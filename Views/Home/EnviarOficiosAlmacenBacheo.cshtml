@@ -1,0 +1,1419 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar Oficios a Almacén - Bacheo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        /* PANEL DE NAVEGACIÓN */
+        .nav-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #f0f9f4 100%);
+            box-shadow: -10px 0 30px rgba(40, 167, 69, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow: hidden;
+            border-left: 1px solid #d4edda;
+        }
+
+            .nav-panel.open {
+                right: 0;
+            }
+
+        .nav-panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 167, 69, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+            .nav-panel-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .nav-toggle {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 20px 25px -5px rgba(40, 167, 69, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-toggle:hover {
+                transform: translateY(-50%) scale(1.1);
+                box-shadow: 0 25px 35px -5px rgba(40, 167, 69, 0.4);
+            }
+
+            .nav-toggle.active {
+                background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                transform: translateY(-50%) rotate(180deg);
+            }
+
+        .nav-panel-header {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            padding: 2rem 1.5rem;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-panel-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-panel-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-panel-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-panel-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .nav-panel-body {
+            padding: 1.5rem;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            background: #ffffff;
+            border-radius: 12px;
+            color: #334155;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid #d4edda;
+            cursor: pointer;
+        }
+
+            .nav-item:hover {
+                background: #f0f9f4;
+                transform: translateX(-5px);
+                border-color: #28a745;
+                box-shadow: 0 4px 6px -1px rgba(40, 167, 69, 0.1);
+            }
+
+            .nav-item.active {
+                background: linear-gradient(135deg, #28a745, #1e7e34);
+                color: white;
+                border-color: #28a745;
+            }
+
+        .nav-item-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active .nav-item-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-item:hover .nav-item-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .nav-item-content {
+            flex: 1;
+        }
+
+        .nav-item-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #1e293b;
+        }
+
+        .nav-item.active .nav-item-title {
+            color: white;
+        }
+
+        .nav-item-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .nav-item.active .nav-item-desc {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-item-arrow {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-item-arrow {
+            color: #28a745;
+            transform: translateX(3px);
+        }
+
+        .nav-item.active .nav-item-arrow {
+            color: white;
+        }
+
+        .nav-panel-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-track {
+            background: #f0f9f4;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-thumb {
+            background: #5cb85c;
+            border-radius: 3px;
+        }
+
+            .nav-panel-body::-webkit-scrollbar-thumb:hover {
+                background: #28a745;
+            }
+
+        .header {
+            background: linear-gradient(135deg, #1e7e34 0%, #28a745 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-title p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+            .btn-back:hover {
+                background: rgba(255,255,255,0.3);
+            }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .actions-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .btn-new {
+            padding: 0.8rem 2rem;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.3s;
+        }
+
+            .btn-new:hover {
+                background: #218838;
+            }
+
+        .oficios-list {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .list-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .oficio-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+            .oficio-card:hover {
+                border-color: #28a745;
+                box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+            }
+
+        .oficio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .oficio-info h3 {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .oficio-meta {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+            .meta-item i {
+                color: #28a745;
+            }
+
+        .badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+            .modal.active {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
+            }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #1e7e34 0%, #28a745 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .modal-header h2 {
+                font-size: 1.5rem;
+                font-weight: 600;
+            }
+
+        .btn-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e7e34;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+            .form-group label {
+                display: block;
+                font-weight: 600;
+                color: #555;
+                margin-bottom: 0.5rem;
+                font-size: 0.95rem;
+            }
+
+        .required {
+            color: #dc3545;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+            .form-group input:focus,
+            .form-group textarea:focus,
+            .form-group select:focus {
+                outline: none;
+                border-color: #28a745;
+            }
+
+        .material-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .material-table {
+            width: 100%;
+            min-width: 700px;
+            border-collapse: collapse;
+        }
+
+            .material-table th {
+                background: #f8f9fa;
+                padding: 1rem;
+                text-align: left;
+                font-weight: 600;
+                border-bottom: 2px solid #ddd;
+                white-space: nowrap;
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+
+            .material-table td {
+                padding: 0.8rem;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .material-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+            .material-table input {
+                width: 100%;
+                padding: 0.6rem;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 0.95rem;
+            }
+
+                .material-table input:focus {
+                    outline: none;
+                    border-color: #28a745;
+                }
+
+        .btn-add-row {
+            margin-top: 1rem;
+            padding: 0.6rem 1.2rem;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+            .btn-add-row:hover {
+                background: #218838;
+            }
+
+        .btn-delete-row {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .file-upload {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+            .file-upload:hover {
+                border-color: #28a745;
+                background: #fafafa;
+            }
+
+            .file-upload.has-file {
+                border-color: #28a745;
+                background: #f0f9f4;
+            }
+
+            .file-upload input {
+                display: none;
+            }
+
+        .file-icon {
+            font-size: 3rem;
+            color: #28a745;
+            margin-bottom: 1rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .btn-submit {
+            padding: 0.8rem 2rem;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            min-width: 200px;
+        }
+
+            .btn-submit:hover {
+                background: #218838;
+            }
+
+        .btn-cancel {
+            padding: 0.8rem 2rem;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            min-width: 120px;
+        }
+
+            .btn-cancel:hover {
+                background: #5a6268;
+            }
+
+        .file-preview {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .btn-remove-file {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .info-box {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+        }
+
+            .info-box i {
+                color: #155724;
+                margin-right: 0.5rem;
+            }
+
+            .info-box p {
+                color: #155724;
+                margin: 0;
+            }
+    </style>
+</head>
+<body>
+    <div class="nav-panel-overlay" id="navPanelOverlay" onclick="toggleNavPanel()"></div>
+
+    <button class="nav-toggle" id="navToggle" onclick="toggleNavPanel()">
+        <i class="fas fa-th-large"></i>
+    </button>
+
+    <div class="nav-panel" id="navPanel">
+        <div class="nav-panel-header">
+            <button class="nav-panel-close" onclick="toggleNavPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="nav-panel-title">Sistema de Bacheo</h3>
+            <p class="nav-panel-subtitle">Navegación Principal</p>
+        </div>
+
+        <div class="nav-panel-body">
+            <div class="nav-item" onclick="redirectTo('captura')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Captura</div>
+                    <div class="nav-item-desc">Registro de bacheos</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('programacion')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Programación</div>
+                    <div class="nav-item-desc">Horarios y cuadrillas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('mapa')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Mapa Interactivo</div>
+                    <div class="nav-item-desc">Ubicación de bacheos</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('rastreo')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Rastreo GPS</div>
+                    <div class="nav-item-desc">Monitoreo de unidades</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('dashboard')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Dashboard</div>
+                    <div class="nav-item-desc">Estadísticas y reportes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('reportes')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Reportes</div>
+                    <div class="nav-item-desc">Incidencias ciudadanas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('material')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-toolbox"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Material Utilizado</div>
+                    <div class="nav-item-desc">Control de inventario</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('asistencia')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Asistencia</div>
+                    <div class="nav-item-desc">Control de personal</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('repositorio')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Repositorio Vehicular</div>
+                    <div class="nav-item-desc">Gestión de unidades</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('citas')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-wrench"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Citas Mantenimiento</div>
+                    <div class="nav-item-desc">Agendar servicios</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item active">
+                <div class="nav-item-icon">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Oficios a Almacén</div>
+                    <div class="nav-item-desc">Envío de solicitudes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>Enviar Oficios a Almacén</h1>
+                <p>Bacheo - Solicitud de Materiales</p>
+            </div>
+            <a href="/Home/DashboardAdministradorBacheo" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="actions-section">
+            <button class="btn-new" onclick="openNuevoOficio()">
+                <i class="fas fa-plus"></i> Crear Nueva Solicitud de Material
+            </button>
+        </div>
+
+        <div class="oficios-list">
+            <div class="list-header">
+                <h2 class="list-title">Oficios Enviados</h2>
+                <span style="color: #666; font-size: 0.95rem;">Total: <strong>2</strong> oficios</span>
+            </div>
+
+            <div class="oficio-card" onclick="openDetalleOficio('of1')">
+                <div class="oficio-header">
+                    <div class="oficio-info">
+                        <h3>Oficio No. BACHEO/1445/10/2025</h3>
+                        <div class="oficio-meta">
+                            <span class="meta-item">
+                                <i class="fas fa-calendar"></i>
+                                10/Octubre/2025
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-truck"></i>
+                                Unidad: BCH-03
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-box"></i>
+                                3 materiales solicitados
+                            </span>
+                        </div>
+                    </div>
+                    <span class="badge badge-pending">Pendiente</span>
+                </div>
+                <p style="color: #666; margin-top: 0.5rem;">
+                    Solicitud de mezcla asfáltica y material pétreo para Colonia Centro
+                </p>
+            </div>
+
+            <div class="oficio-card" onclick="openDetalleOficio('of2')">
+                <div class="oficio-header">
+                    <div class="oficio-info">
+                        <h3>Oficio No. BACHEO/1421/09/2025</h3>
+                        <div class="oficio-meta">
+                            <span class="meta-item">
+                                <i class="fas fa-calendar"></i>
+                                28/Septiembre/2025
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-truck"></i>
+                                Unidad: BCH-01
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-box"></i>
+                                4 materiales solicitados
+                            </span>
+                        </div>
+                    </div>
+                    <span class="badge badge-approved">Aprobado</span>
+                </div>
+                <p style="color: #666; margin-top: 0.5rem;">
+                    Cemento y emulsión asfáltica para bacheo en Av. Principal
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="oficioModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Nueva Solicitud de Material</h2>
+                <button class="btn-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <p><strong>Importante:</strong> Complete todos los campos requeridos (*). El oficio será enviado directamente al Almacén de Servicios Primarios.</p>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Información General del Oficio</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Destinatario <span class="required">*</span></label>
+                            <input type="text" id="destinatario" placeholder="Nombre del responsable de almacén" value="Administrador de Almacén">
+                        </div>
+                        <div class="form-group">
+                            <label>Cargo</label>
+                            <input type="text" id="cargo" placeholder="Cargo del destinatario" value="Jefe de Almacén">
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha <span class="required">*</span></label>
+                            <input type="date" id="fecha">
+                        </div>
+                        <div class="form-group">
+                            <label>Oficio No. <span class="required">*</span></label>
+                            <input type="text" id="oficioNo" placeholder="BACHEO/0000/00/2025">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción de la Solicitud <span class="required">*</span></label>
+                        <textarea id="contenido" placeholder="Por medio de la presente solicito su apoyo con la adquisición de materiales necesarios para..."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 class="section-title" style="margin-bottom: 0;">Información de Unidad/Equipo</h3>
+                        <button type="button" class="btn-add-row" onclick="toggleUnidadSection()" id="btnToggleUnidad">
+                            <i class="fas fa-plus"></i> Agregar Info de Unidad
+                        </button>
+                    </div>
+                    <div id="unidadSection" style="display: none;">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Número Económico</label>
+                                <input type="text" id="numEconomico" placeholder="Ej: BCH-01, BCH-03">
+                            </div>
+                            <div class="form-group">
+                                <label>Unidad/Equipo</label>
+                                <input type="text" id="unidad" placeholder="Ej: Volquete, Compactadora, Bachera">
+                            </div>
+                            <div class="form-group">
+                                <label>Tipo</label>
+                                <input type="text" id="tipo" placeholder="Ej: VOLQUETE, COMPACTADORA, BACHERA">
+                            </div>
+                            <div class="form-group">
+                                <label>Marca</label>
+                                <input type="text" id="marca" placeholder="Ej: KENWORTH, MACK, CATERPILLAR">
+                            </div>
+                            <div class="form-group">
+                                <label>Modelo/Año</label>
+                                <input type="text" id="modelo" placeholder="Ej: 2020">
+                            </div>
+                            <div class="form-group">
+                                <label>Placa</label>
+                                <input type="text" id="placa" placeholder="Ej: BCH-123-D">
+                            </div>
+                            <div class="form-group">
+                                <label>Número de Serie</label>
+                                <input type="text" id="serie" placeholder="Número de serie del equipo">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Materiales Solicitados</h3>
+                    <p style="color: #666; margin-bottom: 1rem; font-size: 0.9rem;">
+                        <i class="fas fa-info-circle"></i> Especifique los materiales que necesita. En pantallas pequeñas, deslice horizontalmente.
+                    </p>
+                    <div class="material-table-wrapper">
+                        <table class="material-table" id="materialTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Cantidad</th>
+                                    <th style="width: 100px;">U.M.</th>
+                                    <th>Material/Insumo</th>
+                                    <th style="width: 180px;">Especificación</th>
+                                    <th style="width: 80px;">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="materialTableBody">
+                                <tr>
+                                    <td><input type="number" value="1" min="1"></td>
+                                    <td><input type="text" placeholder="TON" value="TON"></td>
+                                    <td><input type="text" placeholder="Descripción del material"></td>
+                                    <td><input type="text" placeholder="Especificación o tipo"></td>
+                                    <td><button class="btn-delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="btn-add-row" onclick="addMaterialRow()">
+                        <i class="fas fa-plus"></i> Agregar Material
+                    </button>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Documentos Adjuntos</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>PDF del Oficio <span class="required">*</span></label>
+                            <div class="file-upload" id="pdfUpload" onclick="document.getElementById('pdfFile').click()">
+                                <input type="file" id="pdfFile" accept=".pdf" onchange="handleFileUpload('pdf', this)">
+                                <div class="file-icon"><i class="fas fa-file-pdf"></i></div>
+                                <p><strong>Click para subir PDF del oficio</strong></p>
+                                <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">Formato PDF, máximo 5MB</p>
+                            </div>
+                            <div id="pdfPreview"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Foto del Oficio (Opcional)</label>
+                            <div class="file-upload" id="fotoUpload" onclick="document.getElementById('fotoFile').click()">
+                                <input type="file" id="fotoFile" accept="image/*" onchange="handleFileUpload('foto', this)">
+                                <div class="file-icon"><i class="fas fa-image"></i></div>
+                                <p><strong>Click para subir foto</strong></p>
+                                <p style="font-size: 0.85rem; color: #666; margin-top: 0.5rem;">JPG, PNG, máximo 5MB</p>
+                            </div>
+                            <div id="fotoPreview"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+                <button class="btn-submit" onclick="enviarOficio()">
+                    <i class="fas fa-paper-plane"></i> Enviar Oficio a Almacén
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let navPanelOpen = false;
+
+        document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+
+        function toggleNavPanel() {
+            const navPanel = document.getElementById('navPanel');
+            const overlay = document.getElementById('navPanelOverlay');
+            const toggleBtn = document.getElementById('navToggle');
+
+            navPanelOpen = !navPanelOpen;
+
+            if (navPanelOpen) {
+                navPanel.classList.add('open');
+                overlay.classList.add('active');
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '<i class="fas fa-times"></i>';
+                document.body.style.overflow = 'hidden';
+            } else {
+                navPanel.classList.remove('open');
+                overlay.classList.remove('active');
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '<i class="fas fa-th-large"></i>';
+                document.body.style.overflow = '';
+            }
+        }
+
+        function redirectTo(module) {
+            if (navPanelOpen) toggleNavPanel();
+
+            const urls = {
+                'captura': '/Home/CapturaBacheo',
+                'mapa': '/Home/MapaBacheo',
+                'rastreo': '/Home/RastreoBacheo',
+                'dashboard': '/Home/DashboardBacheo',
+                'reportes': '/Home/ReportesBacheo',
+                'material': '/Home/MaterialUtilizadoBacheo',
+                'asistencia': '/Home/AsistenciaPersonalBacheo',
+                'programacion': '/Home/ProgramacionBacheo',
+                'repositorio': '/Home/RepositorioPlacasBacheo',
+                'citas': '/Home/AgendarCitasMantenimiento'
+            };
+
+            if (urls[module]) {
+                window.location.href = urls[module];
+            }
+        }
+
+        function openNuevoOficio() {
+            document.getElementById('oficioModal').classList.add('active');
+            document.getElementById('modalTitle').textContent = 'Nueva Solicitud de Material';
+
+            document.getElementById('destinatario').value = 'Administrador de Almacén';
+            document.getElementById('cargo').value = 'Jefe de Almacén';
+            document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+            document.getElementById('oficioNo').value = '';
+            document.getElementById('contenido').value = '';
+
+            clearUnidadFields();
+            document.getElementById('unidadSection').style.display = 'none';
+            document.getElementById('btnToggleUnidad').innerHTML = '<i class="fas fa-plus"></i> Agregar Info de Unidad';
+
+            const tbody = document.getElementById('materialTableBody');
+            tbody.innerHTML = `
+                <tr>
+                    <td><input type="number" value="1" min="1"></td>
+                    <td><input type="text" placeholder="TON" value="TON"></td>
+                    <td><input type="text" placeholder="Descripción del material"></td>
+                    <td><input type="text" placeholder="Especificación o tipo"></td>
+                    <td><button class="btn-delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button></td>
+                </tr>
+            `;
+
+            removeFile('pdf');
+            removeFile('foto');
+        }
+
+        function openDetalleOficio(oficioId) {
+            document.getElementById('oficioModal').classList.add('active');
+            document.getElementById('modalTitle').textContent = 'Detalle del Oficio';
+
+            if (oficioId === 'of1') {
+                document.getElementById('destinatario').value = 'Administrador de Almacén';
+                document.getElementById('cargo').value = 'Jefe de Almacén';
+                document.getElementById('fecha').value = '2025-10-10';
+                document.getElementById('oficioNo').value = 'BACHEO/1445/10/2025';
+                document.getElementById('contenido').value = 'Por medio de la presente solicito su apoyo con la adquisición de materiales necesarios para trabajos de bacheo en Colonia Centro.';
+
+                document.getElementById('unidadSection').style.display = 'block';
+                document.getElementById('btnToggleUnidad').innerHTML = '<i class="fas fa-minus"></i> Ocultar Info de Unidad';
+                document.getElementById('numEconomico').value = 'BCH-03';
+                document.getElementById('unidad').value = 'Camión Volquete';
+                document.getElementById('tipo').value = 'VOLQUETE';
+                document.getElementById('marca').value = 'KENWORTH T800';
+                document.getElementById('modelo').value = '2021';
+                document.getElementById('placa').value = 'BCH3456X';
+                document.getElementById('serie').value = '1NKDL40X0RM123456';
+
+                const tbody = document.getElementById('materialTableBody');
+                tbody.innerHTML = `
+                    <tr>
+                        <td><input type="number" value="8" min="1"></td>
+                        <td><input type="text" value="TON"></td>
+                        <td><input type="text" value="MEZCLA ASFÁLTICA EN CALIENTE"></td>
+                        <td><input type="text" value="TIPO III"></td>
+                        <td><button class="btn-delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" value="15" min="1"></td>
+                        <td><input type="text" value="M3"></td>
+                        <td><input type="text" value="GRAVA TRITURADA 3/4"></td>
+                        <td><input type="text" value="BASE HIDRÁULICA"></td>
+                        <td><button class="btn-delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" value="50" min="1"></td>
+                        <td><input type="text" value="KG"></td>
+                        <td><input type="text" value="EMULSIÓN ASFÁLTICA"></td>
+                        <td><input type="text" value="ECR-65"></td>
+                        <td><button class="btn-delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                `;
+            } else if (oficioId === 'of2') {
+                document.getElementById('destinatario').value = 'Administrador de Almacén';
+                document.getElementById('cargo').value = 'Jefe de Almacén';
+                document.getElementById('fecha').value = '2025-09-28';
+                document.getElementById('oficioNo').value = 'BACHEO/1421/09/2025';
+                document.getElementById('contenido').value = 'Solicito materiales para trabajos de bacheo y reparación de pavimento en Av. Principal.';
+
+                document.getElementById('unidadSection').style.display = 'block';
+                document.getElementById('btnToggleUnidad').innerHTML = '<i class="fas fa-minus"></i> Ocultar Info de Unidad';
+                document.getElementById('numEconomico').value = 'BCH-01';
+                document.getElementById('unidad').value = 'Camioneta Bachera';
+                document.getElementById('tipo').value = 'BACHERA';
+                document.getElementById('marca').value = 'FORD F-550';
+                document.getElementById('modelo').value = '2022';
+                document.getElementById('placa').value = 'XY9988Z';
+                document.getElementById('serie').value = '1FDUF5HT8EDA12345';
+
+                const tbody = document.getElementById('materialTableBody');
+                tbody.innerHTML = `
+                    <tr>
+                        <td><input type="number" value="10" min="1"></td>
+                        <td><input type="text" value="TON"></td>
+                        <td><input type="text" value="MEZCLA ASFÁLTICA EN FRÍO"></td>
+                        <td><input type="text" value="TIPO II"></td>
+                        <td><button class="btn-delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" value="50" min="1"></td>
+                        <td><input type="text" value="BULTO"></td>
+                        <td><input type="text" value="CEMENTO PORTLAND"></td>
+                        <td><input type="text" value="CPO 30R"></td>
+                        <td><button class="btn-delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" value="20" min="1"></td>
+                        <td><input type="text" value="M3"></td>
+                        <td><input type="text" value="ARENA"></td>
+                        <td><input type="text" value="MÓDULO DE FINURA 2.8"></td>
+                        <td><button class="btn-delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td><input type="number" value="100" min="1"></td>
+                        <td><input type="text" value="LTS"></td>
+                        <td><input type="text" value="EMULSIÓN ASFÁLTICA"></td>
+                        <td><input type="text" value="ECL-65"></td>
+                        <td><button class="btn-delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                `;
+            }
+
+            const modalFooter = document.querySelector('.modal-footer');
+            modalFooter.innerHTML = `
+                <button class="btn-cancel" onclick="closeModal()">Cerrar</button>
+            `;
+        }
+
+        function closeModal() {
+            document.getElementById('oficioModal').classList.remove('active');
+
+            const modalFooter = document.querySelector('.modal-footer');
+            modalFooter.innerHTML = `
+                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+                <button class="btn-submit" onclick="enviarOficio()">
+                    <i class="fas fa-paper-plane"></i> Enviar Oficio a Almacén
+                </button>
+            `;
+        }
+
+        function toggleUnidadSection() {
+            const section = document.getElementById('unidadSection');
+            const btn = document.getElementById('btnToggleUnidad');
+
+            if (section.style.display === 'none') {
+                section.style.display = 'block';
+                btn.innerHTML = '<i class="fas fa-minus"></i> Ocultar Info de Unidad';
+            } else {
+                section.style.display = 'none';
+                btn.innerHTML = '<i class="fas fa-plus"></i> Agregar Info de Unidad';
+                clearUnidadFields();
+            }
+        }
+
+        function clearUnidadFields() {
+            document.getElementById('numEconomico').value = '';
+            document.getElementById('unidad').value = '';
+            document.getElementById('tipo').value = '';
+            document.getElementById('marca').value = '';
+            document.getElementById('modelo').value = '';
+            document.getElementById('placa').value = '';
+            document.getElementById('serie').value = '';
+        }
+
+        function addMaterialRow() {
+            const tbody = document.getElementById('materialTableBody');
+            const newRow = tbody.insertRow();
+            newRow.innerHTML = `
+                <td><input type="number" value="1" min="1"></td>
+                <td><input type="text" placeholder="TON" value="TON"></td>
+                <td><input type="text" placeholder="Descripción del material"></td>
+                <td><input type="text" placeholder="Especificación o tipo"></td>
+                <td><button class="btn-delete-row" onclick="deleteRow(this)"><i class="fas fa-trash"></i></button></td>
+            `;
+        }
+
+        function deleteRow(btn) {
+            const row = btn.closest('tr');
+            if (document.getElementById('materialTableBody').rows.length > 1) {
+                row.remove();
+            } else {
+                alert('Debe haber al menos un material en la tabla');
+            }
+        }
+
+        function handleFileUpload(type, input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const uploadDiv = document.getElementById(type + 'Upload');
+            const previewDiv = document.getElementById(type + 'Preview');
+
+            uploadDiv.classList.add('has-file');
+
+            const fileName = file.name;
+            const fileSize = (file.size / 1024 / 1024).toFixed(2);
+
+            previewDiv.innerHTML = `
+                <div class="file-preview">
+                    <div class="file-info">
+                        <i class="fas fa-${type === 'pdf' ? 'file-pdf' : 'image'}" style="font-size: 1.5rem; color: #28a745;"></i>
+                        <div>
+                            <strong>${fileName}</strong>
+                            <p style="font-size: 0.85rem; color: #666; margin: 0;">${fileSize} MB</p>
+                        </div>
+                    </div>
+                    <button class="btn-remove-file" onclick="removeFile('${type}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        function removeFile(type) {
+            document.getElementById(type + 'File').value = '';
+            document.getElementById(type + 'Upload').classList.remove('has-file');
+            document.getElementById(type + 'Preview').innerHTML = '';
+        }
+
+        function enviarOficio() {
+            if (!document.getElementById('destinatario').value) {
+                alert('Por favor ingrese el destinatario');
+                return;
+            }
+            if (!document.getElementById('fecha').value) {
+                alert('Por favor ingrese la fecha');
+                return;
+            }
+            if (!document.getElementById('oficioNo').value) {
+                alert('Por favor ingrese el número de oficio');
+                return;
+            }
+            if (!document.getElementById('contenido').value) {
+                alert('Por favor ingrese la descripción de la solicitud');
+                return;
+            }
+            if (!document.getElementById('pdfFile').files[0]) {
+                alert('Debe subir el PDF del oficio');
+                return;
+            }
+
+            const tbody = document.getElementById('materialTableBody');
+            let hasMaterial = false;
+            for (let i = 0; i < tbody.rows.length; i++) {
+                const descripcion = tbody.rows[i].cells[2].querySelector('input').value;
+                if (descripcion.trim()) {
+                    hasMaterial = true;
+                    break;
+                }
+            }
+
+            if (!hasMaterial) {
+                alert('Debe agregar al menos un material');
+                return;
+            }
+
+            if (confirm('¿Está seguro de enviar este oficio al Almacén de Servicios Primarios?')) {
+                alert('Oficio enviado correctamente al Almacén.\n\nPodrá consultar el estado de su solicitud en esta misma pantalla.');
+                closeModal();
+            }
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('oficioModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

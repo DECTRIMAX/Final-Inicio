@@ -1,0 +1,1734 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Citas - Taller Mecánico Municipal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --pri-green: #10b981;
+            --pri-green-light: #34d399;
+            --pri-green-dark: #059669;
+            --bg-light: #ecfdf5;
+            --bg-white: #ffffff;
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --border-gray: #d1d5db;
+            --shadow: rgba(16, 185, 129, 0.15);
+            --shadow-dark: rgba(0, 0, 0, 0.1);
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, #ffffff 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--pri-green) 0%, var(--pri-green-dark) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1800px;
+            margin: 0 auto;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-container {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--pri-green-light);
+            flex-shrink: 0;
+        }
+
+            .logo-container i {
+                font-size: 1.8rem;
+                color: var(--pri-green);
+            }
+
+            .logo-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                padding: 5px;
+            }
+
+        .header-center {
+            flex: 1;
+            text-align: center;
+            min-width: 250px;
+        }
+
+            .header-center h1 {
+                font-size: 1.5rem;
+                font-weight: 800;
+                margin-bottom: 0.3rem;
+            }
+
+            .header-center p {
+                font-size: 0.9rem;
+                opacity: 0.95;
+            }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-back {
+            background: white;
+            color: var(--pri-green);
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+        }
+
+            .btn-back:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.7rem 1.2rem;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--pri-green-light);
+            flex-shrink: 0;
+        }
+
+            .user-avatar i {
+                font-size: 1.5rem;
+                color: var(--pri-green);
+            }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .main-container {
+            display: flex;
+            max-width: 1800px;
+            margin: 0 auto;
+            gap: 1.5rem;
+            padding: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .sidebar {
+            width: 260px;
+            min-width: 240px;
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+            flex-shrink: 0;
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--pri-green-dark);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1.3rem;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .filter-input, .filter-select {
+            width: 100%;
+            padding: 0.7rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+            .filter-input:focus, .filter-select:focus {
+                outline: none;
+                border-color: var(--pri-green);
+                box-shadow: 0 0 0 3px var(--shadow);
+            }
+
+        .filter-range {
+            display: flex;
+            gap: 0.3rem;
+            align-items: center;
+        }
+
+            .filter-range input {
+                width: 105px;
+                padding: 0.5rem 0.3rem;
+                font-size: 0.8rem;
+            }
+
+            .filter-range span {
+                color: var(--gray-600);
+                font-weight: 600;
+                font-size: 0.9rem;
+            }
+
+        .filter-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.7rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+            .filter-checkbox input {
+                width: 18px;
+                height: 18px;
+                cursor: pointer;
+            }
+
+        .filter-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.85rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-green {
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-dark));
+            color: white;
+        }
+
+            .btn-green:hover {
+                background: linear-gradient(135deg, var(--pri-green-dark), #047857);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px var(--shadow);
+            }
+
+        .btn-outline {
+            background: white;
+            color: var(--pri-green);
+            border: 2px solid var(--pri-green);
+        }
+
+            .btn-outline:hover {
+                background: var(--bg-light);
+            }
+
+        .content-area {
+            flex: 1;
+            min-width: 500px;
+        }
+
+        .search-bar {
+            background: white;
+            padding: 1.2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.9rem 1rem 0.9rem 3rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+            .search-input:focus {
+                outline: none;
+                border-color: var(--pri-green);
+                box-shadow: 0 0 0 3px var(--shadow);
+            }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            font-size: 1.1rem;
+        }
+
+        .stats-bar {
+            background: white;
+            padding: 1.2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--bg-light), #d1fae5);
+            border-radius: 10px;
+            border-left: 4px solid var(--pri-green);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--pri-green-dark);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            background: white;
+            padding: 1.2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 0.8rem 1.5rem;
+            background: var(--pri-green);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+            flex: 1 1 auto;
+            justify-content: center;
+            min-width: 160px;
+        }
+
+            .btn-action:hover {
+                background: var(--pri-green-dark);
+                transform: translateY(-2px);
+            }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1400px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-dark));
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+            th:nth-child(2), td:nth-child(2) {
+                min-width: 110px;
+            }
+
+            th:nth-child(3), td:nth-child(3) {
+                min-width: 80px;
+            }
+
+        tbody tr {
+            border-bottom: 1px solid var(--gray-200);
+            transition: all 0.3s ease;
+        }
+
+            tbody tr:hover {
+                background: var(--bg-light);
+            }
+
+        td {
+            padding: 1rem;
+            font-size: 0.9rem;
+            color: var(--gray-700);
+        }
+
+        .badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .badge-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-confirmed {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-in-progress {
+            background: #fde68a;
+            color: #78350f;
+        }
+
+        .badge-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-dept {
+            padding: 0.3rem 0.7rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .badge-alumbrado {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-bacheo {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-recoleccion {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-contenedores {
+            background: #fce7f3;
+            color: #9f1239;
+        }
+
+        .badge-limpieza {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .badge-priority {
+            padding: 0.3rem 0.7rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .priority-low {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .priority-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .priority-high {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .priority-urgent {
+            background: #fecaca;
+            color: #7f1d1d;
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .action-icon {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+            .action-icon.view {
+                color: #3b82f6;
+            }
+
+            .action-icon.start {
+                color: #10b981;
+            }
+
+            .action-icon.edit {
+                color: #f59e0b;
+            }
+
+            .action-icon.cancel {
+                color: #ef4444;
+            }
+
+            .action-icon:hover {
+                transform: scale(1.2);
+            }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .pagination-btn {
+            padding: 0.7rem 1.2rem;
+            background: var(--pri-green);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+            .pagination-btn:disabled {
+                background: var(--gray-300);
+                cursor: not-allowed;
+            }
+
+        .pagination-info {
+            color: var(--gray-600);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        .notification {
+            position: fixed;
+            top: 90px;
+            right: 2rem;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid var(--pri-green);
+            z-index: 10000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            max-width: 350px;
+            font-size: 0.95rem;
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+            .modal-overlay.active {
+                display: flex;
+            }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin: auto;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-dark));
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+            .modal-header h2 {
+                font-size: 1.5rem;
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+            }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+            .modal-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            background: var(--gray-50);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--pri-green);
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gray-600);
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .detail-section-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--pri-green-dark);
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--pri-green);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            background: var(--gray-50);
+            border-radius: 0 0 15px 15px;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .btn-modal {
+            padding: 0.8rem 1.8rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            min-width: 120px;
+        }
+
+        .btn-modal-close {
+            background: white;
+            color: var(--gray-700);
+            border: 2px solid var(--gray-300);
+        }
+
+            .btn-modal-close:hover {
+                background: var(--gray-100);
+            }
+
+        .btn-modal-action {
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-dark));
+            color: white;
+        }
+
+            .btn-modal-action:hover {
+                background: linear-gradient(135deg, var(--pri-green-dark), #047857);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px var(--shadow);
+            }
+
+        .footer {
+            background: var(--gray-800);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+        }
+
+            .footer p {
+                margin: 0.3rem 0;
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo-container">
+                    <i class="fas fa-tools"></i>
+                </div>
+            </div>
+            <div class="header-center">
+                <h1>Agenda de Citas - Taller Mecánico Municipal</h1>
+                <p>Sistema de Gestión de Citas de Mantenimiento Vehicular</p>
+            </div>
+            <div class="header-right">
+                <button onclick="window.history.back()" class="btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    Regresar
+                </button>
+                <div class="user-section">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">Cervando</div>
+                        <div class="user-role">Jefe de Taller</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="sidebar-title">
+                <i class="fas fa-filter"></i>
+                Filtros Avanzados
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Departamento</label>
+                <select class="filter-select" id="filterDept" onchange="applyFilters()">
+                    <option value="">Todos los departamentos</option>
+                    <option value="alumbrado">Alumbrado Público</option>
+                    <option value="bacheo">Bacheo</option>
+                    <option value="recoleccion">Recolección de Basura</option>
+                    <option value="contenedores">Contenedores</option>
+                    <option value="limpieza">Cuadrillas de Limpieza</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Estado de Cita</label>
+                <select class="filter-select" id="filterStatus" onchange="applyFilters()">
+                    <option value="">Todos los estados</option>
+                    <option value="pending">Pendiente</option>
+                    <option value="confirmed">Confirmada</option>
+                    <option value="in-progress">En Proceso</option>
+                    <option value="completed">Completada</option>
+                    <option value="cancelled">Cancelada</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Prioridad</label>
+                <select class="filter-select" id="filterPriority" onchange="applyFilters()">
+                    <option value="">Todas las prioridades</option>
+                    <option value="low">Baja</option>
+                    <option value="medium">Media</option>
+                    <option value="high">Alta</option>
+                    <option value="urgent">Urgente</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Rango de Fechas</label>
+                <div class="filter-range">
+                    <input type="date" class="filter-input" id="filterDateFrom" onchange="applyFilters()">
+                    <span>—</span>
+                    <input type="date" class="filter-input" id="filterDateTo" onchange="applyFilters()">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Tipo de Servicio</label>
+                <select class="filter-select" id="filterService" onchange="applyFilters()">
+                    <option value="">Todos los servicios</option>
+                    <option value="preventivo">Mantenimiento Preventivo</option>
+                    <option value="correctivo">Mantenimiento Correctivo</option>
+                    <option value="revision">Revisión General</option>
+                    <option value="reparacion">Reparación</option>
+                    <option value="diagnostico">Diagnóstico</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">No. Económico</label>
+                <input type="text" class="filter-input" id="filterEconomico" placeholder="Buscar por económico" oninput="applyFilters()">
+            </div>
+
+            <div class="filter-checkbox">
+                <input type="checkbox" id="filterToday" onchange="applyFilters()">
+                <label for="filterToday">Solo citas de hoy</label>
+            </div>
+
+            <div class="filter-checkbox">
+                <input type="checkbox" id="filterWeek" onchange="applyFilters()">
+                <label for="filterWeek">Solo esta semana</label>
+            </div>
+
+            <div class="filter-buttons">
+                <button class="btn btn-green" onclick="applyFilters(true)">
+                    <i class="fas fa-search"></i>
+                    Aplicar Filtros
+                </button>
+                <button class="btn btn-outline" onclick="clearFilters()">
+                    <i class="fas fa-redo"></i>
+                    Limpiar Filtros
+                </button>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <div class="search-bar">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="globalSearch" placeholder="Búsqueda global: unidad, placas, solicitante..." oninput="performGlobalSearch()">
+                </div>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-value">28</div>
+                    <div class="stat-label">Total Citas</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Pendientes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Confirmadas</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">En Proceso</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Urgentes</div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-action" onclick="openNewAppointmentModal()" style="background: linear-gradient(135deg, #f59e0b, #d97706); font-size: 1rem;">
+                    <i class="fas fa-plus-circle"></i> Nueva Cita
+                </button>
+                <button class="btn-action" onclick="exportCSV()">
+                    <i class="fas fa-file-csv"></i> Exportar CSV
+                </button>
+                <button class="btn-action" onclick="printSchedule()">
+                    <i class="fas fa-print"></i> Imprimir Agenda
+                </button>
+                <button class="btn-action" onclick="generateReport()">
+                    <i class="fas fa-chart-bar"></i> Generar Reporte
+                </button>
+            </div>
+
+            <div class="table-container">
+                <div class="table-wrapper">
+                    <table id="appointmentsTable">
+                        <thead>
+                            <tr>
+                                <th>Folio</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Departamento</th>
+                                <th>Unidad</th>
+                                <th>No. Económico</th>
+                                <th>Placas</th>
+                                <th>Tipo Servicio</th>
+                                <th>Prioridad</th>
+                                <th>Solicitante</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointmentsBody">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination">
+                    <button class="pagination-btn" onclick="previousPage()" id="prevBtn">
+                        <i class="fas fa-chevron-left"></i> Anterior
+                    </button>
+                    <span class="pagination-info" id="pageInfo">Página 1 de 1</span>
+                    <button class="pagination-btn" onclick="nextPage()" id="nextBtn">
+                        Siguiente <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">
+                    <i class="fas fa-info-circle"></i>
+                    Detalles de la Cita
+                </h2>
+                <button class="modal-close" onclick="closeDetailModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal-body" id="modalBody">
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-modal btn-modal-close" onclick="closeDetailModal()">
+                    <i class="fas fa-times"></i>
+                    Cerrar
+                </button>
+                <button type="button" class="btn-modal btn-modal-action" onclick="confirmAppointment()">
+                    <i class="fas fa-check"></i>
+                    Confirmar Cita
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="newAppointmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>
+                    <i class="fas fa-plus-circle"></i>
+                    Agendar Nueva Cita
+                </h2>
+                <button class="modal-close" onclick="closeNewAppointmentModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="detail-section-title">
+                    <i class="fas fa-calendar-alt"></i>
+                    Información de la Cita
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Fecha *</div>
+                        <input type="date" id="newFecha" class="filter-input" required>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Hora *</div>
+                        <input type="time" id="newHora" class="filter-input" required>
+                    </div>
+                </div>
+
+                <div class="detail-section-title">
+                    <i class="fas fa-building"></i>
+                    Departamento y Solicitante
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Departamento *</div>
+                        <select id="newDepartamento" class="filter-select" required>
+                            <option value="">Seleccione departamento</option>
+                            <option value="alumbrado">Alumbrado Público</option>
+                            <option value="bacheo">Bacheo</option>
+                            <option value="recoleccion">Recolección de Basura</option>
+                            <option value="contenedores">Contenedores</option>
+                            <option value="limpieza">Cuadrillas de Limpieza</option>
+                        </select>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Solicitante *</div>
+                        <input type="text" id="newSolicitante" class="filter-input" placeholder="Nombre completo" required>
+                    </div>
+                </div>
+
+                <div class="detail-section-title">
+                    <i class="fas fa-truck"></i>
+                    Información del Vehículo
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Unidad *</div>
+                        <input type="text" id="newUnidad" class="filter-input" placeholder="Ej: Camioneta Alumbrado 1" required>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">No. Económico *</div>
+                        <input type="text" id="newEconomico" class="filter-input" placeholder="Ej: ECO-001" required>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Placas *</div>
+                        <input type="text" id="newPlacas" class="filter-input" placeholder="Ej: ABC-1234" required>
+                    </div>
+                </div>
+
+                <div class="detail-section-title">
+                    <i class="fas fa-wrench"></i>
+                    Detalles del Servicio
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Tipo de Servicio *</div>
+                        <select id="newServicio" class="filter-select" required>
+                            <option value="">Seleccione tipo de servicio</option>
+                            <option value="preventivo">Mantenimiento Preventivo</option>
+                            <option value="correctivo">Mantenimiento Correctivo</option>
+                            <option value="revision">Revisión General</option>
+                            <option value="reparacion">Reparación</option>
+                            <option value="diagnostico">Diagnóstico</option>
+                        </select>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Prioridad *</div>
+                        <select id="newPrioridad" class="filter-select" required>
+                            <option value="">Seleccione prioridad</option>
+                            <option value="low">Baja</option>
+                            <option value="medium">Media</option>
+                            <option value="high">Alta</option>
+                            <option value="urgent">Urgente</option>
+                        </select>
+                    </div>
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <div class="detail-label">Descripción del Servicio *</div>
+                        <textarea id="newDescripcion" class="filter-input" rows="3" placeholder="Describa el servicio requerido" required style="resize: vertical;"></textarea>
+                    </div>
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <div class="detail-label">Observaciones</div>
+                        <textarea id="newObservaciones" class="filter-input" rows="2" placeholder="Observaciones adicionales (opcional)" style="resize: vertical;"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-modal btn-modal-close" onclick="closeNewAppointmentModal()">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+                <button type="button" class="btn-modal btn-modal-action" onclick="saveNewAppointment()">
+                    <i class="fas fa-save"></i>
+                    Guardar Cita
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Sistema de Taller Mecánico Municipal - Monclova, Coahuila</p>
+        <p>&copy; 2024 H. Ayuntamiento de Monclova. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        const allAppointments = [
+            {folio: 'TM-001', fecha: '2024-10-09', hora: '08:00', departamento: 'alumbrado', unidad: 'Camioneta Alumbrado 1', economico: 'ECO-001', placas: 'ABC-1234', servicio: 'preventivo', prioridad: 'medium', solicitante: 'Juan Pérez', estado: 'confirmed', descripcion: 'Cambio de aceite y filtros', observaciones: 'Unidad con 10,000 km recorridos'},
+            {folio: 'TM-002', fecha: '2024-10-09', hora: '09:30', departamento: 'bacheo', unidad: 'Camión Bacheo 2', economico: 'ECO-015', placas: 'DEF-5678', servicio: 'correctivo', prioridad: 'high', solicitante: 'María López', estado: 'pending', descripcion: 'Reparación de sistema de frenos', observaciones: 'Urgente - Unidad fuera de servicio'},
+            {folio: 'TM-003', fecha: '2024-10-09', hora: '11:00', departamento: 'recoleccion', unidad: 'Recolector 3', economico: 'ECO-022', placas: 'GHI-9012', servicio: 'revision', prioridad: 'low', solicitante: 'Carlos Méndez', estado: 'confirmed', descripcion: 'Revisión general de motor', observaciones: 'Mantenimiento programado mensual'},
+            {folio: 'TM-004', fecha: '2024-10-09', hora: '14:00', departamento: 'contenedores', unidad: 'Roll Off 1', economico: 'ECO-030', placas: 'JKL-3456', servicio: 'reparacion', prioridad: 'urgent', solicitante: 'Ana García', estado: 'in-progress', descripcion: 'Sistema hidráulico no funciona', observaciones: 'Se está trabajando actualmente'},
+            {folio: 'TM-005', fecha: '2024-10-09', hora: '15:30', departamento: 'limpieza', unidad: 'Barredora 2', economico: 'ECO-045', placas: 'MNO-7890', servicio: 'diagnostico', prioridad: 'medium', solicitante: 'Pedro Sánchez', estado: 'pending', descripcion: 'Motor hace ruido extraño', observaciones: 'Requiere diagnóstico antes de reparación'},
+            {folio: 'TM-006', fecha: '2024-10-10', hora: '08:00', departamento: 'alumbrado', unidad: 'Camioneta Alumbrado 3', economico: 'ECO-007', placas: 'PQR-2468', servicio: 'preventivo', prioridad: 'low', solicitante: 'Luis Torres', estado: 'confirmed', descripcion: 'Servicio de 5,000 km', observaciones: 'Incluye rotación de llantas'},
+            {folio: 'TM-007', fecha: '2024-10-10', hora: '10:00', departamento: 'bacheo', unidad: 'Camión Bacheo 4', economico: 'ECO-018', placas: 'STU-1357', servicio: 'correctivo', prioridad: 'high', solicitante: 'Roberto Díaz', estado: 'confirmed', descripcion: 'Reparación de transmisión', observaciones: 'Cambios difíciles al conducir'},
+            {folio: 'TM-008', fecha: '2024-10-10', hora: '13:00', departamento: 'recoleccion', unidad: 'Recolector 5', economico: 'ECO-025', placas: 'VWX-9753', servicio: 'preventivo', prioridad: 'medium', solicitante: 'Sandra Ruiz', estado: 'pending', descripcion: 'Mantenimiento preventivo completo', observaciones: 'Incluye revisión de compactador'},
+            {folio: 'TM-009', fecha: '2024-10-11', hora: '09:00', departamento: 'contenedores', unidad: 'Roll Off 3', economico: 'ECO-033', placas: 'YZA-8642', servicio: 'reparacion', prioridad: 'urgent', solicitante: 'Miguel Ortiz', estado: 'confirmed', descripcion: 'Fuga en sistema hidráulico', observaciones: 'Unidad no puede operar'},
+            {folio: 'TM-010', fecha: '2024-10-11', hora: '11:30', departamento: 'limpieza', unidad: 'Barredora 4', economico: 'ECO-048', placas: 'BCD-1975', servicio: 'preventivo', prioridad: 'low', solicitante: 'Laura Vega', estado: 'pending', descripcion: 'Cambio de cepillos laterales', observaciones: 'Desgaste normal por uso'},
+            {folio: 'TM-011', fecha: '2024-10-11', hora: '14:30', departamento: 'alumbrado', unidad: 'Camioneta Alumbrado 5', economico: 'ECO-009', placas: 'EFG-3698', servicio: 'diagnostico', prioridad: 'medium', solicitante: 'Jorge Ramírez', estado: 'confirmed', descripcion: 'Check engine encendido', observaciones: 'Revisar códigos de error'},
+            {folio: 'TM-012', fecha: '2024-10-12', hora: '08:30', departamento: 'bacheo', unidad: 'Camión Bacheo 1', economico: 'ECO-014', placas: 'HIJ-7531', servicio: 'correctivo', prioridad: 'high', solicitante: 'Patricia Flores', estado: 'pending', descripcion: 'Sistema eléctrico fallando', observaciones: 'Luces intermitentes'},
+            {folio: 'TM-013', fecha: '2024-10-12', hora: '10:30', departamento: 'recoleccion', unidad: 'Recolector 7', economico: 'ECO-028', placas: 'KLM-9514', servicio: 'revision', prioridad: 'low', solicitante: 'Fernando Castro', estado: 'confirmed', descripcion: 'Inspección de seguridad anual', observaciones: 'Verificación reglamentaria'},
+            {folio: 'TM-014', fecha: '2024-10-12', hora: '13:30', departamento: 'contenedores', unidad: 'Roll Off 2', economico: 'ECO-031', placas: 'NOP-7532', servicio: 'preventivo', prioridad: 'medium', solicitante: 'Carmen Jiménez', estado: 'pending', descripcion: 'Servicio mayor de 15,000 km', observaciones: 'Cambio de aceite y filtros múltiples'},
+            {folio: 'TM-015', fecha: '2024-10-13', hora: '09:00', departamento: 'limpieza', unidad: 'Barredora 1', economico: 'ECO-044', placas: 'QRS-1593', servicio: 'reparacion', prioridad: 'urgent', solicitante: 'Ricardo Herrera', estado: 'confirmed', descripcion: 'Sistema de aspiración no funciona', observaciones: 'Equipo crítico para operación'},
+            {folio: 'TM-016', fecha: '2024-10-08', hora: '14:00', departamento: 'alumbrado', unidad: 'Camioneta Alumbrado 2', economico: 'ECO-003', placas: 'TUV-3571', servicio: 'preventivo', prioridad: 'low', solicitante: 'Gabriela Moreno', estado: 'completed', descripcion: 'Mantenimiento 10,000 km', observaciones: 'Servicio completado satisfactoriamente'},
+            {folio: 'TM-017', fecha: '2024-10-08', hora: '11:00', departamento: 'bacheo', unidad: 'Camión Bacheo 3', economico: 'ECO-016', placas: 'WXY-9512', servicio: 'correctivo', prioridad: 'high', solicitante: 'Daniel Aguilar', estado: 'completed', descripcion: 'Cambio de batería', observaciones: 'Batería nueva instalada'},
+            {folio: 'TM-018', fecha: '2024-10-07', hora: '08:00', departamento: 'recoleccion', unidad: 'Recolector 1', economico: 'ECO-020', placas: 'ZAB-7532', servicio: 'revision', prioridad: 'medium', solicitante: 'Mónica Delgado', estado: 'completed', descripcion: 'Revisión trimestral', observaciones: 'Todo en orden'},
+            {folio: 'TM-019', fecha: '2024-10-14', hora: '10:00', departamento: 'contenedores', unidad: 'Roll Off 4', economico: 'ECO-034', placas: 'CDE-1597', servicio: 'diagnostico', prioridad: 'medium', solicitante: 'Alberto Núñez', estado: 'pending', descripcion: 'Pérdida de potencia', observaciones: 'Motor funciona pero sin fuerza'},
+            {folio: 'TM-020', fecha: '2024-10-14', hora: '14:00', departamento: 'limpieza', unidad: 'Barredora 3', economico: 'ECO-046', placas: 'FGH-3698', servicio: 'preventivo', prioridad: 'low', solicitante: 'Silvia Vargas', estado: 'confirmed', descripcion: 'Lubricación general', observaciones: 'Mantenimiento rutinario'}
+        ];
+
+        let filteredAppointments = [...allAppointments];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
+        function getDeptBadgeClass(dept) {
+            const badges = {
+                'alumbrado': 'badge-alumbrado',
+                'bacheo': 'badge-bacheo',
+                'recoleccion': 'badge-recoleccion',
+                'contenedores': 'badge-contenedores',
+                'limpieza': 'badge-limpieza'
+            };
+            return badges[dept] || 'badge-alumbrado';
+        }
+
+        function getDeptLabel(dept) {
+            const labels = {
+                'alumbrado': 'Alumbrado',
+                'bacheo': 'Bacheo',
+                'recoleccion': 'Recolección',
+                'contenedores': 'Contenedores',
+                'limpieza': 'Limpieza'
+            };
+            return labels[dept] || dept;
+        }
+
+        function getStatusBadgeClass(status) {
+            const badges = {
+                'pending': 'badge-pending',
+                'confirmed': 'badge-confirmed',
+                'in-progress': 'badge-in-progress',
+                'completed': 'badge-completed',
+                'cancelled': 'badge-cancelled'
+            };
+            return badges[status] || 'badge-pending';
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'pending': 'Pendiente',
+                'confirmed': 'Confirmada',
+                'in-progress': 'En Proceso',
+                'completed': 'Completada',
+                'cancelled': 'Cancelada'
+            };
+            return labels[status] || status;
+        }
+
+        function getPriorityClass(priority) {
+            return 'priority-' + priority;
+        }
+
+        function getPriorityLabel(priority) {
+            const labels = {
+                'low': 'Baja',
+                'medium': 'Media',
+                'high': 'Alta',
+                'urgent': 'Urgente'
+            };
+            return labels[priority] || priority;
+        }
+
+        function getServiceLabel(service) {
+            const labels = {
+                'preventivo': 'Preventivo',
+                'correctivo': 'Correctivo',
+                'revision': 'Revisión',
+                'reparacion': 'Reparación',
+                'diagnostico': 'Diagnóstico'
+            };
+            return labels[service] || service;
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('appointmentsBody');
+            tbody.innerHTML = '';
+
+            const totalPages = Math.ceil(filteredAppointments.length / itemsPerPage);
+            const startIdx = (currentPage - 1) * itemsPerPage;
+            const endIdx = startIdx + itemsPerPage;
+            const pageAppointments = filteredAppointments.slice(startIdx, endIdx);
+
+            if (pageAppointments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="12" style="text-align: center; padding: 2rem;">No se encontraron citas</td></tr>';
+            } else {
+                pageAppointments.forEach(apt => {
+                    const row = `
+                        <tr>
+                            <td><strong>${apt.folio}</strong></td>
+                            <td>${apt.fecha}</td>
+                            <td><strong>${apt.hora}</strong></td>
+                            <td>
+                                <span class="badge-dept ${getDeptBadgeClass(apt.departamento)}">
+                                    ${getDeptLabel(apt.departamento)}
+                                </span>
+                            </td>
+                            <td>${apt.unidad}</td>
+                            <td><strong>${apt.economico}</strong></td>
+                            <td>${apt.placas}</td>
+                            <td>${getServiceLabel(apt.servicio)}</td>
+                            <td>
+                                <span class="badge-priority ${getPriorityClass(apt.prioridad)}">
+                                    ${getPriorityLabel(apt.prioridad)}
+                                </span>
+                            </td>
+                            <td>${apt.solicitante}</td>
+                            <td>
+                                <span class="badge ${getStatusBadgeClass(apt.estado)}">
+                                    ${getStatusLabel(apt.estado)}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-icons">
+                                    <i class="fas fa-eye action-icon view" onclick="viewAppointment('${apt.folio}')" title="Ver detalles"></i>
+                                    ${apt.estado === 'confirmed' ? `<i class="fas fa-play-circle action-icon start" onclick="startService('${apt.folio}')" title="Iniciar servicio"></i>` : ''}
+                                    ${apt.estado === 'pending' ? `<i class="fas fa-edit action-icon edit" onclick="editAppointment('${apt.folio}')" title="Editar"></i>` : ''}
+                                    ${apt.estado !== 'completed' && apt.estado !== 'cancelled' ? `<i class="fas fa-times-circle action-icon cancel" onclick="cancelAppointment('${apt.folio}')" title="Cancelar"></i>` : ''}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            }
+
+            updatePagination();
+            updateStats();
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredAppointments.length / itemsPerPage);
+            document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages || 1} (${filteredAppointments.length} citas)`;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+        }
+
+        function updateStats() {
+            const total = filteredAppointments.length;
+            const pending = filteredAppointments.filter(a => a.estado === 'pending').length;
+            const confirmed = filteredAppointments.filter(a => a.estado === 'confirmed').length;
+            const inProgress = filteredAppointments.filter(a => a.estado === 'in-progress').length;
+            const urgent = filteredAppointments.filter(a => a.prioridad === 'urgent').length;
+
+            const stats = document.querySelectorAll('.stat-value');
+            stats[0].textContent = total;
+            stats[1].textContent = pending;
+            stats[2].textContent = confirmed;
+            stats[3].textContent = inProgress;
+            stats[4].textContent = urgent;
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(filteredAppointments.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+                showNotification('Página ' + currentPage);
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+                showNotification('Página ' + currentPage);
+            }
+        }
+
+        function performGlobalSearch() {
+            const searchTerm = document.getElementById('globalSearch').value.toLowerCase();
+
+            if (!searchTerm) {
+                filteredAppointments = [...allAppointments];
+            } else {
+                filteredAppointments = allAppointments.filter(apt => {
+                    return Object.values(apt).some(value =>
+                        String(value).toLowerCase().includes(searchTerm)
+                    );
+                });
+            }
+
+            currentPage = 1;
+            renderTable();
+        }
+
+        function applyFilters(showNotif = false) {
+            const dept = document.getElementById('filterDept').value.toLowerCase();
+            const status = document.getElementById('filterStatus').value.toLowerCase();
+            const priority = document.getElementById('filterPriority').value.toLowerCase();
+            const dateFrom = document.getElementById('filterDateFrom').value;
+            const dateTo = document.getElementById('filterDateTo').value;
+            const service = document.getElementById('filterService').value.toLowerCase();
+            const economico = document.getElementById('filterEconomico').value.toLowerCase();
+            const today = document.getElementById('filterToday').checked;
+            const week = document.getElementById('filterWeek').checked;
+
+            const todayDate = new Date().toISOString().split('T')[0];
+            const weekDate = new Date();
+            weekDate.setDate(weekDate.getDate() + 7);
+            const weekDateStr = weekDate.toISOString().split('T')[0];
+
+            filteredAppointments = allAppointments.filter(apt => {
+                if (dept && apt.departamento !== dept) return false;
+                if (status && apt.estado !== status) return false;
+                if (priority && apt.prioridad !== priority) return false;
+                if (dateFrom && apt.fecha < dateFrom) return false;
+                if (dateTo && apt.fecha > dateTo) return false;
+                if (service && apt.servicio !== service) return false;
+                if (economico && !apt.economico.toLowerCase().includes(economico)) return false;
+                if (today && apt.fecha !== todayDate) return false;
+                if (week && (apt.fecha < todayDate || apt.fecha > weekDateStr)) return false;
+                return true;
+            });
+
+            currentPage = 1;
+            renderTable();
+
+            if (showNotif) {
+                showNotification(`Filtros aplicados: ${filteredAppointments.length} citas encontradas`);
+            }
+        }
+
+        function clearFilters() {
+            document.getElementById('filterDept').value = '';
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterPriority').value = '';
+            document.getElementById('filterDateFrom').value = '';
+            document.getElementById('filterDateTo').value = '';
+            document.getElementById('filterService').value = '';
+            document.getElementById('filterEconomico').value = '';
+            document.getElementById('filterToday').checked = false;
+            document.getElementById('filterWeek').checked = false;
+            document.getElementById('globalSearch').value = '';
+
+            filteredAppointments = [...allAppointments];
+            currentPage = 1;
+            renderTable();
+            showNotification('Filtros limpiados - Mostrando todas las citas');
+        }
+
+        function viewAppointment(folio) {
+            const apt = allAppointments.find(a => a.folio === folio);
+            if (!apt) return;
+
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <div class="detail-section-title">
+                    <i class="fas fa-calendar-alt"></i>
+                    Información de la Cita
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Folio</div>
+                        <div class="detail-value">${apt.folio}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Fecha</div>
+                        <div class="detail-value">${apt.fecha}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Hora</div>
+                        <div class="detail-value">${apt.hora}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Estado</div>
+                        <div class="detail-value">
+                            <span class="badge ${getStatusBadgeClass(apt.estado)}">
+                                ${getStatusLabel(apt.estado)}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section-title">
+                    <i class="fas fa-building"></i>
+                    Departamento y Solicitante
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Departamento</div>
+                        <div class="detail-value">
+                            <span class="badge-dept ${getDeptBadgeClass(apt.departamento)}">
+                                ${getDeptLabel(apt.departamento)}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Solicitante</div>
+                        <div class="detail-value">${apt.solicitante}</div>
+                    </div>
+                </div>
+
+                <div class="detail-section-title">
+                    <i class="fas fa-truck"></i>
+                    Información del Vehículo
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Unidad</div>
+                        <div class="detail-value">${apt.unidad}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">No. Económico</div>
+                        <div class="detail-value">${apt.economico}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Placas</div>
+                        <div class="detail-value">${apt.placas}</div>
+                    </div>
+                </div>
+
+                <div class="detail-section-title">
+                    <i class="fas fa-wrench"></i>
+                    Detalles del Servicio
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Tipo de Servicio</div>
+                        <div class="detail-value">${getServiceLabel(apt.servicio)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Prioridad</div>
+                        <div class="detail-value">
+                            <span class="badge-priority ${getPriorityClass(apt.prioridad)}">
+                                ${getPriorityLabel(apt.prioridad)}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <div class="detail-label">Descripción</div>
+                        <div class="detail-value">${apt.descripcion}</div>
+                    </div>
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <div class="detail-label">Observaciones</div>
+                        <div class="detail-value">${apt.observaciones}</div>
+                    </div>
+                </div>
+            `;
+
+            openDetailModal();
+        }
+
+        function startService(folio) {
+            if (confirm(`¿Desea iniciar el servicio para la cita ${folio}?`)) {
+                const apt = allAppointments.find(a => a.folio === folio);
+                if (apt) {
+                    apt.estado = 'in-progress';
+                    filteredAppointments = [...allAppointments];
+                    renderTable();
+                    showNotification(`✅ Servicio iniciado para ${folio}`);
+                }
+            }
+        }
+
+        function editAppointment(folio) {
+            showNotification(`Función de edición para ${folio} - En desarrollo`);
+        }
+
+        function cancelAppointment(folio) {
+            const apt = allAppointments.find(a => a.folio === folio);
+            if (confirm(`¿Está seguro de cancelar la cita ${folio}?\n\nUnidad: ${apt.unidad}\nFecha: ${apt.fecha} ${apt.hora}`)) {
+                apt.estado = 'cancelled';
+                filteredAppointments = [...allAppointments];
+                renderTable();
+                showNotification(`✅ Cita ${folio} cancelada`);
+            }
+        }
+
+        function confirmAppointment() {
+            showNotification('Cita confirmada correctamente');
+            closeDetailModal();
+        }
+
+        function openDetailModal() {
+            document.getElementById('detailModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function openNewAppointmentModal() {
+            document.getElementById('newAppointmentModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('newFecha').value = today;
+            document.getElementById('newFecha').min = today;
+        }
+
+        function closeNewAppointmentModal() {
+            document.getElementById('newAppointmentModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            clearNewAppointmentForm();
+        }
+
+        function clearNewAppointmentForm() {
+            document.getElementById('newFecha').value = '';
+            document.getElementById('newHora').value = '';
+            document.getElementById('newDepartamento').value = '';
+            document.getElementById('newSolicitante').value = '';
+            document.getElementById('newUnidad').value = '';
+            document.getElementById('newEconomico').value = '';
+            document.getElementById('newPlacas').value = '';
+            document.getElementById('newServicio').value = '';
+            document.getElementById('newPrioridad').value = '';
+            document.getElementById('newDescripcion').value = '';
+            document.getElementById('newObservaciones').value = '';
+        }
+
+        function saveNewAppointment() {
+            const fecha = document.getElementById('newFecha').value;
+            const hora = document.getElementById('newHora').value;
+            const departamento = document.getElementById('newDepartamento').value;
+            const solicitante = document.getElementById('newSolicitante').value;
+            const unidad = document.getElementById('newUnidad').value;
+            const economico = document.getElementById('newEconomico').value;
+            const placas = document.getElementById('newPlacas').value;
+            const servicio = document.getElementById('newServicio').value;
+            const prioridad = document.getElementById('newPrioridad').value;
+            const descripcion = document.getElementById('newDescripcion').value;
+            const observaciones = document.getElementById('newObservaciones').value;
+
+            if (!fecha || !hora || !departamento || !solicitante || !unidad || !economico || !placas || !servicio || !prioridad || !descripcion) {
+                alert('Por favor complete todos los campos obligatorios marcados con *');
+                return;
+            }
+
+            const folioNumber = allAppointments.length + 1;
+            const folio = `TM-${String(folioNumber).padStart(3, '0')}`;
+
+            const newAppointment = {
+                folio: folio,
+                fecha: fecha,
+                hora: hora,
+                departamento: departamento,
+                unidad: unidad,
+                economico: economico,
+                placas: placas,
+                servicio: servicio,
+                prioridad: prioridad,
+                solicitante: solicitante,
+                estado: 'pending',
+                descripcion: descripcion,
+                observaciones: observaciones || 'Sin observaciones'
+            };
+
+            allAppointments.unshift(newAppointment);
+            filteredAppointments = [...allAppointments];
+
+            currentPage = 1;
+            renderTable();
+            closeNewAppointmentModal();
+
+            showNotification(`✅ Cita ${folio} agendada exitosamente para ${fecha} a las ${hora}`);
+        }
+
+        function exportCSV() {
+            const headers = ['Folio', 'Fecha', 'Hora', 'Departamento', 'Unidad', 'Económico', 'Placas', 'Servicio', 'Prioridad', 'Solicitante', 'Estado'];
+            const csvContent = [
+                headers.join(','),
+                ...filteredAppointments.map(a => [
+                    a.folio, a.fecha, a.hora, getDeptLabel(a.departamento),
+                    a.unidad, a.economico, a.placas, getServiceLabel(a.servicio),
+                    getPriorityLabel(a.prioridad), a.solicitante, getStatusLabel(a.estado)
+                ].join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `agenda_taller_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+
+            showNotification('✅ Archivo CSV exportado correctamente');
+        }
+
+        function printSchedule() {
+            window.print();
+            showNotification('Imprimiendo agenda...');
+        }
+
+        function generateReport() {
+            showNotification('Generando reporte estadístico...');
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `<i class="fas fa-check-circle" style="color: var(--pri-green); margin-right: 0.5rem;"></i>${message}`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable();
+            showNotification('Sistema de citas cargado - 20 citas programadas');
+
+            document.getElementById('detailModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeDetailModal();
+                }
+            });
+
+            document.getElementById('newAppointmentModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeNewAppointmentModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

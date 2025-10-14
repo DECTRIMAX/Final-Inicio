@@ -1,0 +1,1922 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captura de Alumbrado Público - Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #28a745;
+            --secondary: #1e7e34;
+            --accent: #5cb85c;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #06b6d4;
+            --dark: #1f2937;
+            --light: #f0f9f4;
+            --border: #d4edda;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f0f9f4 0%, #e6f7eb 100%);
+            color: #1e293b;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* PANEL DE NAVEGACIÓN */
+        .nav-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #f0f9f4 100%);
+            box-shadow: -10px 0 30px rgba(40, 167, 69, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow: hidden;
+            border-left: 1px solid var(--border);
+        }
+
+            .nav-panel.open {
+                right: 0;
+            }
+
+        .nav-panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 167, 69, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+            .nav-panel-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .nav-toggle {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 20px 25px -5px rgba(40, 167, 69, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-toggle:hover {
+                transform: translateY(-50%) scale(1.1);
+                box-shadow: 0 25px 35px -5px rgba(40, 167, 69, 0.4);
+            }
+
+            .nav-toggle.active {
+                background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+                transform: translateY(-50%) rotate(180deg);
+            }
+
+        .nav-panel-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 2rem 1.5rem;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-panel-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-panel-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-panel-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-panel-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .nav-panel-body {
+            padding: 1.5rem;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            background: #ffffff;
+            border-radius: 12px;
+            color: #334155;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+            .nav-item:hover {
+                background: var(--light);
+                transform: translateX(-5px);
+                border-color: var(--primary);
+                box-shadow: 0 4px 6px -1px rgba(40, 167, 69, 0.1);
+            }
+
+            .nav-item.active {
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+                color: white;
+                border-color: var(--primary);
+            }
+
+        .nav-item-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active .nav-item-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-item:hover .nav-item-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .nav-item-content {
+            flex: 1;
+        }
+
+        .nav-item-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #1e293b;
+        }
+
+        .nav-item.active .nav-item-title {
+            color: white;
+        }
+
+        .nav-item-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .nav-item.active .nav-item-desc {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-item-arrow {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-item-arrow {
+            color: var(--primary);
+            transform: translateX(3px);
+        }
+
+        .nav-item.active .nav-item-arrow {
+            color: white;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 20px 25px -5px rgba(40, 167, 69, 0.15);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-info h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-info p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+            .btn-back:hover {
+                background: rgba(255,255,255,0.3);
+                transform: translateY(-2px);
+            }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: var(--secondary);
+                transform: translateY(-2px);
+            }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+            .btn-success:hover {
+                background: #059669;
+            }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+            .btn-warning:hover {
+                background: #d97706;
+            }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+            .btn-danger:hover {
+                background: #dc2626;
+            }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(40, 167, 69, 0.1);
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* MAIN ACTION BUTTON */
+        .main-action {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .main-action-btn {
+            font-size: 1.2rem;
+            padding: 1.5rem 3rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(40, 167, 69, 0.2);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+        }
+
+            .main-action-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 25px 50px -12px rgba(40, 167, 69, 0.5);
+            }
+
+        .main-action-text {
+            margin-top: 1rem;
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        /* FILTERS */
+        .search-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: var(--light);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+            .form-input:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+            }
+
+        /* TABLE */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            font-size: 0.85rem;
+        }
+
+            .table th {
+                background: var(--primary);
+                color: white;
+                padding: 0.75rem 0.5rem;
+                text-align: left;
+                font-weight: 600;
+                font-size: 0.8rem;
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+
+            .table td {
+                padding: 0.75rem 0.5rem;
+                border-bottom: 1px solid var(--border);
+                font-size: 0.8rem;
+            }
+
+            .table tr:hover {
+                background: var(--light);
+            }
+
+        /* ACTIONS */
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* MODAL STYLES */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 167, 69, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(40, 167, 69, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6B7280;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* MAP STYLES */
+        .map-container {
+            margin-bottom: 2rem;
+        }
+
+        .map-wrapper {
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            height: 400px;
+            position: relative;
+        }
+
+        .map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-info {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #64748b;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        /* MATERIAL SELECTOR */
+        .material-selector {
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: var(--light);
+        }
+
+        .material-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .material-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+            .material-item:hover {
+                background: #e6f7eb;
+                border-color: var(--primary);
+            }
+
+        .material-checkbox {
+            margin: 0;
+            accent-color: var(--primary);
+        }
+
+        .material-name {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .material-quantity {
+            width: 80px;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        /* PHOTO UPLOAD */
+        .photo-upload {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--light);
+        }
+
+            .photo-upload:hover {
+                border-color: var(--primary);
+                background: #e6f7eb;
+            }
+
+        .photo-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .photo-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+            .photo-item img {
+                width: 100%;
+                height: 120px;
+                object-fit: cover;
+                cursor: pointer;
+            }
+
+        .photo-delete {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        /* BADGES */
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-1era {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .badge-2da {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .badge-3era {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+        }
+
+        .badge-info {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            color: white;
+        }
+
+        .badge-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        /* SCROLLBARS */
+        .nav-panel-body::-webkit-scrollbar,
+        .material-grid::-webkit-scrollbar,
+        .modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-track,
+        .material-grid::-webkit-scrollbar-track,
+        .modal-content::-webkit-scrollbar-track {
+            background: var(--light);
+        }
+
+        .nav-panel-body::-webkit-scrollbar-thumb,
+        .material-grid::-webkit-scrollbar-thumb,
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+
+            .nav-panel-body::-webkit-scrollbar-thumb:hover,
+            .material-grid::-webkit-scrollbar-thumb:hover,
+            .modal-content::-webkit-scrollbar-thumb:hover {
+                background: var(--primary);
+            }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay para el panel -->
+    <div class="nav-panel-overlay" id="navPanelOverlay" onclick="toggleNavPanel()"></div>
+
+    <!-- Botón flotante para abrir panel -->
+    <button class="nav-toggle" id="navToggle" onclick="toggleNavPanel()">
+        <i class="fas fa-th-large"></i>
+    </button>
+
+    <!-- Panel de Navegación Lateral -->
+    <div class="nav-panel" id="navPanel">
+        <div class="nav-panel-header">
+            <button class="nav-panel-close" onclick="toggleNavPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="nav-panel-title">Sistema de Alumbrado</h3>
+            <p class="nav-panel-subtitle">Navegación Principal</p>
+        </div>
+
+        <div class="nav-panel-body">
+            <div class="nav-item active">
+                <div class="nav-item-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Captura</div>
+                    <div class="nav-item-desc">Registro de trabajos</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('programacion')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Programación</div>
+                    <div class="nav-item-desc">Horarios y cuadrillas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('mapa')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Mapa Interactivo</div>
+                    <div class="nav-item-desc">Ubicación de luminarias</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('rastreo')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Rastreo GPS</div>
+                    <div class="nav-item-desc">Monitoreo de unidades</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('dashboard')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Dashboard</div>
+                    <div class="nav-item-desc">Estadísticas y reportes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('reportes')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Reportes</div>
+                    <div class="nav-item-desc">Incidencias ciudadanas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('inventario')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-toolbox"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Material Utilizado</div>
+                    <div class="nav-item-desc">Control de inventario</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('asistencia')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Asistencia</div>
+                    <div class="nav-item-desc">Control de personal</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('oficios')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Oficios a Almacén</div>
+                    <div class="nav-item-desc">Envío de solicitudes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('placas')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Repositorio de Placas</div>
+                    <div class="nav-item-desc">Gestión de placas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-info">
+                <h1>Captura de Alumbrado Público</h1>
+                <p>Sistema de Registro de Trabajos y Materiales - Monclova, Coahuila</p>
+            </div>
+            <div class="nav-menu">
+                <a href="/Home/DashboardAdministradorAlumbrado" class="btn btn-back">
+                    <i class="fas fa-arrow-left"></i> Dashboard
+                </a>
+                <button class="btn btn-success" onclick="exportarExcel()">
+                    <i class="fas fa-file-excel"></i> Exportar Excel
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Botón principal para agregar trabajo -->
+        <div class="section">
+            <div class="main-action">
+                <button class="main-action-btn" onclick="openModal('nuevoTrabajo')">
+                    <i class="fas fa-plus-circle"></i>
+                    Nuevo Trabajo
+                </button>
+                <p class="main-action-text">Haz clic para registrar un nuevo trabajo de alumbrado público</p>
+            </div>
+        </div>
+
+        <!-- Filtros de Búsqueda -->
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-search"></i>
+                Búsqueda y Filtros
+            </h2>
+            <div class="search-filters">
+                <div class="form-group">
+                    <label class="form-label">Buscar</label>
+                    <input type="text" class="form-input" id="searchText" placeholder="Buscar por dirección, oficial, folio...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Oficial</label>
+                    <input type="text" class="form-input" id="filterOficial" list="oficialesList" placeholder="Buscar oficial...">
+                    <datalist id="oficialesList">
+                        <option value="FIDENCIO FLORES">
+                        <option value="MARIO HERNANDEZ">
+                        <option value="CARLOS RODRIGUEZ">
+                        <option value="LUIS MARTINEZ">
+                    </datalist>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Turno</label>
+                    <select class="form-input" id="filterTurno">
+                        <option value="">Todos los turnos</option>
+                        <option value="1ERA">1ERA</option>
+                        <option value="2DA">2DA</option>
+                        <option value="3ERA">3ERA</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Colonia</label>
+                    <input type="text" class="form-input" id="filterColonia" list="coloniasList" placeholder="Buscar colonia...">
+                    <datalist id="coloniasList">
+                        <option value="CIUDAD DEPORTIVA">
+                        <option value="CENTRO">
+                        <option value="RAMOS ARIZPE">
+                        <option value="GUADALUPE">
+                    </datalist>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Fecha Desde</label>
+                    <input type="date" class="form-input" id="fechaDesde">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Fecha Hasta</label>
+                    <input type="date" class="form-input" id="fechaHasta">
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-primary" onclick="aplicarFiltros()">
+                    <i class="fas fa-filter"></i> Aplicar Filtros
+                </button>
+                <button class="btn btn-warning" onclick="limpiarFiltros()">
+                    <i class="fas fa-eraser"></i> Limpiar
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabla de Trabajos -->
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-list"></i>
+                Registro de Trabajos de Alumbrado
+            </h2>
+            <div class="table-container">
+                <table class="table" id="trabajosTable">
+                    <thead>
+                        <tr>
+                            <th>Oficial</th>
+                            <th>Grúa</th>
+                            <th>Turno</th>
+                            <th>Fecha</th>
+                            <th>Colonia</th>
+                            <th>Dirección</th>
+                            <th>Entre Calles</th>
+                            <th>Medidor</th>
+                            <th>Folio</th>
+                            <th>Descripción</th>
+                            <th>Materiales</th>
+                            <th>Fotos</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trabajosBody">
+                        <!-- Los datos se cargarán dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Nuevo/Editar Trabajo -->
+    <div class="modal" id="modalTrabajo">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Nuevo Trabajo de Alumbrado</h3>
+                <button class="close-modal" onclick="closeModal('modalTrabajo')">&times;</button>
+            </div>
+            <form id="trabajoForm">
+                <input type="hidden" id="trabajoId">
+
+                <!-- Información Básica -->
+                <h4 style="color: var(--primary); margin-bottom: 1rem;">Información del Trabajo</h4>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Oficial</label>
+                        <input type="text" class="form-input" id="oficial" list="oficialesList" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Grúa</label>
+                        <input type="text" class="form-input" id="grua" placeholder="PMM-353">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Turno</label>
+                        <select class="form-input" id="turno" required>
+                            <option value="">Seleccionar turno</option>
+                            <option value="1ERA">1ERA</option>
+                            <option value="2DA">2DA</option>
+                            <option value="3ERA">3ERA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fecha</label>
+                        <input type="date" class="form-input" id="fecha" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Colonia</label>
+                        <input type="text" class="form-input" id="colonia" list="coloniasList" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Medidor</label>
+                        <input type="text" class="form-input" id="medidor" placeholder="S/N">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Dirección</label>
+                    <input type="text" class="form-input" id="direccion" placeholder="Dirección completa" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Entre Calles</label>
+                    <input type="text" class="form-input" id="entreCalles" placeholder="Entre qué calles">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Folio</label>
+                    <input type="text" class="form-input" id="folio" placeholder="S/F">
+                </div>
+
+                <!-- Ubicación en Mapa -->
+                <h4 style="color: var(--primary); margin: 2rem 0 1rem 0;">Ubicación del Trabajo</h4>
+                <div class="map-container">
+                    <div class="map-wrapper">
+                        <div id="map" class="map"></div>
+                        <div class="map-info">
+                            <i class="fas fa-map-marker-alt"></i> Haz clic en el mapa para seleccionar ubicación
+                        </div>
+                    </div>
+                    <div class="form-grid" style="margin-top: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Latitud</label>
+                            <input type="text" class="form-input" id="latitud" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Longitud</label>
+                            <input type="text" class="form-input" id="longitud" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información del Trabajo -->
+                <h4 style="color: var(--primary); margin: 2rem 0 1rem 0;">Detalles del Trabajo</h4>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Cantidad</label>
+                        <input type="number" class="form-input" id="cantidad" min="1" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Número de Lámpara</label>
+                        <input type="text" class="form-input" id="numeroLampara">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Lámpara</label>
+                        <select class="form-input" id="tipoLampara">
+                            <option value="">Seleccionar tipo</option>
+                            <option value="LED 20W">LED 20W</option>
+                            <option value="LED 30W">LED 30W</option>
+                            <option value="LED 50W">LED 50W</option>
+                            <option value="LED 85W">LED 85W</option>
+                            <option value="LED 100W">LED 100W</option>
+                            <option value="LED 130W">LED 130W</option>
+                            <option value="LED 150W">LED 150W</option>
+                            <option value="VAPOR SODIO">VAPOR SODIO</option>
+                            <option value="REFLECTOR">REFLECTOR</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Factura</label>
+                        <input type="text" class="form-input" id="factura">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Descripción del Trabajo</label>
+                    <textarea class="form-input form-textarea" id="descripcionTrabajo" placeholder="Descripción detallada del trabajo realizado" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Datos Adicionales</label>
+                    <textarea class="form-input form-textarea" id="datosAdicionales" placeholder="Información adicional relevante"></textarea>
+                </div>
+
+                <!-- Selección de Materiales -->
+                <h4 style="color: var(--primary); margin: 2rem 0 1rem 0;">Materiales Utilizados</h4>
+                <div class="material-selector">
+                    <div class="material-grid" id="materialGrid">
+                        <!-- Los materiales se cargarán dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- Subida de Fotos -->
+                <h4 style="color: var(--primary); margin: 2rem 0 1rem 0;">Fotos del Trabajo</h4>
+                <div class="form-group">
+                    <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+                        <i class="fas fa-camera" style="font-size: 2rem; color: var(--accent); margin-bottom: 1rem;"></i>
+                        <p>Haz clic para subir fotos del trabajo realizado</p>
+                        <small>Formatos: JPG, PNG, GIF (Máx. 5MB por foto)</small>
+                    </div>
+                    <input type="file" id="photoInput" multiple accept="image/*" style="display: none;">
+                    <div class="photo-preview" id="photoPreview"></div>
+                </div>
+
+                <div class="actions">
+                    <button type="button" class="btn btn-warning" onclick="closeModal('modalTrabajo')">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="limpiarFormulario()">
+                        <i class="fas fa-eraser"></i> Limpiar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Guardar Trabajo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Ver Fotos -->
+    <div class="modal" id="modalFotos">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Fotos del Trabajo</h3>
+                <button class="close-modal" onclick="closeModal('modalFotos')">&times;</button>
+            </div>
+            <div class="photo-preview" id="fotosViewer"></div>
+        </div>
+    </div>
+
+    <!-- Modal Ver Imagen Ampliada -->
+    <div class="modal" id="modalImagenAmpliada">
+        <div class="modal-content" style="max-width: 90%; max-height: 90%;">
+            <div class="modal-header">
+                <h3 class="modal-title">Vista Ampliada</h3>
+                <button class="close-modal" onclick="closeModal('modalImagenAmpliada')">&times;</button>
+            </div>
+            <div style="text-align: center;">
+                <img id="imagenAmpliada" style="max-width: 100%; max-height: 70vh; object-fit: contain;" alt="Imagen ampliada">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+    <script>
+        let navPanelOpen = false;
+        let currentEditId = null;
+        let uploadedPhotos = [];
+        let selectedMaterials = [];
+        let map = null;
+        let currentMarker = null;
+
+        let trabajos = [
+            {
+                id: 1,
+                oficial: 'FIDENCIO FLORES',
+                grua: 'PMM-353',
+                turno: '1ERA',
+                fecha: '2025-01-01',
+                colonia: 'CIUDAD DEPORTIVA',
+                direccion: 'SEGUNDA #1226',
+                entreCalles: 'MOCTEZUMA',
+                medidor: 'S/N',
+                folio: 'S/F',
+                cantidad: 1,
+                numeroLampara: '',
+                tipoLampara: '',
+                factura: '',
+                descripcionTrabajo: 'INSTALACION DE FOTOCELDA Y REPARACION DE LINEAS SULFATADAS',
+                datosAdicionales: '',
+                latitud: '26.9087',
+                longitud: '-101.4217',
+                materiales: [
+                    { nombre: 'FOTOCELDA', cantidad: 1 }
+                ],
+                fotos: []
+            },
+            {
+                id: 2,
+                oficial: 'FIDENCIO FLORES',
+                grua: 'PMM-353',
+                turno: '1ERA',
+                fecha: '2025-01-01',
+                colonia: 'CIUDAD DEPORTIVA',
+                direccion: 'MAXTLA #1522',
+                entreCalles: 'TIZOC Y TEZOZOMOC',
+                medidor: 'S/N',
+                folio: 'S/F',
+                cantidad: 1,
+                numeroLampara: '',
+                tipoLampara: '',
+                factura: '',
+                descripcionTrabajo: 'EN LUMINARIA ENCENDIDA DE DIA SE INSTALO FOTOCELDA',
+                datosAdicionales: '',
+                latitud: '26.9100',
+                longitud: '-101.4200',
+                materiales: [
+                    { nombre: 'FOTOCELDA', cantidad: 1 }
+                ],
+                fotos: []
+            }
+        ];
+
+        const materialesDisponibles = [
+            'LAMPARAS', 'REFLECTORES', 'CABLE', 'FOCO', 'ADITIVO', 'BALASTRA', 'INTERRUPTORES',
+            'FOCOS / BALASTRAS', 'TUBOS', 'CONECTORES', 'AISLADORES / BASTIDORES',
+            'LAMPARA NUEVA CON ARBOTANTE 20W', 'LAMPARA NUEVA CON ARBOTANTE 30W',
+            'LAMPARA NUEVA CON ARBOTANTE 50W', 'LAMPARA NUEVA CON ARBOTANTE 85W',
+            'LAMPARA NUEVA CON ARBOTANTE 100W', 'LAMPARA NUEVA CON ARBOTANTE 130W',
+            'LAMPARA NUEVA CON ARBOTANTE 150W', 'LAMPARA NUEVA CON ARBOTANTE 200W',
+            'LAMPARA NUEVA CON ARBOTANTE 250W', 'LAMPARA NUEVA CON ARBOTANTE 270W',
+            'LAMPARA NUEVA CON ARBOTANTE 300W', 'LAMPARA NUEVA CON ARBOTANTE 400W',
+            'LAMPARA NUEVA CON ARBOTANTE 1000W', 'REFLECTORES DE COLORES',
+            'FOTOCELDA', 'BASE / FOTOCELDA', 'CINTA DE AISLAR',
+            'CABLE 2+1', 'CABLE THW 8', 'CABLE THW 10', 'CABLE THW 12',
+            'CABLE 4', 'CABLE 6', 'CABLE XLP', 'CABLE DUPLEX', 'CABLE CAL. #14',
+            'CABLE ALUMINIO', 'CABLE 3+1', 'CABLE 2/0', 'CABLE #2', 'CABLE 3/0',
+            'CABLE USO RUDO', 'CABLE CAL. 500 MCM', 'CABLE CAL. 1/0', 'CU4 COBRE PARA TIERRA',
+            'CABLE CAL. #16 DESNUDO', 'CABLE DESNUDO P/NEUTRO', 'CABLES DE POTENCIA',
+            'CABLE 1+1', 'CABLE XLP 3+1', 'CABLE XLP 1/0 3+1', 'CABLE XLP 3+1 2/0',
+            'CABLE PARA VOZ Y DATOS', 'CINTA VULCANIZABLE', 'GABINETE',
+            'GABINETE ELECTRICO', 'PASTILLA', 'PASTILLA 20A', 'PASTILLA 30A',
+            'PASTILLA 50A', 'PASTILLA 70A', 'PASTILLA 100A', 'PASTILLA 125A',
+            'PASTILLA 150A', 'PASTILLA 200A', 'PASTILLA 300A', 'CONTACTOR O ARRANCADOR',
+            'BOBINA', 'CENTRO DE CARGA', 'BASE SOCKET', 'VARILLA P/TIERRA O DE COBRE',
+            'CONECTOR PARA VARILLA TIERRA', 'MTS. COBRE P/TIERRA',
+            'FOCO AHORRADOR 85/110', 'FOCO AHORRADOR 220V', 'FOCO LED 110V/220V',
+            'FOCO ESPIRAL 25W', 'FOCO ESPIRAL 26W', 'FOCO ESPIRAL 30W', 'FOCO ESPIRAL 35W',
+            'FOCO TUBO LED PARA CERILLO', 'FOCO VAPOR SODIO', 'BALASTRA VAPOR SODIO',
+            'LAMPARAS 18W TUBO', 'LAMPARA TUBO 60W', 'LAMPARAS DE TUBO 28W',
+            'LAMPARA TUBO 30W', 'LAMPARA 200W', 'LAMPARAS DE TUBO 32W',
+            'BALASTRAS DE 32W', 'PORTALAMPARA MOGUL', 'SOQUET MOGUL', 'LISTON',
+            'FUSIBLES', 'CANILLAS / FUSIBLE CORTA CIRCUITO', 'FUSIBLE TUBO',
+            'POLIDUCTO', 'TUBO GALVANIZADO', 'TUBO CONDUIT O PVC',
+            'TUBO VERDE DIELECTRICO 2"', 'TUBO FLEXIBLE LICUATITE',
+            'TUBO CONO (MTS. LINEALES)', 'TUBO PAD', 'CONECTOR ROJO #8',
+            'CONECTORES BIPARTIDOS', 'CONECTORES VERDES', 'CONECTOR 3/4',
+            'CONECTORES CAFÉ', 'MUFA', 'CAJA', 'CHALUPA', 'ROSETA',
+            'ARBOTANTE', 'BRAZO', 'CONTACTOS', 'CONTACTOS INDUSTRIALES',
+            'APAGADOR', 'SPOTS', 'AISLADORES (CARRETE)', 'AISLADOR 1C',
+            'AISLADOR DE SUSPENSION', 'AISLADOR 33 PC', 'ABRAZADERA 2BS',
+            'ABRAZADERA OMEGA', 'AISLADORES PARA ALTA TENSION', 'BASTIDOR B1',
+            'TERMINAL', 'BASE SOCKET', 'REGISTROS (TIPO CUBETA)',
+            'GRAPAS TIPO PERRO', 'APARTARAYOS', 'GRAPAS', 'FLEJE',
+            'CANALETA (MTS)', 'ESPARRAGO', 'UNICANAL', 'POLIURETANO',
+            'TIMER', 'TRANSFORMADOR', 'CONTROL DE ENCENDIDO/APAGADO'
+        ];
+
+        function toggleNavPanel() {
+            const navPanel = document.getElementById('navPanel');
+            const overlay = document.getElementById('navPanelOverlay');
+            const toggleBtn = document.getElementById('navToggle');
+
+            navPanelOpen = !navPanelOpen;
+
+            if (navPanelOpen) {
+                navPanel.classList.add('open');
+                overlay.classList.add('active');
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '<i class="fas fa-times"></i>';
+                document.body.style.overflow = 'hidden';
+            } else {
+                navPanel.classList.remove('open');
+                overlay.classList.remove('active');
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '<i class="fas fa-th-large"></i>';
+                document.body.style.overflow = '';
+            }
+        }
+
+        function redirectTo(module) {
+            toggleNavPanel();
+
+            const urls = {
+                'programacion': '/Home/ProgramacionAlumbrado',
+                'mapa': '/Home/MapaAlumbrado',
+                'rastreo': '/Home/RastreoAlumbrado',
+                'dashboard': '/Home/DashboardAlumbrado',
+                'reportes': '/Home/ReportesAlumbrado',
+                'inventario': '/Home/MaterialUtilizadoAlumbrado',
+                'asistencia': '/Home/AsistenciaPersonalAlumbrado',
+                'oficios': '/Home/EnviarOficiosAlmacenAlumbrado',
+                'placas': '/Home/RepositorioPlacasAlumbrado'
+            };
+
+            if (urls[module]) {
+                window.location.href = urls[module];
+            }
+        }
+
+        function openModal(tipo, id = null) {
+            if (tipo === 'nuevoTrabajo') {
+                document.getElementById('modalTitle').textContent = 'Nuevo Trabajo de Alumbrado';
+                document.getElementById('trabajoForm').reset();
+                currentEditId = null;
+                uploadedPhotos = [];
+                selectedMaterials = [];
+                document.getElementById('photoPreview').innerHTML = '';
+                configurarFechas();
+                limpiarSeleccionMateriales();
+
+                setTimeout(() => {
+                    initMap();
+                }, 100);
+            }
+            document.getElementById('modalTrabajo').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            if (map && modalId === 'modalTrabajo') {
+                map.remove();
+                map = null;
+            }
+        }
+
+        function initMap() {
+            if (map) {
+                map.remove();
+            }
+
+            const monclovaCoords = [26.9087, -101.4217];
+
+            map = L.map('map').setView(monclovaCoords, 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            map.on('click', function(e) {
+                if (currentMarker) {
+                    map.removeLayer(currentMarker);
+                }
+
+                currentMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+                document.getElementById('latitud').value = e.latlng.lat.toFixed(6);
+                document.getElementById('longitud').value = e.latlng.lng.toFixed(6);
+            });
+        }
+
+        function cargarMateriales() {
+            const materialGrid = document.getElementById('materialGrid');
+            materialGrid.innerHTML = '';
+
+            materialesDisponibles.forEach((material, index) => {
+                const materialDiv = document.createElement('div');
+                materialDiv.className = 'material-item';
+                materialDiv.innerHTML = `
+                    <input type="checkbox" class="material-checkbox" id="material_${index}"
+                           onchange="toggleMaterial('${material}', this.checked, ${index})">
+                    <label for="material_${index}" class="material-name">${material}</label>
+                    <input type="number" class="material-quantity" id="quantity_${index}"
+                           min="1" value="1" onchange="updateMaterialQuantity('${material}', this.value)">
+                `;
+                materialGrid.appendChild(materialDiv);
+            });
+        }
+
+        function toggleMaterial(materialName, checked, index) {
+            const quantity = document.getElementById(`quantity_${index}`).value;
+
+            if (checked) {
+                selectedMaterials.push({
+                    nombre: materialName,
+                    cantidad: parseInt(quantity)
+                });
+            } else {
+                selectedMaterials = selectedMaterials.filter(m => m.nombre !== materialName);
+            }
+        }
+
+        function updateMaterialQuantity(materialName, newQuantity) {
+            const material = selectedMaterials.find(m => m.nombre === materialName);
+            if (material) {
+                material.cantidad = parseInt(newQuantity);
+            }
+        }
+
+        function limpiarSeleccionMateriales() {
+            const checkboxes = document.querySelectorAll('.material-checkbox');
+            checkboxes.forEach(checkbox => checkbox.checked = false);
+            selectedMaterials = [];
+        }
+
+        function configurarFechas() {
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha').value = hoy;
+        }
+
+        function configurarSubidaFotos() {
+            const photoInput = document.getElementById('photoInput');
+            const photoPreview = document.getElementById('photoPreview');
+
+            if (!photoInput || !photoPreview) return;
+
+            photoInput.addEventListener('change', function(e) {
+                const files = Array.from(e.target.files);
+                files.forEach(file => {
+                    if (file.size > 5 * 1024 * 1024) {
+                        showNotification('La imagen es demasiado grande. Máximo 5MB', 'error');
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const photoId = Date.now() + Math.random();
+                        uploadedPhotos.push({
+                            id: photoId,
+                            url: e.target.result,
+                            name: file.name
+                        });
+
+                        const photoDiv = document.createElement('div');
+                        photoDiv.className = 'photo-item';
+                        photoDiv.innerHTML = `
+                            <img src="${e.target.result}" alt="${file.name}" onclick="verImagenAmpliada('${e.target.result}', '${file.name}')">
+                            <button class="photo-delete" onclick="eliminarFoto(${photoId})">×</button>
+                        `;
+                        photoPreview.appendChild(photoDiv);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+        }
+
+        function eliminarFoto(photoId) {
+            uploadedPhotos = uploadedPhotos.filter(photo => photo.id !== photoId);
+            const photoPreview = document.getElementById('photoPreview');
+            const photoItems = Array.from(photoPreview.children);
+            photoItems.forEach(item => {
+                const deleteBtn = item.querySelector('.photo-delete');
+                if (deleteBtn && deleteBtn.onclick && deleteBtn.onclick.toString().includes(photoId)) {
+                    photoPreview.removeChild(item);
+                }
+            });
+        }
+
+        function guardarTrabajo() {
+            const formData = {
+                oficial: document.getElementById('oficial').value,
+                grua: document.getElementById('grua').value,
+                turno: document.getElementById('turno').value,
+                fecha: document.getElementById('fecha').value,
+                colonia: document.getElementById('colonia').value,
+                direccion: document.getElementById('direccion').value,
+                entreCalles: document.getElementById('entreCalles').value,
+                medidor: document.getElementById('medidor').value || 'S/N',
+                folio: document.getElementById('folio').value || 'S/F',
+                cantidad: parseInt(document.getElementById('cantidad').value) || 1,
+                numeroLampara: document.getElementById('numeroLampara').value,
+                tipoLampara: document.getElementById('tipoLampara').value,
+                factura: document.getElementById('factura').value,
+                descripcionTrabajo: document.getElementById('descripcionTrabajo').value,
+                datosAdicionales: document.getElementById('datosAdicionales').value,
+                latitud: document.getElementById('latitud').value,
+                longitud: document.getElementById('longitud').value,
+                materiales: [...selectedMaterials],
+                fotos: [...uploadedPhotos]
+            };
+
+            if (!formData.oficial || !formData.turno || !formData.fecha || !formData.colonia ||
+                !formData.direccion || !formData.descripcionTrabajo) {
+                showNotification('Por favor completa todos los campos obligatorios', 'error');
+                return;
+            }
+
+            if (currentEditId) {
+                const index = trabajos.findIndex(t => t.id === currentEditId);
+                if (index !== -1) {
+                    trabajos[index] = { ...trabajos[index], ...formData };
+                    showNotification('Trabajo actualizado correctamente', 'success');
+                }
+                currentEditId = null;
+            } else {
+                const nuevoTrabajo = {
+                    id: Date.now(),
+                    ...formData
+                };
+                trabajos.unshift(nuevoTrabajo);
+                showNotification('Trabajo registrado correctamente', 'success');
+            }
+
+            cargarTrabajos();
+            closeModal('modalTrabajo');
+        }
+
+        function configurarFormulario() {
+            const form = document.getElementById('trabajoForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    guardarTrabajo();
+                });
+            }
+        }
+
+        function cargarTrabajos(filteredTrabajos = null) {
+            const tbody = document.getElementById('trabajosBody');
+            const trabajosToShow = filteredTrabajos || trabajos;
+
+            tbody.innerHTML = '';
+
+            if (trabajosToShow.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td colspan="13" style="text-align: center; padding: 2rem; color: #64748b;">
+                        No hay trabajos registrados
+                    </td>
+                `;
+                tbody.appendChild(row);
+                return;
+            }
+
+            trabajosToShow.forEach(trabajo => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${trabajo.oficial}</td>
+                    <td>${trabajo.grua}</td>
+                    <td><span class="badge badge-${trabajo.turno.toLowerCase()}">${trabajo.turno}</span></td>
+                    <td>${formatearFecha(trabajo.fecha)}</td>
+                    <td>${trabajo.colonia}</td>
+                    <td title="${trabajo.direccion}">${trabajo.direccion.length > 30 ? trabajo.direccion.substring(0, 30) + '...' : trabajo.direccion}</td>
+                    <td>${trabajo.entreCalles}</td>
+                    <td>${trabajo.medidor}</td>
+                    <td>${trabajo.folio}</td>
+                    <td title="${trabajo.descripcionTrabajo}">${trabajo.descripcionTrabajo.length > 50 ? trabajo.descripcionTrabajo.substring(0, 50) + '...' : trabajo.descripcionTrabajo}</td>
+                    <td>
+                        <span class="badge badge-info">${trabajo.materiales.length} items</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="verFotos(${trabajo.id})" title="Ver fotos">
+                            <i class="fas fa-camera"></i> ${trabajo.fotos.length}
+                        </button>
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 0.25rem;">
+                            <button class="btn btn-sm btn-warning" onclick="editarTrabajo(${trabajo.id})" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="eliminarTrabajo(${trabajo.id})" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function formatearFecha(fecha) {
+            return new Date(fecha + 'T00:00:00').toLocaleDateString('es-MX');
+        }
+
+        function editarTrabajo(id) {
+            const trabajo = trabajos.find(t => t.id === id);
+            if (!trabajo) return;
+
+            currentEditId = id;
+
+            document.getElementById('oficial').value = trabajo.oficial;
+            document.getElementById('grua').value = trabajo.grua;
+            document.getElementById('turno').value = trabajo.turno;
+            document.getElementById('fecha').value = trabajo.fecha;
+            document.getElementById('colonia').value = trabajo.colonia;
+            document.getElementById('direccion').value = trabajo.direccion;
+            document.getElementById('entreCalles').value = trabajo.entreCalles;
+            document.getElementById('medidor').value = trabajo.medidor;
+            document.getElementById('folio').value = trabajo.folio;
+            document.getElementById('cantidad').value = trabajo.cantidad;
+            document.getElementById('numeroLampara').value = trabajo.numeroLampara;
+            document.getElementById('tipoLampara').value = trabajo.tipoLampara;
+            document.getElementById('factura').value = trabajo.factura;
+            document.getElementById('descripcionTrabajo').value = trabajo.descripcionTrabajo;
+            document.getElementById('datosAdicionales').value = trabajo.datosAdicionales;
+
+            if (trabajo.latitud) {
+                document.getElementById('latitud').value = trabajo.latitud;
+            }
+            if (trabajo.longitud) {
+                document.getElementById('longitud').value = trabajo.longitud;
+            }
+
+            selectedMaterials = [...trabajo.materiales];
+            limpiarSeleccionMateriales();
+            trabajo.materiales.forEach(material => {
+                const materialIndex = materialesDisponibles.indexOf(material.nombre);
+                if (materialIndex !== -1) {
+                    document.getElementById(`material_${materialIndex}`).checked = true;
+                    document.getElementById(`quantity_${materialIndex}`).value = material.cantidad;
+                }
+            });
+
+            uploadedPhotos = [...trabajo.fotos];
+            const photoPreview = document.getElementById('photoPreview');
+            photoPreview.innerHTML = '';
+            trabajo.fotos.forEach(foto => {
+                const photoDiv = document.createElement('div');
+                photoDiv.className = 'photo-item';
+                photoDiv.innerHTML = `
+                    <img src="${foto.url}" alt="${foto.name}" onclick="verImagenAmpliada('${foto.url}', '${foto.name}')">
+                    <button class="photo-delete" onclick="eliminarFoto(${foto.id})">×</button>
+                `;
+                photoPreview.appendChild(photoDiv);
+            });
+
+            document.getElementById('modalTitle').textContent = 'Editar Trabajo de Alumbrado';
+            document.getElementById('modalTrabajo').style.display = 'block';
+
+            setTimeout(() => {
+                initMap();
+                if (trabajo.latitud && trabajo.longitud) {
+                    const coords = [parseFloat(trabajo.latitud), parseFloat(trabajo.longitud)];
+                    map.setView(coords, 15);
+                    currentMarker = L.marker(coords).addTo(map);
+                }
+            }, 100);
+        }
+
+        function eliminarTrabajo(id) {
+            const trabajo = trabajos.find(t => t.id === id);
+            if (!trabajo) return;
+
+            if (confirm(`¿Está seguro de eliminar el trabajo de ${trabajo.oficial} en ${trabajo.direccion}?`)) {
+                trabajos = trabajos.filter(t => t.id !== id);
+                cargarTrabajos();
+                showNotification('Trabajo eliminado correctamente', 'success');
+            }
+        }
+
+        function verFotos(id) {
+            const trabajo = trabajos.find(t => t.id === id);
+            if (!trabajo || trabajo.fotos.length === 0) {
+                showNotification('No hay fotos disponibles para este trabajo', 'warning');
+                return;
+            }
+
+            const fotosViewer = document.getElementById('fotosViewer');
+            fotosViewer.innerHTML = '';
+
+            trabajo.fotos.forEach(foto => {
+                const photoDiv = document.createElement('div');
+                photoDiv.className = 'photo-item';
+                photoDiv.innerHTML = `<img src="${foto.url}" alt="${foto.name}" onclick="verImagenAmpliada('${foto.url}', '${foto.name}')">`;
+                fotosViewer.appendChild(photoDiv);
+            });
+
+            document.getElementById('modalFotos').style.display = 'block';
+        }
+
+        function verImagenAmpliada(src, alt) {
+            document.getElementById('imagenAmpliada').src = src;
+            document.getElementById('imagenAmpliada').alt = alt;
+            document.getElementById('modalImagenAmpliada').style.display = 'block';
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('trabajoForm').reset();
+            uploadedPhotos = [];
+            selectedMaterials = [];
+            document.getElementById('photoPreview').innerHTML = '';
+            document.getElementById('latitud').value = '';
+            document.getElementById('longitud').value = '';
+            configurarFechas();
+            limpiarSeleccionMateriales();
+
+            if (currentMarker && map) {
+                map.removeLayer(currentMarker);
+                currentMarker = null;
+            }
+        }
+
+        function aplicarFiltros() {
+            const searchText = document.getElementById('searchText').value.toLowerCase();
+            const filterOficial = document.getElementById('filterOficial').value.toLowerCase();
+            const filterTurno = document.getElementById('filterTurno').value;
+            const filterColonia = document.getElementById('filterColonia').value.toLowerCase();
+            const fechaDesde = document.getElementById('fechaDesde').value;
+            const fechaHasta = document.getElementById('fechaHasta').value;
+
+            let filteredTrabajos = trabajos.filter(trabajo => {
+                let cumpleFiltros = true;
+
+                if (searchText) {
+                    cumpleFiltros = cumpleFiltros && (
+                        trabajo.oficial.toLowerCase().includes(searchText) ||
+                        trabajo.direccion.toLowerCase().includes(searchText) ||
+                        trabajo.descripcionTrabajo.toLowerCase().includes(searchText) ||
+                        trabajo.folio.toLowerCase().includes(searchText)
+                    );
+                }
+
+                if (filterOficial) {
+                    cumpleFiltros = cumpleFiltros && trabajo.oficial.toLowerCase().includes(filterOficial);
+                }
+
+                if (filterTurno) {
+                    cumpleFiltros = cumpleFiltros && trabajo.turno === filterTurno;
+                }
+
+                if (filterColonia) {
+                    cumpleFiltros = cumpleFiltros && trabajo.colonia.toLowerCase().includes(filterColonia);
+                }
+
+                if (fechaDesde && fechaHasta) {
+                    const fechaTrabajo = new Date(trabajo.fecha);
+                    const desde = new Date(fechaDesde);
+                    const hasta = new Date(fechaHasta);
+                    cumpleFiltros = cumpleFiltros && (fechaTrabajo >= desde && fechaTrabajo <= hasta);
+                }
+
+                return cumpleFiltros;
+            });
+
+            cargarTrabajos(filteredTrabajos);
+        }
+
+        function limpiarFiltros() {
+            document.getElementById('searchText').value = '';
+            document.getElementById('filterOficial').value = '';
+            document.getElementById('filterTurno').value = '';
+            document.getElementById('filterColonia').value = '';
+            document.getElementById('fechaDesde').value = '';
+            document.getElementById('fechaHasta').value = '';
+
+            cargarTrabajos();
+        }
+
+        function exportarExcel() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+
+            const headers = [
+                "Oficial", "Grúa", "Turno", "Fecha", "Colonia", "Dirección",
+                "Entre Calles", "Medidor", "Folio", "Cantidad", "Número Lámpara",
+                "Tipo Lámpara", "Factura", "Descripción", "Datos Adicionales",
+                "Materiales", "Total Fotos", "Latitud", "Longitud"
+            ];
+
+            csvContent += headers.join(",") + "\r\n";
+
+            trabajos.forEach(trabajo => {
+                const materialesText = trabajo.materiales.map(m => `${m.nombre} (${m.cantidad})`).join("; ");
+                const row = [
+                    trabajo.oficial,
+                    trabajo.grua,
+                    trabajo.turno,
+                    trabajo.fecha,
+                    trabajo.colonia,
+                    `"${trabajo.direccion}"`,
+                    `"${trabajo.entreCalles}"`,
+                    trabajo.medidor,
+                    trabajo.folio,
+                    trabajo.cantidad,
+                    trabajo.numeroLampara,
+                    trabajo.tipoLampara,
+                    trabajo.factura,
+                    `"${trabajo.descripcionTrabajo}"`,
+                    `"${trabajo.datosAdicionales}"`,
+                    `"${materialesText}"`,
+                    trabajo.fotos.length,
+                    trabajo.latitud || '',
+                    trabajo.longitud || ''
+                ];
+                csvContent += row.join(",") + "\r\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `trabajos_alumbrado_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showNotification('Archivo Excel exportado correctamente', 'success');
+        }
+
+        function configurarFiltrosEventos() {
+            const filtrosEnTiempoReal = ['searchText', 'filterOficial', 'filterColonia'];
+
+            filtrosEnTiempoReal.forEach(filtroId => {
+                const elemento = document.getElementById(filtroId);
+                if (elemento) {
+                    elemento.addEventListener('input', function() {
+                        if (this.value.length >= 2 || this.value.length === 0) {
+                            aplicarFiltros();
+                        }
+                    });
+                }
+            });
+
+            ['filterTurno', 'fechaDesde', 'fechaHasta'].forEach(filtroId => {
+                const elemento = document.getElementById(filtroId);
+                if (elemento) {
+                    elemento.addEventListener('change', aplicarFiltros);
+                }
+            });
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 2001;
+                opacity: 0;
+                transform: translateX(100%);
+                transition: all 0.3s ease;
+                max-width: 300px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            const colors = {
+                success: 'linear-gradient(135deg, #10b981, #059669)',
+                error: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                warning: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                info: 'linear-gradient(135deg, #28a745, #1e7e34)'
+            };
+
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        window.addEventListener('click', function(e) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    if (modal.id === 'modalTrabajo' && map) {
+                        map.remove();
+                        map = null;
+                    }
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarTrabajos();
+            configurarFiltrosEventos();
+            configurarSubidaFotos();
+            configurarFormulario();
+            cargarMateriales();
+
+            console.log('Sistema de Captura de Alumbrado Público cargado correctamente');
+            showNotification('Sistema cargado correctamente', 'success');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,943 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráficas de Reportes | Atención Ciudadana</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --verde-principal: #16a34a;
+            --verde-secundario: #15803d;
+            --verde-claro: #22c55e;
+            --verde-light: #86efac;
+            --verde-bg: #f0fdf4;
+            --blanco: #FFFFFF;
+            --gris-oscuro: #1f2937;
+            --gris-medio: #6b7280;
+            --gris-claro: #f3f4f6;
+            --negro: #111827;
+            --shadow: rgba(22, 163, 74, 0.2);
+            --azul: #3b82f6;
+            --amarillo: #f59e0b;
+            --rojo: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--blanco) 0%, var(--verde-bg) 100%);
+            color: var(--gris-oscuro);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--verde-secundario) 0%, var(--verde-principal) 100%);
+            color: var(--blanco);
+            padding: clamp(0.5rem, 2vw, 1rem) clamp(0.8rem, 3vw, 1.5rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--verde-claro);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            gap: clamp(0.5rem, 2vw, 1.5rem);
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 2vw, 1rem);
+            flex: 1 1 auto;
+            min-width: min(250px, 100%);
+        }
+
+        .logo {
+            width: clamp(60px, 10vw, 75px);
+            height: clamp(60px, 10vw, 75px);
+            background: var(--blanco);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--verde-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+            .logo:hover {
+                transform: scale(1.05);
+            }
+
+            .logo i {
+                font-size: clamp(1.8rem, 5vw, 2.5rem);
+                color: var(--verde-principal);
+            }
+
+        .header-info {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+            .header-info h1 {
+                font-size: clamp(1rem, 2.5vw, 1.5rem);
+                font-weight: 800;
+                margin-bottom: 0.2rem;
+            }
+
+            .header-info p {
+                font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+                opacity: 0.9;
+            }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--blanco);
+            border: 2px solid var(--blanco);
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+            .back-btn:hover {
+                background: var(--blanco);
+                color: var(--verde-principal);
+                transform: translateX(-3px);
+            }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2rem);
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+            padding: clamp(1rem, 4vw, 2rem) clamp(0.8rem, 3vw, 1.5rem);
+            background: var(--blanco);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px var(--shadow);
+            border-left: 4px solid var(--verde-principal);
+        }
+
+        .welcome-title {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-weight: 900;
+            color: var(--verde-principal);
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-subtitle {
+            font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+            color: var(--gris-medio);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+            gap: clamp(0.8rem, 2vw, 1rem);
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+        }
+
+        .stat-card {
+            background: var(--blanco);
+            padding: clamp(1rem, 3vw, 1.5rem);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border-left: 4px solid var(--verde-principal);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px var(--shadow);
+            }
+
+        .stat-icon {
+            width: clamp(40px, 8vw, 50px);
+            height: clamp(40px, 8vw, 50px);
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--blanco);
+            margin: 0 auto clamp(0.5rem, 2vw, 1rem);
+        }
+
+        .stat-number {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 900;
+            color: var(--verde-principal);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+            color: var(--gris-medio);
+            font-weight: 600;
+        }
+
+        .filters-section {
+            background: var(--blanco);
+            border-radius: 15px;
+            padding: clamp(1rem, 3vw, 1.5rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+            border-left: 4px solid var(--verde-principal);
+        }
+
+        .filters-title {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-weight: 700;
+            color: var(--verde-principal);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+            .filter-group label {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--gris-oscuro);
+            }
+
+        .filter-input {
+            padding: 10px 14px;
+            border: 2px solid var(--gris-claro);
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+            .filter-input:focus {
+                border-color: var(--verde-principal);
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-secundario));
+            color: white;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px var(--shadow);
+            }
+
+        .btn-secondary {
+            background: white;
+            color: var(--verde-principal);
+            border: 2px solid var(--verde-principal);
+        }
+
+            .btn-secondary:hover {
+                background: var(--verde-principal);
+                color: white;
+            }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(450px, 100%), 1fr));
+            gap: clamp(1rem, 2.5vw, 2rem);
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+        }
+
+        .chart-container {
+            background: var(--blanco);
+            border-radius: 15px;
+            padding: clamp(1rem, 3vw, 1.5rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            border-left: 4px solid var(--verde-principal);
+        }
+
+        .chart-title {
+            font-size: clamp(1rem, 2.3vw, 1.3rem);
+            font-weight: 700;
+            color: var(--verde-principal);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        .chart-large {
+            grid-column: 1 / -1;
+        }
+
+            .chart-large .chart-wrapper {
+                height: 400px;
+            }
+
+        .summary-section {
+            background: var(--blanco);
+            border-radius: 15px;
+            padding: clamp(1rem, 3vw, 1.5rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            border-left: 4px solid var(--verde-principal);
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+        }
+
+        .summary-title {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-weight: 700;
+            color: var(--verde-principal);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+            gap: 15px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, var(--verde-bg), var(--blanco));
+            padding: 1rem;
+            border-radius: 10px;
+            border: 2px solid var(--verde-light);
+        }
+
+        .summary-card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gris-medio);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .summary-card-value {
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+            font-weight: 900;
+            color: var(--verde-principal);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            z-index: 10000;
+            max-width: 350px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+            .notification.success {
+                background: var(--verde-principal);
+                color: white;
+            }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="header-info">
+                    <h1>Gráficas de Reportes</h1>
+                    <p>Análisis y Estadísticas - Atención Ciudadana</p>
+                </div>
+            </div>
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+                Regresar
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1 class="welcome-title">Panel de Análisis Estadístico</h1>
+            <p class="welcome-subtitle">
+                Visualización de datos y tendencias de reportes ciudadanos
+            </p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
+                <div class="stat-number" id="totalReports">0</div>
+                <div class="stat-label">Total Reportes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-number" id="pendingReports">0</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-spinner"></i></div>
+                <div class="stat-number" id="processingReports">0</div>
+                <div class="stat-label">En Proceso</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-number" id="resolvedReports">0</div>
+                <div class="stat-label">Resueltos</div>
+            </div>
+        </div>
+
+        <div class="filters-section">
+            <div class="filters-title">
+                <i class="fas fa-filter"></i>
+                Filtros de Periodo
+            </div>
+
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label for="filterDateFrom">Fecha Desde</label>
+                    <input type="date" id="filterDateFrom" class="filter-input">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filterDateTo">Fecha Hasta</label>
+                    <input type="date" id="filterDateTo" class="filter-input">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filterDepartment">Departamento</label>
+                    <select id="filterDepartment" class="filter-input">
+                        <option value="">Todos los departamentos</option>
+                        <option value="alumbrado">Alumbrado Público</option>
+                        <option value="forestacion">Forestación</option>
+                        <option value="limpieza">Limpieza Urbana</option>
+                        <option value="bacheo">Bacheo</option>
+                        <option value="recoleccion_boteo">Boteo</option>
+                        <option value="recoleccion_contenedores">Contenedores</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter-actions">
+                <button class="btn btn-primary" onclick="applyFilters()">
+                    <i class="fas fa-sync"></i>
+                    Actualizar Gráficas
+                </button>
+                <button class="btn btn-secondary" onclick="clearFilters()">
+                    <i class="fas fa-redo"></i>
+                    Limpiar Filtros
+                </button>
+            </div>
+        </div>
+
+        <div class="summary-section">
+            <div class="summary-title">
+                <i class="fas fa-info-circle"></i>
+                Resumen Ejecutivo
+            </div>
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="summary-card-title">Departamento con más reportes</div>
+                    <div class="summary-card-value" id="topDepartment">-</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-card-title">Tasa de Resolución</div>
+                    <div class="summary-card-value" id="resolutionRate">0%</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-card-title">Tiempo Promedio</div>
+                    <div class="summary-card-value" id="avgTime">-</div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-card-title">Reportes Esta Semana</div>
+                    <div class="summary-card-value" id="weekReports">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <div class="chart-title">
+                    <i class="fas fa-chart-pie"></i>
+                    Reportes por Estado
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">
+                    <i class="fas fa-chart-bar"></i>
+                    Reportes por Departamento
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="departmentChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container chart-large">
+                <div class="chart-title">
+                    <i class="fas fa-chart-line"></i>
+                    Tendencia de Reportes (Últimos 30 días)
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">
+                    <i class="fas fa-calendar-week"></i>
+                    Reportes por Día de la Semana
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="weekdayChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">
+                    <i class="fas fa-clock"></i>
+                    Reportes por Hora del Día
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="hourChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allReports = [];
+        let filteredReports = [];
+        let charts = {};
+
+        const departmentNames = {
+            'alumbrado': 'Alumbrado Público',
+            'forestacion': 'Forestación',
+            'limpieza': 'Limpieza Urbana',
+            'bacheo': 'Bacheo',
+            'recoleccion_boteo': 'Boteo',
+            'recoleccion_contenedores': 'Contenedores'
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadReports();
+            setupEventListeners();
+            createCharts();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('filterDateFrom').addEventListener('change', applyFilters);
+            document.getElementById('filterDateTo').addEventListener('change', applyFilters);
+            document.getElementById('filterDepartment').addEventListener('change', applyFilters);
+        }
+
+        function loadReports() {
+            allReports = JSON.parse(localStorage.getItem('userReports') || '[]');
+            filteredReports = [...allReports];
+            updateStats();
+            updateSummary();
+        }
+
+        function updateStats() {
+            const total = filteredReports.length;
+            const pending = filteredReports.filter(r => r.status === 'pendiente').length;
+            const processing = filteredReports.filter(r => r.status === 'proceso').length;
+            const resolved = filteredReports.filter(r => r.status === 'resuelto').length;
+
+            animateNumber(document.getElementById('totalReports'), total);
+            animateNumber(document.getElementById('pendingReports'), pending);
+            animateNumber(document.getElementById('processingReports'), processing);
+            animateNumber(document.getElementById('resolvedReports'), resolved);
+        }
+
+        function animateNumber(element, target) {
+            let current = 0;
+            const increment = target / 30;
+            const timer = setInterval(() => {
+                current += increment;
+                element.textContent = Math.floor(current);
+                if (current >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                }
+            }, 30);
+        }
+
+        function updateSummary() {
+            const deptCounts = {};
+            filteredReports.forEach(r => {
+                deptCounts[r.department] = (deptCounts[r.department] || 0) + 1;
+            });
+
+            const topDept = Object.keys(deptCounts).reduce((a, b) =>
+                deptCounts[a] > deptCounts[b] ? a : b, '');
+            document.getElementById('topDepartment').textContent =
+                topDept ? departmentNames[topDept] : '-';
+
+            const resolved = filteredReports.filter(r => r.status === 'resuelto').length;
+            const rate = filteredReports.length > 0
+                ? Math.round((resolved / filteredReports.length) * 100)
+                : 0;
+            document.getElementById('resolutionRate').textContent = rate + '%';
+
+            document.getElementById('avgTime').textContent = '2-3 días';
+
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            const weekCount = filteredReports.filter(r =>
+                new Date(r.timestamp) >= weekAgo
+            ).length;
+            document.getElementById('weekReports').textContent = weekCount;
+        }
+
+        function applyFilters() {
+            const dateFrom = document.getElementById('filterDateFrom').value;
+            const dateTo = document.getElementById('filterDateTo').value;
+            const dept = document.getElementById('filterDepartment').value;
+
+            filteredReports = allReports.filter(report => {
+                const reportDate = new Date(report.timestamp).toISOString().split('T')[0];
+
+                if (dateFrom && reportDate < dateFrom) return false;
+                if (dateTo && reportDate > dateTo) return false;
+                if (dept && report.department !== dept) return false;
+
+                return true;
+            });
+
+            updateStats();
+            updateSummary();
+            updateCharts();
+            showNotification('Gráficas actualizadas', 'success');
+        }
+
+        function clearFilters() {
+            document.getElementById('filterDateFrom').value = '';
+            document.getElementById('filterDateTo').value = '';
+            document.getElementById('filterDepartment').value = '';
+
+            filteredReports = [...allReports];
+            updateStats();
+            updateSummary();
+            updateCharts();
+            showNotification('Filtros limpiados', 'success');
+        }
+
+        function createCharts() {
+            createStatusChart();
+            createDepartmentChart();
+            createTrendChart();
+            createWeekdayChart();
+            createHourChart();
+        }
+
+        function createStatusChart() {
+            const ctx = document.getElementById('statusChart');
+            const pending = filteredReports.filter(r => r.status === 'pendiente').length;
+            const processing = filteredReports.filter(r => r.status === 'proceso').length;
+            const resolved = filteredReports.filter(r => r.status === 'resuelto').length;
+
+            charts.status = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pendientes', 'En Proceso', 'Resueltos'],
+                    datasets: [{
+                        data: [pending, processing, resolved],
+                        backgroundColor: ['#f59e0b', '#3b82f6', '#16a34a'],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function createDepartmentChart() {
+            const ctx = document.getElementById('departmentChart');
+            const deptCounts = {};
+
+            filteredReports.forEach(r => {
+                const name = departmentNames[r.department] || r.department;
+                deptCounts[name] = (deptCounts[name] || 0) + 1;
+            });
+
+            charts.department = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(deptCounts),
+                    datasets: [{
+                        label: 'Reportes',
+                        data: Object.values(deptCounts),
+                        backgroundColor: '#16a34a',
+                        borderColor: '#15803d',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createTrendChart() {
+            const ctx = document.getElementById('trendChart');
+            const last30Days = {};
+
+            for (let i = 29; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+                last30Days[dateStr] = 0;
+            }
+
+            filteredReports.forEach(r => {
+                const dateStr = new Date(r.timestamp).toISOString().split('T')[0];
+                if (last30Days.hasOwnProperty(dateStr)) {
+                    last30Days[dateStr]++;
+                }
+            });
+
+            charts.trend = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Object.keys(last30Days).map(d => {
+                        const date = new Date(d);
+                        return date.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' });
+                    }),
+                    datasets: [{
+                        label: 'Reportes Diarios',
+                        data: Object.values(last30Days),
+                        borderColor: '#16a34a',
+                        backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createWeekdayChart() {
+            const ctx = document.getElementById('weekdayChart');
+            const weekdays = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+            const counts = [0, 0, 0, 0, 0, 0, 0];
+
+            filteredReports.forEach(r => {
+                const day = new Date(r.timestamp).getDay();
+                counts[day]++;
+            });
+
+            charts.weekday = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: weekdays,
+                    datasets: [{
+                        label: 'Reportes',
+                        data: counts,
+                        backgroundColor: '#22c55e',
+                        borderColor: '#16a34a',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createHourChart() {
+            const ctx = document.getElementById('hourChart');
+            const hours = Array.from({length: 24}, (_, i) => i);
+            const counts = Array(24).fill(0);
+
+            filteredReports.forEach(r => {
+                const hour = new Date(r.timestamp).getHours();
+                counts[hour]++;
+            });
+
+            charts.hour = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: hours.map(h => h + ':00'),
+                    datasets: [{
+                        label: 'Reportes',
+                        data: counts,
+                        borderColor: '#16a34a',
+                        backgroundColor: 'rgba(22, 163, 74, 0.2)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateCharts() {
+            Object.values(charts).forEach(chart => chart.destroy());
+            createCharts();
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1407 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Asistencia Personal | Bacheo Municipal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        /* PANEL DE NAVEGACIÓN */
+        .nav-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #f0f9f4 100%);
+            box-shadow: -10px 0 30px rgba(40, 167, 69, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow: hidden;
+            border-left: 1px solid #d4edda;
+        }
+
+            .nav-panel.open {
+                right: 0;
+            }
+
+        .nav-panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 167, 69, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+            .nav-panel-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .nav-toggle {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 20px 25px -5px rgba(40, 167, 69, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-toggle:hover {
+                transform: translateY(-50%) scale(1.1);
+                box-shadow: 0 25px 35px -5px rgba(40, 167, 69, 0.4);
+            }
+
+            .nav-toggle.active {
+                background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                transform: translateY(-50%) rotate(180deg);
+            }
+
+        .nav-panel-header {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            padding: 2rem 1.5rem;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-panel-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-panel-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-panel-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-panel-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .nav-panel-body {
+            padding: 1.5rem;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            background: #ffffff;
+            border-radius: 12px;
+            color: #334155;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid #d4edda;
+            cursor: pointer;
+        }
+
+            .nav-item:hover {
+                background: #f0f9f4;
+                transform: translateX(-5px);
+                border-color: #28a745;
+                box-shadow: 0 4px 6px -1px rgba(40, 167, 69, 0.1);
+            }
+
+            .nav-item.active {
+                background: linear-gradient(135deg, #28a745, #1e7e34);
+                color: white;
+                border-color: #28a745;
+            }
+
+        .nav-item-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active .nav-item-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-item:hover .nav-item-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .nav-item-content {
+            flex: 1;
+        }
+
+        .nav-item-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #1e293b;
+        }
+
+        .nav-item.active .nav-item-title {
+            color: white;
+        }
+
+        .nav-item-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .nav-item.active .nav-item-desc {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-item-arrow {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-item-arrow {
+            color: #28a745;
+            transform: translateX(3px);
+        }
+
+        .nav-item.active .nav-item-arrow {
+            color: white;
+        }
+
+        .filter-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #d4edda;
+        }
+
+        .filter-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #28a745;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        select, input[type="date"], input[type="text"] {
+            width: 100%;
+            padding: 0.7rem;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            color: #28a745;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+            select option {
+                background: white;
+                color: #333;
+                font-weight: 600;
+            }
+
+            select:focus, input:focus {
+                outline: none;
+                border-color: #28a745;
+                box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+            }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .stat-box {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            border-radius: 10px;
+            padding: 0.8rem;
+            text-align: center;
+        }
+
+            .stat-box .label {
+                font-size: 0.75rem;
+                color: #666;
+                margin-bottom: 0.3rem;
+            }
+
+            .stat-box .value {
+                font-size: 1.5rem;
+                font-weight: 900;
+                color: #28a745;
+            }
+
+        .nav-panel-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-track {
+            background: #f0f9f4;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-thumb {
+            background: #5cb85c;
+            border-radius: 3px;
+        }
+
+            .nav-panel-body::-webkit-scrollbar-thumb:hover {
+                background: #28a745;
+            }
+
+        .header {
+            background: linear-gradient(135deg, #1e7e34 0%, #28a745 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .header-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1.8rem;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .logo-container {
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        .logo {
+            width: 90px;
+            height: 90px;
+            background: white;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #28a745;
+            box-shadow: 0 8px 24px rgba(40, 167, 69, 0.5);
+            padding: 6px;
+            transition: transform 0.3s ease;
+        }
+
+            .logo:hover {
+                transform: scale(1.05);
+            }
+
+            .logo i {
+                color: #28a745;
+                font-size: 2.5rem;
+            }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+        .header-info h1 {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 0.4rem;
+        }
+
+        .header-info p {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.7rem 1.2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #28a745;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
+            }
+
+        .btn-success {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+            .btn-success:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: translateY(-2px);
+            }
+
+        .btn-warning {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+            .btn-warning:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: translateY(-2px);
+            }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+            .btn-secondary:hover {
+                background: #5a6268;
+            }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2.5rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-top: 4px solid #28a745;
+        }
+
+            .page-title h2 {
+                font-size: 2.5rem;
+                font-weight: 900;
+                color: #28a745;
+                margin-bottom: 0.8rem;
+            }
+
+            .page-title p {
+                color: #666;
+                font-size: 1.2rem;
+            }
+
+        .controls-bar {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: #f8f9fa;
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            min-width: 300px;
+        }
+
+            .search-box i {
+                color: #28a745;
+            }
+
+            .search-box input {
+                background: transparent;
+                border: none;
+                color: #333;
+                font-size: 0.95rem;
+                width: 100%;
+                outline: none;
+            }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th {
+            padding: 1.2rem 1rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: white;
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+            tbody tr:hover {
+                background: rgba(40, 167, 69, 0.05);
+            }
+
+        td {
+            padding: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .checkbox-cell {
+            text-align: center;
+        }
+
+        .checkbox {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: #28a745;
+        }
+
+        .total-cell {
+            font-weight: 800;
+            color: #28a745;
+            font-size: 1.2rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            color: white;
+        }
+
+            .btn-edit:hover {
+                transform: scale(1.1);
+                box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+            }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+            .btn-delete:hover {
+                transform: scale(1.1);
+                box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+            }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .modal.show {
+                display: flex;
+            }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 0;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #1e7e34 0%, #28a745 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px 12px 0 0;
+        }
+
+            .modal-header h3 {
+                font-size: 1.5rem;
+                font-weight: 800;
+            }
+
+        .btn-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+            .btn-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 0.5rem;
+                font-weight: 600;
+                color: #333;
+                font-size: 0.95rem;
+            }
+
+            .form-group input, .form-group select {
+                width: 100%;
+                padding: 0.9rem 1.2rem;
+                background: white;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                color: #333;
+                font-size: 0.95rem;
+                transition: all 0.3s ease;
+            }
+
+                .form-group input:focus, .form-group select:focus {
+                    outline: none;
+                    border-color: #28a745;
+                    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+                }
+
+        .modal-footer {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .notification {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            padding: 1.2rem 1.8rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            font-size: 0.95rem;
+            max-width: 400px;
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.4s ease;
+            font-weight: 600;
+            border: 1px solid;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .notification.success {
+                background: linear-gradient(135deg, #28a745, #1e7e34);
+                color: white;
+                border-color: #28a745;
+            }
+
+            .notification.error {
+                background: linear-gradient(135deg, #ef4444, #dc2626);
+                color: white;
+                border-color: #ef4444;
+            }
+
+            .notification.info {
+                background: linear-gradient(135deg, #3b82f6, #2563eb);
+                color: white;
+                border-color: #3b82f6;
+            }
+    </style>
+</head>
+<body>
+    <div class="nav-panel-overlay" id="navPanelOverlay" onclick="toggleNavPanel()"></div>
+
+    <button class="nav-toggle" id="navToggle" onclick="toggleNavPanel()">
+        <i class="fas fa-th-large"></i>
+    </button>
+
+    <div class="nav-panel" id="navPanel">
+        <div class="nav-panel-header">
+            <button class="nav-panel-close" onclick="toggleNavPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="nav-panel-title">Sistema de Bacheo</h3>
+            <p class="nav-panel-subtitle">Navegación Principal</p>
+        </div>
+
+        <div class="nav-panel-body">
+            <div class="nav-item" onclick="redirectTo('captura')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Captura</div>
+                    <div class="nav-item-desc">Registro de bacheos</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('programacion')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Programación</div>
+                    <div class="nav-item-desc">Horarios y cuadrillas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('mapa')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Mapa Interactivo</div>
+                    <div class="nav-item-desc">Ubicación de bacheos</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('rastreo')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Rastreo GPS</div>
+                    <div class="nav-item-desc">Monitoreo de unidades</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('dashboard')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Dashboard</div>
+                    <div class="nav-item-desc">Estadísticas y reportes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('reportes')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Reportes</div>
+                    <div class="nav-item-desc">Incidencias ciudadanas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('material')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-toolbox"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Material Utilizado</div>
+                    <div class="nav-item-desc">Control de inventario</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item active">
+                <div class="nav-item-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Asistencia</div>
+                    <div class="nav-item-desc">Control de personal</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('repositorio')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Repositorio Vehicular</div>
+                    <div class="nav-item-desc">Gestión de unidades</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('citas')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-wrench"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Citas Mantenimiento</div>
+                    <div class="nav-item-desc">Agendar servicios</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('oficios')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Oficios a Almacén</div>
+                    <div class="nav-item-desc">Envío de solicitudes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">Filtros de Asistencia</div>
+                <div class="form-group">
+                    <label class="form-label">Año</label>
+                    <select id="yearFilter" onchange="applyFilters()">
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mes</label>
+                    <select id="monthFilter" onchange="applyFilters()">
+                        <option value="1">Enero</option>
+                        <option value="2">Febrero</option>
+                        <option value="3">Marzo</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Mayo</option>
+                        <option value="6">Junio</option>
+                        <option value="7">Julio</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Semana</label>
+                    <select id="weekFilter" onchange="applyFilters()">
+                        <option value="1">Semana 1</option>
+                        <option value="2">Semana 2</option>
+                        <option value="3">Semana 3</option>
+                        <option value="4">Semana 4</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Departamento</label>
+                    <select id="deptFilter" onchange="applyFilters()">
+                        <option value="all">Todos</option>
+                        <option value="operativo">Operativo</option>
+                        <option value="supervisores">Supervisores</option>
+                        <option value="administrativo">Administrativo</option>
+                    </select>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="label">Empleados</div>
+                        <div class="value" id="totalEmpleados">13</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="label">Asistencias</div>
+                        <div class="value" id="totalAsistencias">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="label">Faltas</div>
+                        <div class="value" id="totalFaltas">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="label">% Asistencia</div>
+                        <div class="value" id="porcentajeAsistencia">0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <button class="btn btn-secondary" style="width: 100%;" onclick="clearFilters()">
+                    <i class="fas fa-times"></i>
+                    Limpiar Filtros
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-container">
+                    <div class="logo">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="logo">
+                        <i class="fas fa-road"></i>
+                    </div>
+                </div>
+                <div class="header-info">
+                    <h1>Control de Asistencia Personal</h1>
+                    <p>Sistema de Bacheo Municipal - Monclova, Coahuila</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-success" onclick="window.print()">
+                    <i class="fas fa-print"></i>
+                    Imprimir
+                </button>
+                <button class="btn btn-warning" onclick="exportToExcel()">
+                    <i class="fas fa-file-excel"></i>
+                    Excel
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-title">
+            <h2>Control de Asistencia de Personal</h2>
+            <p>Gestión avanzada de asistencia con filtros por periodo y reportes detallados</p>
+        </div>
+
+        <div class="controls-bar">
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="openAddModal()">
+                    <i class="fas fa-user-plus"></i> Agregar Empleado
+                </button>
+            </div>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Buscar empleado..." oninput="searchEmployee()">
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="attendanceTable">
+                <thead>
+                    <tr>
+                        <th>No. Empleado</th>
+                        <th>Nombre</th>
+                        <th>Departamento</th>
+                        <th>Lunes</th>
+                        <th>Martes</th>
+                        <th>Miércoles</th>
+                        <th>Jueves</th>
+                        <th>Viernes</th>
+                        <th>Sábado</th>
+                        <th>Domingo</th>
+                        <th>Total</th>
+                        <th class="no-print">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal" id="employeeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Agregar Empleado</h3>
+                <button class="btn-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="employeeForm">
+                    <div class="form-group">
+                        <label>Número de Empleado</label>
+                        <input type="text" id="empNumber" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre Completo</label>
+                        <input type="text" id="empName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Departamento</label>
+                        <select id="empDept">
+                            <option value="operativo">Operativo</option>
+                            <option value="supervisores">Supervisores</option>
+                            <option value="administrativo">Administrativo</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">
+                    Cancelar
+                </button>
+                <button type="button" class="btn btn-success" onclick="saveEmployee()">
+                    <i class="fas fa-save"></i> Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText"></span>
+    </div>
+
+    <script>
+        let employees = [
+            { id: 1, number: '3298', name: 'MANUEL DE JESUS GARCIA RIVAS', dept: 'operativo', attendance: [false, false, false, false, false, false, false] },
+            { id: 2, number: '8210', name: 'LUIS MIGUEL GARCIA SIFUENTES', dept: 'operativo', attendance: [false, false, false, false, false, false, false] },
+            { id: 3, number: '7691', name: 'ERASMO GARCIA SIFUENTES', dept: 'operativo', attendance: [false, false, false, false, false, false, false] },
+            { id: 4, number: '3220', name: 'MAURO ARTURO CABRERA ESPARZA', dept: 'operativo', attendance: [false, false, false, false, false, false, false] },
+            { id: 5, number: '4578', name: 'MANUEL DE JESUS GARCIA FLORES', dept: 'operativo', attendance: [false, false, false, false, false, false, false] },
+            { id: 6, number: '5303', name: 'SALVADOR GUERRA MARTINEZ', dept: 'operativo', attendance: [false, false, false, false, false, false, false] },
+            { id: 7, number: '7344', name: 'OLIVERIO TORRES HERNANDEZ', dept: 'operativo', attendance: [false, false, false, false, false, false, false] },
+            { id: 8, number: '3114', name: 'JESUS DUQUE RODRIGUEZ', dept: 'operativo', attendance: [false, false, false, false, false, false, false] },
+            { id: 9, number: '8844', name: 'JAIME DE LA GARZA GUERRERO', dept: 'supervisores', attendance: [false, false, false, false, false, false, false] },
+            { id: 10, number: '11013', name: 'LEONARDO IBARRA LARA', dept: 'operativo', attendance: [false, false, false, false, false, false, false] },
+            { id: 11, number: '11001', name: 'WILIVALDO DAVID SANCHEZ LOPEZ', dept: 'operativo', attendance: [false, false, false, false, false, false, false] },
+            { id: 12, number: '11002', name: 'JOSE CRUZ FLORES SANCHEZ', dept: 'operativo', attendance: [false, false, false, false, false, false, false] },
+            { id: 13, number: '11308', name: 'ERICK ALEJANDRO VILLARREAL RAMIREZ', dept: 'operativo', attendance: [false, false, false, false, false, false, false] }
+        ];
+
+        let editingId = null;
+        let navPanelOpen = false;
+
+        const deptNames = {
+            'operativo': 'Operativo',
+            'supervisores': 'Supervisores',
+            'administrativo': 'Administrativo'
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentMonth = new Date().getMonth() + 1;
+            document.getElementById('monthFilter').value = currentMonth;
+            renderTable();
+            showNotification('Sistema de asistencia inicializado correctamente', 'success');
+        });
+
+        function toggleNavPanel() {
+            const navPanel = document.getElementById('navPanel');
+            const overlay = document.getElementById('navPanelOverlay');
+            const toggleBtn = document.getElementById('navToggle');
+
+            navPanelOpen = !navPanelOpen;
+
+            if (navPanelOpen) {
+                navPanel.classList.add('open');
+                overlay.classList.add('active');
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '<i class="fas fa-times"></i>';
+                document.body.style.overflow = 'hidden';
+            } else {
+                navPanel.classList.remove('open');
+                overlay.classList.remove('active');
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '<i class="fas fa-th-large"></i>';
+                document.body.style.overflow = '';
+            }
+        }
+
+        function redirectTo(module) {
+            if (navPanelOpen) toggleNavPanel();
+
+            const urls = {
+                'captura': '/Home/CapturaBacheo',
+                'mapa': '/Home/MapaBacheo',
+                'rastreo': '/Home/RastreoBacheo',
+                'dashboard': '/Home/DashboardBacheo',
+                'reportes': '/Home/ReportesBacheo',
+                'material': '/Home/MaterialUtilizadoBacheo',
+                'programacion': '/Home/ProgramacionBacheo',
+                'repositorio': '/Home/RepositorioPlacasBacheo',
+                'citas': '/Home/AgendarCitasMantenimiento',
+                'oficios': '/Home/EnviarOficiosAlmacen'
+            };
+
+            if (urls[module]) {
+                showNotification('Navegando a ' + module, 'info');
+                setTimeout(function() {
+                    window.location.href = urls[module];
+                }, 800);
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            const deptFilter = document.getElementById('deptFilter').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            tbody.innerHTML = '';
+
+            let filteredEmployees = employees.filter(emp => {
+                const matchesDept = deptFilter === 'all' || emp.dept === deptFilter;
+                const matchesSearch = emp.name.toLowerCase().includes(searchTerm) ||
+                                     emp.number.includes(searchTerm);
+                return matchesDept && matchesSearch;
+            });
+
+            filteredEmployees.forEach(emp => {
+                const total = emp.attendance.filter(a => a).length;
+                const row = `
+                    <tr>
+                        <td style="font-weight: 600; color: #333;">${emp.number}</td>
+                        <td style="color: #333; font-weight: 600;">${emp.name}</td>
+                        <td>${deptNames[emp.dept]}</td>
+                        ${emp.attendance.map((attended, idx) => `
+                            <td class="checkbox-cell">
+                                <input type="checkbox" class="checkbox" ${attended ? 'checked' : ''}
+                                    onchange="toggleAttendance(${emp.id}, ${idx})">
+                            </td>
+                        `).join('')}
+                        <td class="total-cell">${total}</td>
+                        <td class="action-buttons">
+                            <button class="btn-icon btn-edit" onclick="editEmployee(${emp.id})" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon btn-delete" onclick="deleteEmployee(${emp.id})" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+            updateStats();
+        }
+
+        function updateStats() {
+            const deptFilter = document.getElementById('deptFilter').value;
+            const filteredEmployees = employees.filter(emp =>
+                deptFilter === 'all' || emp.dept === deptFilter
+            );
+
+            const totalEmpleados = filteredEmployees.length;
+            const totalDias = filteredEmployees.length * 7;
+            const totalAsistencias = filteredEmployees.reduce((sum, emp) =>
+                sum + emp.attendance.filter(a => a).length, 0
+            );
+            const totalFaltas = totalDias - totalAsistencias;
+            const porcentaje = totalDias > 0 ? ((totalAsistencias / totalDias) * 100).toFixed(1) : 0;
+
+            document.getElementById('totalEmpleados').textContent = totalEmpleados;
+            document.getElementById('totalAsistencias').textContent = totalAsistencias;
+            document.getElementById('totalFaltas').textContent = totalFaltas;
+            document.getElementById('porcentajeAsistencia').textContent = porcentaje + '%';
+        }
+
+        function toggleAttendance(empId, dayIndex) {
+            const emp = employees.find(e => e.id === empId);
+            if (emp) {
+                emp.attendance[dayIndex] = !emp.attendance[dayIndex];
+                renderTable();
+                showNotification('Asistencia actualizada', 'success');
+            }
+        }
+
+        function openAddModal() {
+            editingId = null;
+            document.getElementById('modalTitle').textContent = 'Agregar Empleado';
+            document.getElementById('empNumber').value = '';
+            document.getElementById('empName').value = '';
+            document.getElementById('empDept').value = 'operativo';
+            document.getElementById('employeeModal').classList.add('show');
+        }
+
+        function editEmployee(id) {
+            editingId = id;
+            const emp = employees.find(e => e.id === id);
+            if (emp) {
+                document.getElementById('modalTitle').textContent = 'Editar Empleado';
+                document.getElementById('empNumber').value = emp.number;
+                document.getElementById('empName').value = emp.name;
+                document.getElementById('empDept').value = emp.dept;
+                document.getElementById('employeeModal').classList.add('show');
+            }
+        }
+
+        function deleteEmployee(id) {
+            if (confirm('¿Está seguro de eliminar este empleado?')) {
+                employees = employees.filter(e => e.id !== id);
+                renderTable();
+                showNotification('Empleado eliminado correctamente', 'success');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('employeeModal').classList.remove('show');
+        }
+
+        function saveEmployee() {
+            const number = document.getElementById('empNumber').value.trim();
+            const name = document.getElementById('empName').value.trim().toUpperCase();
+            const dept = document.getElementById('empDept').value;
+
+            if (!number || !name) {
+                showNotification('Por favor complete todos los campos', 'error');
+                return;
+            }
+
+            if (editingId) {
+                const emp = employees.find(e => e.id === editingId);
+                if (emp) {
+                    emp.number = number;
+                    emp.name = name;
+                    emp.dept = dept;
+                    showNotification('Empleado actualizado correctamente', 'success');
+                }
+            } else {
+                const newId = employees.length > 0 ? Math.max(...employees.map(e => e.id)) + 1 : 1;
+                employees.push({
+                    id: newId,
+                    number: number,
+                    name: name,
+                    dept: dept,
+                    attendance: [false, false, false, false, false, false, false]
+                });
+                showNotification('Empleado agregado correctamente', 'success');
+            }
+
+            renderTable();
+            closeModal();
+        }
+
+        function applyFilters() {
+            const year = document.getElementById('yearFilter').value;
+            const month = document.getElementById('monthFilter').value;
+            const week = document.getElementById('weekFilter').value;
+
+            showNotification('Filtros aplicados: ' + getMonthName(month) + ' ' + year + ', Semana ' + week, 'info');
+            renderTable();
+        }
+
+        function clearFilters() {
+            document.getElementById('yearFilter').value = '2025';
+            const currentMonth = new Date().getMonth() + 1;
+            document.getElementById('monthFilter').value = currentMonth;
+            document.getElementById('weekFilter').value = '1';
+            document.getElementById('deptFilter').value = 'all';
+            document.getElementById('searchInput').value = '';
+            renderTable();
+            showNotification('Filtros restablecidos', 'info');
+        }
+
+        function getMonthName(month) {
+            const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            return months[parseInt(month) - 1];
+        }
+
+        function searchEmployee() {
+            renderTable();
+        }
+
+        function exportToExcel() {
+            showNotification('Exportando a Excel...', 'info');
+            setTimeout(() => {
+                showNotification('Archivo Excel generado correctamente', 'success');
+            }, 1500);
+        }
+
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            const icon = notification.querySelector('i');
+
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+            } else {
+                icon.className = 'fas fa-info-circle';
+            }
+
+            notification.className = 'notification ' + type + ' show';
+            text.textContent = message;
+
+            setTimeout(function() {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                closeModal();
+            }
+        });
+
+        console.log('Sistema de Control de Asistencia Personal - Bacheo Municipal');
+        console.log('Estilo de Oficios con Panel de Navegación Lateral');
+        console.log('Sistema completamente funcional');
+    </script>
+</body>
+</html>

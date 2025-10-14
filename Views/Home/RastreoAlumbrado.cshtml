@@ -1,0 +1,1333 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rastreo de Unidades | Sistema de Alumbrado Público</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #28a745;
+            --primary-light: #5cb85c;
+            --secondary: #1e7e34;
+            --accent: #10b981;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --bg-primary: #0F0F0F;
+            --bg-secondary: #1A1A1A;
+            --card-bg: #1F1F1F;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B3B3B3;
+            --border: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* PANEL DE NAVEGACIÓN */
+        .nav-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: linear-gradient(180deg, #1F1F1F 0%, #1A2F1A 100%);
+            box-shadow: -10px 0 30px rgba(40, 167, 69, 0.4);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow: hidden;
+            border-left: 2px solid var(--primary);
+        }
+
+            .nav-panel.open {
+                right: 0;
+            }
+
+        .nav-panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 167, 69, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+            .nav-panel-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .nav-toggle {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 20px 25px -5px rgba(40, 167, 69, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-toggle:hover {
+                transform: translateY(-50%) scale(1.1);
+                box-shadow: 0 25px 35px -5px rgba(40, 167, 69, 0.6);
+            }
+
+            .nav-toggle.active {
+                background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
+                transform: translateY(-50%) rotate(180deg);
+            }
+
+        .nav-panel-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 2rem 1.5rem;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-panel-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-panel-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-panel-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-panel-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .nav-panel-body {
+            padding: 1.5rem;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            background: rgba(40, 167, 69, 0.1);
+            border-radius: 12px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            cursor: pointer;
+        }
+
+            .nav-item:hover {
+                background: rgba(40, 167, 69, 0.2);
+                transform: translateX(-5px);
+                border-color: var(--primary);
+                box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+            }
+
+            .nav-item.active {
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+                border-color: var(--primary);
+            }
+
+        .nav-item-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active .nav-item-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-item:hover .nav-item-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .nav-item-content {
+            flex: 1;
+        }
+
+        .nav-item-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .nav-item.active .nav-item-title {
+            color: white;
+        }
+
+        .nav-item-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .nav-item.active .nav-item-desc {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-item-arrow {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-item-arrow {
+            color: var(--primary-light);
+            transform: translateX(3px);
+        }
+
+        .nav-item.active .nav-item-arrow {
+            color: white;
+        }
+
+        .nav-panel-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-track {
+            background: rgba(40, 167, 69, 0.1);
+        }
+
+        .nav-panel-body::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+            .nav-panel-body::-webkit-scrollbar-thumb:hover {
+                background: var(--primary-light);
+            }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, #111111 0%, #1A2F1A 100%);
+            padding: clamp(0.8rem, 3vw, 1.5rem) clamp(1rem, 4vw, 2rem);
+            box-shadow: 0 8px 32px rgba(40, 167, 69, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: clamp(0.5rem, 2vw, 1.5rem);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 2vw, 2rem);
+            flex-wrap: wrap;
+        }
+
+        .municipal-logos {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 1.5rem);
+        }
+
+        .municipal-logo {
+            width: clamp(50px, 10vw, 120px);
+            height: clamp(50px, 10vw, 120px);
+            background: #FFFFFF;
+            border-radius: clamp(12px, 3vw, 20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(6px, 2vw, 12px);
+            border: clamp(2px, 0.5vw, 4px) solid var(--primary);
+            box-shadow: 0 10px 40px rgba(40, 167, 69, 0.5);
+            transition: all 0.4s ease;
+            flex-shrink: 0;
+        }
+
+            .municipal-logo:hover {
+                transform: scale(1.08);
+                box-shadow: 0 12px 40px rgba(40, 167, 69, 0.7);
+            }
+
+            .municipal-logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+        .header-info h1 {
+            font-size: clamp(1rem, 3.5vw, 1.8rem);
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+            line-height: 1.2;
+        }
+
+        .header-info p {
+            font-size: clamp(0.75rem, 2vw, 1rem);
+            color: var(--text-secondary);
+            line-height: 1.3;
+        }
+
+        .btn-back {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: clamp(0.6rem, 1.8vw, 0.9rem) clamp(1rem, 2.5vw, 1.8rem);
+            border: none;
+            border-radius: clamp(8px, 2vw, 12px);
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            white-space: nowrap;
+        }
+
+            .btn-back:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(40, 167, 69, 0.5);
+            }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2.5rem) clamp(0.8rem, 2vw, 1.5rem);
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: clamp(1.5rem, 4vw, 3rem);
+            padding: clamp(1.2rem, 3vw, 2.5rem);
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(31, 31, 31, 0.8) 100%);
+            border-radius: clamp(16px, 3vw, 24px);
+            box-shadow: 0 12px 48px rgba(40, 167, 69, 0.2);
+            border: 1px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .page-title::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: clamp(3px, 0.5vw, 4px);
+                background: linear-gradient(90deg, var(--primary), var(--accent), var(--primary-light));
+            }
+
+            .page-title h2 {
+                font-size: clamp(1.5rem, 5vw, 3rem);
+                font-weight: 900;
+                background: linear-gradient(135deg, var(--primary), var(--accent));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: clamp(0.5rem, 2vw, 1rem);
+                text-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+                line-height: 1.2;
+            }
+
+            .page-title p {
+                color: var(--text-secondary);
+                font-size: clamp(0.85rem, 2.5vw, 1.2rem);
+                font-weight: 400;
+                line-height: 1.4;
+            }
+
+        .status-panel {
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(31, 31, 31, 0.9) 100%);
+            border-radius: clamp(16px, 3vw, 20px);
+            padding: clamp(1.2rem, 2.5vw, 2rem);
+            margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+            box-shadow: 0 8px 40px rgba(40, 167, 69, 0.2);
+            border: 1px solid var(--primary);
+        }
+
+        .status-indicators {
+            display: flex;
+            gap: clamp(1rem, 3vw, 2rem);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 0.8rem);
+            padding: clamp(0.7rem, 2vw, 1rem) clamp(1rem, 3vw, 2rem);
+            border-radius: clamp(16px, 3vw, 20px);
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            font-weight: 700;
+            border: 2px solid;
+            transition: all 0.3s ease;
+        }
+
+            .status-badge:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+            }
+
+            .status-badge.active {
+                background: rgba(16, 185, 129, 0.2);
+                border-color: var(--success);
+                color: var(--success);
+            }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* GPS CONTAINER */
+        .gps-container {
+            background: var(--card-bg);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 12px 48px rgba(40, 167, 69, 0.3);
+            border: 1px solid var(--primary);
+            position: relative;
+            margin-bottom: 3rem;
+        }
+
+        .gps-header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+            .gps-header h3 {
+                font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+                color: white;
+            }
+
+        .gps-actions {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-gps {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.7rem 1.3rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+            .btn-gps:hover {
+                background: rgba(255, 255, 255, 0.35);
+                transform: translateY(-2px);
+            }
+
+        .iframe-wrapper {
+            position: relative;
+            width: 100%;
+            height: 750px;
+            background: #000;
+        }
+
+            .iframe-wrapper iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 15, 15, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            z-index: 10;
+        }
+
+            .loading-overlay.hidden {
+                display: none;
+            }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(40, 167, 69, 0.2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+        }
+
+        .loading-overlay p {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* UNITS GRID */
+        .units-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+            gap: clamp(1.2rem, 2.5vw, 2rem);
+        }
+
+        .unit-card {
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(31, 31, 31, 0.9) 100%);
+            border-radius: clamp(16px, 3vw, 20px);
+            padding: clamp(1.2rem, 2.5vw, 2rem);
+            box-shadow: 0 8px 40px rgba(40, 167, 69, 0.2);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .unit-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(135deg, transparent, rgba(40, 167, 69, 0.02));
+                pointer-events: none;
+            }
+
+            .unit-card:hover {
+                transform: translateY(-8px);
+                border-color: var(--primary);
+                box-shadow: 0 16px 60px rgba(40, 167, 69, 0.4);
+            }
+
+                .unit-card:hover::before {
+                    background: linear-gradient(135deg, transparent, rgba(40, 167, 69, 0.08));
+                }
+
+            .unit-card.selected {
+                border-color: var(--accent);
+                border-width: 2px;
+                background: linear-gradient(135deg, rgba(40, 167, 69, 0.15), rgba(31, 31, 31, 0.9));
+            }
+
+        .unit-icon {
+            width: clamp(50px, 10vw, 80px);
+            height: clamp(50px, 10vw, 80px);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: clamp(14px, 3vw, 18px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+            color: white;
+            margin: 0 auto clamp(0.8rem, 2vw, 1.5rem);
+            box-shadow: 0 8px 30px rgba(40, 167, 69, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .unit-card:hover .unit-icon {
+            transform: scale(1.1) rotate(-5deg);
+            box-shadow: 0 12px 40px rgba(40, 167, 69, 0.7);
+        }
+
+        .unit-number {
+            font-size: clamp(1.1rem, 3.5vw, 1.6rem);
+            font-weight: 900;
+            color: var(--text-primary);
+            text-align: center;
+            margin-bottom: clamp(0.3rem, 1vw, 0.5rem);
+            text-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
+            line-height: 1.2;
+        }
+
+        .unit-name {
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            color: var(--text-secondary);
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: clamp(0.8rem, 2vw, 1.5rem);
+            line-height: 1.3;
+        }
+
+        .unit-details {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.5rem, 1.5vw, 0.8rem);
+            padding-top: clamp(0.8rem, 2vw, 1.5rem);
+            border-top: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 0.8rem);
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+            color: var(--text-secondary);
+            padding: clamp(0.4rem, 1vw, 0.5rem);
+            background: rgba(40, 167, 69, 0.05);
+            border-radius: clamp(6px, 1.5vw, 8px);
+            line-height: 1.3;
+        }
+
+            .detail-item i {
+                width: clamp(18px, 4vw, 22px);
+                text-align: center;
+                color: var(--accent);
+                font-size: clamp(0.8rem, 2vw, 1rem);
+                flex-shrink: 0;
+            }
+
+        .unit-status {
+            display: inline-flex;
+            align-items: center;
+            gap: clamp(0.4rem, 1vw, 0.5rem);
+            padding: clamp(0.3rem, 1vw, 0.4rem) clamp(0.6rem, 1.5vw, 0.8rem);
+            border-radius: clamp(10px, 2vw, 12px);
+            font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+            font-weight: 700;
+            border: 1px solid;
+            white-space: nowrap;
+        }
+
+            .unit-status.active {
+                background: rgba(16, 185, 129, 0.2);
+                border-color: var(--success);
+                color: var(--success);
+            }
+
+        .unit-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* NOTIFICATION */
+        .notification {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            padding: clamp(0.9rem, 2vw, 1.2rem) clamp(1.2rem, 3vw, 1.8rem);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(40, 167, 69, 0.4);
+            z-index: 10000;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            max-width: min(400px, 90vw);
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.4s ease;
+            font-weight: 600;
+            border: 1px solid;
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .notification.success {
+                background: linear-gradient(135deg, var(--success), #059669);
+                color: white;
+                border-color: var(--success);
+            }
+
+            .notification.info {
+                background: linear-gradient(135deg, var(--primary), var(--accent));
+                color: white;
+                border-color: var(--primary);
+            }
+
+            .notification.warning {
+                background: linear-gradient(135deg, var(--warning), #D97706);
+                color: white;
+                border-color: var(--warning);
+            }
+
+    </style>
+</head>
+<body>
+    <!-- Overlay para el panel -->
+    <div class="nav-panel-overlay" id="navPanelOverlay" onclick="toggleNavPanel()"></div>
+
+    <!-- Botón flotante para abrir panel -->
+    <button class="nav-toggle" id="navToggle" onclick="toggleNavPanel()">
+        <i class="fas fa-th-large"></i>
+    </button>
+
+    <!-- Panel de Navegación Lateral -->
+    <div class="nav-panel" id="navPanel">
+        <div class="nav-panel-header">
+            <button class="nav-panel-close" onclick="toggleNavPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="nav-panel-title">Sistema de Alumbrado</h3>
+            <p class="nav-panel-subtitle">Navegación Principal</p>
+        </div>
+
+        <div class="nav-panel-body">
+            <div class="nav-item" onclick="redirectTo('captura')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Captura</div>
+                    <div class="nav-item-desc">Registro de trabajos</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('programacion')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Programación</div>
+                    <div class="nav-item-desc">Horarios y cuadrillas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('mapa')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Mapa Interactivo</div>
+                    <div class="nav-item-desc">Ubicación de luminarias</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item active" onclick="redirectTo('rastreo')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Rastreo GPS</div>
+                    <div class="nav-item-desc">Monitoreo de unidades</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('dashboard')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Dashboard</div>
+                    <div class="nav-item-desc">Estadísticas y reportes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('reportes')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Reportes</div>
+                    <div class="nav-item-desc">Incidencias ciudadanas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('inventario')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-toolbox"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Material Utilizado</div>
+                    <div class="nav-item-desc">Control de inventario</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('asistencia')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Asistencia</div>
+                    <div class="nav-item-desc">Control de personal</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('oficios')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Enviar Oficios</div>
+                    <div class="nav-item-desc">Almacén de oficios</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('repositorio')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Repositorio Placas</div>
+                    <div class="nav-item-desc">Archivo de placas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('citas')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Agendar Citas</div>
+                    <div class="nav-item-desc">Mantenimiento preventivo</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="municipal-logos">
+                    <div class="municipal-logo" title="Escudo de Monclova">
+                        <img src="~/imagenes/ESCUDO.png" alt="Escudo Municipal"
+                             onerror="this.style.display='none'; this.parentNode.innerHTML='<i class=\'fas fa-shield-alt\' style=\'color: var(--primary); font-size: 2rem;\'></i>'">
+                    </div>
+                    <div class="municipal-logo" title="Logo de Alumbrado">
+                        <img src="~/imagenes/Alumbrado.png" alt="Logo Alumbrado"
+                             onerror="this.style.display='none'; this.parentNode.innerHTML='<i class=\'fas fa-lightbulb\' style=\'color: var(--primary); font-size: 2rem;\'></i>'">
+                    </div>
+                </div>
+                <div class="header-info">
+                    <h1>Rastreo de Unidades de Alumbrado</h1>
+                    <p>Sistema GPS en Tiempo Real - Monclova, Coahuila</p>
+                </div>
+            </div>
+            <button onclick="window.history.back()" class="btn-back">
+                <i class="fas fa-arrow-left"></i>
+                Regresar
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-title">
+            <h2>Sistema de Monitoreo GPS</h2>
+            <p>Rastreo en tiempo real de las unidades operativas de alumbrado público</p>
+        </div>
+
+        <div class="status-panel">
+            <div class="status-indicators">
+                <div class="status-badge active">
+                    <div class="status-indicator" style="background: var(--success);"></div>
+                    <span id="activeCount">6 Unidades Activas</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="gps-container">
+            <div class="gps-header">
+                <h3><i class="fas fa-satellite-dish"></i> Visor GPS en Tiempo Real</h3>
+                <div class="gps-actions">
+                    <button class="btn-gps" onclick="refreshGPS()">
+                        <i class="fas fa-sync-alt"></i>
+                        Actualizar
+                    </button>
+                    <button class="btn-gps" onclick="fullscreenGPS()">
+                        <i class="fas fa-expand"></i>
+                        Pantalla Completa
+                    </button>
+                </div>
+            </div>
+            <div class="iframe-wrapper" id="gpsWrapper">
+                <div class="loading-overlay" id="loadingOverlay">
+                    <div class="spinner" id="spinner"></div>
+                    <p>Cargando sistema GPS...</p>
+                </div>
+                <iframe id="gpsFrame"
+                        src="https://gps.epcom.net/locator/index.html?t=0da71feb8d4af78cb29ce6e8a0ab7ab47D3AC2DBA5D40B4FD8BAFA50CF200C13BF69FB6A"
+                        allow="geolocation"
+                        loading="lazy">
+                </iframe>
+            </div>
+        </div>
+
+        <div class="units-grid">
+            <div class="unit-card" onclick="selectUnit('M-AL-001')">
+                <div class="unit-icon">
+                    <i class="fas fa-truck-pickup"></i>
+                </div>
+                <div class="unit-number">M-AL-001</div>
+                <div class="unit-name">Unidad de Alumbrado 1</div>
+                <div class="unit-details">
+                    <div class="detail-item">
+                        <i class="fas fa-user-hard-hat"></i>
+                        <span>Fidencio Flores</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-signal"></i>
+                        <span class="unit-status active">
+                            <span class="unit-status-dot" style="background: var(--success);"></span>
+                            En Operación
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Zona Centro</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>1ERA - 7:00 AM - 3:00 PM</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="unit-card" onclick="selectUnit('M-AL-002')">
+                <div class="unit-icon">
+                    <i class="fas fa-truck-pickup"></i>
+                </div>
+                <div class="unit-number">M-AL-002</div>
+                <div class="unit-name">Unidad de Alumbrado 2</div>
+                <div class="unit-details">
+                    <div class="detail-item">
+                        <i class="fas fa-user-hard-hat"></i>
+                        <span>Mario Hernández</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-signal"></i>
+                        <span class="unit-status active">
+                            <span class="unit-status-dot" style="background: var(--success);"></span>
+                            En Operación
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Zona Norte</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>1ERA - 7:00 AM - 3:00 PM</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="unit-card" onclick="selectUnit('M-AL-003')">
+                <div class="unit-icon">
+                    <i class="fas fa-truck-pickup"></i>
+                </div>
+                <div class="unit-number">M-AL-003</div>
+                <div class="unit-name">Unidad de Alumbrado 3</div>
+                <div class="unit-details">
+                    <div class="detail-item">
+                        <i class="fas fa-user-hard-hat"></i>
+                        <span>Carlos Rodríguez</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-signal"></i>
+                        <span class="unit-status active">
+                            <span class="unit-status-dot" style="background: var(--success);"></span>
+                            En Operación
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Zona Sur</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>2DA - 3:00 PM - 11:00 PM</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="unit-card" onclick="selectUnit('M-AL-004')">
+                <div class="unit-icon">
+                    <i class="fas fa-truck-pickup"></i>
+                </div>
+                <div class="unit-number">M-AL-004</div>
+                <div class="unit-name">Unidad de Alumbrado 4</div>
+                <div class="unit-details">
+                    <div class="detail-item">
+                        <i class="fas fa-user-hard-hat"></i>
+                        <span>Luis Martínez</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-signal"></i>
+                        <span class="unit-status active">
+                            <span class="unit-status-dot" style="background: var(--success);"></span>
+                            En Operación
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Zona Este</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>2DA - 3:00 PM - 11:00 PM</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="unit-card" onclick="selectUnit('M-AL-005')">
+                <div class="unit-icon">
+                    <i class="fas fa-truck-pickup"></i>
+                </div>
+                <div class="unit-number">M-AL-005</div>
+                <div class="unit-name">Unidad de Alumbrado 5</div>
+                <div class="unit-details">
+                    <div class="detail-item">
+                        <i class="fas fa-user-hard-hat"></i>
+                        <span>Roberto Sánchez</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-signal"></i>
+                        <span class="unit-status active">
+                            <span class="unit-status-dot" style="background: var(--success);"></span>
+                            En Operación
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Zona Oeste</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>3ERA - 11:00 PM - 7:00 AM</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="unit-card" onclick="selectUnit('M-AL-006')">
+                <div class="unit-icon">
+                    <i class="fas fa-truck-pickup"></i>
+                </div>
+                <div class="unit-number">M-AL-006</div>
+                <div class="unit-name">Unidad de Alumbrado 6</div>
+                <div class="unit-details">
+                    <div class="detail-item">
+                        <i class="fas fa-user-hard-hat"></i>
+                        <span>Miguel Torres</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-signal"></i>
+                        <span class="unit-status active">
+                            <span class="unit-status-dot" style="background: var(--success);"></span>
+                            En Operación
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Zona Industrial</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <span>3ERA - 11:00 PM - 7:00 AM</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let navPanelOpen = false;
+        let spinnerRotation = 0;
+        let spinnerInterval;
+
+        function toggleNavPanel() {
+            const navPanel = document.getElementById('navPanel');
+            const overlay = document.getElementById('navPanelOverlay');
+            const toggleBtn = document.getElementById('navToggle');
+
+            navPanelOpen = !navPanelOpen;
+
+            if (navPanelOpen) {
+                navPanel.classList.add('open');
+                overlay.classList.add('active');
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '<i class="fas fa-times"></i>';
+                document.body.style.overflow = 'hidden';
+            } else {
+                navPanel.classList.remove('open');
+                overlay.classList.remove('active');
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '<i class="fas fa-th-large"></i>';
+                document.body.style.overflow = '';
+            }
+        }
+
+        function redirectTo(module) {
+            toggleNavPanel();
+
+            const urls = {
+                'captura': '/Home/CapturaAlumbrado',
+                'programacion': '/Home/ProgramacionAlumbrado',
+                'mapa': '/Home/MapaAlumbrado',
+                'rastreo': '/Home/RastreoAlumbrado',
+                'dashboard': '/Home/DashboardAlumbrado',
+                'reportes': '/Home/ReportesAlumbrado',
+                'inventario': '/Home/MaterialUtilizadoAlumbrado',
+                'asistencia': '/Home/AsistenciaPersonalAlumbrado',
+                'oficios': '/Home/EnviarOficiosAlmacenAlumbrado',
+                'repositorio': '/Home/RepositorioPlacasAlumbrado',
+                'citas': '/Home/AgendarCitasMantenimiento'
+            };
+
+            if (urls[module]) {
+                window.location.href = urls[module];
+            }
+        }
+
+        function startSpinner() {
+            const spinner = document.getElementById('spinner');
+            if (spinner) {
+                spinnerInterval = setInterval(() => {
+                    spinnerRotation += 5;
+                    spinner.style.transform = `rotate(${spinnerRotation}deg)`;
+                }, 16);
+            }
+        }
+
+        function stopSpinner() {
+            if (spinnerInterval) {
+                clearInterval(spinnerInterval);
+            }
+        }
+
+        function pulseIndicators() {
+            const indicators = document.querySelectorAll('.status-indicator, .unit-status-dot');
+            let opacity = 1;
+            let direction = -1;
+
+            setInterval(() => {
+                opacity += direction * 0.03;
+                if (opacity <= 0.4 || opacity >= 1) {
+                    direction *= -1;
+                }
+                indicators.forEach(ind => {
+                    ind.style.opacity = opacity;
+                });
+            }, 50);
+        }
+
+        function showNotification(message, type = 'info') {
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notif => {
+                if (document.body.contains(notif)) {
+                    document.body.removeChild(notif);
+                }
+            });
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (document.body.contains(notification)) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 400);
+                }
+            }, 3500);
+        }
+
+        function refreshGPS() {
+            showNotification('Actualizando ubicaciones GPS...', 'info');
+            const iframe = document.getElementById('gpsFrame');
+            const currentSrc = iframe.src;
+            iframe.src = '';
+            setTimeout(() => {
+                iframe.src = currentSrc;
+                showNotification('Mapa GPS actualizado correctamente', 'success');
+            }, 500);
+        }
+
+        function fullscreenGPS() {
+            const wrapper = document.getElementById('gpsWrapper');
+            if (wrapper.requestFullscreen) {
+                wrapper.requestFullscreen();
+            } else if (wrapper.webkitRequestFullscreen) {
+                wrapper.webkitRequestFullscreen();
+            } else if (wrapper.msRequestFullscreen) {
+                wrapper.msRequestFullscreen();
+            }
+            showNotification('Modo pantalla completa activado', 'info');
+        }
+
+        function selectUnit(unitId) {
+            const cards = document.querySelectorAll('.unit-card');
+            cards.forEach(card => card.classList.remove('selected'));
+
+            event.currentTarget.classList.add('selected');
+
+            showNotification(`Rastreando unidad: ${unitId}`, 'info');
+        }
+
+        let lastGPSState = null;
+
+        function preserveGPSZoom() {
+            const iframe = document.getElementById('gpsFrame');
+            if (iframe && iframe.contentWindow) {
+                try {
+                    if (lastGPSState) {
+                        // Lógica adicional si es necesaria
+                    }
+                } catch (e) {
+                    console.log('GPS zoom preservation active');
+                }
+            }
+        }
+
+        setInterval(preserveGPSZoom, 2000);
+
+        document.getElementById('gpsFrame').addEventListener('load', function() {
+            setTimeout(() => {
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) {
+                    overlay.classList.add('hidden');
+                    stopSpinner();
+                    showNotification('Sistema GPS cargado correctamente', 'success');
+                }
+                preserveGPSZoom();
+            }, 1500);
+        });
+
+        window.addEventListener('online', () => {
+            showNotification('Conexión GPS restaurada', 'success');
+        });
+
+        window.addEventListener('offline', () => {
+            showNotification('Sin conexión - Modo offline', 'warning');
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            startSpinner();
+            pulseIndicators();
+
+            setTimeout(() => {
+                showNotification('Sistema de rastreo GPS inicializado', 'success');
+            }, 1000);
+
+            console.log('%c🛰️ Sistema de Rastreo GPS - Monclova', 'color: #28a745; font-size: 16px; font-weight: bold;');
+            console.log('%cMódulo: Rastreo de Unidades de Alumbrado Público', 'color: #10B981; font-weight: bold;');
+            console.log('%cUnidades monitoreadas: 6', 'color: #10b981;');
+            console.log('%cEstado: Operativo', 'color: #10B981;');
+        });
+    </script>
+</body>
+</html>

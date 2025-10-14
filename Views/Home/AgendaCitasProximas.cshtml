@@ -1,0 +1,954 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda General - Directores</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --pink-50: #fdf2f8;
+            --pink-100: #fce7f3;
+            --pink-200: #fbcfe8;
+            --pink-300: #f9a8d4;
+            --pink-400: #f472b6;
+            --pink-500: #ec4899;
+            --pink-600: #db2777;
+            --pink-700: #be185d;
+            --pink-800: #9f1239;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--pink-50) 0%, var(--gray-50) 100%);
+            color: var(--gray-900);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--pink-600) 0%, var(--pink-700) 100%);
+            color: white;
+            padding: clamp(1rem, 3vw, 1.5rem) clamp(1rem, 4vw, 2rem);
+            box-shadow: 0 4px 20px rgba(236, 72, 153, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1800px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 2vw, 1rem);
+        }
+
+        .logo-container {
+            width: clamp(45px, 10vw, 60px);
+            height: clamp(45px, 10vw, 60px);
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--pink-300);
+            flex-shrink: 0;
+        }
+
+            .logo-container i {
+                font-size: clamp(1.2rem, 4vw, 1.8rem);
+                color: var(--pink-600);
+            }
+
+        .header-center h1 {
+            font-size: clamp(1.1rem, 4vw, 1.8rem);
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-center p {
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            opacity: 0.95;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: clamp(0.5rem, 2vw, 0.7rem) clamp(1rem, 3vw, 1.5rem);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+        }
+
+            .btn-back:hover {
+                background: rgba(255,255,255,0.3);
+            }
+
+        .main-container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2rem);
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: 15px;
+            padding: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .welcome-icon {
+            width: clamp(60px, 12vw, 80px);
+            height: clamp(60px, 12vw, 80px);
+            background: linear-gradient(135deg, var(--pink-500), var(--pink-600));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+            .welcome-icon i {
+                font-size: clamp(1.8rem, 5vw, 2.5rem);
+                color: white;
+            }
+
+        .welcome-title {
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            font-weight: 800;
+            color: var(--pink-700);
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-text {
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            color: var(--gray-600);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+            gap: clamp(1rem, 2vw, 1.5rem);
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: clamp(1.2rem, 2.5vw, 1.5rem);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 20px rgba(236, 72, 153, 0.15);
+            }
+
+            .stat-card.total {
+                border-color: var(--pink-600);
+            }
+
+            .stat-card.hoy {
+                border-color: #10b981;
+            }
+
+            .stat-card.semana {
+                border-color: #f59e0b;
+            }
+
+            .stat-card.mes {
+                border-color: #3b82f6;
+            }
+
+        .stat-value {
+            font-size: clamp(2rem, 6vw, 2.5rem);
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        .filters-card {
+            background: white;
+            border-radius: 15px;
+            padding: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .filters-title {
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            font-weight: 800;
+            color: var(--pink-700);
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+            gap: clamp(0.8rem, 2vw, 1.2rem);
+            margin-bottom: clamp(0.8rem, 2vw, 1.2rem);
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: clamp(0.85rem, 2vw, 0.9rem);
+            font-weight: 700;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: clamp(0.6rem, 2vw, 0.75rem);
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            transition: all 0.3s ease;
+        }
+
+            .form-input:focus, .form-select:focus {
+                outline: none;
+                border-color: var(--pink-500);
+                box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+            }
+
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: clamp(0.6rem, 2vw, 0.75rem) clamp(1rem, 3vw, 1.5rem);
+            border: none;
+            border-radius: 8px;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-pink {
+            background: linear-gradient(135deg, var(--pink-500), var(--pink-600));
+            color: white;
+        }
+
+            .btn-pink:hover {
+                background: linear-gradient(135deg, var(--pink-600), var(--pink-700));
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+            }
+
+        .btn-outline {
+            background: white;
+            color: var(--pink-600);
+            border: 2px solid var(--pink-600);
+        }
+
+            .btn-outline:hover {
+                background: var(--pink-50);
+            }
+
+        .eventos-container {
+            background: white;
+            border-radius: 15px;
+            padding: clamp(1.2rem, 3vw, 1.8rem);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .container-title {
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            font-weight: 800;
+            color: var(--pink-700);
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .eventos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));
+            gap: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .event-card {
+            background: linear-gradient(135deg, var(--pink-50) 0%, var(--gray-50) 100%);
+            border-left: 4px solid var(--pink-500);
+            border-radius: 12px;
+            padding: clamp(1rem, 2.5vw, 1.5rem);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+            .event-card:hover {
+                transform: translateX(5px);
+                box-shadow: 0 6px 20px rgba(236, 72, 153, 0.15);
+            }
+
+            .event-card.urgente {
+                border-left-color: #ef4444;
+                background: linear-gradient(135deg, #fef2f2 0%, var(--gray-50) 100%);
+            }
+
+            .event-card.hoy {
+                border-left-color: #10b981;
+                background: linear-gradient(135deg, #f0fdf4 0%, var(--gray-50) 100%);
+            }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            gap: 0.5rem;
+        }
+
+        .event-title {
+            font-size: clamp(1rem, 2.5vw, 1.15rem);
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .event-director {
+            font-size: clamp(0.85rem, 2vw, 0.9rem);
+            color: var(--pink-700);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .event-badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: clamp(0.75rem, 2vw, 0.85rem);
+            font-weight: 600;
+        }
+
+        .badge-urgente {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-hoy {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-proxima {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .event-details {
+            font-size: clamp(0.85rem, 2vw, 0.9rem);
+            color: var(--gray-700);
+            line-height: 1.7;
+        }
+
+        .event-detail-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.7rem;
+            margin-bottom: 0.6rem;
+        }
+
+            .event-detail-row i {
+                color: var(--pink-500);
+                width: 18px;
+                flex-shrink: 0;
+                margin-top: 0.1rem;
+            }
+
+        .event-comment {
+            background: white;
+            padding: clamp(0.8rem, 2vw, 1rem);
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: clamp(0.8rem, 2vw, 0.85rem);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-200);
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-maps {
+            flex: 1;
+            min-width: 140px;
+            padding: 0.7rem 1rem;
+            background: linear-gradient(135deg, #4285F4, #34A853);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: clamp(0.85rem, 2vw, 0.9rem);
+        }
+
+            .btn-maps:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: clamp(3rem, 6vw, 4rem);
+            color: var(--gray-500);
+        }
+
+            .empty-state i {
+                font-size: clamp(3rem, 8vw, 4rem);
+                color: var(--pink-300);
+                margin-bottom: 1rem;
+            }
+
+            .empty-state h3 {
+                font-size: clamp(1.1rem, 3vw, 1.3rem);
+                color: var(--gray-700);
+                margin-bottom: 0.5rem;
+            }
+
+        .footer {
+            background: var(--gray-800);
+            color: white;
+            padding: clamp(1rem, 3vw, 1.5rem);
+            text-align: center;
+            margin-top: clamp(2rem, 4vw, 3rem);
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+        }
+
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: clamp(1rem, 3vw, 2rem);
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid var(--pink-500);
+            z-index: 10000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            max-width: calc(100vw - 2rem);
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--gray-100);
+            padding: 0.3rem;
+            border-radius: 8px;
+        }
+
+        .view-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: clamp(0.85rem, 2vw, 0.9rem);
+            transition: all 0.3s ease;
+            color: var(--gray-600);
+        }
+
+            .view-btn.active {
+                background: white;
+                color: var(--pink-600);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+        .eventos-lista {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo-container">
+                    <i class="fas fa-calendar-week"></i>
+                </div>
+                <div class="header-center">
+                    <h1>Agenda General de Eventos</h1>
+                    <p>Vista de Directores - Próximos Eventos</p>
+                </div>
+            </div>
+            <a href="/Home/InicioAlmacen" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="welcome-card">
+            <div class="welcome-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h2 class="welcome-title">Bienvenido, Director</h2>
+            <p class="welcome-text">Aquí puedes ver todos los eventos programados para los diferentes departamentos</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card total">
+                <div class="stat-value" id="statTotal">0</div>
+                <div class="stat-label">Total de Eventos</div>
+            </div>
+            <div class="stat-card hoy">
+                <div class="stat-value" id="statHoy">0</div>
+                <div class="stat-label">Eventos Hoy</div>
+            </div>
+            <div class="stat-card semana">
+                <div class="stat-value" id="statSemana">0</div>
+                <div class="stat-label">Esta Semana</div>
+            </div>
+            <div class="stat-card mes">
+                <div class="stat-value" id="statMes">0</div>
+                <div class="stat-label">Este Mes</div>
+            </div>
+        </div>
+
+        <div class="filters-card">
+            <div class="filters-title">
+                <i class="fas fa-filter"></i>
+                Filtrar Eventos
+            </div>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label>Director / Área</label>
+                    <select class="form-select" id="filterDirector" onchange="filtrarEventos()">
+                        <option value="">Todos los Directores</option>
+                        <option value="Director de Bacheo">Director de Bacheo</option>
+                        <option value="Director de Alumbrado">Director de Alumbrado</option>
+                        <option value="Director de Recolección">Director de Recolección</option>
+                        <option value="Director de Limpieza">Director de Limpieza</option>
+                        <option value="Director General">Director General</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Período</label>
+                    <select class="form-select" id="filterPeriodo" onchange="filtrarEventos()">
+                        <option value="todos">Todos</option>
+                        <option value="hoy">Hoy</option>
+                        <option value="semana" selected>Esta Semana</option>
+                        <option value="mes">Este Mes</option>
+                        <option value="proximos">Próximos 30 días</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Fecha Desde</label>
+                    <input type="date" class="form-input" id="filterFechaInicio" onchange="filtrarEventos()">
+                </div>
+                <div class="filter-group">
+                    <label>Fecha Hasta</label>
+                    <input type="date" class="form-input" id="filterFechaFin" onchange="filtrarEventos()">
+                </div>
+            </div>
+            <div class="filter-buttons">
+                <button class="btn btn-pink" onclick="aplicarFiltros()">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+                <button class="btn btn-outline" onclick="limpiarFiltros()">
+                    <i class="fas fa-redo"></i> Limpiar Filtros
+                </button>
+            </div>
+        </div>
+
+        <div class="eventos-container">
+            <div class="container-title">
+                <span><i class="fas fa-calendar-alt"></i> Eventos Programados</span>
+                <div class="view-toggle">
+                    <button class="view-btn active" onclick="cambiarVista('grid')">
+                        <i class="fas fa-th"></i> Cuadrícula
+                    </button>
+                    <button class="view-btn" onclick="cambiarVista('lista')">
+                        <i class="fas fa-list"></i> Lista
+                    </button>
+                </div>
+            </div>
+            <div class="eventos-grid" id="eventosContainer">
+                <div class="empty-state">
+                    <i class="fas fa-calendar-times"></i>
+                    <h3>No hay eventos programados</h3>
+                    <p>Los eventos aparecerán aquí cuando se creen</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Sistema de Agenda General - Servicios Primarios Monclova</p>
+        <p>&copy; 2025 H. Ayuntamiento de Monclova. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // Datos de ejemplo - En producción vendrían del servidor
+        let eventos = [
+            {
+                director: 'Director de Bacheo',
+                evento: 'Supervisión Calle 38',
+                fecha: '2025-10-07',
+                hora: '11:30',
+                lugar: 'Calle 38, Colonia Centro',
+                comentario: 'Supervisión de obra en proceso',
+                ubicacion: 'https://maps.app.goo.gl/ACRaq99Q4xbY1UQYA'
+            },
+            {
+                director: 'Director de Alumbrado',
+                evento: 'Entrega de Obra Calle Álamo',
+                fecha: '2025-10-07',
+                hora: '08:30',
+                lugar: 'Calle Álamo, Col. 5 de Abril',
+                comentario: 'Entrega oficial de obra de alumbrado',
+                ubicacion: 'https://maps.app.goo.gl/kuCpWBw14MHUhMma7'
+            },
+            {
+                director: 'Director General',
+                evento: 'Rueda de Prensa Alumbrada',
+                fecha: '2025-10-06',
+                hora: '12:30',
+                lugar: 'Feria de Monclova',
+                comentario: 'Rueda de prensa sobre arte y cultura',
+                ubicacion: 'https://maps.app.goo.gl/k63wjvb9d11Sq3HP7'
+            },
+            {
+                director: 'Director de Recolección',
+                evento: 'Arranque de Obra Monteviejo',
+                fecha: '2025-10-09',
+                hora: '10:00',
+                lugar: 'Colonia Monteviejo',
+                comentario: 'Inicio de obras en la colonia',
+                ubicacion: 'https://maps.app.goo.gl/ejemplo1'
+            },
+            {
+                director: 'Director de Bacheo',
+                evento: 'Entrega de Obra Rotonda Guadalupe',
+                fecha: '2025-10-10',
+                hora: '08:30',
+                lugar: 'Calle Monterrey / Uruguay',
+                comentario: 'Entrega oficial de rotonda',
+                ubicacion: 'https://maps.app.goo.gl/3ThC3AWgJhfcLUNc9'
+            }
+        ];
+
+        let vistaActual = 'grid';
+
+        function cargarEventos() {
+            actualizarEstadisticas();
+            mostrarEventos(eventos);
+        }
+
+        function actualizarEstadisticas() {
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+
+            const eventosHoy = eventos.filter(e => {
+                const fechaEvento = new Date(e.fecha + 'T00:00:00');
+                return fechaEvento.getTime() === hoy.getTime();
+            });
+
+            const inicioSemana = new Date(hoy);
+            inicioSemana.setDate(hoy.getDate() - hoy.getDay());
+            const finSemana = new Date(inicioSemana);
+            finSemana.setDate(inicioSemana.getDate() + 6);
+
+            const eventosSemana = eventos.filter(e => {
+                const fechaEvento = new Date(e.fecha + 'T00:00:00');
+                return fechaEvento >= inicioSemana && fechaEvento <= finSemana;
+            });
+
+            const inicioMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+            const finMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0);
+
+            const eventosMes = eventos.filter(e => {
+                const fechaEvento = new Date(e.fecha + 'T00:00:00');
+                return fechaEvento >= inicioMes && fechaEvento <= finMes;
+            });
+
+            document.getElementById('statTotal').textContent = eventos.length;
+            document.getElementById('statHoy').textContent = eventosHoy.length;
+            document.getElementById('statSemana').textContent = eventosSemana.length;
+            document.getElementById('statMes').textContent = eventosMes.length;
+        }
+
+        function mostrarEventos(eventosAMostrar) {
+            const container = document.getElementById('eventosContainer');
+
+            if (eventosAMostrar.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-times"></i>
+                        <h3>No se encontraron eventos</h3>
+                        <p>Ajusta los filtros para ver más resultados</p>
+                    </div>
+                `;
+                return;
+            }
+
+            if (vistaActual === 'grid') {
+                container.className = 'eventos-grid';
+            } else {
+                container.className = 'eventos-lista';
+            }
+
+            container.innerHTML = eventosAMostrar.map(evento => {
+                const badge = obtenerBadge(evento.fecha);
+                const cardClass = badge.tipo === 'hoy' ? 'event-card hoy' : badge.tipo === 'urgente' ? 'event-card urgente' : 'event-card';
+
+                return `
+                    <div class="${cardClass}">
+                        <div class="event-header">
+                            <div style="flex: 1;">
+                                <div class="event-title">${evento.evento}</div>
+                                <div class="event-director">
+                                    <i class="fas fa-user-tie"></i>
+                                    ${evento.director}
+                                </div>
+                            </div>
+                            <div class="event-badges">
+                                <span class="badge ${badge.clase}">${badge.texto}</span>
+                            </div>
+                        </div>
+                        <div class="event-details">
+                            <div class="event-detail-row">
+                                <i class="fas fa-calendar"></i>
+                                <span><strong>${formatearFecha(evento.fecha)}</strong></span>
+                            </div>
+                            <div class="event-detail-row">
+                                <i class="fas fa-clock"></i>
+                                <span>${evento.hora} Hrs.</span>
+                            </div>
+                            <div class="event-detail-row">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${evento.lugar}</span>
+                            </div>
+                        </div>
+                        ${evento.comentario ? `
+                        <div class="event-comment">
+                            <i class="fas fa-comment-dots"></i> <strong>Comentario:</strong> ${evento.comentario}
+                        </div>
+                        ` : ''}
+                        <div class="event-actions">
+                            <a href="${evento.ubicacion}" target="_blank" class="btn-maps">
+                                <i class="fas fa-map-marked-alt"></i>
+                                Abrir en Maps
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function obtenerBadge(fecha) {
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            const fechaEvento = new Date(fecha + 'T00:00:00');
+
+            const diffDias = Math.ceil((fechaEvento - hoy) / (1000 * 60 * 60 * 24));
+
+            if (diffDias === 0) {
+                return { tipo: 'hoy', clase: 'badge-hoy', texto: 'HOY' };
+            } else if (diffDias === 1) {
+                return { tipo: 'urgente', clase: 'badge-urgente', texto: 'MAÑANA' };
+            } else if (diffDias <= 7) {
+                return { tipo: 'proxima', clase: 'badge-proxima', texto: `En ${diffDias} días` };
+            } else {
+                return { tipo: 'proxima', clase: 'badge-proxima', texto: formatearFecha(fecha) };
+            }
+        }
+
+        function formatearFecha(fecha) {
+            const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            const date = new Date(fecha + 'T00:00:00');
+            const dias = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+            return `${dias[date.getDay()]} ${date.getDate()}/${meses[date.getMonth()]}/${date.getFullYear()}`;
+        }
+
+        function filtrarEventos() {
+            const filterDirector = document.getElementById('filterDirector').value;
+            const filterPeriodo = document.getElementById('filterPeriodo').value;
+            const filterFechaInicio = document.getElementById('filterFechaInicio').value;
+            const filterFechaFin = document.getElementById('filterFechaFin').value;
+
+            let eventosFiltrados = eventos;
+
+            // Filtrar por director
+            if (filterDirector) {
+                eventosFiltrados = eventosFiltrados.filter(e => e.director === filterDirector);
+            }
+
+            // Filtrar por período
+            if (filterPeriodo !== 'todos') {
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+
+                switch(filterPeriodo) {
+                    case 'hoy':
+                        eventosFiltrados = eventosFiltrados.filter(e => {
+                            const fechaEvento = new Date(e.fecha + 'T00:00:00');
+                            return fechaEvento.getTime() === hoy.getTime();
+                        });
+                        break;
+                    case 'semana':
+                        const inicioSemana = new Date(hoy);
+                        inicioSemana.setDate(hoy.getDate() - hoy.getDay());
+                        const finSemana = new Date(inicioSemana);
+                        finSemana.setDate(inicioSemana.getDate() + 6);
+                        eventosFiltrados = eventosFiltrados.filter(e => {
+                            const fechaEvento = new Date(e.fecha + 'T00:00:00');
+                            return fechaEvento >= inicioSemana && fechaEvento <= finSemana;
+                        });
+                        break;
+                    case 'mes':
+                        const inicioMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+                        const finMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0);
+                        eventosFiltrados = eventosFiltrados.filter(e => {
+                            const fechaEvento = new Date(e.fecha + 'T00:00:00');
+                            return fechaEvento >= inicioMes && fechaEvento <= finMes;
+                        });
+                        break;
+                    case 'proximos':
+                        const treintaDias = new Date(hoy);
+                        treintaDias.setDate(hoy.getDate() + 30);
+                        eventosFiltrados = eventosFiltrados.filter(e => {
+                            const fechaEvento = new Date(e.fecha + 'T00:00:00');
+                            return fechaEvento >= hoy && fechaEvento <= treintaDias;
+                        });
+                        break;
+                }
+            }
+
+            // Filtrar por rango de fechas personalizado
+            if (filterFechaInicio) {
+                eventosFiltrados = eventosFiltrados.filter(e => e.fecha >= filterFechaInicio);
+            }
+            if (filterFechaFin) {
+                eventosFiltrados = eventosFiltrados.filter(e => e.fecha <= filterFechaFin);
+            }
+
+            // Ordenar por fecha
+            eventosFiltrados.sort((a, b) => {
+                const dateA = new Date(a.fecha + ' ' + a.hora);
+                const dateB = new Date(b.fecha + ' ' + b.hora);
+                return dateA - dateB;
+            });
+
+            mostrarEventos(eventosFiltrados);
+        }
+
+        function aplicarFiltros() {
+            filtrarEventos();
+            showNotification('Filtros aplicados correctamente');
+        }
+
+        function limpiarFiltros() {
+            document.getElementById('filterDirector').value = '';
+            document.getElementById('filterPeriodo').value = 'semana';
+            document.getElementById('filterFechaInicio').value = '';
+            document.getElementById('filterFechaFin').value = '';
+            filtrarEventos();
+            showNotification('Filtros limpiados');
+        }
+
+        function cambiarVista(vista) {
+            vistaActual = vista;
+            const buttons = document.querySelectorAll('.view-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.view-btn').classList.add('active');
+            filtrarEventos();
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `<i class="fas fa-check-circle" style="color: #ec4899; margin-right: 0.5rem;"></i>${message}`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarEventos();
+            filtrarEventos();
+        });
+    </script>
+</body>
+</html>

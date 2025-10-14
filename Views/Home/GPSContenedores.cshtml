@@ -1,0 +1,798 @@
+﻿
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS Contenedores | Sistema Municipal Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #059669;
+            --light-green: #10B981;
+            --dark-green: #047857;
+            --bg-light: #F0FDF4;
+            --bg-card: #DCFCE7;
+            --text-dark: #064E3B;
+            --text-medium: #166534;
+            --text-light: #15803D;
+            --border-color: #86EFAC;
+            --accent-yellow: #FBBF24;
+            --accent-orange: #F97316;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, #ECFDF5 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: white;
+            padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1rem, 3vw, 2rem);
+            box-shadow: 0 8px 32px rgba(5, 150, 105, 0.4);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 4px solid var(--light-green);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            flex: 1;
+            min-width: min(250px, 100%);
+        }
+
+        .logo {
+            width: clamp(55px, 12vw, 75px);
+            height: clamp(55px, 12vw, 75px);
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            color: var(--primary-green);
+            border: clamp(3px, 0.8vw, 4px) solid var(--light-green);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+        }
+
+            .logo:hover {
+                transform: scale(1.1) rotate(10deg);
+                box-shadow: 0 8px 30px rgba(255, 255, 255, 0.5);
+            }
+
+        .header-info h1 {
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            font-weight: 900;
+            margin-bottom: 0.4rem;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-info p {
+            font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+
+        .btn-back {
+            background: white;
+            color: var(--primary-green);
+            padding: clamp(0.7rem, 1.8vw, 0.9rem) clamp(1.2rem, 3vw, 1.8rem);
+            border: none;
+            border-radius: 50px;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: clamp(0.4rem, 1vw, 0.6rem);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+
+            .btn-back:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+                background: var(--bg-light);
+            }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+            padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 3vw, 2rem);
+            background: white;
+            border-radius: clamp(16px, 3vw, 24px);
+            box-shadow: 0 10px 40px rgba(5, 150, 105, 0.15);
+            border: clamp(2px, 0.5vw, 3px) solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .page-header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 6px;
+                background: linear-gradient(90deg, var(--primary-green), var(--light-green), var(--accent-yellow));
+            }
+
+            .page-header h2 {
+                font-size: clamp(2.2rem, 5vw, 3.5rem);
+                font-weight: 900;
+                background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 1rem;
+            }
+
+            .page-header p {
+                color: var(--text-medium);
+                font-size: clamp(1rem, 2.5vw, 1.3rem);
+                font-weight: 500;
+            }
+
+        .stats-bar {
+            display: flex;
+            gap: clamp(1rem, 2vw, 1.5rem);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+            padding: clamp(1.2rem, 2.5vw, 2rem);
+            background: white;
+            border-radius: clamp(14px, 3vw, 20px);
+            box-shadow: 0 8px 30px rgba(5, 150, 105, 0.1);
+            border: clamp(1px, 0.3vw, 2px) solid var(--border-color);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.8rem, 2vw, 1rem);
+            padding: clamp(1rem, 2vw, 1.2rem) clamp(1.5rem, 3vw, 2rem);
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-light));
+            border-radius: clamp(12px, 2.5vw, 16px);
+            border: clamp(1px, 0.3vw, 2px) solid var(--light-green);
+            transition: all 0.3s ease;
+        }
+
+            .stat-item:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(5, 150, 105, 0.3);
+            }
+
+        .stat-icon {
+            width: clamp(40px, 8vw, 50px);
+            height: clamp(40px, 8vw, 50px);
+            background: var(--primary-green);
+            border-radius: clamp(10px, 2vw, 12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            flex-shrink: 0;
+        }
+
+        .stat-content .stat-number {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 900;
+            color: var(--primary-green);
+            line-height: 1;
+        }
+
+        .stat-content .stat-label {
+            font-size: clamp(0.75rem, 1.8vw, 0.85rem);
+            color: var(--text-medium);
+            font-weight: 600;
+        }
+
+        .gps-container {
+            background: white;
+            border-radius: clamp(16px, 3vw, 24px);
+            overflow: hidden;
+            box-shadow: 0 12px 48px rgba(5, 150, 105, 0.2);
+            border: clamp(2px, 0.5vw, 3px) solid var(--border-color);
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+        }
+
+        .gps-header {
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            padding: clamp(1rem, 2.5vw, 1.5rem) clamp(1.2rem, 3vw, 2rem);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            flex-wrap: wrap;
+            gap: clamp(0.8rem, 2vw, 1rem);
+        }
+
+            .gps-header h3 {
+                font-size: clamp(1.1rem, 3vw, 1.5rem);
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                gap: clamp(0.5rem, 1.5vw, 0.8rem);
+            }
+
+        .gps-actions {
+            display: flex;
+            gap: clamp(0.5rem, 1.5vw, 0.8rem);
+            flex-wrap: wrap;
+        }
+
+        .btn-gps {
+            background: rgba(255, 255, 255, 0.2);
+            border: clamp(1px, 0.3vw, 2px) solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: clamp(0.6rem, 1.5vw, 0.7rem) clamp(1rem, 2.5vw, 1.3rem);
+            border-radius: clamp(10px, 2vw, 12px);
+            font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: clamp(0.4rem, 1vw, 0.6rem);
+            white-space: nowrap;
+        }
+
+            .btn-gps:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            }
+
+        .iframe-wrapper {
+            position: relative;
+            width: 100%;
+            height: clamp(450px, 60vh, 750px);
+            background: var(--bg-light);
+        }
+
+            .iframe-wrapper iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(240, 253, 244, 0.98);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            z-index: 10;
+        }
+
+            .loading-overlay.hidden {
+                display: none;
+            }
+
+        .spinner {
+            width: clamp(50px, 12vw, 70px);
+            height: clamp(50px, 12vw, 70px);
+            border: clamp(4px, 1vw, 6px) solid var(--border-color);
+            border-top-color: var(--primary-green);
+            border-radius: 50%;
+        }
+
+        .loading-overlay p {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            font-weight: 700;
+            color: var(--text-medium);
+        }
+
+        .containers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+            gap: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        .container-card {
+            background: white;
+            border-radius: clamp(16px, 3vw, 20px);
+            padding: clamp(1.5rem, 3vw, 2rem);
+            box-shadow: 0 8px 32px rgba(5, 150, 105, 0.15);
+            border: clamp(2px, 0.5vw, 3px) solid var(--border-color);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .container-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 5px;
+                background: linear-gradient(90deg, var(--primary-green), var(--light-green));
+            }
+
+            .container-card:hover {
+                transform: translateY(-10px) scale(1.02);
+                border-color: var(--primary-green);
+                box-shadow: 0 16px 50px rgba(5, 150, 105, 0.3);
+            }
+
+            .container-card.selected {
+                border-color: var(--accent-orange);
+                box-shadow: 0 16px 50px rgba(249, 115, 22, 0.4);
+            }
+
+                .container-card.selected::before {
+                    background: linear-gradient(90deg, var(--accent-orange), var(--accent-yellow));
+                }
+
+        .container-icon {
+            width: clamp(70px, 15vw, 90px);
+            height: clamp(70px, 15vw, 90px);
+            background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            color: white;
+            margin: 0 auto clamp(1rem, 2vw, 1.5rem);
+            box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
+            border: clamp(3px, 0.7vw, 4px) solid white;
+            transition: all 0.3s ease;
+        }
+
+        .container-card:hover .container-icon {
+            transform: scale(1.15) rotate(-10deg);
+            box-shadow: 0 12px 35px rgba(5, 150, 105, 0.6);
+        }
+
+        .container-number {
+            font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+            font-weight: 900;
+            color: var(--primary-green);
+            text-align: center;
+            margin-bottom: clamp(0.3rem, 1vw, 0.5rem);
+        }
+
+        .container-name {
+            font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+            color: var(--text-medium);
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .container-details {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.8rem, 2vw, 1rem);
+            padding-top: clamp(1rem, 2vw, 1.5rem);
+            border-top: clamp(1px, 0.3vw, 2px) solid var(--border-color);
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.8rem, 2vw, 1rem);
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            color: var(--text-medium);
+            padding: clamp(0.6rem, 1.5vw, 0.8rem);
+            background: var(--bg-light);
+            border-radius: clamp(10px, 2vw, 12px);
+            border: 1px solid var(--border-color);
+        }
+
+            .detail-row i {
+                width: clamp(20px, 4vw, 24px);
+                text-align: center;
+                color: var(--primary-green);
+                font-size: clamp(1rem, 2.2vw, 1.1rem);
+                flex-shrink: 0;
+            }
+
+        .container-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border: 2px solid;
+        }
+
+            .container-status.operational {
+                background: rgba(16, 185, 129, 0.15);
+                border-color: var(--light-green);
+                color: var(--dark-green);
+            }
+
+            .container-status.full {
+                background: rgba(251, 191, 36, 0.15);
+                border-color: var(--accent-yellow);
+                color: #B45309;
+            }
+
+            .container-status.maintenance {
+                background: rgba(239, 68, 68, 0.15);
+                border-color: #EF4444;
+                color: #991B1B;
+            }
+
+        .status-dot {
+            width: clamp(8px, 1.8vw, 10px);
+            height: clamp(8px, 1.8vw, 10px);
+            border-radius: 50%;
+        }
+
+        .capacity-bar {
+            width: 100%;
+            height: clamp(6px, 1.5vw, 8px);
+            background: var(--bg-light);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .capacity-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--light-green), var(--primary-green));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+            .capacity-fill.warning {
+                background: linear-gradient(90deg, var(--accent-yellow), var(--accent-orange));
+            }
+
+            .capacity-fill.full {
+                background: linear-gradient(90deg, #EF4444, #DC2626);
+            }
+
+        .notification {
+            position: fixed;
+            top: clamp(15px, 3vw, 25px);
+            right: clamp(15px, 3vw, 25px);
+            padding: clamp(1rem, 2vw, 1.2rem) clamp(1.2rem, 2.5vw, 1.8rem);
+            border-radius: clamp(12px, 2.5vw, 16px);
+            box-shadow: 0 8px 32px rgba(5, 150, 105, 0.4);
+            z-index: 10000;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            max-width: min(380px, 90vw);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.4s ease;
+            font-weight: 700;
+            border: clamp(2px, 0.5vw, 3px) solid;
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .notification.success {
+                background: white;
+                color: var(--primary-green);
+                border-color: var(--light-green);
+            }
+
+            .notification.info {
+                background: white;
+                color: #0284C7;
+                border-color: #38BDF8;
+            }
+
+            .notification.warning {
+                background: white;
+                color: #D97706;
+                border-color: var(--accent-yellow);
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">
+                    <i class="fas fa-dumpster"></i>
+                </div>
+                <div class="header-info">
+                    <h1>Monitoreo GPS de Contenedores</h1>
+                    <p>Sistema de Gestión Integral - Monclova, Coahuila</p>
+                </div>
+            </div>
+            <button class="btn-back" onclick="window.history.back()">
+                <i class="fas fa-arrow-left"></i>
+                Regresar
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Sistema de Rastreo de Contenedores</h2>
+            <p>Monitoreo en tiempo real de 11 contenedores municipales</p>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="operationalCount">9</div>
+                    <div class="stat-label">Operativos</div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number" id="fullCount">2</div>
+                    <div class="stat-label">Llenos</div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">11</div>
+                    <div class="stat-label">Total Ubicaciones</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="gps-container">
+            <div class="gps-header">
+                <h3><i class="fas fa-satellite-dish"></i> Mapa de Contenedores en Tiempo Real</h3>
+                <div class="gps-actions">
+                    <button class="btn-gps" onclick="refreshGPS()">
+                        <i class="fas fa-sync-alt"></i>
+                        Actualizar
+                    </button>
+                    <button class="btn-gps" onclick="fullscreenGPS()">
+                        <i class="fas fa-expand"></i>
+                        Pantalla Completa
+                    </button>
+                </div>
+            </div>
+            <div class="iframe-wrapper" id="gpsWrapper">
+                <div class="loading-overlay" id="loadingOverlay">
+                    <div class="spinner"></div>
+                    <p>Cargando ubicaciones GPS...</p>
+                </div>
+                <iframe id="gpsFrame"
+                        src="https://gps.epcom.net/locator/index.html?t=cfee27e232fae98d84d92679dd124590647B3A6EBF575E87E74A8E84ED9CBF22E417EF21"
+                        allow="geolocation"
+                        loading="lazy">
+                </iframe>
+            </div>
+        </div>
+
+        <div class="containers-grid" id="containersGrid"></div>
+    </div>
+
+    <script>
+        const containers = [
+            { id: 'CONT-001', name: 'Contenedor Centro', location: 'Plaza Principal', capacity: 85, status: 'full', type: 'Mixto' },
+            { id: 'CONT-002', name: 'Contenedor Norte', location: 'Col. Industrial', capacity: 45, status: 'operational', type: 'Orgánico' },
+            { id: 'CONT-003', name: 'Contenedor Sur', location: 'Fracc. Praderas', capacity: 60, status: 'operational', type: 'Inorgánico' },
+            { id: 'CONT-004', name: 'Contenedor Este', location: 'Zona Comercial', capacity: 92, status: 'full', type: 'Mixto' },
+            { id: 'CONT-005', name: 'Contenedor Oeste', location: 'Col. Vista Hermosa', capacity: 35, status: 'operational', type: 'Reciclable' },
+            { id: 'CONT-006', name: 'Contenedor Tecnológico', location: 'Instituto Tecnológico', capacity: 50, status: 'operational', type: 'Mixto' },
+            { id: 'CONT-007', name: 'Contenedor Mercado', location: 'Mercado Municipal', capacity: 78, status: 'operational', type: 'Orgánico' },
+            { id: 'CONT-008', name: 'Contenedor Parque', location: 'Parque Xochipilli', capacity: 42, status: 'operational', type: 'Mixto' },
+            { id: 'CONT-009', name: 'Contenedor Hospital', location: 'Hospital General', capacity: 68, status: 'operational', type: 'Sanitario' },
+            { id: 'CONT-010', name: 'Contenedor Universidad', location: 'Campus Universitario', capacity: 55, status: 'operational', type: 'Reciclable' },
+            { id: 'CONT-011', name: 'Contenedor Deportivo', location: 'Unidad Deportiva', capacity: 38, status: 'operational', type: 'Mixto' }
+        ];
+
+        function getCapacityClass(capacity) {
+            if (capacity >= 80) return 'full';
+            if (capacity >= 60) return 'warning';
+            return '';
+        }
+
+        function getStatusDisplay(status) {
+            const statusMap = {
+                'operational': { text: 'Operativo', color: 'var(--light-green)' },
+                'full': { text: 'Lleno', color: 'var(--accent-yellow)' },
+                'maintenance': { text: 'Mantenimiento', color: '#EF4444' }
+            };
+            return statusMap[status] || statusMap['operational'];
+        }
+
+        function renderContainers() {
+            const grid = document.getElementById('containersGrid');
+            grid.innerHTML = containers.map(container => {
+                const statusInfo = getStatusDisplay(container.status);
+                return `
+                    <div class="container-card" onclick="selectContainer('${container.id}')">
+                        <div class="container-icon">
+                            <i class="fas fa-dumpster"></i>
+                        </div>
+                        <div class="container-number">${container.id}</div>
+                        <div class="container-name">${container.name}</div>
+                        <div class="container-details">
+                            <div class="detail-row">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${container.location}</span>
+                            </div>
+                            <div class="detail-row">
+                                <i class="fas fa-signal"></i>
+                                <span class="container-status ${container.status}">
+                                    <span class="status-dot" style="background: ${statusInfo.color};"></span>
+                                    ${statusInfo.text}
+                                </span>
+                            </div>
+                            <div class="detail-row">
+                                <i class="fas fa-recycle"></i>
+                                <span>Tipo: ${container.type}</span>
+                            </div>
+                            <div class="detail-row" style="flex-direction: column; align-items: flex-start; gap: 0.5rem;">
+                                <div style="display: flex; align-items: center; gap: 0.8rem; width: 100%;">
+                                    <i class="fas fa-chart-pie"></i>
+                                    <span>Capacidad: ${container.capacity}%</span>
+                                </div>
+                                <div class="capacity-bar">
+                                    <div class="capacity-fill ${getCapacityClass(container.capacity)}"
+                                         style="width: ${container.capacity}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function pulseStatusDots() {
+            const dots = document.querySelectorAll('.status-dot');
+            let opacity = 1;
+            let direction = -1;
+
+            setInterval(() => {
+                opacity += direction * 0.03;
+                if (opacity <= 0.5 || opacity >= 1) {
+                    direction *= -1;
+                }
+                dots.forEach(dot => {
+                    dot.style.opacity = opacity;
+                });
+            }, 50);
+        }
+
+        function rotateSpinner() {
+            const spinner = document.querySelector('.spinner');
+            let rotation = 0;
+
+            setInterval(() => {
+                rotation += 5;
+                if (spinner && !document.getElementById('loadingOverlay').classList.contains('hidden')) {
+                    spinner.style.transform = `rotate(${rotation}deg)`;
+                }
+            }, 16);
+        }
+
+        function showNotification(message, type = 'info') {
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notif => {
+                if (document.body.contains(notif)) {
+                    document.body.removeChild(notif);
+                }
+            });
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (document.body.contains(notification)) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 400);
+                }
+            }, 3500);
+        }
+
+        function refreshGPS() {
+            showNotification('Actualizando ubicaciones de contenedores...', 'info');
+            const iframe = document.getElementById('gpsFrame');
+            const currentSrc = iframe.src;
+            iframe.src = '';
+            setTimeout(() => {
+                iframe.src = currentSrc;
+                showNotification('Mapa GPS actualizado correctamente', 'success');
+            }, 500);
+        }
+
+        function fullscreenGPS() {
+            const wrapper = document.getElementById('gpsWrapper');
+            if (wrapper.requestFullscreen) {
+                wrapper.requestFullscreen();
+            } else if (wrapper.webkitRequestFullscreen) {
+                wrapper.webkitRequestFullscreen();
+            } else if (wrapper.msRequestFullscreen) {
+                wrapper.msRequestFullscreen();
+            }
+            showNotification('Modo pantalla completa activado', 'info');
+        }
+
+        function selectContainer(containerId) {
+            const cards = document.querySelectorAll('.container-card');
+            cards.forEach(card => card.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            showNotification(`Monitoreando: ${containerId}`, 'info');
+        }
+
+        document.getElementById('gpsFrame').addEventListener('load', function() {
+            setTimeout(() => {
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) {
+                    overlay.classList.add('hidden');
+                    showNotification('Sistema GPS cargado correctamente', 'success');
+                }
+            }, 1500);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderContainers();
+            pulseStatusDots();
+            rotateSpinner();
+            setTimeout(() => {
+                showNotification('Sistema de monitoreo de contenedores iniciado', 'success');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

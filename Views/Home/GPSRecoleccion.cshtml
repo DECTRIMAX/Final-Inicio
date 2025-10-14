@@ -1,0 +1,799 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rastreo GPS - Recolección Municipal | Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --pri-green: #10b981;
+            --pri-green-light: #34d399;
+            --pri-green-dark: #059669;
+            --bg-light: #f0fdf4;
+            --bg-white: #ffffff;
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --border-gray: #e5e7eb;
+            --shadow: rgba(16, 185, 129, 0.15);
+            --shadow-dark: rgba(0, 0, 0, 0.1);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, #ffffff 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--pri-green) 0%, var(--pri-green-dark) 100%);
+            color: white;
+            padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1rem, 3vw, 2rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--pri-green-dark);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            flex: 1;
+            min-width: min(280px, 100%);
+        }
+
+        .logos-container {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+        }
+
+        .logo {
+            width: clamp(50px, 8vw, 70px);
+            height: clamp(50px, 8vw, 70px);
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--pri-green-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+            .logo:hover {
+                transform: scale(1.05);
+                box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+            }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                padding: 5px;
+            }
+
+            .logo i {
+                font-size: clamp(1.5rem, 4vw, 2.2rem);
+                color: var(--pri-green);
+            }
+
+        .header-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+            .header-info h1 {
+                font-size: clamp(1rem, 2.5vw, 1.8rem);
+                font-weight: 800;
+                margin-bottom: 0.3rem;
+            }
+
+            .header-info p {
+                font-size: clamp(0.75rem, 1.8vw, 1rem);
+                opacity: 0.95;
+            }
+
+        .btn-back {
+            background: white;
+            color: var(--pri-green);
+            padding: clamp(0.6rem, 1.5vw, 0.9rem) clamp(1rem, 2vw, 1.8rem);
+            border: none;
+            border-radius: 10px;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+        }
+
+            .btn-back:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2.5rem) clamp(0.8rem, 2vw, 1.5rem);
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: clamp(1.5rem, 3vw, 3rem);
+            padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 2vw, 2rem);
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px var(--shadow-dark);
+            border-left: 5px solid var(--pri-green);
+        }
+
+            .page-title h2 {
+                font-size: clamp(1.5rem, 4vw, 2.5rem);
+                font-weight: 900;
+                color: var(--pri-green);
+                margin-bottom: clamp(0.5rem, 1.5vw, 1rem);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: clamp(0.5rem, 1.5vw, 1rem);
+                flex-wrap: wrap;
+            }
+
+            .page-title p {
+                color: var(--text-gray);
+                font-size: clamp(0.9rem, 2vw, 1.1rem);
+            }
+
+        .status-panel {
+            background: white;
+            border-radius: 15px;
+            padding: clamp(1rem, 2.5vw, 2rem);
+            margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+            box-shadow: 0 4px 20px var(--shadow-dark);
+            border: 2px solid var(--border-gray);
+        }
+
+        .status-indicators {
+            display: flex;
+            gap: clamp(1rem, 2vw, 2rem);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 0.8rem);
+            padding: clamp(0.8rem, 2vw, 1rem) clamp(1.2rem, 3vw, 2rem);
+            border-radius: 15px;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            font-weight: 700;
+            border: 2px solid;
+            transition: all 0.3s ease;
+        }
+
+            .status-badge:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px var(--shadow);
+            }
+
+            .status-badge.active {
+                background: rgba(16, 185, 129, 0.1);
+                border-color: var(--success);
+                color: var(--success);
+            }
+
+            .status-badge.inactive {
+                background: rgba(239, 68, 68, 0.1);
+                border-color: var(--danger);
+                color: var(--danger);
+            }
+
+        .status-indicator {
+            width: clamp(10px, 2vw, 12px);
+            height: clamp(10px, 2vw, 12px);
+            border-radius: 50%;
+        }
+
+        .gps-container {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px var(--shadow-dark);
+            border: 2px solid var(--border-gray);
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+        }
+
+        .gps-header {
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-light));
+            padding: clamp(1rem, 2.5vw, 1.5rem) clamp(1rem, 3vw, 2rem);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--pri-green-dark);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+            .gps-header h3 {
+                font-size: clamp(1rem, 2.5vw, 1.4rem);
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                gap: clamp(0.5rem, 1.5vw, 0.8rem);
+                color: white;
+                flex: 1;
+                min-width: min(200px, 100%);
+            }
+
+        .gps-actions {
+            display: flex;
+            gap: clamp(0.5rem, 1.5vw, 0.8rem);
+            flex-wrap: wrap;
+        }
+
+        .btn-gps {
+            background: white;
+            border: none;
+            color: var(--pri-green);
+            padding: clamp(0.5rem, 1.5vw, 0.7rem) clamp(0.8rem, 2vw, 1.3rem);
+            border-radius: 10px;
+            font-size: clamp(0.75rem, 1.8vw, 0.9rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+            .btn-gps:hover {
+                background: var(--bg-light);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+        .iframe-wrapper {
+            position: relative;
+            width: 100%;
+            height: clamp(400px, 60vw, 750px);
+            background: var(--bg-light);
+        }
+
+            .iframe-wrapper iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            z-index: 10;
+        }
+
+            .loading-overlay.hidden {
+                display: none;
+            }
+
+        .spinner {
+            width: clamp(40px, 8vw, 60px);
+            height: clamp(40px, 8vw, 60px);
+            border: 4px solid var(--border-gray);
+            border-top-color: var(--pri-green);
+            border-radius: 50%;
+        }
+
+        .loading-overlay p {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            font-weight: 600;
+            color: var(--text-gray);
+        }
+
+        .units-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+            gap: clamp(1rem, 2.5vw, 2rem);
+        }
+
+        .unit-card {
+            background: white;
+            border-radius: 15px;
+            padding: clamp(1.2rem, 3vw, 2rem);
+            box-shadow: 0 4px 20px var(--shadow-dark);
+            border: 2px solid var(--border-gray);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+            .unit-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 12px 40px var(--shadow);
+                border-color: var(--pri-green);
+            }
+
+            .unit-card.selected {
+                border-color: var(--pri-green);
+                box-shadow: 0 12px 40px var(--shadow);
+                background: var(--bg-light);
+            }
+
+        .unit-icon {
+            width: clamp(60px, 12vw, 80px);
+            height: clamp(60px, 12vw, 80px);
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-light));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            color: white;
+            margin: 0 auto clamp(1rem, 2vw, 1.5rem);
+            box-shadow: 0 8px 25px var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .unit-card:hover .unit-icon {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .unit-number {
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            font-weight: 900;
+            color: var(--pri-green);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .unit-name {
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            color: var(--text-gray);
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .unit-details {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.6rem, 1.5vw, 0.8rem);
+            padding-top: clamp(1rem, 2vw, 1.5rem);
+            border-top: 2px solid var(--border-gray);
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 0.8rem);
+            font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+            color: var(--text-gray);
+            padding: clamp(0.4rem, 1vw, 0.5rem);
+            background: var(--bg-light);
+            border-radius: 8px;
+        }
+
+            .detail-item i {
+                width: 22px;
+                text-align: center;
+                color: var(--pri-green);
+                flex-shrink: 0;
+            }
+
+        .unit-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 12px;
+            font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+            font-weight: 700;
+            border: 2px solid;
+        }
+
+            .unit-status.active {
+                background: rgba(16, 185, 129, 0.1);
+                border-color: var(--success);
+                color: var(--success);
+            }
+
+            .unit-status.inactive {
+                background: rgba(239, 68, 68, 0.1);
+                border-color: var(--danger);
+                color: var(--danger);
+            }
+
+        .unit-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .notification {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1rem, 2.5vw, 1.8rem);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            font-size: clamp(0.8rem, 2vw, 0.95rem);
+            max-width: min(350px, 90vw);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.4s ease;
+            font-weight: 600;
+            border: 2px solid;
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .notification.success {
+                background: white;
+                color: var(--success);
+                border-color: var(--success);
+            }
+
+            .notification.info {
+                background: white;
+                color: var(--pri-green);
+                border-color: var(--pri-green);
+            }
+
+        .stats-mini {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(140px, 100%), 1fr));
+            gap: clamp(0.8rem, 2vw, 1rem);
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        .stat-mini {
+            background: white;
+            padding: clamp(1rem, 2vw, 1.5rem);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow-dark);
+            border-left: 4px solid var(--pri-green);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+            .stat-mini:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px var(--shadow);
+            }
+
+        .stat-mini-icon {
+            width: clamp(35px, 7vw, 45px);
+            height: clamp(35px, 7vw, 45px);
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-light));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: white;
+            margin: 0 auto clamp(0.5rem, 1.5vw, 0.8rem);
+        }
+
+        .stat-mini-value {
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+            font-weight: 900;
+            color: var(--pri-green);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-mini-label {
+            font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logos-container">
+                    <div class="logo" title="Escudo Municipal">
+                        <img src="~/imagenes/M.png" alt="Escudo Municipal" onerror="this.parentElement.innerHTML='<i class=\'fas fa-landmark\'></i>'">
+                    </div>
+                    <div class="logo" title="Recolección de Residuos">
+                        <img src="~/imagenes/RecoleccionDeBasura.png" alt="Logo Recolección" onerror="this.parentElement.innerHTML='<i class=\'fas fa-recycle\'></i>'">
+                    </div>
+                </div>
+                <div class="header-info">
+                    <h1>Rastreo GPS - Recolección Municipal</h1>
+                    <p>Sistema de Monitoreo en Tiempo Real - Monclova, Coahuila</p>
+                </div>
+            </div>
+            <a href="/Home/PanelGeneralDirectorServiciosPrimarios" class="btn-back">
+                <i class="fas fa-arrow-left"></i>
+                Regresar
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-title">
+            <h2>
+                <i class="fas fa-satellite-dish"></i>
+                Sistema de Rastreo GPS
+            </h2>
+            <p>Monitoreo en tiempo real de 24 unidades de recolección de residuos</p>
+        </div>
+
+        <div class="stats-mini">
+            <div class="stat-mini">
+                <div class="stat-mini-icon"><i class="fas fa-truck-pickup"></i></div>
+                <div class="stat-mini-value" id="totalUnits">24</div>
+                <div class="stat-mini-label">Total Unidades</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-mini-value" id="activeUnits">24</div>
+                <div class="stat-mini-label">En Operación</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini-icon"><i class="fas fa-route"></i></div>
+                <div class="stat-mini-value">18</div>
+                <div class="stat-mini-label">Rutas Activas</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-mini-value">98%</div>
+                <div class="stat-mini-label">Eficiencia</div>
+            </div>
+        </div>
+
+        <div class="status-panel">
+            <div class="status-indicators">
+                <div class="status-badge active">
+                    <div class="status-indicator" style="background: var(--success);"></div>
+                    <span id="activeCount">24 Unidades Activas</span>
+                </div>
+                <div class="status-badge inactive">
+                    <div class="status-indicator" style="background: var(--danger);"></div>
+                    <span id="inactiveCount">0 Unidades Inactivas</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="gps-container">
+            <div class="gps-header">
+                <h3><i class="fas fa-map-marked-alt"></i> Mapa GPS en Tiempo Real</h3>
+                <div class="gps-actions">
+                    <button class="btn-gps" onclick="refreshGPS()">
+                        <i class="fas fa-sync-alt"></i>
+                        Actualizar
+                    </button>
+                    <button class="btn-gps" onclick="fullscreenGPS()">
+                        <i class="fas fa-expand"></i>
+                        Pantalla Completa
+                    </button>
+                </div>
+            </div>
+            <div class="iframe-wrapper" id="gpsWrapper">
+                <div class="loading-overlay" id="loadingOverlay">
+                    <div class="spinner"></div>
+                    <p>Cargando sistema GPS...</p>
+                </div>
+                <iframe id="gpsFrame"
+                        src="https://gps.epcom.net/locator/index.html?t=a8042422b0efcb088fd477156bfd1a64AB2B984857D6EBB6BF280AEE03386D521F429888"
+                        allow="geolocation"
+                        loading="lazy">
+                </iframe>
+            </div>
+        </div>
+
+        <div class="units-grid" id="unitsGrid"></div>
+    </div>
+
+    <script>
+        const units = [
+            { id: 'REC-001', name: 'Camión Recolector 1', operator: 'Juan Pérez', zone: 'Zona Norte', schedule: '6:00 AM - 2:00 PM', status: 'active' },
+            { id: 'REC-002', name: 'Camión Recolector 2', operator: 'Carlos López', zone: 'Zona Sur', schedule: '6:00 AM - 2:00 PM', status: 'active' },
+            { id: 'REC-003', name: 'Camión Recolector 3', operator: 'Miguel Ángel', zone: 'Zona Centro', schedule: '7:00 AM - 3:00 PM', status: 'active' },
+            { id: 'REC-004', name: 'Camión Recolector 4', operator: 'Roberto Díaz', zone: 'Zona Este', schedule: '7:00 AM - 3:00 PM', status: 'active' },
+            { id: 'REC-005', name: 'Camión Recolector 5', operator: 'José García', zone: 'Zona Oeste', schedule: '8:00 AM - 4:00 PM', status: 'active' },
+            { id: 'REC-006', name: 'Camión Recolector 6', operator: 'Luis Martínez', zone: 'Colonia Industrial', schedule: '6:00 AM - 2:00 PM', status: 'active' },
+            { id: 'REC-007', name: 'Camión Recolector 7', operator: 'Pedro Sánchez', zone: 'Fraccionamientos', schedule: '7:00 AM - 3:00 PM', status: 'active' },
+            { id: 'REC-008', name: 'Camión Recolector 8', operator: 'Arturo Ramírez', zone: 'Centro Histórico', schedule: '5:00 AM - 1:00 PM', status: 'active' },
+            { id: 'REC-009', name: 'Camión Recolector 9', operator: 'Fernando Torres', zone: 'Zona Comercial', schedule: '8:00 AM - 4:00 PM', status: 'active' },
+            { id: 'REC-010', name: 'Camión Recolector 10', operator: 'Raúl Hernández', zone: 'Colonias Populares', schedule: '6:00 AM - 2:00 PM', status: 'active' },
+            { id: 'REC-011', name: 'Camión Recolector 11', operator: 'Mario Flores', zone: 'Zona Industrial 2', schedule: '7:00 AM - 3:00 PM', status: 'active' },
+            { id: 'REC-012', name: 'Camión Recolector 12', operator: 'Sergio Medina', zone: 'Periférico Norte', schedule: '6:00 AM - 2:00 PM', status: 'active' },
+            { id: 'REC-013', name: 'Camión Recolector 13', operator: 'Alberto Ruiz', zone: 'Periférico Sur', schedule: '7:00 AM - 3:00 PM', status: 'active' },
+            { id: 'REC-014', name: 'Camión Recolector 14', operator: 'Ricardo Morales', zone: 'Villas del Bosque', schedule: '8:00 AM - 4:00 PM', status: 'active' },
+            { id: 'REC-015', name: 'Camión Recolector 15', operator: 'Javier Castro', zone: 'Lomas del Valle', schedule: '6:00 AM - 2:00 PM', status: 'active' },
+            { id: 'REC-016', name: 'Camión Recolector 16', operator: 'Héctor Vargas', zone: 'San José', schedule: '7:00 AM - 3:00 PM', status: 'active' },
+            { id: 'REC-017', name: 'Camión Recolector 17', operator: 'Daniel Ortiz', zone: 'Las Américas', schedule: '6:00 AM - 2:00 PM', status: 'active' },
+            { id: 'REC-018', name: 'Camión Recolector 18', operator: 'Alejandro Reyes', zone: 'Villa Unión', schedule: '8:00 AM - 4:00 PM', status: 'active' },
+            { id: 'REC-019', name: 'Camión Recolector 19', operator: 'Gustavo Jiménez', zone: 'El Mirador', schedule: '6:00 AM - 2:00 PM', status: 'active' },
+            { id: 'REC-020', name: 'Camión Recolector 20', operator: 'Enrique Delgado', zone: 'Praderas', schedule: '7:00 AM - 3:00 PM', status: 'active' },
+            { id: 'REC-021', name: 'Camión Recolector 21', operator: 'Marco Núñez', zone: 'Vista Hermosa', schedule: '6:00 AM - 2:00 PM', status: 'active' },
+            { id: 'REC-022', name: 'Camión Recolector 22', operator: 'Oscar Silva', zone: 'Residencial', schedule: '8:00 AM - 4:00 PM', status: 'active' },
+            { id: 'REC-023', name: 'Camión Recolector 23', operator: 'Felipe Ramos', zone: 'Tecnológico', schedule: '7:00 AM - 3:00 PM', status: 'active' },
+            { id: 'REC-024', name: 'Camión Recolector 24', operator: 'Ángel Mendoza', zone: 'Universidad', schedule: '6:00 AM - 2:00 PM', status: 'active' }
+        ];
+
+        function renderUnits() {
+            const grid = document.getElementById('unitsGrid');
+            grid.innerHTML = units.map(unit => `
+                <div class="unit-card" onclick="selectUnit('${unit.id}', event)">
+                    <div class="unit-icon">
+                        <i class="fas fa-truck-pickup"></i>
+                    </div>
+                    <div class="unit-number">${unit.id}</div>
+                    <div class="unit-name">${unit.name}</div>
+                    <div class="unit-details">
+                        <div class="detail-item">
+                            <i class="fas fa-user"></i>
+                            <span>${unit.operator}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-signal"></i>
+                            <span class="unit-status ${unit.status}">
+                                <span class="unit-status-dot" style="background: var(--${unit.status === 'active' ? 'success' : 'danger'});"></span>
+                                ${unit.status === 'active' ? 'En Operación' : 'Inactiva'}
+                            </span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${unit.zone}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-clock"></i>
+                            <span>${unit.schedule}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function pulseStatusDots() {
+            const dots = document.querySelectorAll('.unit-status-dot, .status-indicator');
+            let opacity = 1;
+            let direction = -1;
+
+            setInterval(() => {
+                opacity += direction * 0.03;
+                if (opacity <= 0.4 || opacity >= 1) {
+                    direction *= -1;
+                }
+                dots.forEach(dot => {
+                    dot.style.opacity = opacity;
+                });
+            }, 50);
+        }
+
+        function rotateSpinner() {
+            const spinner = document.querySelector('.spinner');
+            let rotation = 0;
+
+            setInterval(() => {
+                rotation += 5;
+                if (spinner && !document.getElementById('loadingOverlay').classList.contains('hidden')) {
+                    spinner.style.transform = `rotate(${rotation}deg)`;
+                }
+            }, 16);
+        }
+
+        function showNotification(message, type = 'info') {
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notif => {
+                if (document.body.contains(notif)) {
+                    document.body.removeChild(notif);
+                }
+            });
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (document.body.contains(notification)) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 400);
+                }
+            }, 3500);
+        }
+
+        function refreshGPS() {
+            showNotification('Actualizando ubicaciones GPS...', 'info');
+            const iframe = document.getElementById('gpsFrame');
+            const currentSrc = iframe.src;
+            iframe.src = '';
+            setTimeout(() => {
+                iframe.src = currentSrc;
+                showNotification('Mapa GPS actualizado correctamente', 'success');
+            }, 500);
+        }
+
+        function fullscreenGPS() {
+            const wrapper = document.getElementById('gpsWrapper');
+            if (wrapper.requestFullscreen) {
+                wrapper.requestFullscreen();
+            } else if (wrapper.webkitRequestFullscreen) {
+                wrapper.webkitRequestFullscreen();
+            } else if (wrapper.msRequestFullscreen) {
+                wrapper.msRequestFullscreen();
+            }
+            showNotification('Modo pantalla completa activado', 'info');
+        }
+
+        function selectUnit(unitId, event) {
+            const cards = document.querySelectorAll('.unit-card');
+            cards.forEach(card => card.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            showNotification(`Rastreando unidad: ${unitId}`, 'info');
+        }
+
+        document.getElementById('gpsFrame').addEventListener('load', function() {
+            setTimeout(() => {
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) {
+                    overlay.classList.add('hidden');
+                    showNotification('Sistema GPS cargado correctamente', 'success');
+                }
+            }, 1500);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderUnits();
+            pulseStatusDots();
+            rotateSpinner();
+            setTimeout(() => {
+                showNotification('Sistema de rastreo GPS inicializado', 'success');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1089 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captura de Boteo - Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --verde-principal: #16a34a;
+            --verde-secundario: #15803d;
+            --verde-claro: #22c55e;
+            --verde-light: #86efac;
+            --verde-oscuro: #14532d;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #06b6d4;
+            --dark: #1F2937;
+            --light: #f0fdf4;
+            --border: #86efac;
+            --gris-claro: #f3f4f6;
+            --gris-medio: #9ca3af;
+            --bg-light: #f0fdf4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, var(--gris-claro) 100%);
+            color: #111827;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--verde-secundario) 0%, var(--verde-principal) 100%);
+            color: white;
+            padding: clamp(1rem, 2vw, 1.5rem) clamp(1rem, 3vw, 2rem);
+            box-shadow: 0 4px 20px rgba(22, 163, 74, 0.3);
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: clamp(0.75rem, 2vw, 1rem);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.75rem, 2vw, 1.2rem);
+            flex: 1 1 auto;
+            min-width: min(250px, 100%);
+            flex-wrap: wrap;
+        }
+
+        .logo-container {
+            display: flex;
+            gap: clamp(0.5rem, 1.5vw, 0.8rem);
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            width: clamp(50px, 8vw, 80px);
+            height: clamp(50px, 8vw, 80px);
+            background: white;
+            border-radius: clamp(8px, 1.5vw, 12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--verde-light);
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+            overflow: hidden;
+            padding: 6px;
+            flex-shrink: 0;
+        }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                background: white;
+            }
+
+            .logo i {
+                font-size: clamp(1.5rem, 2.5vw, 2rem);
+                color: var(--verde-principal);
+            }
+
+        .header-info h1 {
+            font-size: clamp(1.1rem, 3vw, 1.8rem);
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-info p {
+            font-size: clamp(0.75rem, 1.8vw, 1rem);
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+            flex-wrap: wrap;
+            flex: 0 1 auto;
+        }
+
+        .btn {
+            padding: clamp(0.5rem, 1.2vw, 0.75rem) clamp(0.75rem, 2vw, 1.5rem);
+            border: none;
+            border-radius: 8px;
+            font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+            .btn-back:hover {
+                background: rgba(255,255,255,0.3);
+                transform: translateY(-2px);
+            }
+
+        .btn-primary {
+            background: var(--verde-principal);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: var(--verde-secundario);
+                transform: translateY(-2px);
+            }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+            .btn-success:hover {
+                background: #059669;
+            }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+            .btn-warning:hover {
+                background: #D97706;
+            }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+            .btn-danger:hover {
+                background: #DC2626;
+            }
+
+        .btn-sm {
+            padding: clamp(0.35rem, 1vw, 0.5rem) clamp(0.6rem, 1.5vw, 1rem);
+            font-size: clamp(0.7rem, 1.3vw, 0.8rem);
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2rem);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+            gap: clamp(0.75rem, 2vw, 1.5rem);
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+        }
+
+        .stat-card {
+            background: white;
+            padding: clamp(1rem, 2.5vw, 1.5rem);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            }
+
+        .stat-icon {
+            width: clamp(45px, 7vw, 60px);
+            height: clamp(45px, 7vw, 60px);
+            margin: 0 auto clamp(0.5rem, 1.5vw, 1rem);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            color: white;
+        }
+
+        .stat-number {
+            font-size: clamp(1.4rem, 3.5vw, 2rem);
+            font-weight: 800;
+            color: var(--verde-principal);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+            color: #6B7280;
+            font-weight: 600;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: clamp(1rem, 3vw, 2rem);
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            font-weight: 700;
+            color: var(--verde-principal);
+            margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
+            gap: clamp(0.75rem, 1.5vw, 1rem);
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            padding: clamp(0.75rem, 2vw, 1.5rem);
+            background: var(--light);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+        }
+
+        .form-input, .form-select {
+            padding: clamp(0.5rem, 1.2vw, 0.75rem);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+            .form-input:focus, .form-select:focus {
+                outline: none;
+                border-color: var(--verde-principal);
+                box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            -webkit-overflow-scrolling: touch;
+        }
+
+            .table-container::-webkit-scrollbar {
+                height: 8px;
+            }
+
+            .table-container::-webkit-scrollbar-track {
+                background: var(--light);
+                border-radius: 4px;
+            }
+
+            .table-container::-webkit-scrollbar-thumb {
+                background: var(--verde-light);
+                border-radius: 4px;
+            }
+
+                .table-container::-webkit-scrollbar-thumb:hover {
+                    background: var(--verde-principal);
+                }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            background: var(--light);
+            padding: clamp(0.6rem, 1.5vw, 1rem);
+            text-align: left;
+            font-weight: 600;
+            color: var(--verde-principal);
+            border-bottom: 2px solid var(--border);
+            font-size: clamp(0.7rem, 1.3vw, 0.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: clamp(0.6rem, 1.5vw, 1rem);
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+            font-size: clamp(0.75rem, 1.4vw, 0.9rem);
+        }
+
+        tr:hover {
+            background: var(--light);
+        }
+
+        .badge {
+            padding: clamp(0.25rem, 0.6vw, 0.35rem) clamp(0.5rem, 1.2vw, 0.85rem);
+            border-radius: 20px;
+            font-size: clamp(0.65rem, 1.2vw, 0.75rem);
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .badge-green {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .badge-blue {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .badge-orange {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-icon {
+            padding: clamp(0.35rem, 0.8vw, 0.5rem);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: clamp(0.75rem, 1.3vw, 0.9rem);
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit {
+            background: rgba(22, 163, 74, 0.1);
+            color: var(--verde-principal);
+        }
+
+            .btn-edit:hover {
+                background: var(--verde-principal);
+                color: white;
+            }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+            .btn-delete:hover {
+                background: var(--danger);
+                color: white;
+            }
+
+        .fab {
+            position: fixed;
+            bottom: clamp(1rem, 3vw, 2rem);
+            right: clamp(1rem, 3vw, 2rem);
+            width: clamp(50px, 8vw, 60px);
+            height: clamp(50px, 8vw, 60px);
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            color: white;
+            border: none;
+            font-size: clamp(1.2rem, 2vw, 1.5rem);
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(22, 163, 74, 0.4);
+            z-index: 999;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .fab:hover {
+                transform: scale(1.1) rotate(90deg);
+                box-shadow: 0 12px 32px rgba(22, 163, 74, 0.5);
+            }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+            .modal.active {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: clamp(0.5rem, 2vw, 1rem);
+            }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: min(800px, 95%);
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-secundario));
+            color: white;
+            padding: clamp(1rem, 2vw, 1.5rem);
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+            .close-modal:hover {
+                background: rgba(255,255,255,0.3);
+                transform: rotate(90deg);
+            }
+
+        .modal-body {
+            padding: clamp(1rem, 2.5vw, 1.5rem);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+            gap: clamp(0.75rem, 1.5vw, 1rem);
+            margin-bottom: clamp(0.75rem, 1.5vw, 1rem);
+        }
+
+        .notification {
+            position: fixed;
+            top: clamp(1rem, 3vw, 20px);
+            right: clamp(1rem, 3vw, 20px);
+            left: auto;
+            padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.5rem);
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1001;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            max-width: min(400px, calc(100vw - 2rem));
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .notification.success {
+                background: var(--success);
+            }
+
+            .notification.error {
+                background: var(--danger);
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: clamp(2rem, 5vw, 3rem);
+            color: #6B7280;
+        }
+
+            .empty-state i {
+                font-size: clamp(2.5rem, 6vw, 4rem);
+                margin-bottom: 1rem;
+                opacity: 0.5;
+            }
+
+            .empty-state h3 {
+                font-size: clamp(1rem, 2vw, 1.2rem);
+                margin-bottom: 0.5rem;
+            }
+
+            .empty-state p {
+                font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-container">
+                    <div class="logo">
+                        <img src="~/imagenes/LOGO.png" alt="Logo Municipal" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-landmark\'></i>'">
+                    </div>
+                    <div class="logo">
+                        <img src="~/imagenes/RecoleccionDeBasura.png" alt="Limpieza" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-broom\'></i>'">
+                    </div>
+                </div>
+                <div class="header-info">
+                    <h1>Captura de Boteo</h1>
+                    <p>Sistema de Recolección • Presidencia Municipal - Monclova, Coahuila</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-back" onclick="window.history.back()">
+                    <i class="fas fa-arrow-left"></i> Regresar
+                </button>
+                <button class="btn btn-success" onclick="exportToCSV()">
+                    <i class="fas fa-file-export"></i> Exportar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #16a34a, #15803d);">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="stat-number" id="totalViajes">0</div>
+                <div class="stat-label">Total de Viajes</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                    <i class="fas fa-weight-hanging"></i>
+                </div>
+                <div class="stat-number" id="totalToneladas">0</div>
+                <div class="stat-label">Toneladas Totales</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="stat-number" id="totalHoy">0</div>
+                <div class="stat-label">Viajes Hoy</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                    <i class="fas fa-gas-pump"></i>
+                </div>
+                <div class="stat-number" id="totalDiesel">0</div>
+                <div class="stat-label">Litros Diesel</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-filter"></i>
+                <span>Filtros de Búsqueda</span>
+            </h2>
+            <div class="filters-grid">
+                <div class="form-group">
+                    <label class="form-label">Buscar</label>
+                    <input type="text" class="form-input" id="searchInput" placeholder="Unidad, operador...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Mes</label>
+                    <select class="form-select" id="filterMes">
+                        <option value="">Todos los meses</option>
+                        <option value="ENERO">Enero</option>
+                        <option value="FEBRERO">Febrero</option>
+                        <option value="MARZO">Marzo</option>
+                        <option value="ABRIL">Abril</option>
+                        <option value="MAYO">Mayo</option>
+                        <option value="JUNIO">Junio</option>
+                        <option value="JULIO">Julio</option>
+                        <option value="AGOSTO">Agosto</option>
+                        <option value="SEPTIEMBRE">Septiembre</option>
+                        <option value="OCTUBRE">Octubre</option>
+                        <option value="NOVIEMBRE">Noviembre</option>
+                        <option value="DICIEMBRE">Diciembre</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Fecha Desde</label>
+                    <input type="date" class="form-input" id="filterFechaDesde">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Fecha Hasta</label>
+                    <input type="date" class="form-input" id="filterFechaHasta">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Unidad</label>
+                    <select class="form-select" id="filterUnidad">
+                        <option value="">Todas las unidades</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Operador</label>
+                    <select class="form-select" id="filterOperador">
+                        <option value="">Todos los operadores</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="aplicarFiltros()">
+                    <i class="fas fa-filter"></i> Aplicar Filtros
+                </button>
+                <button class="btn btn-warning" onclick="limpiarFiltros()">
+                    <i class="fas fa-eraser"></i> Limpiar
+                </button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-list"></i>
+                <span>Registros de Boteo</span>
+            </h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Día</th>
+                            <th>Mes</th>
+                            <th>Entrada</th>
+                            <th>Salida</th>
+                            <th>Peso Neto</th>
+                            <th>Diesel</th>
+                            <th>Unidad</th>
+                            <th>Operador</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordsTable"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <button class="fab" onclick="openFormModal()">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <div id="formModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Nuevo Registro de Boteo</h3>
+                <button class="close-modal" onclick="closeFormModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="recordForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Día *</label>
+                            <input type="number" class="form-input" id="dia" min="1" max="31" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mes *</label>
+                            <select class="form-select" id="mes" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="ENERO">Enero</option>
+                                <option value="FEBRERO">Febrero</option>
+                                <option value="MARZO">Marzo</option>
+                                <option value="ABRIL">Abril</option>
+                                <option value="MAYO">Mayo</option>
+                                <option value="JUNIO">Junio</option>
+                                <option value="JULIO">Julio</option>
+                                <option value="AGOSTO">Agosto</option>
+                                <option value="SEPTIEMBRE">Septiembre</option>
+                                <option value="OCTUBRE">Octubre</option>
+                                <option value="NOVIEMBRE">Noviembre</option>
+                                <option value="DICIEMBRE">Diciembre</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Hora Entrada *</label>
+                            <input type="time" class="form-input" id="entrada" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Hora Salida *</label>
+                            <input type="time" class="form-input" id="salida" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Peso Neto (kg) *</label>
+                            <input type="number" class="form-input" id="pesoNeto" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Diesel (litros) *</label>
+                            <input type="number" class="form-input" id="diesel" step="0.01" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Unidad *</label>
+                        <input type="text" class="form-input" id="unidad" required placeholder="Ej: LIB, LN">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Operador *</label>
+                        <input type="text" class="form-input" id="operador" required placeholder="Nombre completo del operador">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1rem;">
+                        <i class="fas fa-save"></i>
+                        Guardar Registro
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText"></span>
+    </div>
+
+    <script>
+        let records = [];
+        let recordsFiltrados = [];
+        let editingRecordId = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRecords();
+            setupEventListeners();
+            populateFilters();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('recordForm').addEventListener('submit', handleFormSubmit);
+            ['searchInput', 'filterMes', 'filterUnidad', 'filterOperador', 'filterFechaDesde', 'filterFechaHasta'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', aplicarFiltros);
+                    element.addEventListener('change', aplicarFiltros);
+                }
+            });
+        }
+
+        function loadRecords() {
+            const saved = localStorage.getItem('boteoMunicipalRecords');
+            if (saved) {
+                records = JSON.parse(saved);
+            }
+            recordsFiltrados = [...records];
+            renderRecords();
+            updateStats();
+        }
+
+        function saveRecords() {
+            localStorage.setItem('boteoMunicipalRecords', JSON.stringify(records));
+        }
+
+        function populateFilters() {
+            const unidades = [...new Set(records.map(r => r.unidad))].sort();
+            const operadores = [...new Set(records.map(r => r.operador))].sort();
+
+            const unidadSelect = document.getElementById('filterUnidad');
+            unidadSelect.innerHTML = '<option value="">Todas las unidades</option>';
+            unidades.forEach(u => {
+                const option = document.createElement('option');
+                option.value = u;
+                option.textContent = u;
+                unidadSelect.appendChild(option);
+            });
+
+            const operadorSelect = document.getElementById('filterOperador');
+            operadorSelect.innerHTML = '<option value="">Todos los operadores</option>';
+            operadores.forEach(o => {
+                const option = document.createElement('option');
+                option.value = o;
+                option.textContent = o;
+                operadorSelect.appendChild(option);
+            });
+        }
+
+        function aplicarFiltros() {
+            const search = document.getElementById('searchInput').value.toLowerCase().trim();
+            const mes = document.getElementById('filterMes').value;
+            const unidad = document.getElementById('filterUnidad').value;
+            const operador = document.getElementById('filterOperador').value;
+            const fechaDesde = document.getElementById('filterFechaDesde').value;
+            const fechaHasta = document.getElementById('filterFechaHasta').value;
+
+            recordsFiltrados = records.filter(record => {
+                if (search && !record.unidad.toLowerCase().includes(search) &&
+                    !record.operador.toLowerCase().includes(search) &&
+                    !record.mes.toLowerCase().includes(search)) {
+                    return false;
+                }
+
+                if (mes && record.mes !== mes) return false;
+                if (unidad && record.unidad !== unidad) return false;
+                if (operador && record.operador !== operador) return false;
+
+                if (fechaDesde || fechaHasta) {
+                    const recordDate = new Date(record.fecha);
+                    if (fechaDesde && recordDate < new Date(fechaDesde + 'T00:00:00')) return false;
+                    if (fechaHasta && recordDate > new Date(fechaHasta + 'T23:59:59')) return false;
+                }
+
+                return true;
+            });
+
+            renderRecords();
+            updateStats();
+            showNotification(`Se encontraron ${recordsFiltrados.length} registro${recordsFiltrados.length !== 1 ? 's' : ''}`, 'success');
+        }
+
+        function limpiarFiltros() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterMes').value = '';
+            document.getElementById('filterUnidad').value = '';
+            document.getElementById('filterOperador').value = '';
+            document.getElementById('filterFechaDesde').value = '';
+            document.getElementById('filterFechaHasta').value = '';
+
+            recordsFiltrados = [...records];
+            renderRecords();
+            updateStats();
+            showNotification('Filtros limpiados', 'success');
+        }
+
+        function openFormModal() {
+            editingRecordId = null;
+            document.getElementById('recordForm').reset();
+            document.querySelector('#formModal .modal-title').textContent = 'Nuevo Registro de Boteo';
+            document.getElementById('formModal').classList.add('active');
+        }
+
+        function closeFormModal() {
+            document.getElementById('formModal').classList.remove('active');
+            document.getElementById('recordForm').reset();
+            editingRecordId = null;
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            const record = {
+                id: editingRecordId || Date.now(),
+                dia: document.getElementById('dia').value,
+                mes: document.getElementById('mes').value,
+                entrada: document.getElementById('entrada').value,
+                salida: document.getElementById('salida').value,
+                pesoNeto: parseFloat(document.getElementById('pesoNeto').value),
+                diesel: parseFloat(document.getElementById('diesel').value),
+                unidad: document.getElementById('unidad').value,
+                operador: document.getElementById('operador').value,
+                fecha: new Date().toISOString()
+            };
+
+            if (editingRecordId) {
+                const index = records.findIndex(r => r.id === editingRecordId);
+                records[index] = record;
+                showNotification('Registro actualizado correctamente', 'success');
+            } else {
+                records.push(record);
+                showNotification('Registro guardado correctamente', 'success');
+            }
+
+            saveRecords();
+            closeFormModal();
+            recordsFiltrados = [...records];
+            renderRecords();
+            updateStats();
+            populateFilters();
+        }
+
+        function renderRecords() {
+            const tbody = document.getElementById('recordsTable');
+
+            let sorted = [...recordsFiltrados].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+            if (sorted.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><i class="fas fa-inbox"></i><h3>No hay registros</h3><p>No se encontraron registros</p></div></td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = sorted.map(r => `
+                <tr>
+                    <td><strong>${r.dia}</strong></td>
+                    <td><span class="badge badge-blue">${r.mes}</span></td>
+                    <td>${r.entrada}</td>
+                    <td>${r.salida}</td>
+                    <td><strong>${r.pesoNeto.toFixed(2)}</strong></td>
+                    <td><span class="badge badge-orange">${r.diesel.toFixed(2)}</span></td>
+                    <td><span class="badge badge-green">${r.unidad}</span></td>
+                    <td>${r.operador}</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn-icon btn-edit" onclick="editRecord(${r.id})" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon btn-delete" onclick="deleteRecord(${r.id})" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function editRecord(id) {
+            const record = records.find(r => r.id === id);
+            if (!record) return;
+
+            editingRecordId = id;
+            document.getElementById('dia').value = record.dia;
+            document.getElementById('mes').value = record.mes;
+            document.getElementById('entrada').value = record.entrada;
+            document.getElementById('salida').value = record.salida;
+            document.getElementById('pesoNeto').value = record.pesoNeto;
+            document.getElementById('diesel').value = record.diesel;
+            document.getElementById('unidad').value = record.unidad;
+            document.getElementById('operador').value = record.operador;
+
+            document.querySelector('#formModal .modal-title').textContent = 'Editar Registro';
+            document.getElementById('formModal').classList.add('active');
+        }
+
+        function deleteRecord(id) {
+            if (!confirm('¿Estás seguro de eliminar este registro?')) return;
+
+            records = records.filter(r => r.id !== id);
+            saveRecords();
+            showNotification('Registro eliminado correctamente', 'success');
+            recordsFiltrados = [...records];
+            renderRecords();
+            updateStats();
+            populateFilters();
+        }
+
+        function updateStats() {
+            const totalViajes = recordsFiltrados.length;
+            const totalToneladas = recordsFiltrados.reduce((sum, r) => sum + (r.pesoNeto / 1000), 0);
+            const totalDiesel = recordsFiltrados.reduce((sum, r) => sum + r.diesel, 0);
+
+            const today = new Date();
+            const todayRecords = recordsFiltrados.filter(r => {
+                const recordDate = new Date(r.fecha);
+                return recordDate.toDateString() === today.toDateString();
+            });
+
+            document.getElementById('totalViajes').textContent = totalViajes;
+            document.getElementById('totalToneladas').textContent = totalToneladas.toFixed(2);
+            document.getElementById('totalHoy').textContent = todayRecords.length;
+            document.getElementById('totalDiesel').textContent = totalDiesel.toFixed(2);
+        }
+
+        function exportToCSV() {
+            if (recordsFiltrados.length === 0) {
+                showNotification('No hay registros para exportar', 'error');
+                return;
+            }
+
+            let csv = '\uFEFFDÍA,MES,ENTRADA,SALIDA,PESO NETO (kg),DIESEL (lts),UNIDAD,OPERADOR\n';
+
+            recordsFiltrados.forEach(r => {
+                csv += `"${r.dia}","${r.mes}","${r.entrada}","${r.salida}","${r.pesoNeto}","${r.diesel}","${r.unidad}","${r.operador}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'BOTEO_MUNICIPAL_' + new Date().toISOString().split('T')[0] + '.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showNotification('Exportados ' + recordsFiltrados.length + ' registros', 'success');
+        }
+
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            const icon = notification.querySelector('i');
+
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else {
+                icon.className = 'fas fa-exclamation-circle';
+            }
+
+            notification.className = 'notification ' + type + ' show';
+            text.textContent = message;
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeFormModal();
+            }
+        });
+
+        console.log('✅ Sistema de Captura de Boteo inicializado');
+    </script>
+</body>
+</html>

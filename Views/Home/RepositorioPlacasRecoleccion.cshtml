@@ -1,0 +1,1697 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repositorio Vehicular - Recolección Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --verde-principal: #16a34a;
+            --verde-secundario: #15803d;
+            --verde-claro: #22c55e;
+            --verde-light: #86efac;
+            --verde-oscuro: #14532d;
+            --gris-oscuro: #1f2937;
+            --gris-medio: #9ca3af;
+            --gris-claro: #f3f4f6;
+            --blanco: #FFFFFF;
+            --negro: #111827;
+            --bg-light: #f0fdf4;
+            --rojo: #dc2626;
+            --azul: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, var(--gris-claro) 100%);
+            color: var(--negro);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--verde-secundario) 0%, var(--verde-principal) 100%);
+            color: white;
+            padding: clamp(0.5rem, 2vw, 1.5rem) clamp(0.8rem, 3vw, 2rem);
+            box-shadow: 0 4px 20px rgba(22, 163, 74, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1800px;
+            margin: 0 auto;
+            gap: clamp(0.8rem, 2vw, 2rem);
+            flex-wrap: wrap;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 2vw, 1rem);
+            flex: 1;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: clamp(0.5rem, 1.5vw, 0.7rem) clamp(0.8rem, 2vw, 1.2rem);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: clamp(0.75rem, 2vw, 0.95rem);
+            display: flex;
+            align-items: center;
+            gap: clamp(0.3rem, 1vw, 0.5rem);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+            .btn-back:hover {
+                background: white;
+                color: var(--verde-principal);
+                transform: translateX(-3px);
+            }
+
+        .logo-container {
+            width: clamp(45px, 8vw, 65px);
+            height: clamp(45px, 8vw, 65px);
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--verde-light);
+            overflow: hidden;
+        }
+
+            .logo-container i {
+                font-size: clamp(1.3rem, 4vw, 2rem);
+                color: var(--verde-principal);
+            }
+
+            .logo-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+        .header-center {
+            flex: 1;
+            text-align: center;
+        }
+
+            .header-center h1 {
+                font-size: clamp(1rem, 3vw, 1.6rem);
+                font-weight: 800;
+                margin-bottom: clamp(0.2rem, 0.5vw, 0.3rem);
+            }
+
+            .header-center p {
+                font-size: clamp(0.75rem, 2vw, 0.9rem);
+                opacity: 0.95;
+            }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+        }
+
+        .user-avatar {
+            width: clamp(45px, 8vw, 60px);
+            height: clamp(45px, 8vw, 60px);
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--verde-light);
+        }
+
+            .user-avatar i {
+                font-size: clamp(1.2rem, 3vw, 1.6rem);
+                color: var(--verde-principal);
+            }
+
+        .main-container {
+            display: flex;
+            max-width: 1800px;
+            margin: 0 auto;
+            gap: clamp(1rem, 2vw, 1.5rem);
+            padding: clamp(1rem, 2.5vw, 2rem);
+            flex-wrap: wrap;
+        }
+
+        .sidebar {
+            width: clamp(280px, 25vw, 320px);
+            min-width: min(280px, 100%);
+            background: white;
+            border-radius: 15px;
+            padding: clamp(1rem, 2vw, 1.5rem);
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.15);
+            height: fit-content;
+            flex-shrink: 0;
+        }
+
+        .sidebar-title {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-weight: 800;
+            color: var(--verde-principal);
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .filter-group {
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .filter-label {
+            font-size: clamp(0.8rem, 2vw, 0.95rem);
+            font-weight: 700;
+            color: var(--gris-oscuro);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .filter-input, .filter-select {
+            width: 100%;
+            padding: clamp(0.6rem, 1.5vw, 0.75rem);
+            border: 2px solid var(--gris-claro);
+            border-radius: 8px;
+            font-size: clamp(0.8rem, 2vw, 0.95rem);
+            transition: all 0.3s ease;
+        }
+
+            .filter-input:focus, .filter-select:focus {
+                outline: none;
+                border-color: var(--verde-principal);
+                box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            }
+
+        .filter-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: clamp(0.6rem, 1.5vw, 0.8rem);
+            background: var(--bg-light);
+            border-radius: 8px;
+        }
+
+            .filter-checkbox input {
+                width: 18px;
+                height: 18px;
+                cursor: pointer;
+            }
+
+        .filter-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .btn {
+            padding: clamp(0.7rem, 1.5vw, 0.9rem) clamp(1rem, 2vw, 1.3rem);
+            border: none;
+            border-radius: 8px;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-verde {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            color: white;
+        }
+
+            .btn-verde:hover {
+                background: linear-gradient(135deg, var(--verde-secundario), var(--verde-principal));
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+            }
+
+        .btn-outline {
+            background: white;
+            color: var(--verde-principal);
+            border: 2px solid var(--verde-principal);
+        }
+
+            .btn-outline:hover {
+                background: var(--bg-light);
+            }
+
+        .content-area {
+            flex: 1;
+            min-width: min(500px, 100%);
+        }
+
+        .search-bar {
+            background: white;
+            padding: clamp(1rem, 2vw, 1.3rem);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.15);
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .search-input-wrapper {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: clamp(0.75rem, 1.8vw, 0.95rem) clamp(0.8rem, 2vw, 1rem) clamp(0.75rem, 1.8vw, 0.95rem) clamp(2.3rem, 5vw, 3.2rem);
+            border: 2px solid var(--gris-claro);
+            border-radius: 10px;
+            font-size: clamp(0.85rem, 2vw, 1.05rem);
+        }
+
+            .search-input:focus {
+                outline: none;
+                border-color: var(--verde-principal);
+                box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            }
+
+        .search-icon {
+            position: absolute;
+            left: clamp(0.7rem, 1.8vw, 1.1rem);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gris-medio);
+            font-size: clamp(0.95rem, 2.2vw, 1.2rem);
+        }
+
+        .action-buttons {
+            background: white;
+            padding: clamp(1rem, 2vw, 1.3rem);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.15);
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            display: flex;
+            gap: clamp(0.7rem, 1.8vw, 1.1rem);
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: clamp(0.65rem, 1.5vw, 0.85rem) clamp(1rem, 2.2vw, 1.6rem);
+            background: var(--verde-principal);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+            flex: 1 1 auto;
+            justify-content: center;
+            min-width: min(140px, 45%);
+        }
+
+            .btn-action:hover {
+                background: var(--verde-secundario);
+                transform: translateY(-2px);
+            }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.15);
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th {
+            padding: clamp(0.75rem, 1.8vw, 1.1rem);
+            text-align: left;
+            font-weight: 700;
+            font-size: clamp(0.75rem, 1.8vw, 0.95rem);
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--gris-claro);
+            transition: all 0.3s ease;
+        }
+
+            tbody tr:hover {
+                background: var(--bg-light);
+            }
+
+        td {
+            padding: clamp(0.75rem, 1.8vw, 1.1rem);
+            font-size: clamp(0.75rem, 1.8vw, 0.95rem);
+            color: var(--gris-oscuro);
+        }
+
+        .badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .badge-active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-inactive {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-type {
+            padding: 0.3rem 0.7rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .badge-boteo {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-contenedores {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-pipas {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .action-icon {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+            .action-icon.edit {
+                color: var(--azul);
+            }
+
+            .action-icon.delete {
+                color: var(--rojo);
+            }
+
+            .action-icon.view {
+                color: var(--verde-principal);
+            }
+
+            .action-icon:hover {
+                transform: scale(1.2);
+            }
+
+        .pdf-icon {
+            color: var(--rojo);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .pdf-icon:hover {
+                transform: scale(1.15);
+            }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(0.7rem, 1.8vw, 1.1rem);
+            padding: clamp(1rem, 2vw, 1.6rem);
+            flex-wrap: wrap;
+        }
+
+        .pagination-btn {
+            padding: clamp(0.5rem, 1.3vw, 0.7rem) clamp(0.9rem, 2vw, 1.3rem);
+            background: var(--verde-principal);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+            .pagination-btn:disabled {
+                background: var(--gris-claro);
+                cursor: not-allowed;
+            }
+
+        .pagination-info {
+            color: var(--gris-oscuro);
+            font-weight: 600;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            text-align: center;
+        }
+
+        .floating-btn {
+            position: fixed;
+            bottom: clamp(1rem, 3vw, 2.5rem);
+            right: clamp(1rem, 3vw, 2.5rem);
+            width: clamp(50px, 10vw, 65px);
+            height: clamp(50px, 10vw, 65px);
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(22, 163, 74, 0.4);
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+            .floating-btn:hover {
+                transform: scale(1.1) rotate(90deg);
+            }
+
+        .notification {
+            position: fixed;
+            top: clamp(80px, 12vw, 110px);
+            right: clamp(1rem, 3vw, 2.5rem);
+            background: white;
+            padding: clamp(0.8rem, 1.8vw, 1.1rem) clamp(1rem, 2.2vw, 1.6rem);
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid var(--verde-principal);
+            z-index: 10000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            max-width: min(320px, calc(100vw - 2rem));
+            font-size: clamp(0.8rem, 2vw, 0.98rem);
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+        .footer {
+            background: var(--negro);
+            color: white;
+            padding: clamp(1rem, 2vw, 1.6rem);
+            text-align: center;
+            margin-top: clamp(2rem, 4vw, 3.5rem);
+            font-size: clamp(0.8rem, 2vw, 0.98rem);
+        }
+
+            .footer p {
+                margin: clamp(0.2rem, 1vw, 0.4rem) 0;
+            }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            padding: clamp(0.5rem, 2vw, 1.5rem);
+            overflow-y: auto;
+        }
+
+            .modal-overlay.active {
+                display: flex;
+            }
+
+        .modal-content {
+            background: white;
+            border-radius: clamp(10px, 2vw, 15px);
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin: auto;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            color: white;
+            padding: clamp(1.1rem, 2.5vw, 1.7rem) clamp(1.3rem, 3vw, 2.2rem);
+            border-radius: clamp(10px, 2vw, 15px) clamp(10px, 2vw, 15px) 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+            .modal-header h2 {
+                font-size: clamp(1.1rem, 3vw, 1.6rem);
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                gap: clamp(0.5rem, 1.5vw, 0.9rem);
+            }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: clamp(32px, 6vw, 38px);
+            height: clamp(32px, 6vw, 38px);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+            .modal-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .modal-body {
+            padding: clamp(1.3rem, 3vw, 2.2rem);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+            gap: clamp(1.1rem, 2.5vw, 1.7rem);
+            margin-bottom: clamp(1.1rem, 2.5vw, 1.7rem);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+            .form-group.full-width {
+                grid-column: 1 / -1;
+            }
+
+        .form-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--gris-oscuro);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+            .form-label .required {
+                color: var(--verde-principal);
+            }
+
+        .form-input, .form-select, .form-textarea {
+            padding: 0.75rem;
+            border: 2px solid var(--gris-claro);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+            .form-input:focus, .form-select:focus, .form-textarea:focus {
+                outline: none;
+                border-color: var(--verde-principal);
+                box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+        }
+
+            .form-checkbox-group input[type="checkbox"] {
+                width: 20px;
+                height: 20px;
+                cursor: pointer;
+            }
+
+            .form-checkbox-group label {
+                font-weight: 600;
+                cursor: pointer;
+            }
+
+        .modal-footer {
+            padding: clamp(1.1rem, 2.5vw, 1.7rem) clamp(1.3rem, 3vw, 2.2rem);
+            background: var(--gris-claro);
+            border-radius: 0 0 clamp(10px, 2vw, 15px) clamp(10px, 2vw, 15px);
+            display: flex;
+            gap: clamp(0.8rem, 2vw, 1.2rem);
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .btn-modal {
+            padding: clamp(0.7rem, 1.8vw, 0.9rem) clamp(1.4rem, 3vw, 2.2rem);
+            border: none;
+            border-radius: 8px;
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1 1 auto;
+            justify-content: center;
+            min-width: min(120px, 100%);
+        }
+
+        .btn-modal-cancel {
+            background: white;
+            color: var(--gris-oscuro);
+            border: 2px solid var(--gris-claro);
+        }
+
+            .btn-modal-cancel:hover {
+                background: var(--gris-claro);
+            }
+
+        .btn-modal-save {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            color: white;
+        }
+
+            .btn-modal-save:hover {
+                background: linear-gradient(135deg, var(--verde-secundario), var(--verde-principal));
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+            }
+
+        .form-section-title {
+            font-size: clamp(0.95rem, 2.3vw, 1.2rem);
+            font-weight: 800;
+            color: var(--verde-principal);
+            margin: clamp(1.3rem, 3vw, 2.2rem) 0 clamp(0.8rem, 2vw, 1.2rem) 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--verde-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .file-upload-area {
+            border: 2px dashed var(--verde-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            background: var(--bg-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+            .file-upload-area:hover {
+                border-color: var(--verde-principal);
+                background: #dcfce7;
+            }
+
+            .file-upload-area input[type="file"] {
+                display: none;
+            }
+
+        .file-upload-icon {
+            font-size: 2rem;
+            color: var(--verde-principal);
+            margin-bottom: 0.5rem;
+        }
+
+        .file-upload-text {
+            color: var(--gris-oscuro);
+            font-size: 0.9rem;
+        }
+
+        .file-preview {
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--gris-claro);
+            border-radius: 8px;
+            margin-top: 0.5rem;
+        }
+
+            .file-preview.active {
+                display: flex;
+            }
+
+        .file-preview-icon {
+            font-size: 2rem;
+            color: var(--verde-principal);
+        }
+
+        .file-preview-info {
+            flex: 1;
+        }
+
+        .file-preview-name {
+            font-weight: 700;
+            color: var(--negro);
+        }
+
+        .file-preview-size {
+            font-size: 0.85rem;
+            color: var(--gris-medio);
+        }
+
+        .file-preview-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .file-preview-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view-pdf {
+            background: var(--verde-principal);
+            color: white;
+        }
+
+            .btn-view-pdf:hover {
+                background: var(--verde-secundario);
+            }
+
+        .btn-remove-pdf {
+            background: var(--rojo);
+            color: white;
+        }
+
+            .btn-remove-pdf:hover {
+                background: #b91c1c;
+            }
+
+        .pdf-viewer-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 11000;
+            padding: clamp(1rem, 3vw, 2.5rem);
+        }
+
+            .pdf-viewer-modal.active {
+                display: flex;
+            }
+
+        .pdf-viewer-content {
+            background: white;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 900px;
+            height: clamp(70vh, 80vh, 85vh);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pdf-viewer-header {
+            background: var(--verde-principal);
+            color: white;
+            padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1rem, 2.5vw, 1.7rem);
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .pdf-viewer-header h3 {
+                font-size: clamp(0.95rem, 2.3vw, 1.2rem);
+            }
+
+        .pdf-viewer-body {
+            flex: 1;
+            padding: clamp(1.3rem, 3vw, 2.2rem);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: auto;
+        }
+
+        .pdf-placeholder {
+            text-align: center;
+            color: var(--gris-medio);
+        }
+
+            .pdf-placeholder i {
+                font-size: clamp(2.8rem, 8vw, 4.5rem);
+                color: var(--verde-principal);
+                margin-bottom: 1rem;
+            }
+
+            .pdf-placeholder p {
+                font-size: clamp(0.85rem, 2vw, 1rem);
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <button class="btn-back" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Regresar</span>
+                </button>
+                <div class="logo-container">
+                    <img src="~/imagenes/RecoleccionDeBasura.png" alt="Recolección" onerror="this.parentElement.innerHTML='<i class=\'fas fa-recycle\'></i>'">
+                </div>
+            </div>
+            <div class="header-center">
+                <h1>Repositorio Vehicular — Área de Recolección</h1>
+                <p>Sistema de Control y Gestión de Unidades de Recolección</p>
+            </div>
+            <div class="header-right">
+                <div class="user-avatar">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="sidebar-title">
+                <i class="fas fa-filter"></i>
+                Filtros Avanzados
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Tipo de Unidad</label>
+                <select class="filter-select" id="filterTipo" onchange="applyFilters()">
+                    <option value="">Todos los tipos</option>
+                    <option value="boteo">Camión de Boteo</option>
+                    <option value="contenedores">Camión de Contenedores</option>
+                    <option value="pipas">Pipa de Agua</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Placas</label>
+                <input type="text" class="filter-input" id="filterPlacas" placeholder="Buscar por placas" oninput="applyFilters()">
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Marca</label>
+                <input type="text" class="filter-input" id="filterMarca" placeholder="Buscar por marca" oninput="applyFilters()">
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Nombre</label>
+                <input type="text" class="filter-input" id="filterNombre" placeholder="Buscar por nombre" oninput="applyFilters()">
+            </div>
+
+            <div class="filter-checkbox">
+                <input type="checkbox" id="filterPDF" onchange="applyFilters()">
+                <label for="filterPDF">Solo con PDF adjunto</label>
+            </div>
+
+            <div class="filter-buttons">
+                <button class="btn btn-verde" onclick="applyFilters(true)">
+                    <i class="fas fa-search"></i>
+                    Aplicar Filtros
+                </button>
+                <button class="btn btn-outline" onclick="clearFilters()">
+                    <i class="fas fa-redo"></i>
+                    Limpiar Filtros
+                </button>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <div class="search-bar">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="globalSearch" placeholder="Búsqueda global por cualquier campo..." oninput="performGlobalSearch()">
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-action" onclick="exportCSV()">
+                    <i class="fas fa-file-csv"></i> Exportar CSV
+                </button>
+                <button class="btn-action" onclick="printList()">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+                <button class="btn-action" onclick="downloadAllPDFs()">
+                    <i class="fas fa-file-pdf"></i> Descargar PDFs
+                </button>
+            </div>
+
+            <div class="table-container">
+                <div class="table-wrapper">
+                    <table id="vehiclesTable">
+                        <thead>
+                            <tr>
+                                <th>Póliza</th>
+                                <th>Inciso</th>
+                                <th>Serie</th>
+                                <th>No. Serie</th>
+                                <th>Tipo</th>
+                                <th>Modelo</th>
+                                <th>Nombre</th>
+                                <th>No. Económico</th>
+                                <th>Marca</th>
+                                <th>Placas</th>
+                                <th>PDF</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vehiclesBody">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination">
+                    <button class="pagination-btn" onclick="previousPage()" id="prevBtn">
+                        <i class="fas fa-chevron-left"></i> Anterior
+                    </button>
+                    <span class="pagination-info" id="pageInfo">Página 1 de 1</span>
+                    <button class="pagination-btn" onclick="nextPage()" id="nextBtn">
+                        Siguiente <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <button class="floating-btn" onclick="openAddVehicleModal()">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <div class="modal-overlay" id="addVehicleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">
+                    <i class="fas fa-truck"></i>
+                    Agregar Nueva Unidad de Recolección
+                </h2>
+                <button class="modal-close" onclick="closeAddVehicleModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="vehicleForm" onsubmit="saveNewVehicle(event)">
+                <div class="modal-body">
+                    <div class="form-section-title">
+                        <i class="fas fa-file-alt"></i>
+                        Información de Póliza
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Póliza <span class="required">*</span></label>
+                            <input type="text" class="form-input" name="poliza" placeholder="POL-2024-XXX" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Inciso <span class="required">*</span></label>
+                            <input type="text" class="form-input" name="inciso" placeholder="A, B, C..." maxlength="3" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Serie <span class="required">*</span></label>
+                            <input type="text" class="form-input" name="serie" placeholder="SER-XXX" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">No. de Serie <span class="required">*</span></label>
+                            <input type="text" class="form-input" name="noSerie" placeholder="17 dígitos VIN" maxlength="17" required>
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">
+                        <i class="fas fa-truck"></i>
+                        Información del Vehículo
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Tipo de Unidad <span class="required">*</span></label>
+                            <select class="form-select" name="tipo" required>
+                                <option value="">Seleccionar tipo</option>
+                                <option value="boteo">Camión de Boteo</option>
+                                <option value="contenedores">Camión de Contenedores</option>
+                                <option value="pipas">Pipa de Agua</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Marca <span class="required">*</span></label>
+                            <input type="text" class="form-input" name="marca" placeholder="International, Kenworth, etc." required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Año Modelo <span class="required">*</span></label>
+                            <input type="number" class="form-input" name="modelo" placeholder="2024" min="1990" max="2030" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Placas <span class="required">*</span></label>
+                            <input type="text" class="form-input" name="placas" placeholder="ABC-1234" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">No. Económico <span class="required">*</span></label>
+                            <input type="text" class="form-input" name="economico" placeholder="ECO-XXX" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Nombre de la Unidad <span class="required">*</span></label>
+                            <input type="text" class="form-input" name="nombre" placeholder="Recolector 1" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label class="form-label">Descripción <span class="required">*</span></label>
+                            <textarea class="form-textarea" name="descripcion" placeholder="Descripción detallada del vehículo..." required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">
+                        <i class="fas fa-cog"></i>
+                        Estado
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <div class="form-checkbox-group">
+                                <input type="checkbox" id="activoCheckbox" name="activo" checked>
+                                <label for="activoCheckbox">Unidad activa</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">
+                        <i class="fas fa-file-pdf"></i>
+                        Documento PDF
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label">Subir PDF de la Unidad</label>
+                        <div class="file-upload-area" onclick="document.getElementById('pdfUpload').click()">
+                            <input type="file" id="pdfUpload" accept=".pdf" onchange="handleFileUpload(event)">
+                            <div class="file-upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="file-upload-text">
+                                <strong>Click para subir</strong> o arrastra el archivo PDF aquí<br>
+                                <small>Tamaño máximo: 10MB</small>
+                            </div>
+                        </div>
+                        <div class="file-preview" id="filePreview">
+                            <div class="file-preview-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="file-preview-info">
+                                <div class="file-preview-name" id="fileName"></div>
+                                <div class="file-preview-size" id="fileSize"></div>
+                            </div>
+                            <div class="file-preview-actions">
+                                <button type="button" class="file-preview-btn btn-view-pdf" onclick="viewPDFInModal()">
+                                    <i class="fas fa-eye"></i> Ver
+                                </button>
+                                <button type="button" class="file-preview-btn btn-remove-pdf" onclick="removeUploadedFile()">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal btn-modal-cancel" onclick="closeAddVehicleModal()">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-modal btn-modal-save">
+                        <i class="fas fa-save"></i>
+                        Guardar Unidad
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="pdf-viewer-modal" id="pdfViewerModal">
+        <div class="pdf-viewer-content">
+            <div class="pdf-viewer-header">
+                <h3><i class="fas fa-file-pdf"></i> Visualizador de PDF</h3>
+                <button class="modal-close" onclick="closePDFViewer()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="pdf-viewer-body">
+                <div class="pdf-placeholder">
+                    <i class="fas fa-file-pdf"></i>
+                    <p><strong>Archivo PDF cargado correctamente</strong></p>
+                    <p style="font-size: 0.9rem;">En implementación real, aquí se mostraría el contenido del PDF</p>
+                    <p style="font-size: 0.85rem; margin-top: 1rem;">Archivo: <span id="pdfViewerFileName"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Sistema desarrollado para Área de Recolección — Monclova, Coahuila</p>
+        <p>&copy; 2024 H. Ayuntamiento de Monclova. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        const allVehicles = [
+            {poliza: 'POL-2024-001', inciso: 'A', serie: 'SER-001', noSerie: '1HGBH41JXMN109186', tipo: 'boteo', modelo: 2023, nombre: 'Recolector 1', economico: 'REC-001', descripcion: 'International DuraStar Compactador 15m³', marca: 'International', placas: 'REC-1234', hasPDF: true, activo: true},
+            {poliza: 'POL-2024-002', inciso: 'B', serie: 'SER-002', noSerie: '2HGBH41JXMN109187', tipo: 'boteo', modelo: 2022, nombre: 'Recolector 2', economico: 'REC-002', descripcion: 'Freightliner M2 106 Compactador 18m³', marca: 'Freightliner', placas: 'REC-5678', hasPDF: true, activo: true},
+            {poliza: 'POL-2024-003', inciso: 'C', serie: 'SER-003', noSerie: '3HGBH41JXMN109188', tipo: 'boteo', modelo: 2021, nombre: 'Recolector 3', economico: 'REC-003', descripcion: 'Mack LR Refuse Compactador 20m³', marca: 'Mack', placas: 'REC-9012', hasPDF: false, activo: true},
+            {poliza: 'POL-2024-004', inciso: 'D', serie: 'SER-004', noSerie: '4HGBH41JXMN109189', tipo: 'contenedores', modelo: 2023, nombre: 'Roll Off 1', economico: 'CNT-001', descripcion: 'Peterbilt 348 Roll-Off 40 yardas', marca: 'Peterbilt', placas: 'CNT-3456', hasPDF: true, activo: true},
+            {poliza: 'POL-2024-005', inciso: 'E', serie: 'SER-005', noSerie: '5HGBH41JXMN109190', tipo: 'contenedores', modelo: 2022, nombre: 'Roll Off 2', economico: 'CNT-002', descripcion: 'Kenworth T370 Roll-Off 30 yardas', marca: 'Kenworth', placas: 'CNT-7890', hasPDF: true, activo: false},
+            {poliza: 'POL-2024-006', inciso: 'F', serie: 'SER-006', noSerie: '6HGBH41JXMN109191', tipo: 'pipas', modelo: 2023, nombre: 'Pipa Agua 1', economico: 'PIP-001', descripcion: 'Kenworth T800 Pipa 10,000 litros', marca: 'Kenworth', placas: 'PIP-2345', hasPDF: false, activo: true},
+            {poliza: 'POL-2024-007', inciso: 'G', serie: 'SER-007', noSerie: '7HGBH41JXMN109192', tipo: 'boteo', modelo: 2020, nombre: 'Recolector 4', economico: 'REC-004', descripcion: 'Volvo VHD Compactador 16m³', marca: 'Volvo', placas: 'REC-6789', hasPDF: true, activo: true},
+            {poliza: 'POL-2024-008', inciso: 'H', serie: 'SER-008', noSerie: '8HGBH41JXMN109193', tipo: 'contenedores', modelo: 2021, nombre: 'Roll Off 3', economico: 'CNT-003', descripcion: 'Freightliner 114SD Roll-Off 35 yardas', marca: 'Freightliner', placas: 'CNT-0123', hasPDF: true, activo: true},
+            {poliza: 'POL-2024-009', inciso: 'I', serie: 'SER-009', noSerie: '9HGBH41JXMN109194', tipo: 'boteo', modelo: 2023, nombre: 'Recolector 5', economico: 'REC-005', descripcion: 'Hino 338 Compactador 12m³', marca: 'Hino', placas: 'REC-4567', hasPDF: false, activo: true},
+            {poliza: 'POL-2024-010', inciso: 'J', serie: 'SER-010', noSerie: '0HGBH41JXMN109195', tipo: 'pipas', modelo: 2022, nombre: 'Pipa Agua 2', economico: 'PIP-002', descripcion: 'International WorkStar Pipa 12,000 litros', marca: 'International', placas: 'PIP-8901', hasPDF: true, activo: true}
+        ];
+
+        let filteredVehicles = [...allVehicles];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let currentPDFFile = null;
+        let editingVehiclePoliza = null;
+
+        function getBadgeClass(tipo) {
+            const badges = {
+                'boteo': 'badge-boteo',
+                'contenedores': 'badge-contenedores',
+                'pipas': 'badge-pipas'
+            };
+            return badges[tipo] || 'badge-boteo';
+        }
+
+        function getTipoLabel(tipo) {
+            const labels = {
+                'boteo': 'Boteo',
+                'contenedores': 'Contenedores',
+                'pipas': 'Pipas'
+            };
+            return labels[tipo] || tipo;
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('vehiclesBody');
+            tbody.innerHTML = '';
+
+            const totalPages = Math.ceil(filteredVehicles.length / itemsPerPage);
+            const startIdx = (currentPage - 1) * itemsPerPage;
+            const endIdx = startIdx + itemsPerPage;
+            const pageVehicles = filteredVehicles.slice(startIdx, endIdx);
+
+            if (pageVehicles.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="13" style="text-align: center; padding: 2rem;">No se encontraron registros</td></tr>';
+            } else {
+                pageVehicles.forEach(vehicle => {
+                    const row = `
+                        <tr>
+                            <td>${vehicle.poliza}</td>
+                            <td>${vehicle.inciso}</td>
+                            <td>${vehicle.serie}</td>
+                            <td>${vehicle.noSerie}</td>
+                            <td>
+                                <span class="badge-type ${getBadgeClass(vehicle.tipo)}">
+                                    ${getTipoLabel(vehicle.tipo)}
+                                </span>
+                            </td>
+                            <td>${vehicle.modelo}</td>
+                            <td>${vehicle.nombre}</td>
+                            <td>${vehicle.economico}</td>
+                            <td>${vehicle.marca}</td>
+                            <td><strong>${vehicle.placas}</strong></td>
+                            <td>
+                                ${vehicle.hasPDF ?
+                                    `<i class="fas fa-file-pdf pdf-icon" onclick="downloadPDF('${vehicle.poliza}')" title="Descargar PDF"></i>` :
+                                    '<span style="color: #9ca3af;">—</span>'}
+                            </td>
+                            <td>
+                                <span class="badge ${vehicle.activo ? 'badge-active' : 'badge-inactive'}">
+                                    ${vehicle.activo ? 'Activo' : 'Inactivo'}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-icons">
+                                    <i class="fas fa-edit action-icon edit" onclick="editVehicle('${vehicle.poliza}')" title="Editar"></i>
+                                    <i class="fas fa-trash action-icon delete" onclick="deleteVehicle('${vehicle.poliza}')" title="Eliminar"></i>
+                                    <i class="fas fa-eye action-icon view" onclick="viewVehicle('${vehicle.poliza}')" title="Ver detalles"></i>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            }
+
+            updatePagination();
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredVehicles.length / itemsPerPage);
+            document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages || 1} (${filteredVehicles.length} registros)`;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(filteredVehicles.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+                showNotification('Página ' + currentPage);
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+                showNotification('Página ' + currentPage);
+            }
+        }
+
+        function performGlobalSearch() {
+            const searchTerm = document.getElementById('globalSearch').value.toLowerCase();
+
+            if (!searchTerm) {
+                filteredVehicles = [...allVehicles];
+            } else {
+                filteredVehicles = allVehicles.filter(vehicle => {
+                    return Object.values(vehicle).some(value =>
+                        String(value).toLowerCase().includes(searchTerm)
+                    );
+                });
+            }
+
+            currentPage = 1;
+            renderTable();
+        }
+
+        function applyFilters(showNotif = false) {
+            const tipo = document.getElementById('filterTipo').value.toLowerCase();
+            const placas = document.getElementById('filterPlacas').value.toLowerCase();
+            const marca = document.getElementById('filterMarca').value.toLowerCase();
+            const nombre = document.getElementById('filterNombre').value.toLowerCase();
+            const onlyPDF = document.getElementById('filterPDF').checked;
+
+            filteredVehicles = allVehicles.filter(vehicle => {
+                if (tipo && vehicle.tipo !== tipo) return false;
+                if (placas && !vehicle.placas.toLowerCase().includes(placas)) return false;
+                if (marca && !vehicle.marca.toLowerCase().includes(marca)) return false;
+                if (nombre && !vehicle.nombre.toLowerCase().includes(nombre)) return false;
+                if (onlyPDF && !vehicle.hasPDF) return false;
+                return true;
+            });
+
+            currentPage = 1;
+            renderTable();
+
+            if (showNotif) {
+                showNotification(`Filtros aplicados: ${filteredVehicles.length} registros encontrados`);
+            }
+        }
+
+        function clearFilters() {
+            document.getElementById('filterTipo').value = '';
+            document.getElementById('filterPlacas').value = '';
+            document.getElementById('filterMarca').value = '';
+            document.getElementById('filterNombre').value = '';
+            document.getElementById('filterPDF').checked = false;
+            document.getElementById('globalSearch').value = '';
+
+            filteredVehicles = [...allVehicles];
+            currentPage = 1;
+            renderTable();
+            showNotification('Filtros limpiados - Mostrando todos los registros');
+        }
+
+        function exportCSV() {
+            const headers = ['Póliza', 'Inciso', 'Serie', 'No. Serie', 'Tipo', 'Modelo', 'Nombre', 'No. Económico', 'Marca', 'Placas', 'Tiene PDF', 'Estado'];
+            const csvContent = [
+                headers.join(','),
+                ...filteredVehicles.map(v => [
+                    v.poliza, v.inciso, v.serie, v.noSerie, getTipoLabel(v.tipo),
+                    v.modelo, v.nombre, v.economico, v.marca, v.placas,
+                    v.hasPDF ? 'Sí' : 'No', v.activo ? 'Activo' : 'Inactivo'
+                ].join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `repositorio_recoleccion_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+
+            showNotification('Archivo CSV exportado correctamente');
+        }
+
+        function printList() {
+            window.print();
+            showNotification('Imprimiendo listado...');
+        }
+
+        function downloadAllPDFs() {
+            const pdfCount = filteredVehicles.filter(v => v.hasPDF).length;
+            showNotification(`Se descargarían ${pdfCount} archivos PDF`);
+        }
+
+        function downloadPDF(poliza) {
+            const vehicle = allVehicles.find(v => v.poliza === poliza);
+            if (vehicle && vehicle.hasPDF) {
+                showNotification(`Descargando PDF de ${vehicle.nombre}`);
+                document.getElementById('pdfViewerFileName').textContent = `${poliza}.pdf`;
+                openPDFViewer();
+            } else {
+                showNotification('No hay PDF disponible para esta unidad');
+            }
+        }
+
+        function openAddVehicleModal() {
+            editingVehiclePoliza = null;
+            document.getElementById('modalTitle').innerHTML = '<i class="fas fa-truck"></i> Agregar Nueva Unidad de Recolección';
+            document.getElementById('addVehicleModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAddVehicleModal() {
+            document.getElementById('addVehicleModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            document.getElementById('vehicleForm').reset();
+            removeUploadedFile();
+            editingVehiclePoliza = null;
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.type !== 'application/pdf') {
+                    showNotification('⚠️ Por favor selecciona un archivo PDF');
+                    event.target.value = '';
+                    return;
+                }
+
+                if (file.size > 10 * 1024 * 1024) {
+                    showNotification('⚠️ El archivo es muy grande (máximo 10MB)');
+                    event.target.value = '';
+                    return;
+                }
+
+                currentPDFFile = file;
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('fileSize').textContent = formatFileSize(file.size);
+                document.getElementById('filePreview').classList.add('active');
+                showNotification('✅ PDF cargado correctamente');
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function removeUploadedFile() {
+            currentPDFFile = null;
+            document.getElementById('pdfUpload').value = '';
+            document.getElementById('filePreview').classList.remove('active');
+            showNotification('PDF eliminado');
+        }
+
+        function viewPDFInModal() {
+            if (currentPDFFile) {
+                document.getElementById('pdfViewerFileName').textContent = currentPDFFile.name;
+                openPDFViewer();
+            }
+        }
+
+        function openPDFViewer() {
+            document.getElementById('pdfViewerModal').classList.add('active');
+        }
+
+        function closePDFViewer() {
+            document.getElementById('pdfViewerModal').classList.remove('active');
+        }
+
+        function saveNewVehicle(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const vehicleData = {
+                poliza: formData.get('poliza'),
+                inciso: formData.get('inciso'),
+                serie: formData.get('serie'),
+                noSerie: formData.get('noSerie'),
+                tipo: formData.get('tipo'),
+                modelo: parseInt(formData.get('modelo')),
+                nombre: formData.get('nombre'),
+                economico: formData.get('economico'),
+                descripcion: formData.get('descripcion'),
+                marca: formData.get('marca'),
+                placas: formData.get('placas'),
+                hasPDF: currentPDFFile !== null,
+                pdfData: currentPDFFile ? currentPDFFile.name : null,
+                activo: formData.get('activo') === 'on'
+            };
+
+            if (editingVehiclePoliza) {
+                const index = allVehicles.findIndex(v => v.poliza === editingVehiclePoliza);
+                if (index !== -1) {
+                    allVehicles[index] = vehicleData;
+                    showNotification(`✅ Unidad ${vehicleData.nombre} actualizada correctamente`);
+                }
+            } else {
+                allVehicles.unshift(vehicleData);
+                showNotification(`✅ Unidad ${vehicleData.nombre} agregada correctamente`);
+            }
+
+            filteredVehicles = [...allVehicles];
+            currentPage = 1;
+            renderTable();
+            closeAddVehicleModal();
+        }
+
+        function editVehicle(poliza) {
+            const vehicle = allVehicles.find(v => v.poliza === poliza);
+            if (!vehicle) return;
+
+            editingVehiclePoliza = poliza;
+            document.getElementById('modalTitle').innerHTML = '<i class="fas fa-edit"></i> Editar Unidad de Recolección';
+
+            document.querySelector('[name="poliza"]').value = vehicle.poliza;
+            document.querySelector('[name="inciso"]').value = vehicle.inciso;
+            document.querySelector('[name="serie"]').value = vehicle.serie;
+            document.querySelector('[name="noSerie"]').value = vehicle.noSerie;
+            document.querySelector('[name="tipo"]').value = vehicle.tipo;
+            document.querySelector('[name="modelo"]').value = vehicle.modelo;
+            document.querySelector('[name="nombre"]').value = vehicle.nombre;
+            document.querySelector('[name="economico"]').value = vehicle.economico;
+            document.querySelector('[name="descripcion"]').value = vehicle.descripcion;
+            document.querySelector('[name="marca"]').value = vehicle.marca;
+            document.querySelector('[name="placas"]').value = vehicle.placas;
+            document.querySelector('[name="activo"]').checked = vehicle.activo;
+
+            if (vehicle.hasPDF && vehicle.pdfData) {
+                document.getElementById('fileName').textContent = vehicle.pdfData;
+                document.getElementById('fileSize').textContent = 'PDF existente';
+                document.getElementById('filePreview').classList.add('active');
+            }
+
+            openAddVehicleModal();
+        }
+
+        function deleteVehicle(poliza) {
+            const vehicle = allVehicles.find(v => v.poliza === poliza);
+            if (!vehicle) return;
+
+            if (confirm(`¿Está seguro de eliminar la unidad ${vehicle.nombre}?\n\nPóliza: ${poliza}\nPlacas: ${vehicle.placas}\n\nEsta acción no se puede deshacer.`)) {
+                const index = allVehicles.findIndex(v => v.poliza === poliza);
+                if (index !== -1) {
+                    allVehicles.splice(index, 1);
+                    filteredVehicles = [...allVehicles];
+
+                    const totalPages = Math.ceil(filteredVehicles.length / itemsPerPage);
+                    if (currentPage > totalPages && currentPage > 1) {
+                        currentPage = totalPages;
+                    }
+
+                    renderTable();
+                    showNotification(`✅ Unidad ${vehicle.nombre} eliminada correctamente`);
+                }
+            }
+        }
+
+        function viewVehicle(poliza) {
+            const vehicle = allVehicles.find(v => v.poliza === poliza);
+            if (vehicle) {
+                const details = `
+                    📋 DETALLES DE LA UNIDAD
+
+                    Póliza: ${vehicle.poliza}
+                    Inciso: ${vehicle.inciso}
+                    Serie: ${vehicle.serie}
+                    No. Serie: ${vehicle.noSerie}
+
+                    Tipo: ${getTipoLabel(vehicle.tipo)}
+                    Marca: ${vehicle.marca}
+                    Modelo: ${vehicle.modelo}
+                    Placas: ${vehicle.placas}
+
+                    Nombre: ${vehicle.nombre}
+                    No. Económico: ${vehicle.economico}
+                    Descripción: ${vehicle.descripcion}
+
+                    Estado: ${vehicle.activo ? 'Activo' : 'Inactivo'}
+                    PDF: ${vehicle.hasPDF ? 'Sí' : 'No'}
+                `;
+                alert(details);
+            }
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `<i class="fas fa-check-circle" style="color: var(--verde-principal); margin-right: 0.5rem;"></i>${message}`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable();
+            showNotification('Sistema cargado - 10 vehículos de recolección registrados');
+
+            document.getElementById('addVehicleModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeAddVehicleModal();
+                }
+            });
+
+            document.getElementById('pdfViewerModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closePDFViewer();
+                }
+            });
+
+            const uploadArea = document.querySelector('.file-upload-area');
+
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'var(--verde-principal)';
+                uploadArea.style.background = '#dcfce7';
+            });
+
+            uploadArea.addEventListener('dragleave', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'var(--verde-light)';
+                uploadArea.style.background = 'var(--bg-light)';
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'var(--verde-light)';
+                uploadArea.style.background = 'var(--bg-light)';
+
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (file.type === 'application/pdf') {
+                        document.getElementById('pdfUpload').files = files;
+                        handleFileUpload({ target: { files: files } });
+                    } else {
+                        showNotification('⚠️ Por favor arrastra un archivo PDF');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

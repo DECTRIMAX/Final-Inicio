@@ -1,0 +1,1575 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistema de Alumbrado Público | Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --primary: #28a745;
+            --secondary: #1e7e34;
+            --accent: #5cb85c;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #06b6d4;
+            --dark: #1f2937;
+            --light: #f0f9f4;
+            --border: #d4edda;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f0f9f4 0%, #e6f7eb 100%);
+            color: #1e293b;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* PANEL DE NAVEGACIÓN */
+        .nav-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #f0f9f4 100%);
+            box-shadow: -10px 0 30px rgba(40, 167, 69, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow: hidden;
+            border-left: 1px solid var(--border);
+        }
+
+            .nav-panel.open {
+                right: 0;
+            }
+
+        .nav-panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 167, 69, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+            .nav-panel-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .nav-toggle {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 20px 25px -5px rgba(40, 167, 69, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-toggle:hover {
+                transform: translateY(-50%) scale(1.1);
+                box-shadow: 0 25px 35px -5px rgba(40, 167, 69, 0.4);
+            }
+
+            .nav-toggle.active {
+                background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+                transform: translateY(-50%) rotate(180deg);
+            }
+
+        .nav-panel-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 2rem 1.5rem;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-panel-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-panel-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-panel-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-panel-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .nav-panel-body {
+            padding: 1.5rem;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            background: #ffffff;
+            border-radius: 12px;
+            color: #334155;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+            .nav-item:hover {
+                background: var(--light);
+                transform: translateX(-5px);
+                border-color: var(--primary);
+                box-shadow: 0 4px 6px -1px rgba(40, 167, 69, 0.1);
+            }
+
+            .nav-item.active {
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+                color: white;
+                border-color: var(--primary);
+            }
+
+        .nav-item-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active .nav-item-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-item:hover .nav-item-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .nav-item-content {
+            flex: 1;
+        }
+
+        .nav-item-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #1e293b;
+        }
+
+        .nav-item.active .nav-item-title {
+            color: white;
+        }
+
+        .nav-item-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .nav-item.active .nav-item-desc {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-item-arrow {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-item-arrow {
+            color: var(--primary);
+            transform: translateX(3px);
+        }
+
+        .nav-item.active .nav-item-arrow {
+            color: white;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 20px 25px -5px rgba(40, 167, 69, 0.15);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-info h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-info p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+            .btn-success:hover {
+                background: #059669;
+                transform: translateY(-2px);
+            }
+
+        .btn-info {
+            background: var(--info);
+            color: white;
+        }
+
+            .btn-info:hover {
+                background: #0891b2;
+                transform: translateY(-2px);
+            }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: var(--secondary);
+                transform: translateY(-2px);
+            }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+            .btn-warning:hover {
+                background: #d97706;
+                transform: translateY(-2px);
+            }
+
+        /* CONTAINER */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            padding-right: 100px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(40, 167, 69, 0.1);
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.1rem;
+            color: #6B7280;
+            margin-bottom: 1rem;
+        }
+
+        /* STATS CARDS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f9f4 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+            }
+
+            .stat-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 30px rgba(40, 167, 69, 0.15);
+            }
+
+        .stat-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin: 0 auto 1rem;
+        }
+
+        .stat-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .stat-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+        }
+
+        .stat-warning {
+            background: linear-gradient(135deg, var(--warning), #d97706);
+        }
+
+        .stat-info {
+            background: linear-gradient(135deg, var(--info), #0891b2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        /* DATE SELECTOR */
+        .date-selector {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(40, 167, 69, 0.1);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .date-input {
+            padding: 0.5rem;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+            .date-input:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+            }
+
+        /* FILTERS */
+        .search-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: var(--light);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+            .form-input:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+            }
+
+        /* CHARTS */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(40, 167, 69, 0.1);
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .chart-canvas {
+            max-height: 300px;
+            width: 100% !important;
+            height: 300px !important;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .chart-button {
+            padding: 0.4rem 0.8rem;
+            background: var(--light);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+            .chart-button:hover {
+                background: var(--primary);
+                color: white;
+                border-color: var(--primary);
+            }
+
+            .chart-button.active {
+                background: var(--primary);
+                color: white;
+                border-color: var(--primary);
+            }
+
+        /* ACTIONS */
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        /* SCROLLBARS */
+        .nav-panel-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-track {
+            background: var(--light);
+        }
+
+        .nav-panel-body::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+
+            .nav-panel-body::-webkit-scrollbar-thumb:hover {
+                background: var(--primary);
+            }
+    </style>
+</head>
+<body>
+    <!-- Overlay para el panel -->
+    <div class="nav-panel-overlay" id="navPanelOverlay"></div>
+
+    <!-- Botón flotante para abrir panel -->
+    <button class="nav-toggle" id="navToggle">
+        <i class="fas fa-th-large"></i>
+    </button>
+
+    <!-- Panel de Navegación Lateral -->
+    <div class="nav-panel" id="navPanel">
+        <div class="nav-panel-header">
+            <button class="nav-panel-close" id="navPanelClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="nav-panel-title">Sistema de Alumbrado</h3>
+            <p class="nav-panel-subtitle">Navegación Principal</p>
+        </div>
+
+        <div class="nav-panel-body">
+            <div class="nav-item" data-module="captura">
+                <div class="nav-item-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Captura</div>
+                    <div class="nav-item-desc">Registro de trabajos</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="programacion">
+                <div class="nav-item-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Programación</div>
+                    <div class="nav-item-desc">Horarios y cuadrillas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="mapa">
+                <div class="nav-item-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Mapa Interactivo</div>
+                    <div class="nav-item-desc">Ubicación de luminarias</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="rastreo">
+                <div class="nav-item-icon">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Rastreo GPS</div>
+                    <div class="nav-item-desc">Monitoreo de unidades</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item active" data-module="dashboard">
+                <div class="nav-item-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Dashboard</div>
+                    <div class="nav-item-desc">Estadísticas y reportes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="reportes">
+                <div class="nav-item-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Reportes</div>
+                    <div class="nav-item-desc">Incidencias ciudadanas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="inventario">
+                <div class="nav-item-icon">
+                    <i class="fas fa-toolbox"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Material Utilizado</div>
+                    <div class="nav-item-desc">Control de inventario</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="asistencia">
+                <div class="nav-item-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Asistencia</div>
+                    <div class="nav-item-desc">Control de personal</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="oficios">
+                <div class="nav-item-icon">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Enviar Oficios</div>
+                    <div class="nav-item-desc">Almacén de oficios</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="repositorio">
+                <div class="nav-item-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Repositorio Placas</div>
+                    <div class="nav-item-desc">Archivo de placas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="citas">
+                <div class="nav-item-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Agendar Citas</div>
+                    <div class="nav-item-desc">Mantenimiento preventivo</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-info">
+                <h1>Dashboard - Sistema de Alumbrado</h1>
+                <p>Panel de Control Principal - Monclova, Coahuila</p>
+            </div>
+            <div class="nav-menu">
+                <button class="btn btn-success" onclick="exportarDatos()">
+                    <i class="fas fa-download"></i> Exportar
+                </button>
+                <button class="btn btn-info" onclick="generarReporte()">
+                    <i class="fas fa-chart-bar"></i> Reporte
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1 class="welcome-title">Dashboard Principal</h1>
+            <p class="welcome-subtitle">Monitoreo en tiempo real del sistema de alumbrado público</p>
+        </div>
+
+        <!-- Selector de Fechas -->
+        <div class="date-selector">
+            <label>Desde:</label>
+            <input type="date" class="date-input" id="fechaInicio">
+            <label>Hasta:</label>
+            <input type="date" class="date-input" id="fechaFin">
+            <button class="btn btn-primary" onclick="actualizarGraficas()">
+                <i class="fas fa-filter"></i> Filtrar
+            </button>
+            <button class="btn btn-warning" onclick="resetearFechas()">
+                <i class="fas fa-refresh"></i> Reset
+            </button>
+        </div>
+
+        <!-- Estadísticas Generales -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon stat-primary">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <div class="stat-number" id="totalLuminarias">2,847</div>
+                <div class="stat-label">Luminarias Totales</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon stat-success">
+                    <i class="fas fa-circle-check"></i>
+                </div>
+                <div class="stat-number" id="funcionando">2,654</div>
+                <div class="stat-label">Funcionando</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon stat-warning">
+                    <i class="fas fa-screwdriver-wrench"></i>
+                </div>
+                <div class="stat-number" id="mantenimiento">193</div>
+                <div class="stat-label">En Mantenimiento</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon stat-info">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="stat-number" id="ahorro">45%</div>
+                <div class="stat-label">Ahorro Energético</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon stat-success">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-number" id="eficiencia">93.5%</div>
+                <div class="stat-label">Eficiencia Global</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon stat-info">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-number" id="tiempoRespuesta">15min</div>
+                <div class="stat-label">Tiempo Respuesta</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon stat-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-number" id="alertas">8</div>
+                <div class="stat-label">Alertas Activas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon stat-primary">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-number" id="tecnicos">24</div>
+                <div class="stat-label">Técnicos Activos</div>
+            </div>
+        </div>
+
+        <!-- Filtros Avanzados -->
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-filter"></i>
+                Filtros Avanzados
+            </h2>
+            <div class="search-filters">
+                <div class="form-group">
+                    <label class="form-label">Zona</label>
+                    <select class="form-input" id="filterZona">
+                        <option value="">Todas las zonas</option>
+                        <option value="centro">Centro</option>
+                        <option value="norte">Norte</option>
+                        <option value="sur">Sur</option>
+                        <option value="este">Este</option>
+                        <option value="oeste">Oeste</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Estado</label>
+                    <select class="form-input" id="filterEstado">
+                        <option value="">Todos los estados</option>
+                        <option value="funcionando">Funcionando</option>
+                        <option value="mantenimiento">En Mantenimiento</option>
+                        <option value="apagadas">Apagadas</option>
+                        <option value="dañadas">Dañadas</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tipo Luminaria</label>
+                    <select class="form-input" id="filterTipo">
+                        <option value="">Todos los tipos</option>
+                        <option value="led">LED</option>
+                        <option value="sodio">Vapor de Sodio</option>
+                        <option value="mercurio">Vapor de Mercurio</option>
+                        <option value="halogenuro">Halogenuro Metálico</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Potencia</label>
+                    <select class="form-input" id="filterPotencia">
+                        <option value="">Todas las potencias</option>
+                        <option value="50w">50W</option>
+                        <option value="85w">85W</option>
+                        <option value="150w">150W</option>
+                        <option value="250w">250W</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Turno</label>
+                    <select class="form-input" id="filterTurno">
+                        <option value="">Todos los turnos</option>
+                        <option value="matutino">Matutino</option>
+                        <option value="vespertino">Vespertino</option>
+                        <option value="nocturno">Nocturno</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Consumo (kWh)</label>
+                    <select class="form-input" id="filterConsumo">
+                        <option value="">Todo el consumo</option>
+                        <option value="bajo">Bajo (<500)</option>
+                        <option value="medio">Medio (500-1000)</option>
+                        <option value="alto">Alto (>1000)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-primary" onclick="aplicarFiltros()">
+                    <i class="fas fa-filter"></i> Aplicar Filtros
+                </button>
+                <button class="btn btn-warning" onclick="limpiarFiltros()">
+                    <i class="fas fa-eraser"></i> Limpiar
+                </button>
+                <button class="btn btn-info" onclick="generarReporteCompleto()">
+                    <i class="fas fa-chart-bar"></i> Generar Reporte
+                </button>
+                <button class="btn btn-success" onclick="exportarExcel()">
+                    <i class="fas fa-file-excel"></i> Excel
+                </button>
+            </div>
+        </div>
+
+        <!-- Gráficas de Análisis -->
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-pie"></i>
+                Análisis de Alumbrado Público
+            </h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3 class="chart-title">Consumo Energético</h3>
+                    <div class="chart-controls">
+                        <button class="chart-button active" onclick="cambiarPeriodo('energia', 'dia')">Día</button>
+                        <button class="chart-button" onclick="cambiarPeriodo('energia', 'semana')">Semana</button>
+                        <button class="chart-button" onclick="cambiarPeriodo('energia', 'mes')">Mes</button>
+                    </div>
+                    <canvas id="chartEnergia" class="chart-canvas"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">Estado de Luminarias</h3>
+                    <div class="chart-controls">
+                        <button class="chart-button active" onclick="cambiarPeriodo('estado', 'actual')">Actual</button>
+                        <button class="chart-button" onclick="cambiarPeriodo('estado', 'historico')">Histórico</button>
+                    </div>
+                    <canvas id="chartEstado" class="chart-canvas"></canvas>
+                </div>
+            </div>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3 class="chart-title">Reportes por Zona</h3>
+                    <div class="chart-controls">
+                        <button class="chart-button active" onclick="cambiarPeriodo('reportes', 'dia')">Hoy</button>
+                        <button class="chart-button" onclick="cambiarPeriodo('reportes', 'semana')">7 días</button>
+                        <button class="chart-button" onclick="cambiarPeriodo('reportes', 'mes')">30 días</button>
+                    </div>
+                    <canvas id="chartReportes" class="chart-canvas"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">Eficiencia por Sector</h3>
+                    <div class="chart-controls">
+                        <button class="chart-button active" onclick="cambiarPeriodo('eficiencia', 'general')">General</button>
+                        <button class="chart-button" onclick="cambiarPeriodo('eficiencia', 'detallado')">Detallado</button>
+                    </div>
+                    <canvas id="chartEficiencia" class="chart-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Alertas y Notificaciones -->
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-bell"></i>
+                Alertas y Notificaciones
+            </h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                <div style="background: linear-gradient(135deg, #fef3c7, #fbbf24); padding: 1rem; border-radius: 12px; border-left: 4px solid #f59e0b;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <i class="fas fa-exclamation-triangle" style="color: #d97706;"></i>
+                        <strong style="color: #92400e;">Mantenimiento Pendiente</strong>
+                    </div>
+                    <p style="color: #92400e; font-size: 0.9rem;">12 luminarias requieren mantenimiento preventivo en Zona Norte</p>
+                </div>
+                <div style="background: linear-gradient(135deg, #dbeafe, #3b82f6); padding: 1rem; border-radius: 12px; border-left: 4px solid #2563eb;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <i class="fas fa-info-circle" style="color: #1d4ed8;"></i>
+                        <strong style="color: #1e3a8a;">Información</strong>
+                    </div>
+                    <p style="color: #1e3a8a; font-size: 0.9rem;">Programación automática activada para horario de invierno</p>
+                </div>
+                <div style="background: linear-gradient(135deg, #dcfce7, #10b981); padding: 1rem; border-radius: 12px; border-left: 4px solid #059669;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <i class="fas fa-check-circle" style="color: #047857;"></i>
+                        <strong style="color: #064e3b;">Sistema Operativo</strong>
+                    </div>
+                    <p style="color: #064e3b; font-size: 0.9rem;">93.5% de luminarias funcionando correctamente</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumen de Actividades Recientes -->
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-history"></i>
+                Actividades Recientes
+            </h2>
+            <div style="space-y: 1rem;">
+                <div style="display: flex; align-items: center; padding: 1rem; background: var(--light); border-radius: 8px; border-left: 4px solid var(--primary); margin-bottom: 1rem;">
+                    <div style="width: 40px; height: 40px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem;">
+                        <i class="fas fa-wrench" style="color: white; font-size: 0.9rem;"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: var(--dark);">Mantenimiento Completado</div>
+                        <div style="font-size: 0.9rem; color: #6b7280;">Zona Centro - 15 luminarias reparadas</div>
+                        <div style="font-size: 0.8rem; color: #9ca3af;">Hace 2 horas</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; padding: 1rem; background: var(--light); border-radius: 8px; border-left: 4px solid var(--success); margin-bottom: 1rem;">
+                    <div style="width: 40px; height: 40px; background: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem;">
+                        <i class="fas fa-lightbulb" style="color: white; font-size: 0.9rem;"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: var(--dark);">Instalación Nueva</div>
+                        <div style="font-size: 0.9rem; color: #6b7280;">25 luminarias LED instaladas en Zona Este</div>
+                        <div style="font-size: 0.8rem; color: #9ca3af;">Hace 4 horas</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; padding: 1rem; background: var(--light); border-radius: 8px; border-left: 4px solid var(--warning); margin-bottom: 1rem;">
+                    <div style="width: 40px; height: 40px; background: var(--warning); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem;">
+                        <i class="fas fa-exclamation-triangle" style="color: white; font-size: 0.9rem;"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; color: var(--dark);">Reporte Ciudadano</div>
+                        <div style="font-size: 0.9rem; color: #6b7280;">Luminaria apagada reportada en Av. Juárez</div>
+                        <div style="font-size: 0.8rem; color: #9ca3af;">Hace 6 horas</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let navPanelOpen = false;
+        let chartEnergia, chartEstado, chartReportes, chartEficiencia;
+
+        // Toggle del panel de navegación
+        function toggleNavPanel() {
+            const navPanel = document.getElementById('navPanel');
+            const overlay = document.getElementById('navPanelOverlay');
+            const toggleBtn = document.getElementById('navToggle');
+
+            if (!navPanel || !overlay || !toggleBtn) return;
+
+            navPanelOpen = !navPanelOpen;
+
+            if (navPanelOpen) {
+                navPanel.classList.add('open');
+                overlay.classList.add('active');
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '<i class="fas fa-times"></i>';
+                document.body.style.overflow = 'hidden';
+            } else {
+                navPanel.classList.remove('open');
+                overlay.classList.remove('active');
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '<i class="fas fa-th-large"></i>';
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Redireccionar a diferentes módulos
+        function redirectTo(module) {
+            if (navPanelOpen) toggleNavPanel();
+
+            const urls = {
+                'captura': '/Home/CapturaAlumbrado',
+                'programacion': '/Home/ProgramacionAlumbrado',
+                'mapa': '/Home/MapaAlumbrado',
+                'rastreo': '/Home/RastreoAlumbrado',
+                'dashboard': '/Home/DashboardAlumbrado',
+                'reportes': '/Home/ReportesAlumbrado',
+                'inventario': '/Home/MaterialUtilizadoAlumbrado',
+                'asistencia': '/Home/AsistenciaPersonalAlumbrado',
+                'oficios': '/Home/EnviarOficiosAlmacenAlumbrado',
+                'repositorio': '/Home/RepositorioPlacasAlumbrado',
+                'citas': '/Home/AgendarCitasMantenimiento'
+            };
+
+            showNotification(`Navegando a ${module}...`, 'info');
+            setTimeout(() => {
+                if (urls[module]) window.location.href = urls[module];
+            }, 300);
+        }
+
+        // Inicializar gráficas
+        function inicializarGraficas() {
+            try {
+                if (chartEnergia) chartEnergia.destroy();
+                if (chartEstado) chartEstado.destroy();
+                if (chartReportes) chartReportes.destroy();
+                if (chartEficiencia) chartEficiencia.destroy();
+            } catch (error) {
+                console.log('Error destruyendo gráficas:', error);
+            }
+
+            // Gráfica de Consumo Energético
+            const ctxEnergia = document.getElementById('chartEnergia');
+            if (ctxEnergia) {
+                chartEnergia = new Chart(ctxEnergia.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+                        datasets: [{
+                            label: 'Consumo kWh',
+                            data: [850, 920, 450, 380, 420, 780],
+                            borderColor: '#28a745',
+                            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            pointBackgroundColor: '#28a745',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(40, 167, 69, 0.1)' } },
+                            x: { grid: { color: 'rgba(40, 167, 69, 0.1)' } }
+                        }
+                    }
+                });
+            }
+
+            // Gráfica de Estado de Luminarias
+            const ctxEstado = document.getElementById('chartEstado');
+            if (ctxEstado) {
+                chartEstado = new Chart(ctxEstado.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Funcionando', 'Mantenimiento', 'Apagadas', 'Dañadas'],
+                        datasets: [{
+                            data: [2654, 193, 45, 32],
+                            backgroundColor: ['#10b981', '#f59e0b', '#6b7280', '#ef4444'],
+                            borderWidth: 3,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { padding: 20, usePointStyle: true } }
+                        }
+                    }
+                });
+            }
+
+            // Gráfica de Reportes por Zona
+            const ctxReportes = document.getElementById('chartReportes');
+            if (ctxReportes) {
+                chartReportes = new Chart(ctxReportes.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Centro', 'Norte', 'Sur', 'Este', 'Oeste'],
+                        datasets: [{
+                            label: 'Reportes',
+                            data: [12, 8, 15, 6, 9],
+                            backgroundColor: ['#28a745', '#10b981', '#f59e0b', '#ef4444', '#06b6d4'],
+                            borderRadius: 6,
+                            borderWidth: 2,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(40, 167, 69, 0.1)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+
+            // Gráfica de Eficiencia
+            const ctxEficiencia = document.getElementById('chartEficiencia');
+            if (ctxEficiencia) {
+                chartEficiencia = new Chart(ctxEficiencia.getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: ['Centro', 'Norte', 'Sur', 'Este', 'Oeste'],
+                        datasets: [{
+                            data: [95, 87, 92, 89, 91],
+                            backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#6b7280', '#28a745'],
+                            borderWidth: 3,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { padding: 20, usePointStyle: true } }
+                        }
+                    }
+                });
+            }
+
+            showNotification('Gráficas inicializadas correctamente', 'success');
+        }
+
+        // Cambiar período de gráficas
+        function cambiarPeriodo(grafica, periodo) {
+            if (!event || !event.target) return;
+
+            const container = event.target.closest('.chart-container');
+            if (container) {
+                container.querySelectorAll('.chart-button').forEach(btn => btn.classList.remove('active'));
+                event.target.classList.add('active');
+            }
+
+            switch (grafica) {
+                case 'energia':
+                    if (chartEnergia) {
+                        const nuevosLabels = periodo === 'dia' ? ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'] :
+                                            periodo === 'semana' ? ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'] :
+                                            ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4'];
+                        const nuevosDatos = periodo === 'dia' ? [850, 920, 450, 380, 420, 780] :
+                                          periodo === 'semana' ? [5200, 4800, 5500, 4900, 5100, 3200, 3800] :
+                                          [18500, 19200, 17800, 18900];
+
+                        chartEnergia.data.labels = nuevosLabels;
+                        chartEnergia.data.datasets[0].data = nuevosDatos;
+                        chartEnergia.update('active');
+                    }
+                    break;
+                case 'estado':
+                    if (chartEstado) {
+                        const nuevosDatos = periodo === 'actual' ? [2654, 193, 45, 32] : [2580, 167, 52, 48];
+                        chartEstado.data.datasets[0].data = nuevosDatos;
+                        chartEstado.update('active');
+                    }
+                    break;
+                case 'reportes':
+                    if (chartReportes) {
+                        const nuevosDatos = periodo === 'dia' ? [2, 1, 3, 1, 2] :
+                                          periodo === 'semana' ? [12, 8, 15, 6, 9] :
+                                          [45, 32, 58, 23, 38];
+                        chartReportes.data.datasets[0].data = nuevosDatos;
+                        chartReportes.update('active');
+                    }
+                    break;
+                case 'eficiencia':
+                    if (chartEficiencia) {
+                        const nuevosDatos = periodo === 'general' ? [95, 87, 92, 89, 91] : [98, 92, 89, 94, 96];
+                        chartEficiencia.data.datasets[0].data = nuevosDatos;
+                        chartEficiencia.update('active');
+                    }
+                    break;
+            }
+
+            showNotification(`Gráfica actualizada: ${periodo}`, 'success');
+        }
+
+        // Aplicar filtros
+        function aplicarFiltros() {
+            const filtros = {
+                zona: document.getElementById('filterZona')?.value || '',
+                estado: document.getElementById('filterEstado')?.value || '',
+                tipo: document.getElementById('filterTipo')?.value || '',
+                potencia: document.getElementById('filterPotencia')?.value || '',
+                turno: document.getElementById('filterTurno')?.value || '',
+                consumo: document.getElementById('filterConsumo')?.value || ''
+            };
+
+            let filtrosAplicados = [];
+            Object.keys(filtros).forEach(key => {
+                if (filtros[key]) {
+                    filtrosAplicados.push(`${key}: ${filtros[key]}`);
+                }
+            });
+
+            const mensaje = filtrosAplicados.length > 0 ?
+                `Filtros aplicados: ${filtrosAplicados.join(', ')}` :
+                'Mostrando todos los datos';
+
+            showNotification(mensaje, 'success');
+            setTimeout(() => actualizarEstadisticas(), 500);
+        }
+
+        // Limpiar filtros
+        function limpiarFiltros() {
+            ['filterZona', 'filterEstado', 'filterTipo', 'filterPotencia', 'filterTurno', 'filterConsumo'].forEach(id => {
+                const elemento = document.getElementById(id);
+                if (elemento) elemento.value = '';
+            });
+            showNotification('Filtros limpiados correctamente', 'warning');
+            setTimeout(() => actualizarEstadisticas(), 500);
+        }
+
+        // Actualizar gráficas con fechas
+        function actualizarGraficas() {
+            const fechaInicio = document.getElementById('fechaInicio')?.value;
+            const fechaFin = document.getElementById('fechaFin')?.value;
+
+            if (!fechaInicio || !fechaFin) {
+                showNotification('Selecciona ambas fechas', 'error');
+                return;
+            }
+
+            if (new Date(fechaInicio) > new Date(fechaFin)) {
+                showNotification('La fecha de inicio debe ser anterior a la fecha fin', 'error');
+                return;
+            }
+
+            const diferenciaDias = Math.ceil((new Date(fechaFin) - new Date(fechaInicio)) / (1000 * 60 * 60 * 24));
+            showNotification(`Gráficas actualizadas para ${diferenciaDias} días`, 'success');
+            setTimeout(() => actualizarEstadisticas(), 500);
+        }
+
+        // Resetear fechas
+        function resetearFechas() {
+            const hoy = new Date();
+            const hace7dias = new Date(hoy.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+            const fechaInicio = document.getElementById('fechaInicio');
+            const fechaFin = document.getElementById('fechaFin');
+
+            if (fechaInicio) fechaInicio.value = hace7dias.toISOString().split('T')[0];
+            if (fechaFin) fechaFin.value = hoy.toISOString().split('T')[0];
+
+            showNotification('Fechas reseteadas a los últimos 7 días', 'info');
+        }
+
+        // Actualizar estadísticas
+        function actualizarEstadisticas() {
+            const stats = {
+                totalLuminarias: Math.round(2847 + (Math.random() - 0.5) * 50),
+                funcionando: Math.round(2654 + (Math.random() - 0.5) * 100),
+                mantenimiento: Math.round(193 + (Math.random() - 0.5) * 30),
+                ahorro: Math.round((45 + (Math.random() - 0.5) * 10) * 10) / 10,
+                eficiencia: Math.round((93.5 + (Math.random() - 0.5) * 5) * 10) / 10,
+                tiempoRespuesta: Math.round(15 + (Math.random() - 0.5) * 10),
+                alertas: Math.round(Math.max(0, 8 + (Math.random() - 0.5) * 6)),
+                tecnicos: Math.round(24 + (Math.random() - 0.5) * 4)
+            };
+
+            Object.keys(stats).forEach(key => {
+                const elemento = document.getElementById(key);
+                if (elemento) {
+                    elemento.style.transform = 'scale(1.1)';
+                    elemento.style.transition = 'all 0.3s ease';
+
+                    setTimeout(() => {
+                        if (key === 'ahorro' || key === 'eficiencia') {
+                            elemento.textContent = stats[key] + '%';
+                        } else if (key === 'tiempoRespuesta') {
+                            elemento.textContent = stats[key] + 'min';
+                        } else {
+                            elemento.textContent = stats[key].toLocaleString();
+                        }
+                        elemento.style.transform = 'scale(1)';
+                    }, 150);
+                }
+            });
+        }
+
+        // Exportar datos
+        function exportarDatos() {
+            showNotification('Preparando exportación de datos...', 'info');
+            const datos = {
+                fecha: new Date().toISOString(),
+                estadisticas: {
+                    luminarias_totales: 2847,
+                    funcionando: 2654,
+                    mantenimiento: 193
+                }
+            };
+
+            setTimeout(() => {
+                const dataStr = JSON.stringify(datos, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `datos_dashboard_${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                showNotification('Datos exportados correctamente', 'success');
+            }, 2000);
+        }
+
+        // Generar reporte
+        function generarReporte() {
+            showNotification('Generando reporte...', 'info');
+            setTimeout(() => {
+                showNotification('Reporte generado exitosamente', 'success');
+            }, 2000);
+        }
+
+        // Generar reporte completo
+        function generarReporteCompleto() {
+            showNotification('Generando reporte completo...', 'info');
+            setTimeout(() => {
+                showNotification('Reporte completo generado', 'success');
+            }, 2500);
+        }
+
+        // Exportar a Excel
+        function exportarExcel() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Zona,Luminarias,Funcionando,Mantenimiento,Eficiencia\n";
+            csvContent += "Centro,567,534,33,94.2%\n";
+            csvContent += "Norte,623,589,34,94.5%\n";
+            csvContent += "Sur,584,551,33,94.4%\n";
+            csvContent += "Este,498,472,26,94.8%\n";
+            csvContent += "Oeste,575,508,67,88.4%\n";
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `dashboard_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showNotification('Archivo Excel exportado', 'success');
+        }
+
+        // Sistema de notificaciones
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 2001;
+                opacity: 0;
+                transform: translateX(100%);
+                transition: all 0.3s ease;
+                max-width: 350px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+                font-size: 0.9rem;
+                cursor: pointer;
+            `;
+
+            const colors = {
+                success: 'linear-gradient(135deg, #10b981, #059669)',
+                error: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                warning: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                info: 'linear-gradient(135deg, #28a745, #1e7e34)'
+            };
+
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+
+            notification.addEventListener('click', () => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => notification.remove(), 300);
+            });
+        }
+
+        // Configurar eventos del panel
+        function configurarEventosPanel() {
+            const navToggle = document.getElementById('navToggle');
+            if (navToggle) navToggle.onclick = () => toggleNavPanel();
+
+            const navPanelClose = document.getElementById('navPanelClose');
+            if (navPanelClose) navPanelClose.onclick = () => toggleNavPanel();
+
+            const navPanelOverlay = document.getElementById('navPanelOverlay');
+            if (navPanelOverlay) navPanelOverlay.onclick = () => toggleNavPanel();
+
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                const module = item.getAttribute('data-module');
+                if (module) item.onclick = () => redirectTo(module);
+            });
+        }
+
+        // Configurar atajos de teclado
+        function configurarAtajos() {
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'n') {
+                    e.preventDefault();
+                    toggleNavPanel();
+                }
+                if (e.key === 'Escape' && navPanelOpen) {
+                    toggleNavPanel();
+                }
+            });
+        }
+
+        // Inicialización principal
+        document.addEventListener('DOMContentLoaded', function() {
+            configurarEventosPanel();
+            configurarAtajos();
+            resetearFechas();
+
+            if (typeof Chart !== 'undefined') {
+                Chart.defaults.font.family = 'Inter, -apple-system, BlinkMacSystemFont, sans-serif';
+                setTimeout(() => inicializarGraficas(), 800);
+            }
+
+            setInterval(() => actualizarEstadisticas(), 30000);
+
+            setTimeout(() => {
+                showNotification('Dashboard cargado correctamente', 'success');
+            }, 1200);
+        });
+
+        // Limpieza al cerrar
+        window.addEventListener('beforeunload', function() {
+            try {
+                if (chartEnergia) chartEnergia.destroy();
+                if (chartEstado) chartEstado.destroy();
+                if (chartReportes) chartReportes.destroy();
+                if (chartEficiencia) chartEficiencia.destroy();
+            } catch (error) {
+                console.log('Error limpiando recursos:', error);
+            }
+        });
+    </script>
+</body>
+</html>

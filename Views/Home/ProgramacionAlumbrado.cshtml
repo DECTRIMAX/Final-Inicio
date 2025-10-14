@@ -1,0 +1,1577 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Cuadrillas - Alumbrado Público</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #28a745;
+            --secondary: #1e7e34;
+            --accent: #5cb85c;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #06b6d4;
+            --dark: #1F2937;
+            --light: #f0f9f4;
+            --border: #d4edda;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f0f9f4 0%, #e6f7eb 100%);
+            color: #111827;
+            line-height: 1.6;
+            min-height: 100vh;
+            font-size: clamp(14px, 2vw, 16px);
+        }
+
+        .nav-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: min(90%, 380px);
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #f0f9f4 100%);
+            box-shadow: -10px 0 30px rgba(40, 167, 69, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow: hidden;
+            border-left: 1px solid var(--border);
+        }
+
+            .nav-panel.open {
+                right: 0;
+            }
+
+        .nav-panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 167, 69, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+            .nav-panel-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .nav-toggle {
+            position: fixed;
+            top: 50%;
+            right: clamp(10px, 2vw, 20px);
+            transform: translateY(-50%);
+            width: clamp(44px, 8vw, 56px);
+            height: clamp(44px, 8vw, 56px);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            cursor: pointer;
+            box-shadow: 0 20px 25px -5px rgba(40, 167, 69, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-toggle:hover {
+                transform: translateY(-50%) scale(1.1);
+                box-shadow: 0 25px 35px -5px rgba(40, 167, 69, 0.4);
+            }
+
+            .nav-toggle.active {
+                background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+                transform: translateY(-50%) rotate(180deg);
+            }
+
+        .nav-panel-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 2vw, 1.5rem);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-panel-title {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-panel-subtitle {
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            opacity: 0.9;
+        }
+
+        .nav-panel-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: clamp(32px, 6vw, 36px);
+            height: clamp(32px, 6vw, 36px);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+        }
+
+            .nav-panel-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .nav-panel-body {
+            padding: clamp(1rem, 2vw, 1.5rem);
+            height: calc(100vh - clamp(100px, 15vh, 120px));
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: clamp(0.75rem, 2vw, 1rem) clamp(1rem, 2vw, 1.25rem);
+            margin-bottom: 0.75rem;
+            background: #ffffff;
+            border-radius: clamp(8px, 2vw, 12px);
+            color: #334155;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+            .nav-item:hover {
+                background: var(--light);
+                transform: translateX(-5px);
+                border-color: var(--primary);
+                box-shadow: 0 4px 6px -1px rgba(40, 167, 69, 0.1);
+            }
+
+            .nav-item.active {
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+                color: white;
+                border-color: var(--primary);
+            }
+
+        .nav-item-icon {
+            width: clamp(40px, 8vw, 48px);
+            height: clamp(40px, 8vw, 48px);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: clamp(8px, 2vw, 12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: white;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .nav-item.active .nav-item-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-item:hover .nav-item-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .nav-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .nav-item-title {
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #1e293b;
+        }
+
+        .nav-item.active .nav-item-title {
+            color: white;
+        }
+
+        .nav-item-desc {
+            font-size: clamp(0.75rem, 1.8vw, 0.8rem);
+            color: #64748b;
+        }
+
+        .nav-item.active .nav-item-desc {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-item-arrow {
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            color: #94a3b8;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .nav-item:hover .nav-item-arrow {
+            color: var(--primary);
+            transform: translateX(3px);
+        }
+
+        .nav-item.active .nav-item-arrow {
+            color: white;
+        }
+
+        .nav-panel-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-track {
+            background: var(--light);
+        }
+
+        .nav-panel-body::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+
+            .nav-panel-body::-webkit-scrollbar-thumb:hover {
+                background: var(--primary);
+            }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: clamp(1rem, 2vw, 1.5rem) clamp(1rem, 3vw, 2rem);
+            box-shadow: 0 4px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: clamp(1rem, 2vw, 2rem);
+        }
+
+        .header-info {
+            flex: 1 1 300px;
+            min-width: 0;
+        }
+
+            .header-info h1 {
+                font-size: clamp(1.2rem, 3vw, 1.8rem);
+                font-weight: 700;
+                margin-bottom: 0.3rem;
+                word-wrap: break-word;
+            }
+
+            .header-info p {
+                font-size: clamp(0.85rem, 2vw, 1rem);
+                opacity: 0.9;
+            }
+
+        .nav-menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+            align-items: center;
+        }
+
+        .btn {
+            padding: clamp(0.6rem, 1.5vw, 0.75rem) clamp(1rem, 2vw, 1.5rem);
+            border: none;
+            border-radius: clamp(6px, 1.5vw, 8px);
+            text-decoration: none;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+            .btn-back:hover {
+                background: rgba(255,255,255,0.3);
+                transform: translateY(-2px);
+            }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: var(--secondary);
+                transform: translateY(-2px);
+            }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+            .btn-success:hover {
+                background: #059669;
+            }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+            .btn-warning:hover {
+                background: #D97706;
+            }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+            .btn-danger:hover {
+                background: #DC2626;
+            }
+
+        .btn-info {
+            background: var(--info);
+            color: white;
+        }
+
+            .btn-info:hover {
+                background: #0891b2;
+            }
+
+        .btn-sm {
+            padding: clamp(0.4rem, 1vw, 0.5rem) clamp(0.8rem, 1.5vw, 1rem);
+            font-size: clamp(0.75rem, 1.8vw, 0.8rem);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2rem);
+            padding-right: clamp(60px, 12vw, 100px);
+        }
+
+        .section {
+            background: white;
+            border-radius: clamp(12px, 2vw, 16px);
+            padding: clamp(1rem, 3vw, 2rem);
+            margin-bottom: clamp(1rem, 2vw, 2rem);
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 0.75rem);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: clamp(1rem, 2vw, 1.5rem);
+            margin-bottom: clamp(1rem, 2vw, 2rem);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: clamp(0.85rem, 2vw, 0.9rem);
+        }
+
+        .form-input {
+            padding: clamp(0.6rem, 1.5vw, 0.75rem);
+            border: 2px solid var(--border);
+            border-radius: clamp(6px, 1.5vw, 8px);
+            font-size: clamp(0.85rem, 2vw, 0.9rem);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+            .form-input:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+            }
+
+        .form-textarea {
+            min-height: clamp(80px, 15vw, 100px);
+            resize: vertical;
+        }
+
+        .search-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+            gap: clamp(0.75rem, 1.5vw, 1rem);
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            padding: clamp(1rem, 2vw, 1.5rem);
+            background: var(--light);
+            border-radius: clamp(8px, 2vw, 12px);
+            border: 1px solid var(--border);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: clamp(8px, 2vw, 12px);
+            border: 1px solid var(--border);
+        }
+
+        .table {
+            width: 100%;
+            min-width: 900px;
+            border-collapse: collapse;
+            background: white;
+        }
+
+            .table th {
+                background: var(--primary);
+                color: white;
+                padding: clamp(0.75rem, 2vw, 1rem);
+                text-align: left;
+                font-weight: 600;
+                font-size: clamp(0.8rem, 2vw, 0.9rem);
+                white-space: nowrap;
+            }
+
+            .table td {
+                padding: clamp(0.75rem, 2vw, 1rem);
+                border-bottom: 1px solid var(--border);
+                font-size: clamp(0.8rem, 2vw, 0.9rem);
+            }
+
+            .table tr:hover {
+                background: var(--light);
+            }
+
+        .status-badge {
+            padding: clamp(0.2rem, 0.5vw, 0.25rem) clamp(0.6rem, 1.5vw, 0.75rem);
+            border-radius: 20px;
+            font-size: clamp(0.7rem, 1.8vw, 0.75rem);
+            font-weight: 600;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .status-pendiente {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .status-proceso {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .status-completado {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: clamp(1rem, 3vw, 2rem);
+        }
+
+        .modal-content {
+            position: relative;
+            margin: auto;
+            background: white;
+            border-radius: clamp(12px, 2vw, 16px);
+            padding: clamp(1rem, 3vw, 2rem);
+            width: min(95%, 700px);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            padding-bottom: clamp(0.75rem, 1.5vw, 1rem);
+            border-bottom: 1px solid var(--border);
+            gap: 1rem;
+        }
+
+        .modal-title {
+            font-size: clamp(1.1rem, 2.5vw, 1.25rem);
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: clamp(1.3rem, 3vw, 1.5rem);
+            cursor: pointer;
+            color: #6B7280;
+            flex-shrink: 0;
+        }
+
+        .photo-upload {
+            border: 2px dashed var(--border);
+            border-radius: clamp(6px, 1.5vw, 8px);
+            padding: clamp(1.5rem, 3vw, 2rem);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .photo-upload:hover {
+                border-color: var(--primary);
+                background: var(--light);
+            }
+
+        .photo-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 120px), 1fr));
+            gap: clamp(0.75rem, 1.5vw, 1rem);
+            margin-top: clamp(0.75rem, 1.5vw, 1rem);
+        }
+
+        .photo-item {
+            position: relative;
+            border-radius: clamp(6px, 1.5vw, 8px);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            aspect-ratio: 1;
+        }
+
+            .photo-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .photo-delete {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: clamp(20px, 4vw, 24px);
+            height: clamp(20px, 4vw, 24px);
+            cursor: pointer;
+            font-size: clamp(0.65rem, 1.5vw, 0.7rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: clamp(0.5rem, 1vw, 0.5rem);
+            justify-content: flex-end;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+            gap: clamp(1rem, 2vw, 1.5rem);
+            margin-bottom: clamp(1rem, 2vw, 2rem);
+        }
+
+        .stat-card {
+            background: white;
+            padding: clamp(1rem, 2vw, 1.5rem);
+            border-radius: clamp(8px, 2vw, 12px);
+            border: 1px solid var(--border);
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .stat-number {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            color: #6B7280;
+            font-weight: 600;
+        }
+
+        .export-btn {
+            background: var(--success);
+            color: white;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: clamp(0.75rem, 2vw, 1rem) clamp(1rem, 2vw, 1.5rem);
+            border-radius: clamp(6px, 1.5vw, 8px);
+            color: white;
+            font-weight: 600;
+            z-index: 1001;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            max-width: min(90%, 400px);
+            font-size: clamp(0.85rem, 2vw, 0.9rem);
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .notification.success {
+                background: var(--success);
+            }
+
+            .notification.error {
+                background: var(--danger);
+            }
+
+            .notification.warning {
+                background: var(--warning);
+            }
+
+            .notification.info {
+                background: var(--primary);
+            }
+
+        .location-input-group {
+            display: flex;
+            gap: clamp(0.5rem, 1vw, 0.75rem);
+            align-items: flex-end;
+        }
+
+            .location-input-group .form-group {
+                flex: 1;
+            }
+
+        .btn-location {
+            background: var(--info);
+            color: white;
+            padding: clamp(0.6rem, 1.5vw, 0.75rem);
+            border: none;
+            border-radius: clamp(6px, 1.5vw, 8px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+            .btn-location:hover {
+                background: #0891b2;
+                transform: translateY(-2px);
+            }
+
+        .location-info {
+            font-size: clamp(0.75rem, 1.8vw, 0.8rem);
+            color: #6B7280;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-panel-overlay" id="navPanelOverlay"></div>
+
+    <button class="nav-toggle" id="navToggle">
+        <i class="fas fa-th-large"></i>
+    </button>
+
+    <div class="nav-panel" id="navPanel">
+        <div class="nav-panel-header">
+            <button class="nav-panel-close" id="navPanelClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="nav-panel-title">Sistema de Alumbrado</h3>
+            <p class="nav-panel-subtitle">Navegación Principal</p>
+        </div>
+
+        <div class="nav-panel-body">
+            <div class="nav-item" data-module="captura">
+                <div class="nav-item-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Captura</div>
+                    <div class="nav-item-desc">Registro de trabajos</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item active" data-module="programacion">
+                <div class="nav-item-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Programación</div>
+                    <div class="nav-item-desc">Horarios y cuadrillas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="mapa">
+                <div class="nav-item-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Mapa Interactivo</div>
+                    <div class="nav-item-desc">Ubicación de luminarias</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="rastreo">
+                <div class="nav-item-icon">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Rastreo GPS</div>
+                    <div class="nav-item-desc">Monitoreo de unidades</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="dashboard">
+                <div class="nav-item-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Dashboard</div>
+                    <div class="nav-item-desc">Estadísticas y reportes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="reportes">
+                <div class="nav-item-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Reportes</div>
+                    <div class="nav-item-desc">Incidencias ciudadanas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="inventario">
+                <div class="nav-item-icon">
+                    <i class="fas fa-toolbox"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Material Utilizado</div>
+                    <div class="nav-item-desc">Control de inventario</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="asistencia">
+                <div class="nav-item-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Asistencia</div>
+                    <div class="nav-item-desc">Control de personal</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="oficios">
+                <div class="nav-item-icon">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Enviar Oficios</div>
+                    <div class="nav-item-desc">Almacén de oficios</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="repositorio">
+                <div class="nav-item-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Repositorio Placas</div>
+                    <div class="nav-item-desc">Archivo de placas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" data-module="citas">
+                <div class="nav-item-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Agendar Citas</div>
+                    <div class="nav-item-desc">Mantenimiento preventivo</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="header-info">
+                <h1>Programación de Cuadrillas - Alumbrado Público</h1>
+                <p>Presidencia Municipal de Monclova, Coahuila 2025-2027</p>
+            </div>
+            <div class="nav-menu">
+                <a href="/Home/DashboardAdministradorAlumbrado" class="btn btn-back">
+                    <i class="fas fa-arrow-left"></i> Regresar
+                </a>
+                <button class="btn btn-primary" onclick="openModal('nuevoReporte')">
+                    <i class="fas fa-plus"></i> Nuevo
+                </button>
+                <button class="btn btn-success export-btn" onclick="exportarDocumento()">
+                    <i class="fas fa-file-export"></i> Exportar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalReportes">24</div>
+                <div class="stat-label">Total Reportes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendientes">8</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="enProceso">12</div>
+                <div class="stat-label">En Proceso</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="completados">4</div>
+                <div class="stat-label">Completados</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-search"></i>
+                Búsqueda y Filtros
+            </h2>
+            <div class="search-filters">
+                <div class="form-group">
+                    <label class="form-label">Buscar</label>
+                    <input type="text" class="form-input" id="searchText" placeholder="Folio o dirección...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Supervisor</label>
+                    <select class="form-input" id="filterSupervisor">
+                        <option value="">Todos</option>
+                        <option value="JOEL ABREGO">JOEL ABREGO</option>
+                        <option value="MARIO HERNANDEZ">MARIO HERNANDEZ</option>
+                        <option value="LUIS MARTINEZ">LUIS MARTINEZ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Oficial</label>
+                    <select class="form-input" id="filterOficial">
+                        <option value="">Todos</option>
+                        <option value="JUAN JAIME CHAVEZ">JUAN JAIME CHAVEZ</option>
+                        <option value="CARLOS RODRIGUEZ">CARLOS RODRIGUEZ</option>
+                        <option value="MIGUEL SANTOS">MIGUEL SANTOS</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Turno</label>
+                    <select class="form-input" id="filterTurno">
+                        <option value="">Todos</option>
+                        <option value="1ERA">1ERA</option>
+                        <option value="2DA">2DA</option>
+                        <option value="3ERA">3ERA</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Estado</label>
+                    <select class="form-input" id="filterEstado">
+                        <option value="">Todos</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="En Proceso">En Proceso</option>
+                        <option value="Completado">Completado</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Desde</label>
+                    <input type="date" class="form-input" id="fechaDesde">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Hasta</label>
+                    <input type="date" class="form-input" id="fechaHasta">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mes/Año</label>
+                    <input type="month" class="form-input" id="filterMes">
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-primary" onclick="aplicarFiltros()">
+                    <i class="fas fa-filter"></i> Filtrar
+                </button>
+                <button class="btn btn-warning" onclick="limpiarFiltros()">
+                    <i class="fas fa-eraser"></i> Limpiar
+                </button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-list"></i>
+                Reportes de Cuadrilla
+            </h2>
+            <div class="table-container">
+                <table class="table" id="reportesTable">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Folio</th>
+                            <th>Fecha</th>
+                            <th>Supervisor</th>
+                            <th>Oficial</th>
+                            <th>Turno</th>
+                            <th>Grúa</th>
+                            <th>Dirección</th>
+                            <th>Reporte</th>
+                            <th>Estado</th>
+                            <th>Ubicación</th>
+                            <th>Fotos</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportesBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modalReporte">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Nuevo Reporte</h3>
+                <button class="close-modal" onclick="closeModal('modalReporte')">&times;</button>
+            </div>
+            <form id="reporteForm">
+                <input type="hidden" id="reporteId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Folio</label>
+                        <input type="text" class="form-input" id="folio" placeholder="S/F o número">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fecha</label>
+                        <input type="date" class="form-input" id="fecha" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Supervisor</label>
+                        <input type="text" class="form-input" id="supervisor" placeholder="Nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Oficial</label>
+                        <input type="text" class="form-input" id="oficial" placeholder="Nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Turno</label>
+                        <select class="form-input" id="turno" required>
+                            <option value="">Seleccionar</option>
+                            <option value="1ERA">1ERA</option>
+                            <option value="2DA">2DA</option>
+                            <option value="3ERA">3ERA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Grúa No.</label>
+                        <input type="text" class="form-input" id="grua" placeholder="Número">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Dirección</label>
+                    <input type="text" class="form-input" id="direccion" placeholder="Dirección completa" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-map-marker-alt"></i> Ubicación GPS
+                    </label>
+                    <div class="location-input-group">
+                        <div class="form-group">
+                            <input type="text" class="form-input" id="latitud" placeholder="Latitud (ej: 26.9077)">
+                            <div class="location-info">Latitud</div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-input" id="longitud" placeholder="Longitud (ej: -101.4203)">
+                            <div class="location-info">Longitud</div>
+                        </div>
+                        <button type="button" class="btn-location" onclick="obtenerUbicacion()">
+                            <i class="fas fa-crosshairs"></i> Mi Ubicación
+                        </button>
+                    </div>
+                    <div class="location-info" style="margin-top: 0.5rem;">
+                        <i class="fas fa-info-circle"></i> Ingresa las coordenadas o usa tu ubicación actual
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Reporte</label>
+                    <textarea class="form-input form-textarea" id="reporte" placeholder="Descripción" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Comentarios</label>
+                    <textarea class="form-input form-textarea" id="comentarios" placeholder="Observaciones"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Estado</label>
+                    <select class="form-input" id="estado" required>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="En Proceso">En Proceso</option>
+                        <option value="Completado">Completado</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Fotos</label>
+                    <div class="photo-upload" onclick="document.getElementById('photoInput').click()">
+                        <i class="fas fa-camera" style="font-size: 2rem; color: #6B7280; margin-bottom: 1rem;"></i>
+                        <p>Subir fotos</p>
+                        <small>JPG, PNG (Máx. 5MB)</small>
+                    </div>
+                    <input type="file" id="photoInput" multiple accept="image/*" style="display: none;">
+                    <div class="photo-preview" id="photoPreview"></div>
+                </div>
+                <div class="actions">
+                    <button type="button" class="btn btn-warning" onclick="closeModal('modalReporte')">Cancelar</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="modalFotos">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Fotos del Reporte</h3>
+                <button class="close-modal" onclick="closeModal('modalFotos')">&times;</button>
+            </div>
+            <div class="photo-preview" id="fotosViewer"></div>
+        </div>
+    </div>
+
+    <script>
+        let navPanelOpen = false;
+
+        function configurarEventosPanel() {
+            const navToggle = document.getElementById('navToggle');
+            if (navToggle) {
+                navToggle.onclick = () => toggleNavPanel();
+            }
+
+            const navPanelClose = document.getElementById('navPanelClose');
+            if (navPanelClose) {
+                navPanelClose.onclick = () => toggleNavPanel();
+            }
+
+            const navPanelOverlay = document.getElementById('navPanelOverlay');
+            if (navPanelOverlay) {
+                navPanelOverlay.onclick = () => toggleNavPanel();
+            }
+
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                const module = item.getAttribute('data-module');
+                if (module) {
+                    item.onclick = () => redirectTo(module);
+                }
+            });
+        }
+
+        function toggleNavPanel() {
+            const navPanel = document.getElementById('navPanel');
+            const overlay = document.getElementById('navPanelOverlay');
+            const toggleBtn = document.getElementById('navToggle');
+
+            if (!navPanel || !overlay || !toggleBtn) return;
+
+            navPanelOpen = !navPanelOpen;
+
+            if (navPanelOpen) {
+                navPanel.classList.add('open');
+                overlay.classList.add('active');
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '<i class="fas fa-times"></i>';
+                document.body.style.overflow = 'hidden';
+            } else {
+                navPanel.classList.remove('open');
+                overlay.classList.remove('active');
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '<i class="fas fa-th-large"></i>';
+                document.body.style.overflow = '';
+            }
+        }
+
+        function redirectTo(module) {
+            if (navPanelOpen) toggleNavPanel();
+            const urls = {
+                'captura': '/Home/CapturaAlumbrado',
+                'programacion': '/Home/ProgramacionAlumbrado',
+                'mapa': '/Home/MapaAlumbrado',
+                'rastreo': '/Home/RastreoAlumbrado',
+                'dashboard': '/Home/DashboardAlumbrado',
+                'reportes': '/Home/ReportesAlumbrado',
+                'inventario': '/Home/MaterialUtilizadoAlumbrado',
+                'asistencia': '/Home/AsistenciaPersonalAlumbrado',
+                'oficios': '/Home/EnviarOficiosAlmacenAlumbrado',
+                'repositorio': '/Home/RepositorioPlacasAlumbrado',
+                'citas': '/Home/AgendarCitasMantenimiento'
+            };
+
+            if (urls[module]) {
+                mostrarNotificacion(`Navegando a ${module}...`, 'info');
+                setTimeout(() => {
+                    window.location.href = urls[module];
+                }, 300);
+            } else {
+                showNotification(`Módulo ${module} no encontrado`, 'error');
+            }
+        }
+
+        let reportes = [
+            {id: 1, folio: 'S/F', fecha: '2025-08-12', supervisor: 'JOEL ABREGO', oficial: 'JUAN JAIME CHAVEZ', turno: '3ERA', grua: '1', direccion: 'CALLE 5 (A LA VUELTA DEL KINDER) ENTRE CALLE 18 COL. RAMOS ARIZPE', reporte: '1 LUMINARIA APAGADA', comentarios: '', estado: 'Pendiente', latitud: '26.9077', longitud: '-101.4203', fotos: []},
+            {id: 2, folio: 'S/F', fecha: '2025-08-12', supervisor: 'JOEL ABREGO', oficial: 'JUAN JAIME CHAVEZ', turno: '3ERA', grua: '2', direccion: 'CALLE 3 DESDE CALLE 19 A FINAL DE CALLE COL. RAMOS ARIZPE', reporte: 'REVISION DE LUMINARIAS APAGADAS', comentarios: '', estado: 'En Proceso', latitud: '26.9088', longitud: '-101.4215', fotos: []},
+            {id: 3, folio: 'S/F', fecha: '2025-08-12', supervisor: 'JOEL ABREGO', oficial: 'JUAN JAIME CHAVEZ', turno: '3ERA', grua: '3', direccion: 'CALLE 8 ESQUINA CALLE 17 COL. CALDERON', reporte: '1 LUMINARIA APAGADA', comentarios: '', estado: 'Completado', latitud: '26.9095', longitud: '-101.4225', fotos: []}
+        ];
+
+        let currentEditId = null;
+        let uploadedPhotos = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            configurarEventosPanel();
+            cargarReportes();
+            configurarFechas();
+            configurarSubidaFotos();
+            configurarFormulario();
+        });
+
+        function configurarFechas() {
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha').value = hoy;
+            document.getElementById('fechaDesde').value = hoy;
+            document.getElementById('fechaHasta').value = hoy;
+            document.getElementById('filterMes').value = new Date().toISOString().slice(0, 7);
+        }
+
+        function obtenerUbicacion() {
+            if (navigator.geolocation) {
+                showNotification('Obteniendo ubicación...', 'info');
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        document.getElementById('latitud').value = position.coords.latitude.toFixed(6);
+                        document.getElementById('longitud').value = position.coords.longitude.toFixed(6);
+                        showNotification('Ubicación obtenida correctamente', 'success');
+                    },
+                    function(error) {
+                        showNotification('Error al obtener ubicación. Verifica los permisos.', 'error');
+                        console.error('Error de geolocalización:', error);
+                    }
+                );
+            } else {
+                showNotification('Tu navegador no soporta geolocalización', 'error');
+            }
+        }
+
+        function abrirMapa(latitud, longitud) {
+            if (latitud && longitud) {
+                const url = `https://www.google.com/maps?q=${latitud},${longitud}`;
+                window.open(url, '_blank');
+            } else {
+                showNotification('No hay coordenadas disponibles', 'warning');
+            }
+        }
+
+        function cargarReportes(filteredReportes = null) {
+            const tbody = document.getElementById('reportesBody');
+            const reportesToShow = filteredReportes || reportes;
+            tbody.innerHTML = '';
+
+            reportesToShow.forEach((reporte, index) => {
+                const row = document.createElement('tr');
+                const tieneUbicacion = reporte.latitud && reporte.longitud;
+                const botonUbicacion = tieneUbicacion
+                    ? `<button class="btn btn-sm btn-info" onclick="abrirMapa('${reporte.latitud}', '${reporte.longitud}')" title="Ver en Google Maps"><i class="fas fa-map-marked-alt"></i></button>`
+                    : `<span style="color: #9CA3AF; font-size: 0.8rem;">Sin ubicación</span>`;
+
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${reporte.folio}</td>
+                    <td>${formatearFecha(reporte.fecha)}</td>
+                    <td>${reporte.supervisor}</td>
+                    <td>${reporte.oficial}</td>
+                    <td>${reporte.turno}</td>
+                    <td>${reporte.grua}</td>
+                    <td>${reporte.direccion}</td>
+                    <td>${reporte.reporte}</td>
+                    <td><span class="status-badge status-${reporte.estado.toLowerCase().replace(' ', '')}">${reporte.estado}</span></td>
+                    <td>${botonUbicacion}</td>
+                    <td><button class="btn btn-sm btn-primary" onclick="verFotos(${reporte.id})"><i class="fas fa-camera"></i> ${reporte.fotos.length}</button></td>
+                    <td><button class="btn btn-sm btn-warning" onclick="editarReporte(${reporte.id})"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-danger" onclick="eliminarReporte(${reporte.id})"><i class="fas fa-trash"></i></button></td>
+                `;
+                tbody.appendChild(row);
+            });
+            actualizarEstadisticas(reportesToShow);
+        }
+
+        function formatearFecha(fecha) {
+            return new Date(fecha + 'T00:00:00').toLocaleDateString('es-MX');
+        }
+
+        function actualizarEstadisticas(reportesToShow = reportes) {
+            document.getElementById('totalReportes').textContent = reportesToShow.length;
+            document.getElementById('pendientes').textContent = reportesToShow.filter(r => r.estado === 'Pendiente').length;
+            document.getElementById('enProceso').textContent = reportesToShow.filter(r => r.estado === 'En Proceso').length;
+            document.getElementById('completados').textContent = reportesToShow.filter(r => r.estado === 'Completado').length;
+        }
+
+        function openModal(tipo) {
+            if (tipo === 'nuevoReporte') {
+                document.getElementById('modalTitle').textContent = 'Nuevo Reporte';
+                document.getElementById('reporteForm').reset();
+                currentEditId = null;
+                uploadedPhotos = [];
+                document.getElementById('photoPreview').innerHTML = '';
+                document.getElementById('latitud').value = '';
+                document.getElementById('longitud').value = '';
+                configurarFechas();
+            }
+            document.getElementById('modalReporte').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function configurarSubidaFotos() {
+            const photoInput = document.getElementById('photoInput');
+            photoInput.addEventListener('change', function(e) {
+                Array.from(e.target.files).forEach(file => {
+                    if (file.size > 5 * 1024 * 1024) {
+                        showNotification('Imagen muy grande (Máx. 5MB)', 'error');
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const photoId = Date.now() + Math.random();
+                        uploadedPhotos.push({id: photoId, url: e.target.result, name: file.name});
+                        const photoDiv = document.createElement('div');
+                        photoDiv.className = 'photo-item';
+                        photoDiv.innerHTML = `<img src="${e.target.result}" alt="${file.name}"><button class="photo-delete" onclick="eliminarFoto(${photoId})">×</button>`;
+                        document.getElementById('photoPreview').appendChild(photoDiv);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+        }
+
+        function eliminarFoto(photoId) {
+            uploadedPhotos = uploadedPhotos.filter(photo => photo.id !== photoId);
+            const photoPreview = document.getElementById('photoPreview');
+            Array.from(photoPreview.children).forEach(item => {
+                const deleteBtn = item.querySelector('.photo-delete');
+                if (deleteBtn && deleteBtn.onclick.toString().includes(photoId)) {
+                    photoPreview.removeChild(item);
+                }
+            });
+        }
+
+        function configurarFormulario() {
+            document.getElementById('reporteForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                guardarReporte();
+            });
+        }
+
+        function guardarReporte() {
+            const formData = {
+                folio: document.getElementById('folio').value || 'S/F',
+                fecha: document.getElementById('fecha').value,
+                supervisor: document.getElementById('supervisor').value,
+                oficial: document.getElementById('oficial').value,
+                turno: document.getElementById('turno').value,
+                grua: document.getElementById('grua').value,
+                direccion: document.getElementById('direccion').value,
+                reporte: document.getElementById('reporte').value,
+                comentarios: document.getElementById('comentarios').value,
+                estado: document.getElementById('estado').value,
+                latitud: document.getElementById('latitud').value,
+                longitud: document.getElementById('longitud').value,
+                fotos: [...uploadedPhotos]
+            };
+
+            if (currentEditId) {
+                const index = reportes.findIndex(r => r.id === currentEditId);
+                if (index !== -1) {
+                    reportes[index] = {...reportes[index], ...formData};
+                    showNotification('Reporte actualizado', 'success');
+                }
+            } else {
+                reportes.unshift({id: Date.now(), ...formData});
+                showNotification('Reporte creado', 'success');
+            }
+            cargarReportes();
+            closeModal('modalReporte');
+        }
+
+        function editarReporte(id) {
+            const reporte = reportes.find(r => r.id === id);
+            if (!reporte) return;
+            currentEditId = id;
+            uploadedPhotos = [...reporte.fotos];
+            document.getElementById('folio').value = reporte.folio;
+            document.getElementById('fecha').value = reporte.fecha;
+            document.getElementById('supervisor').value = reporte.supervisor;
+            document.getElementById('oficial').value = reporte.oficial;
+            document.getElementById('turno').value = reporte.turno;
+            document.getElementById('grua').value = reporte.grua;
+            document.getElementById('direccion').value = reporte.direccion;
+            document.getElementById('reporte').value = reporte.reporte;
+            document.getElementById('comentarios').value = reporte.comentarios;
+            document.getElementById('estado').value = reporte.estado;
+            document.getElementById('latitud').value = reporte.latitud || '';
+            document.getElementById('longitud').value = reporte.longitud || '';
+            const photoPreview = document.getElementById('photoPreview');
+            photoPreview.innerHTML = '';
+            reporte.fotos.forEach(foto => {
+                const photoDiv = document.createElement('div');
+                photoDiv.className = 'photo-item';
+                photoDiv.innerHTML = `<img src="${foto.url}" alt="${foto.name}"><button class="photo-delete" onclick="eliminarFoto(${foto.id})">×</button>`;
+                photoPreview.appendChild(photoDiv);
+            });
+            document.getElementById('modalTitle').textContent = 'Editar Reporte';
+            document.getElementById('modalReporte').style.display = 'block';
+        }
+
+        function eliminarReporte(id) {
+            if (confirm('¿Eliminar reporte?')) {
+                reportes = reportes.filter(r => r.id !== id);
+                cargarReportes();
+                showNotification('Reporte eliminado', 'success');
+            }
+        }
+
+        function verFotos(id) {
+            const reporte = reportes.find(r => r.id === id);
+            if (!reporte || reporte.fotos.length === 0) {
+                showNotification('No hay fotos', 'info');
+                return;
+            }
+            const fotosViewer = document.getElementById('fotosViewer');
+            fotosViewer.innerHTML = '';
+            reporte.fotos.forEach(foto => {
+                const photoDiv = document.createElement('div');
+                photoDiv.className = 'photo-item';
+                photoDiv.innerHTML = `<img src="${foto.url}" alt="${foto.name}">`;
+                fotosViewer.appendChild(photoDiv);
+            });
+            document.getElementById('modalFotos').style.display = 'block';
+        }
+
+        function aplicarFiltros() {
+            const searchText = document.getElementById('searchText').value.toLowerCase();
+            const filterSupervisor = document.getElementById('filterSupervisor').value;
+            const filterOficial = document.getElementById('filterOficial').value;
+            const filterTurno = document.getElementById('filterTurno').value;
+            const filterEstado = document.getElementById('filterEstado').value;
+            const fechaDesde = document.getElementById('fechaDesde').value;
+            const fechaHasta = document.getElementById('fechaHasta').value;
+            const filterMes = document.getElementById('filterMes').value;
+
+            let filteredReportes = reportes.filter(reporte => {
+                let cumple = true;
+                if (searchText) cumple = cumple && (reporte.folio.toLowerCase().includes(searchText) || reporte.direccion.toLowerCase().includes(searchText) || reporte.reporte.toLowerCase().includes(searchText));
+                if (filterSupervisor) cumple = cumple && reporte.supervisor === filterSupervisor;
+                if (filterOficial) cumple = cumple && reporte.oficial === filterOficial;
+                if (filterTurno) cumple = cumple && reporte.turno === filterTurno;
+                if (filterEstado) cumple = cumple && reporte.estado === filterEstado;
+                if (fechaDesde && fechaHasta) {
+                    const fr = new Date(reporte.fecha);
+                    cumple = cumple && (fr >= new Date(fechaDesde) && fr <= new Date(fechaHasta));
+                }
+                if (filterMes) cumple = cumple && reporte.fecha.substring(0, 7) === filterMes;
+                return cumple;
+            });
+            cargarReportes(filteredReportes);
+            showNotification(`${filteredReportes.length} reportes encontrados`, 'info');
+        }
+
+        function limpiarFiltros() {
+            document.getElementById('searchText').value = '';
+            document.getElementById('filterSupervisor').value = '';
+            document.getElementById('filterOficial').value = '';
+            document.getElementById('filterTurno').value = '';
+            document.getElementById('filterEstado').value = '';
+            document.getElementById('fechaDesde').value = '';
+            document.getElementById('fechaHasta').value = '';
+            document.getElementById('filterMes').value = '';
+            cargarReportes();
+            showNotification('Filtros limpiados', 'info');
+        }
+
+        function exportarDocumento() {
+            const fecha = new Date().toLocaleDateString('es-MX');
+            let contenido = `PROGRAMACION DE CUADRILLAS\nALUMBRADO PUBLICO\nFECHA: ${fecha}\n\n`;
+            reportes.forEach((r, i) => {
+                contenido += `${i + 1}. ${r.folio} - ${formatearFecha(r.fecha)}\n   ${r.supervisor} / ${r.oficial}\n   ${r.direccion}\n   ${r.reporte}\n   Estado: ${r.estado}\n`;
+                if (r.latitud && r.longitud) {
+                    contenido += `   Ubicación: ${r.latitud}, ${r.longitud}\n`;
+                }
+                contenido += '\n';
+            });
+            const blob = new Blob([contenido], {type: 'text/plain;charset=utf-8'});
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Reporte_${fecha.replace(/\//g, '-')}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            showNotification('Documento exportado', 'success');
+        }
+
+        function showNotification(message, type = 'info') {
+            const existing = document.querySelector('.notification');
+            if (existing) existing.remove();
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.parentNode && notification.parentNode.removeChild(notification), 300);
+            }, 4000);
+        }
+
+        function mostrarNotificacion(message, type) {
+            showNotification(message, type);
+        }
+
+        window.addEventListener('click', function(e) {
+            document.querySelectorAll('.modal').forEach(modal => {
+                if (e.target === modal) modal.style.display = 'none';
+            });
+        });
+
+        document.getElementById('searchText').addEventListener('input', function() {
+            if (this.value.length >= 3 || this.value.length === 0) aplicarFiltros();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'n') {
+                e.preventDefault();
+                openModal('nuevoReporte');
+            }
+            if (e.ctrlKey && e.key === 'e') {
+                e.preventDefault();
+                exportarDocumento();
+            }
+            if (e.key === 'Escape') {
+                if (navPanelOpen) {
+                    toggleNavPanel();
+                } else {
+                    document.querySelectorAll('.modal').forEach(modal => {
+                        if (modal.style.display === 'block') modal.style.display = 'none';
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

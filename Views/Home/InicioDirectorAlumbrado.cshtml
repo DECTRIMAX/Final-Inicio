@@ -1,0 +1,702 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Director de Alumbrado Público | Luis Estrada</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --pri-yellow: #F9A825;
+            --pri-yellow-light: #FBC02D;
+            --pri-yellow-dark: #F57F17;
+            --pri-orange: #FF6F00;
+            --pri-white: #FFFFFF;
+            --bg-light: #FFF9E6;
+            --bg-dark: #FFF3CD;
+            --text-dark: #212121;
+            --text-gray: #616161;
+            --shadow: rgba(249, 168, 37, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-dark) 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--pri-yellow) 0%, var(--pri-yellow-dark) 100%);
+            color: var(--pri-white);
+            padding: clamp(0.5rem, 2vw, 1rem) clamp(0.8rem, 3vw, 1.5rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--pri-orange);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            gap: clamp(0.5rem, 2vw, 1.5rem);
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 2vw, 1rem);
+            flex: 1 1 auto;
+            min-width: min(250px, 100%);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+        }
+
+        .logo-municipal {
+            width: clamp(60px, 9vw, 75px);
+            height: clamp(60px, 9vw, 75px);
+            background: var(--pri-white);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--pri-yellow-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .logo-alumbrado {
+            width: clamp(60px, 9vw, 75px);
+            height: clamp(60px, 9vw, 75px);
+            background: var(--pri-white);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--pri-yellow-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+            .logo-municipal:hover,
+            .logo-alumbrado:hover {
+                transform: scale(1.05);
+                box-shadow: 0 4px 15px rgba(249, 168, 37, 0.3);
+            }
+
+            .logo-municipal img,
+            .logo-alumbrado img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+            .logo-municipal i,
+            .logo-alumbrado i {
+                font-size: clamp(1.8rem, 5vw, 2.3rem);
+                color: var(--pri-yellow);
+            }
+
+        .header-info {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+            .header-info h1 {
+                font-size: clamp(1rem, 2.5vw, 1.5rem);
+                font-weight: 800;
+                margin-bottom: 0.2rem;
+                word-wrap: break-word;
+            }
+
+            .header-info p {
+                font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+                opacity: 0.9;
+            }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 0.8rem);
+            flex-shrink: 0;
+        }
+
+        .user-avatar {
+            width: clamp(60px, 10vw, 75px);
+            height: clamp(60px, 10vw, 75px);
+            border-radius: 50%;
+            background: var(--pri-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--pri-yellow-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+            .user-avatar:hover {
+                transform: scale(1.05);
+                box-shadow: 0 4px 15px rgba(249, 168, 37, 0.3);
+            }
+
+            .user-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .user-avatar i {
+                font-size: clamp(1.5rem, 4.5vw, 2.2rem);
+                color: var(--pri-yellow);
+            }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: clamp(0.85rem, 2.2vw, 1.1rem);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .user-role {
+            font-size: clamp(0.7rem, 1.6vw, 0.85rem);
+            opacity: 0.9;
+            white-space: nowrap;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2rem);
+            width: 100%;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+            padding: clamp(1rem, 4vw, 2rem) clamp(0.8rem, 3vw, 1.5rem);
+            background: var(--pri-white);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px var(--shadow);
+            border-left: 4px solid var(--pri-yellow);
+        }
+
+        .welcome-title {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-weight: 900;
+            color: var(--pri-yellow);
+            margin-bottom: 0.5rem;
+            word-wrap: break-word;
+        }
+
+        .welcome-subtitle {
+            font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+            color: var(--text-gray);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+            gap: clamp(0.8rem, 2vw, 1rem);
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+        }
+
+        .stat-card {
+            background: var(--pri-white);
+            padding: clamp(1rem, 3vw, 1.5rem);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border-left: 4px solid var(--pri-yellow);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px var(--shadow);
+            }
+
+        .stat-icon {
+            width: clamp(40px, 8vw, 50px);
+            height: clamp(40px, 8vw, 50px);
+            background: linear-gradient(135deg, var(--pri-yellow), var(--pri-yellow-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--pri-white);
+            margin: 0 auto clamp(0.5rem, 2vw, 1rem);
+        }
+
+        .stat-number {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 900;
+            color: var(--pri-yellow);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .area-panel {
+            background: var(--pri-white);
+            border-radius: 15px;
+            margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            border-left: 5px solid var(--pri-yellow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .area-header {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 2vw, 1rem);
+            padding: clamp(1rem, 3vw, 1.5rem);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, var(--bg-light), var(--bg-dark));
+            flex-wrap: wrap;
+        }
+
+            .area-header:hover {
+                background: linear-gradient(135deg, var(--bg-dark), var(--pri-yellow-light));
+            }
+
+            .area-header.active {
+                background: linear-gradient(135deg, var(--pri-yellow), var(--pri-yellow-light));
+            }
+
+                .area-header.active .area-icon,
+                .area-header.active .area-title h3,
+                .area-header.active .area-title p,
+                .area-header.active .toggle-icon {
+                    color: var(--pri-white);
+                }
+
+        .area-icon {
+            width: clamp(50px, 10vw, 60px);
+            height: clamp(50px, 10vw, 60px);
+            background: linear-gradient(135deg, var(--pri-yellow), var(--pri-yellow-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+            color: var(--pri-white);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+            .area-icon img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                padding: 5px;
+            }
+
+        .area-title {
+            flex: 1 1 auto;
+            min-width: min(200px, 100%);
+        }
+
+            .area-title h3 {
+                font-size: clamp(1.1rem, 3vw, 1.5rem);
+                font-weight: 800;
+                color: var(--pri-yellow);
+                transition: all 0.3s ease;
+                word-wrap: break-word;
+            }
+
+            .area-title p {
+                font-size: clamp(0.75rem, 2vw, 0.9rem);
+                color: var(--text-gray);
+                transition: all 0.3s ease;
+            }
+
+        .toggle-icon {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--pri-yellow);
+            transition: transform 0.3s ease, color 0.3s ease;
+            flex-shrink: 0;
+        }
+
+            .toggle-icon.active {
+                transform: rotate(180deg);
+            }
+
+        .area-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.3s ease;
+            padding: 0 clamp(0.8rem, 3vw, 1.5rem);
+        }
+
+            .area-content.active {
+                max-height: 5000px;
+                padding: clamp(1rem, 3vw, 1.5rem);
+            }
+
+        .navigation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
+            gap: clamp(0.8rem, 2vw, 1rem);
+        }
+
+        .nav-card {
+            background: linear-gradient(135deg, var(--bg-light), var(--bg-dark));
+            border-radius: 12px;
+            padding: clamp(1rem, 2.5vw, 1.2rem);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+            .nav-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px var(--shadow);
+                border-color: var(--pri-yellow);
+            }
+
+        .nav-card-icon {
+            width: clamp(40px, 8vw, 45px);
+            height: clamp(40px, 8vw, 45px);
+            background: var(--pri-yellow);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            color: var(--pri-white);
+            margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
+        }
+
+        .nav-card-title {
+            font-size: clamp(0.9rem, 2.2vw, 1rem);
+            font-weight: 700;
+            color: var(--pri-yellow);
+            margin-bottom: 0.5rem;
+            word-wrap: break-word;
+        }
+
+        .nav-card-description {
+            font-size: clamp(0.75rem, 1.8vw, 0.85rem);
+            color: var(--text-gray);
+            line-height: 1.4;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(1.3rem, 4vw, 2rem);
+            margin: clamp(1.5rem, 3vw, 2rem) 0 clamp(1rem, 2.5vw, 1.5rem) 0;
+            font-weight: 900;
+            padding: clamp(0.8rem, 2vw, 1rem);
+            background: linear-gradient(135deg, var(--pri-yellow), var(--pri-yellow-dark));
+            color: var(--pri-white);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .footer {
+            background: linear-gradient(135deg, var(--pri-yellow), var(--pri-yellow-dark));
+            color: var(--pri-white);
+            padding: clamp(1rem, 2.5vw, 1.5rem);
+            margin-top: clamp(2rem, 4vw, 3rem);
+            text-align: center;
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+        }
+
+            .footer p {
+                margin: 0.3rem 0;
+            }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: clamp(0.8rem, 2vw, 1rem) clamp(1rem, 2.5vw, 1.5rem);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 10000;
+            max-width: min(300px, 90vw);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+        }
+
+            .notification.success {
+                background: var(--pri-yellow);
+                color: white;
+            }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+        .hidden-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <input type="file" id="logoMunicipalInput" class="hidden-input" accept="image/*">
+    <input type="file" id="logoAlumbradoInput" class="hidden-input" accept="image/*">
+    <input type="file" id="userPhotoInput" class="hidden-input" accept="image/*">
+
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-container">
+                    <div class="logo-municipal" id="logoMunicipal" title="Click para cambiar logo municipal">
+                        <img src="~/imagenes/ESCUDO.png" alt="Escudo Municipal" onerror="this.parentElement.innerHTML='<i class=\'fas fa-landmark\'></i>'">
+                    </div>
+                    <div class="logo-alumbrado" id="logoAlumbrado" title="Click para cambiar logo de alumbrado">
+                        <img src="~/imagenes/ALUMBRADO.png" alt="Logo Alumbrado" onerror="this.parentElement.innerHTML='<i class=\'fas fa-lightbulb\'></i>'">
+                    </div>
+                </div>
+                <div class="header-info">
+                    <h1>Panel Director de Alumbrado Público</h1>
+                    <p>Gestión y Control del Sistema de Iluminación Municipal</p>
+                </div>
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar" id="userAvatar" title="Click para cambiar foto">
+                    <img src="~/imagenes/LUIS_ESTRADA.png" alt="Luis Estrada" onerror="this.parentElement.innerHTML='<i class=\'fas fa-user-tie\'></i>'">
+                </div>
+                <div class="user-info">
+                    <div class="user-name">Ing. Luis Estrada</div>
+                    <div class="user-role">Director de Alumbrado Público</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1 class="welcome-title">Panel de Control de Alumbrado</h1>
+            <p class="welcome-subtitle">
+                Sistema de Gestión de Iluminación Pública - Monclova
+            </p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-lightbulb"></i></div>
+                <div class="stat-number">3,842</div>
+                <div class="stat-label">Luminarias Activas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-tools"></i></div>
+                <div class="stat-number">156</div>
+                <div class="stat-label">Reparaciones Mes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users-gear"></i></div>
+                <div class="stat-number">32</div>
+                <div class="stat-label">Técnicos Activos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="stat-number">97%</div>
+                <div class="stat-label">Cobertura</div>
+            </div>
+        </div>
+
+        <!-- ÁREA DE ALUMBRADO -->
+        <div class="area-panel">
+            <div class="area-header" onclick="toggleArea('alumbrado')">
+                <div class="area-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <div class="area-title">
+                    <h3>Administración de Alumbrado Público</h3>
+                    <p>Gestión del sistema de iluminación municipal</p>
+                </div>
+                <i class="fas fa-chevron-down toggle-icon" id="toggle-alumbrado"></i>
+            </div>
+            <div class="area-content" id="content-alumbrado">
+                <div class="navigation-grid">
+                    <div class="nav-card" onclick="navigateTo('/Home/DashboardAdministradorAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-chart-bar"></i></div>
+                        <div class="nav-card-title">Gráficas de Alumbrado</div>
+                        <div class="nav-card-description">Estadísticas y análisis visual del sistema</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/ProgramacionAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-clock"></i></div>
+                        <div class="nav-card-title">Programación de Horarios</div>
+                        <div class="nav-card-description">Control de encendido/apagado</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/CapturaAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-camera-retro"></i></div>
+                        <div class="nav-card-title">Captura de Incidencias</div>
+                        <div class="nav-card-description">Registro de fallas</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/MapaAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-map-location-dot"></i></div>
+                        <div class="nav-card-title">Mapa de Luminarias</div>
+                        <div class="nav-card-description">Ubicación de postes</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/RastreoAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-location-arrow"></i></div>
+                        <div class="nav-card-title">Rastreo de Unidades</div>
+                        <div class="nav-card-description">GPS de cuadrillas</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/ReportesAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="nav-card-title">Reportes Ciudadanos</div>
+                        <div class="nav-card-description">Fallas reportadas</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/MaterialUtilizadoAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-tools"></i></div>
+                        <div class="nav-card-title">Material Utilizado</div>
+                        <div class="nav-card-description">Inventario de lámparas</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/AsistenciaPersonalAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-user-check"></i></div>
+                        <div class="nav-card-title">Asistencia Personal</div>
+                        <div class="nav-card-description">Control de técnicos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Herramientas del Director</h2>
+        <div class="navigation-grid">
+            <div class="nav-card" onclick="navigateTo('/Home/AgendaCitasProximas')">
+                <div class="nav-card-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="nav-card-title">Agenda de Citas Próximas</div>
+                <div class="nav-card-description">Reuniones programadas con jefa de administración</div>
+            </div>
+            <div class="nav-card" onclick="navigateTo('/Home/ReportesGeneralesServiciosPrimarios')">
+                <div class="nav-card-icon"><i class="fas fa-clipboard-list"></i></div>
+                <div class="nav-card-title">Reportes Generales</div>
+                <div class="nav-card-description">Informes y reportes ejecutivos</div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p><strong>Panel Director de Alumbrado Público - Ing. Luis Estrada</strong></p>
+        <p>&copy; 2024 H. Ayuntamiento de Monclova. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function toggleArea(areaId) {
+            const content = document.getElementById('content-' + areaId);
+            const toggle = document.getElementById('toggle-' + areaId);
+            const header = toggle.closest('.area-header');
+
+            const isActive = content.classList.contains('active');
+
+            const allContents = document.querySelectorAll('.area-content');
+            const allToggles = document.querySelectorAll('.toggle-icon');
+            const allHeaders = document.querySelectorAll('.area-header');
+
+            for (let i = 0; i < allContents.length; i++) {
+                allContents[i].classList.remove('active');
+            }
+            for (let i = 0; i < allToggles.length; i++) {
+                allToggles[i].classList.remove('active');
+            }
+            for (let i = 0; i < allHeaders.length; i++) {
+                allHeaders[i].classList.remove('active');
+            }
+
+            if (!isActive) {
+                content.classList.add('active');
+                toggle.classList.add('active');
+                header.classList.add('active');
+            }
+        }
+
+        function navigateTo(url) {
+            showNotification('Accediendo al módulo...', 'success');
+            setTimeout(function() {
+                window.location.href = url;
+            }, 500);
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = 'notification ' + type;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(function() {
+                notification.classList.add('show');
+            }, 100);
+
+            setTimeout(function() {
+                notification.classList.remove('show');
+                setTimeout(function() {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 2000);
+        }
+
+        function setupPhotoUpload(elementId, inputId) {
+            const element = document.getElementById(elementId);
+            const input = document.getElementById(inputId);
+
+            element.addEventListener('click', function(e) {
+                e.stopPropagation();
+                input.click();
+            });
+
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        element.innerHTML = '<img src="' + event.target.result + '" alt="Imagen">';
+                        showNotification('Imagen actualizada correctamente', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setupPhotoUpload('logoMunicipal', 'logoMunicipalInput');
+            setupPhotoUpload('logoAlumbrado', 'logoAlumbradoInput');
+            setupPhotoUpload('userAvatar', 'userPhotoInput');
+
+            setTimeout(function() {
+                showNotification('Sistema inicializado correctamente', 'success');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1038 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Reportes Solicitados | Servicios Primarios</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --pri-green: #10b981;
+            --pri-green-light: #34d399;
+            --pri-green-dark: #059669;
+            --pri-green-darker: #047857;
+            --pri-white: #FFFFFF;
+            --bg-light: #f0fdf4;
+            --bg-green-light: #d1fae5;
+            --text-dark: #1f2937;
+            --text-gray: #4b5563;
+            --shadow: rgba(16, 185, 129, 0.2);
+            --blue: #3b82f6;
+            --yellow: #f59e0b;
+            --red: #dc2626;
+            --purple: #8b5cf6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-green-light) 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--pri-green) 0%, var(--pri-green-dark) 100%);
+            color: var(--pri-white);
+            padding: clamp(0.5rem, 2vw, 1rem) clamp(0.8rem, 3vw, 1.5rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--pri-green-darker);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1800px;
+            margin: 0 auto;
+            gap: clamp(0.5rem, 2vw, 1.5rem);
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 2vw, 1rem);
+            flex: 1 1 auto;
+            min-width: min(250px, 100%);
+        }
+
+        .logo {
+            width: clamp(65px, 10vw, 80px);
+            height: clamp(65px, 10vw, 80px);
+            background: var(--pri-white);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--pri-green-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+            .logo:hover {
+                transform: scale(1.05);
+            }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                padding: 5px;
+            }
+
+            .logo i {
+                font-size: clamp(1.8rem, 5vw, 2.5rem);
+                color: var(--pri-green);
+            }
+
+        .header-info {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+            .header-info h1 {
+                font-size: clamp(1rem, 2.5vw, 1.5rem);
+                font-weight: 800;
+                margin-bottom: 0.2rem;
+            }
+
+            .header-info p {
+                font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+                opacity: 0.9;
+            }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--pri-white);
+            border: 2px solid var(--pri-white);
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+            .back-btn:hover {
+                background: var(--pri-white);
+                color: var(--pri-green);
+                transform: translateX(-3px);
+            }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2rem);
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+            padding: clamp(1.5rem, 4vw, 2.5rem);
+            background: linear-gradient(135deg, var(--pri-white) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px var(--shadow);
+            border-left: 5px solid var(--pri-green);
+        }
+
+        .welcome-title {
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-weight: 900;
+            color: var(--pri-green);
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .welcome-subtitle {
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        .date-range-selector {
+            background: var(--pri-white);
+            padding: clamp(1rem, 3vw, 1.5rem);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px var(--shadow);
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+            border-left: 4px solid var(--pri-green);
+        }
+
+        .date-range-title {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-weight: 700;
+            color: var(--pri-green);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .date-range-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+
+        .date-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+            .date-input-group label {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-dark);
+            }
+
+        .date-input {
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+            .date-input:focus {
+                border-color: var(--pri-green);
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+            }
+
+        .btn-apply {
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-dark));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+            .btn-apply:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px var(--shadow);
+            }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+            gap: clamp(1rem, 2vw, 1.5rem);
+            margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+        }
+
+        .stat-card {
+            background: var(--pri-white);
+            padding: clamp(1.5rem, 3vw, 2rem);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px var(--shadow);
+            border-left: 5px solid var(--pri-green);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 100px;
+                height: 100px;
+                background: linear-gradient(135deg, transparent, rgba(16, 185, 129, 0.1));
+                border-radius: 0 0 0 100%;
+            }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 12px 35px var(--shadow);
+            }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .stat-icon {
+            width: clamp(50px, 10vw, 65px);
+            height: clamp(50px, 10vw, 65px);
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-light));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: var(--pri-white);
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+            .stat-icon.blue {
+                background: linear-gradient(135deg, var(--blue), #2563eb);
+            }
+
+            .stat-icon.yellow {
+                background: linear-gradient(135deg, var(--yellow), #d97706);
+            }
+
+            .stat-icon.red {
+                background: linear-gradient(135deg, var(--red), #b91c1c);
+            }
+
+        .stat-number {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 900;
+            color: var(--pri-green);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            color: var(--text-gray);
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .stat-change {
+            font-size: 13px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+            .stat-change.positive {
+                color: var(--pri-green);
+            }
+
+            .stat-change.negative {
+                color: var(--red);
+            }
+
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
+            gap: clamp(1rem, 2vw, 1.5rem);
+            margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+        }
+
+        .chart-card {
+            background: var(--pri-white);
+            padding: clamp(1.5rem, 3vw, 2rem);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px var(--shadow);
+            border-left: 5px solid var(--pri-green);
+        }
+
+        .chart-title {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            font-weight: 700;
+            color: var(--pri-green);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .recent-reports {
+            background: var(--pri-white);
+            padding: clamp(1.5rem, 3vw, 2rem);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px var(--shadow);
+            border-left: 5px solid var(--pri-green);
+        }
+
+        .recent-title {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            font-weight: 700;
+            color: var(--pri-green);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .report-item {
+            padding: 15px;
+            border-left: 4px solid var(--pri-green);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), transparent);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+            .report-item:hover {
+                transform: translateX(5px);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            }
+
+        .report-header-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .report-folio {
+            font-weight: 700;
+            color: var(--pri-green-dark);
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+
+        .report-status {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-pendiente {
+            background: rgba(251, 191, 36, 0.2);
+            color: #d97706;
+        }
+
+        .status-proceso {
+            background: rgba(59, 130, 246, 0.2);
+            color: #2563eb;
+        }
+
+        .status-resuelto {
+            background: rgba(34, 197, 94, 0.2);
+            color: #16a34a;
+        }
+
+        .report-details {
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+            .report-details strong {
+                color: var(--text-dark);
+            }
+
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-gray);
+        }
+
+            .no-data i {
+                font-size: 64px;
+                color: #d1d5db;
+                margin-bottom: 20px;
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">
+                    <img src="/imagenes/M.png" alt="Monclova" onerror="this.parentElement.innerHTML='<i class=\'fas fa-building\'></i>'">
+                </div>
+                <div class="logo">
+                    <img src="/imagenes/ServiciosPrimarios.png" alt="Servicios Primarios" onerror="this.parentElement.innerHTML='<i class=\'fas fa-tools\'></i>'">
+                </div>
+                <div class="header-info">
+                    <h1>Dashboard de Reportes</h1>
+                    <p>Análisis y Estadísticas - Reportes Solicitados</p>
+                </div>
+            </div>
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+                Regresar
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1 class="welcome-title">📊 Dashboard de Reportes Solicitados</h1>
+            <p class="welcome-subtitle">
+                Visualización completa de todos los reportes ciudadanos con análisis en tiempo real
+            </p>
+        </div>
+
+        <div class="date-range-selector">
+            <div class="date-range-title">
+                <i class="fas fa-calendar-alt"></i>
+                Filtrar por Fecha
+            </div>
+            <div class="date-range-grid">
+                <div class="date-input-group">
+                    <label for="dateFrom">Desde</label>
+                    <input type="date" id="dateFrom" class="date-input">
+                </div>
+                <div class="date-input-group">
+                    <label for="dateTo">Hasta</label>
+                    <input type="date" id="dateTo" class="date-input">
+                </div>
+                <button class="btn-apply" onclick="applyDateFilter()">
+                    <i class="fas fa-sync-alt"></i>
+                    Actualizar Dashboard
+                </button>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                </div>
+                <div class="stat-number" id="totalReports">0</div>
+                <div class="stat-label">Total de Reportes</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span id="totalChange">0%</span> vs mes anterior
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon yellow">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+                <div class="stat-number" style="color: var(--yellow);" id="pendingReports">0</div>
+                <div class="stat-label">Pendientes</div>
+                <div class="stat-change">
+                    <i class="fas fa-info-circle"></i>
+                    <span id="pendingPercent">0%</span> del total
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-spinner"></i>
+                    </div>
+                </div>
+                <div class="stat-number" style="color: var(--blue);" id="processingReports">0</div>
+                <div class="stat-label">En Proceso</div>
+                <div class="stat-change">
+                    <i class="fas fa-info-circle"></i>
+                    <span id="processingPercent">0%</span> del total
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, var(--pri-green), var(--pri-green-light));">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="stat-number" id="resolvedReports">0</div>
+                <div class="stat-label">Resueltos</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span id="resolvedPercent">0%</span> del total
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-section">
+            <div class="chart-card">
+                <div class="chart-title">
+                    <i class="fas fa-chart-pie"></i>
+                    Distribución por Estado
+                </div>
+                <div class="chart-container">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">
+                    <i class="fas fa-chart-bar"></i>
+                    Reportes por Departamento
+                </div>
+                <div class="chart-container">
+                    <canvas id="departmentChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-section">
+            <div class="chart-card" style="grid-column: 1 / -1;">
+                <div class="chart-title">
+                    <i class="fas fa-chart-line"></i>
+                    Tendencia de Reportes (Últimos 30 días)
+                </div>
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-reports">
+            <div class="recent-title">
+                <i class="fas fa-history"></i>
+                Reportes Recientes (<span id="recentCount">0</span>)
+            </div>
+            <div id="recentReportsList"></div>
+        </div>
+    </div>
+
+    <script>
+        let allReports = [];
+        let filteredReports = [];
+        let statusChart, departmentChart, trendChart;
+
+        const departmentNames = {
+            'alumbrado': 'Alumbrado Público',
+            'forestacion': 'Forestación',
+            'limpieza': 'Limpieza Urbana',
+            'bacheo': 'Bacheo',
+            'recoleccion_boteo': 'Boteo',
+            'recoleccion_contenedores': 'Contenedores'
+        };
+
+        const statusNames = {
+            'pendiente': 'Pendiente',
+            'proceso': 'En Proceso',
+            'resuelto': 'Resuelto'
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDashboardData();
+            setDefaultDates();
+        });
+
+        function setDefaultDates() {
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today);
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+
+            document.getElementById('dateTo').valueAsDate = today;
+            document.getElementById('dateFrom').valueAsDate = thirtyDaysAgo;
+        }
+
+        function loadDashboardData() {
+            generateSampleData();
+            allReports = JSON.parse(localStorage.getItem('userReports') || '[]');
+
+            filteredReports = [...allReports];
+            updateDashboard();
+        }
+
+        function generateSampleData() {
+            const departments = ['alumbrado', 'forestacion', 'limpieza', 'bacheo', 'recoleccion_boteo', 'recoleccion_contenedores'];
+            const statuses = ['pendiente', 'proceso', 'resuelto'];
+
+            const nombres = [
+                'Juan Pérez García', 'María González López', 'Carlos Rodríguez Sánchez',
+                'Ana Martínez Hernández', 'Luis Torres Ramírez', 'Carmen Flores Díaz',
+                'José Mendoza Ruiz', 'Patricia Morales Castro', 'Roberto Silva Ortiz',
+                'Laura Jiménez Cruz', 'Miguel Ángel Reyes', 'Gabriela Romero Vega',
+                'Fernando Castillo Méndez', 'Sofía Vargas Luna', 'Diego Núñez Parra',
+                'Valeria Gutiérrez Rojas', 'Alejandro Contreras Ríos', 'Isabella Delgado Peña',
+                'Ricardo Herrera Navarro', 'Camila Aguilar Cortés', 'Andrés Medina Soto',
+                'Daniela Cabrera Fuentes', 'Javier Moreno Ibarra', 'Natalia Ramos Campos',
+                'Sergio Espinoza Vera', 'Paola Guerrero Valdez', 'Héctor Salazar Ochoa',
+                'Mariana Vázquez Quintero', 'Oscar Santana Mejía', 'Adriana Montoya Paz'
+            ];
+
+            const calles = [
+                'Av. Juárez', 'Calle Hidalgo', 'Blvd. Fundadores', 'Calle Morelos',
+                'Av. Universidad', 'Calle Zaragoza', 'Blvd. Harold Pape', 'Calle Allende',
+                'Av. Venustiano Carranza', 'Calle Cuauhtémoc', 'Blvd. Ejército Mexicano',
+                'Calle Aldama', 'Av. Tecnológico', 'Calle Rayón', 'Blvd. Colosio',
+                'Calle Guerrero', 'Av. Las Torres', 'Calle Ocampo', 'Blvd. Fundición',
+                'Calle Pino Suárez', 'Av. Las Américas', 'Calle Independencia'
+            ];
+
+            const colonias = [
+                'Centro', 'Buenos Aires', 'Moderna', 'Jardines de Monclova',
+                'Valle Dorado', 'Francisco I. Madero', 'Los Pinos', 'Las Américas',
+                'Tecnológico', 'Loma Linda', 'Doctores', 'San Miguel',
+                'Villa Jardín', 'Chapultepec', 'Obrera', 'Residencial',
+                'Valle Verde', 'Las Quintas', 'El Porvenir', 'Industrial'
+            ];
+
+            const descripciones = {
+                'alumbrado': [
+                    'Poste de luz apagado desde hace 3 días en esquina',
+                    'Lámpara intermitente que no ilumina correctamente',
+                    'Falta de alumbrado público en toda la cuadra',
+                    'Luz fundida que necesita reemplazo urgente',
+                    'Cableado expuesto que representa peligro'
+                ],
+                'forestacion': [
+                    'Árbol con ramas secas que pueden caer',
+                    'Poda necesaria de árboles que obstruyen la vista',
+                    'Árbol caído bloqueando la banqueta',
+                    'Maleza crecida en área verde pública',
+                    'Necesidad de plantar árboles en parque local'
+                ],
+                'limpieza': [
+                    'Acumulación de basura en esquina desde hace días',
+                    'Residuos sin recoger después de día de recolección',
+                    'Limpieza necesaria en parque público',
+                    'Basura volando por falta de contenedor',
+                    'Escombro abandonado en vía pública'
+                ],
+                'bacheo': [
+                    'Bache profundo que daña vehículos',
+                    'Pavimento deteriorado en zona de tránsito',
+                    'Hundimiento en la calle que requiere reparación',
+                    'Múltiples baches en cuadra completa',
+                    'Grietas en asfalto que se están expandiendo'
+                ],
+                'recoleccion_boteo': [
+                    'Muebles y electrodomésticos viejos para recolección',
+                    'Colchones y enseres domésticos en banqueta',
+                    'Escombro de construcción para boteo',
+                    'Llantas y objetos grandes acumulados',
+                    'Aparatos electrónicos viejos para recoger'
+                ],
+                'recoleccion_contenedores': [
+                    'Contenedor de basura desbordado',
+                    'Contenedor volcado o dañado',
+                    'Falta contenedor en esta zona',
+                    'Contenedor lleno desde hace varios días',
+                    'Basura acumulada alrededor del contenedor'
+                ]
+            };
+
+            const sampleReports = [];
+
+            for (let i = 0; i < 85; i++) {
+                const date = new Date();
+                const randomDays = Math.floor(Math.random() * 45);
+                date.setDate(date.getDate() - randomDays);
+
+                const dept = departments[Math.floor(Math.random() * departments.length)];
+
+                let status;
+                if (randomDays < 2) {
+                    status = 'pendiente';
+                } else if (randomDays < 10) {
+                    status = Math.random() > 0.5 ? 'proceso' : 'pendiente';
+                } else if (randomDays < 20) {
+                    status = Math.random() > 0.3 ? 'proceso' : 'resuelto';
+                } else {
+                    status = 'resuelto';
+                }
+
+                sampleReports.push({
+                    folio: `MON-${1000 + i}`,
+                    name: nombres[Math.floor(Math.random() * nombres.length)],
+                    phone: `844-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
+                    street: calles[Math.floor(Math.random() * calles.length)],
+                    houseNumber: `${Math.floor(Math.random() * 999) + 1}`,
+                    neighborhood: colonias[Math.floor(Math.random() * colonias.length)],
+                    betweenStreets: Math.random() > 0.5 ? `${calles[Math.floor(Math.random() * calles.length)]} y ${calles[Math.floor(Math.random() * calles.length)]}` : '',
+                    postalCode: `257${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)}`,
+                    department: dept,
+                    description: descripciones[dept][Math.floor(Math.random() * descripciones[dept].length)],
+                    additionalComments: Math.random() > 0.7 ? 'Situación urgente que requiere atención inmediata' : '',
+                    status: status,
+                    timestamp: date.toISOString(),
+                    estimatedTime: getEstimatedTime(dept)
+                });
+            }
+
+            localStorage.setItem('userReports', JSON.stringify(sampleReports));
+        }
+
+        function getEstimatedTime(department) {
+            const times = {
+                'alumbrado': '24-48 horas',
+                'forestacion': '5-7 días hábiles',
+                'limpieza': '1-2 días hábiles',
+                'bacheo': '7-10 días hábiles',
+                'recoleccion_boteo': '24-48 horas',
+                'recoleccion_contenedores': '24-48 horas'
+            };
+            return times[department] || '3-5 días hábiles';
+        }
+
+        function applyDateFilter() {
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+
+            if (!dateFrom || !dateTo) {
+                filteredReports = [...allReports];
+            } else {
+                filteredReports = allReports.filter(report => {
+                    const reportDate = new Date(report.timestamp).toISOString().split('T')[0];
+                    return reportDate >= dateFrom && reportDate <= dateTo;
+                });
+            }
+
+            updateDashboard();
+        }
+
+        function updateDashboard() {
+            updateStats();
+            updateCharts();
+            updateRecentReports();
+        }
+
+        function updateStats() {
+            const total = filteredReports.length;
+            const pending = filteredReports.filter(r => r.status === 'pendiente').length;
+            const processing = filteredReports.filter(r => r.status === 'proceso').length;
+            const resolved = filteredReports.filter(r => r.status === 'resuelto').length;
+
+            animateNumber(document.getElementById('totalReports'), total);
+            animateNumber(document.getElementById('pendingReports'), pending);
+            animateNumber(document.getElementById('processingReports'), processing);
+            animateNumber(document.getElementById('resolvedReports'), resolved);
+
+            document.getElementById('totalChange').textContent = '12.5';
+            document.getElementById('pendingPercent').textContent = total > 0 ? ((pending / total) * 100).toFixed(1) : '0';
+            document.getElementById('processingPercent').textContent = total > 0 ? ((processing / total) * 100).toFixed(1) : '0';
+            document.getElementById('resolvedPercent').textContent = total > 0 ? ((resolved / total) * 100).toFixed(1) : '0';
+        }
+
+        function animateNumber(element, target) {
+            let current = 0;
+            const increment = target / 30;
+            const timer = setInterval(() => {
+                current += increment;
+                element.textContent = Math.floor(current);
+                if (current >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                }
+            }, 30);
+        }
+
+        function updateCharts() {
+            updateStatusChart();
+            updateDepartmentChart();
+            updateTrendChart();
+        }
+
+        function updateStatusChart() {
+            const pending = filteredReports.filter(r => r.status === 'pendiente').length;
+            const processing = filteredReports.filter(r => r.status === 'proceso').length;
+            const resolved = filteredReports.filter(r => r.status === 'resuelto').length;
+
+            if (statusChart) statusChart.destroy();
+
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            statusChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pendientes', 'En Proceso', 'Resueltos'],
+                    datasets: [{
+                        data: [pending, processing, resolved],
+                        backgroundColor: ['#f59e0b', '#3b82f6', '#10b981'],
+                        borderWidth: 3,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                font: {
+                                    size: 12,
+                                    weight: 600
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateDepartmentChart() {
+            const deptCounts = {};
+            filteredReports.forEach(report => {
+                deptCounts[report.department] = (deptCounts[report.department] || 0) + 1;
+            });
+
+            if (departmentChart) departmentChart.destroy();
+
+            const ctx = document.getElementById('departmentChart').getContext('2d');
+            departmentChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(deptCounts).map(d => departmentNames[d] || d),
+                    datasets: [{
+                        label: 'Cantidad de Reportes',
+                        data: Object.values(deptCounts),
+                        backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateTrendChart() {
+            const last30Days = [];
+            const today = new Date();
+
+            for (let i = 29; i >= 0; i--) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - i);
+                last30Days.push(date.toISOString().split('T')[0]);
+            }
+
+            const trendData = last30Days.map(date => {
+                return filteredReports.filter(report =>
+                    report.timestamp.split('T')[0] === date
+                ).length;
+            });
+
+            if (trendChart) trendChart.destroy();
+
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            trendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: last30Days.map(d => {
+                        const date = new Date(d);
+                        return date.getDate() + '/' + (date.getMonth() + 1);
+                    }),
+                    datasets: [{
+                        label: 'Reportes por Día',
+                        data: trendData,
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: 'rgba(16, 185, 129, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateRecentReports() {
+            const recentList = document.getElementById('recentReportsList');
+            const recentReports = [...filteredReports]
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                .slice(0, 10);
+
+            document.getElementById('recentCount').textContent = recentReports.length;
+
+            if (recentReports.length === 0) {
+                recentList.innerHTML = `
+                    <div class="no-data">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No hay reportes para mostrar</h3>
+                        <p>Ajusta los filtros de fecha para ver más reportes</p>
+                    </div>
+                `;
+                return;
+            }
+
+            recentList.innerHTML = recentReports.map(report => {
+                const date = new Date(report.timestamp);
+                const formattedDate = date.toLocaleDateString('es-MX', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                return `
+                    <div class="report-item">
+                        <div class="report-header-item">
+                            <span class="report-folio">📋 ${report.folio}</span>
+                            <span class="report-status status-${report.status}">
+                                ${statusNames[report.status]}
+                            </span>
+                        </div>
+                        <div class="report-details">
+                            <strong>Departamento:</strong> ${departmentNames[report.department]}<br>
+                            <strong>Ciudadano:</strong> ${report.name}<br>
+                            <strong>Dirección:</strong> ${report.street} ${report.houseNumber}, ${report.neighborhood}<br>
+                            <strong>Fecha:</strong> ${formattedDate}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

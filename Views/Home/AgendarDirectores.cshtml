@@ -1,0 +1,1278 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda de Directores - Servicios Primarios</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        :root {
+            --pink-50: #fdf2f8;
+            --pink-100: #fce7f3;
+            --pink-200: #fbcfe8;
+            --pink-300: #f9a8d4;
+            --pink-400: #f472b6;
+            --pink-500: #ec4899;
+            --pink-600: #db2777;
+            --pink-700: #be185d;
+            --pink-800: #9f1239;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--pink-50) 0%, var(--gray-50) 100%);
+            color: var(--gray-900);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--pink-600) 0%, var(--pink-700) 100%);
+            color: white;
+            padding: clamp(1rem, 3vw, 1.5rem) clamp(1rem, 4vw, 2rem);
+            box-shadow: 0 4px 20px rgba(236, 72, 153, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1800px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 2vw, 1rem);
+        }
+
+        .logo-container {
+            width: clamp(45px, 10vw, 60px);
+            height: clamp(45px, 10vw, 60px);
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--pink-300);
+            flex-shrink: 0;
+        }
+
+            .logo-container i {
+                font-size: clamp(1.2rem, 4vw, 1.8rem);
+                color: var(--pink-600);
+            }
+
+        .header-center h1 {
+            font-size: clamp(1.1rem, 4vw, 1.8rem);
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-center p {
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+            opacity: 0.95;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: clamp(0.5rem, 2vw, 0.7rem) clamp(1rem, 3vw, 1.5rem);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+        }
+
+            .btn-back:hover {
+                background: rgba(255,255,255,0.3);
+            }
+
+        .main-container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2rem);
+        }
+
+        .action-bar {
+            background: white;
+            border-radius: 15px;
+            padding: clamp(1rem, 3vw, 1.5rem);
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .action-title {
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            font-weight: 800;
+            color: var(--pink-700);
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .btn {
+            padding: clamp(0.6rem, 2vw, 0.75rem) clamp(1rem, 3vw, 1.5rem);
+            border: none;
+            border-radius: 8px;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-pink {
+            background: linear-gradient(135deg, var(--pink-500), var(--pink-600));
+            color: white;
+        }
+
+            .btn-pink:hover {
+                background: linear-gradient(135deg, var(--pink-600), var(--pink-700));
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+            }
+
+        .btn-outline {
+            background: white;
+            color: var(--pink-600);
+            border: 2px solid var(--pink-600);
+        }
+
+            .btn-outline:hover {
+                background: var(--pink-50);
+            }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+            .btn-success:hover {
+                background: linear-gradient(135deg, #059669, #047857);
+                transform: translateY(-2px);
+            }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: clamp(1rem, 3vw, 2rem);
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: clamp(1.2rem, 3vw, 2rem);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-title {
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            font-weight: 800;
+            color: var(--pink-700);
+            margin-bottom: clamp(1rem, 3vw, 1.5rem);
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .stats-mini {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 100px), 1fr));
+            gap: clamp(0.8rem, 2vw, 1rem);
+            margin-bottom: clamp(1rem, 3vw, 1.5rem);
+        }
+
+        .stat-mini {
+            background: linear-gradient(135deg, var(--pink-500), var(--pink-600));
+            color: white;
+            padding: clamp(0.8rem, 2vw, 1rem);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-mini-value {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-mini-label {
+            font-size: clamp(0.75rem, 2vw, 0.85rem);
+            opacity: 0.9;
+        }
+
+        .event-card {
+            background: var(--pink-50);
+            border-left: 4px solid var(--pink-500);
+            border-radius: 10px;
+            padding: clamp(1rem, 2.5vw, 1.2rem);
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .event-card:hover {
+                box-shadow: 0 4px 12px rgba(236, 72, 153, 0.15);
+                transform: translateX(5px);
+            }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.8rem;
+            gap: 0.5rem;
+        }
+
+        .event-title {
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.3rem;
+        }
+
+        .event-date {
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            color: var(--pink-700);
+            font-weight: 600;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-icon {
+            background: white;
+            border: none;
+            width: clamp(30px, 7vw, 36px);
+            height: clamp(30px, 7vw, 36px);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: clamp(0.8rem, 2vw, 0.95rem);
+        }
+
+            .btn-icon:hover {
+                background: var(--pink-100);
+                transform: scale(1.1);
+            }
+
+            .btn-icon.edit {
+                color: var(--pink-600);
+            }
+
+            .btn-icon.delete {
+                color: #ef4444;
+            }
+
+            .btn-icon.share {
+                color: #10b981;
+            }
+
+        .event-details {
+            font-size: clamp(0.85rem, 2vw, 0.9rem);
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+
+        .event-detail-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.4rem;
+        }
+
+            .event-detail-row i {
+                color: var(--pink-500);
+                width: 16px;
+                flex-shrink: 0;
+            }
+
+        .event-comment {
+            background: white;
+            padding: clamp(0.6rem, 2vw, 0.8rem);
+            border-radius: 6px;
+            margin-top: 0.8rem;
+            font-size: clamp(0.8rem, 2vw, 0.85rem);
+            color: var(--gray-700);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: clamp(2rem, 5vw, 3rem);
+            color: var(--gray-500);
+        }
+
+            .empty-state i {
+                font-size: clamp(2.5rem, 8vw, 4rem);
+                color: var(--pink-300);
+                margin-bottom: 1rem;
+            }
+
+        .filter-bar {
+            background: var(--gray-50);
+            padding: clamp(0.8rem, 2vw, 1rem);
+            border-radius: 10px;
+            margin-bottom: clamp(1rem, 3vw, 1.5rem);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-item {
+            flex: 1;
+            min-width: min(100%, 180px);
+        }
+
+        .scrollable-events {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            overflow-y: auto;
+        }
+
+            .modal.active {
+                display: flex;
+            }
+
+        .modal-content {
+            background: white;
+            border-radius: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--pink-600), var(--pink-700));
+            color: white;
+            padding: clamp(1rem, 3vw, 1.5rem) clamp(1rem, 4vw, 2rem);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+            .modal-header h2 {
+                font-size: clamp(1.1rem, 3vw, 1.5rem);
+                font-weight: 700;
+            }
+
+        .btn-close {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .modal-body {
+            padding: clamp(1.2rem, 3vw, 2rem);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: clamp(1rem, 2vw, 1.5rem);
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .form-group {
+            margin-bottom: 0;
+        }
+
+            .form-group.full-width {
+                grid-column: 1 / -1;
+            }
+
+            .form-group label {
+                display: block;
+                font-size: clamp(0.85rem, 2vw, 0.95rem);
+                font-weight: 700;
+                color: var(--gray-700);
+                margin-bottom: 0.5rem;
+            }
+
+        .required {
+            color: var(--pink-600);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: clamp(0.6rem, 2vw, 0.8rem);
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            transition: all 0.3s ease;
+        }
+
+            .form-input:focus, .form-select:focus, .form-textarea:focus {
+                outline: none;
+                border-color: var(--pink-500);
+                box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+            }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .map-container {
+            width: 100%;
+            height: clamp(300px, 50vh, 500px);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--gray-200);
+            margin: 1rem 0;
+            position: relative;
+            touch-action: none;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .map-instructions {
+            background: var(--pink-50);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: clamp(0.85rem, 2vw, 0.9rem);
+        }
+
+            .map-instructions i {
+                color: var(--pink-600);
+                font-size: 1.5rem;
+            }
+
+        .location-preview {
+            background: var(--gray-50);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: clamp(0.85rem, 2vw, 0.9rem);
+        }
+
+            .location-preview strong {
+                color: var(--pink-700);
+            }
+
+        .modal-footer {
+            padding: clamp(1rem, 3vw, 1.5rem) clamp(1rem, 4vw, 2rem);
+            border-top: 2px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            flex-wrap: wrap;
+            position: sticky;
+            bottom: 0;
+            background: white;
+            z-index: 100;
+        }
+
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: clamp(1rem, 3vw, 2rem);
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid var(--pink-500);
+            z-index: 10000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            max-width: calc(100vw - 2rem);
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+        .footer {
+            background: var(--gray-800);
+            color: white;
+            padding: clamp(1rem, 3vw, 1.5rem);
+            text-align: center;
+            margin-top: clamp(2rem, 4vw, 3rem);
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+        }
+
+        .share-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .share-btn {
+            padding: 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+            .share-btn:hover {
+                border-color: var(--pink-500);
+                background: var(--pink-50);
+                transform: translateY(-3px);
+            }
+
+            .share-btn i {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+                display: block;
+            }
+
+            .share-btn.whatsapp i {
+                color: #25D366;
+            }
+
+            .share-btn.email i {
+                color: #EA4335;
+            }
+
+            .share-btn.sms i {
+                color: #0088CC;
+            }
+
+            .share-btn.location i {
+                color: #4285F4;
+            }
+
+        .recipient-section {
+            margin-top: 1.5rem;
+        }
+
+        .recipient-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .recipient-option {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .recipient-option:hover {
+                border-color: var(--pink-500);
+                background: var(--pink-50);
+            }
+
+            .recipient-option input[type="radio"] {
+                width: 20px;
+                height: 20px;
+                cursor: pointer;
+            }
+
+            .recipient-option label {
+                cursor: pointer;
+                font-weight: 600;
+                flex: 1;
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo-container">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="header-center">
+                    <h1>Agenda de Directores</h1>
+                    <p>Gestión de Eventos</p>
+                </div>
+            </div>
+            <a href="/Home/InicioAlmacen" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="action-bar">
+            <div class="action-title">
+                <i class="fas fa-calendar-plus"></i>
+                Agenda Semanal
+            </div>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button class="btn btn-outline" onclick="exportarAgenda()">
+                    <i class="fas fa-file-pdf"></i> Exportar
+                </button>
+                <button class="btn btn-pink" onclick="abrirNuevoEvento()">
+                    <i class="fas fa-plus"></i> Nuevo Evento
+                </button>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-chart-pie"></i>
+                    Resumen
+                </div>
+
+                <div class="stats-mini">
+                    <div class="stat-mini">
+                        <div class="stat-mini-value" id="totalEventos">0</div>
+                        <div class="stat-mini-label">Total</div>
+                    </div>
+                    <div class="stat-mini" style="background: linear-gradient(135deg, #f472b6, #ec4899);">
+                        <div class="stat-mini-value" id="eventosSemana">0</div>
+                        <div class="stat-mini-label">Semana</div>
+                    </div>
+                    <div class="stat-mini" style="background: linear-gradient(135deg, #f9a8d4, #f472b6);">
+                        <div class="stat-mini-value" id="eventosProximos">0</div>
+                        <div class="stat-mini-label">Próximos</div>
+                    </div>
+                </div>
+
+                <div class="card-title" style="margin-top: 2rem;">
+                    <i class="fas fa-list-ul"></i>
+                    Eventos Agendados
+                </div>
+
+                <div class="filter-bar">
+                    <div class="filter-item">
+                        <label style="font-size: 0.85rem; font-weight: 600; color: var(--gray-700); display: block; margin-bottom: 0.3rem;">Director</label>
+                        <select class="form-select" id="filterDirector" onchange="filtrarEventos()">
+                            <option value="">Todos</option>
+                            <option value="Director de Bacheo">Bacheo</option>
+                            <option value="Director de Alumbrado">Alumbrado</option>
+                            <option value="Director de Recolección">Recolección</option>
+                            <option value="Director de Limpieza">Limpieza</option>
+                            <option value="Director General">General</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label style="font-size: 0.85rem; font-weight: 600; color: var(--gray-700); display: block; margin-bottom: 0.3rem;">Fecha</label>
+                        <input type="date" class="form-input" id="filterFecha" onchange="filtrarEventos()">
+                    </div>
+                </div>
+
+                <div class="scrollable-events" id="eventosLista">
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-times"></i>
+                        <h3>No hay eventos</h3>
+                        <p>Crea tu primer evento</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Sistema de Agenda - Servicios Primarios Monclova</p>
+        <p>&copy; 2025 H. Ayuntamiento de Monclova</p>
+    </footer>
+
+    <!-- Modal Nuevo Evento -->
+    <div class="modal" id="nuevoEventoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-calendar-plus"></i> Crear Nuevo Evento</h2>
+                <button class="btn-close" onclick="closeModal('nuevoEventoModal')">
+                    <i class="fas fa-times"></i> Cerrar
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="eventForm" onsubmit="guardarEvento(event)">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>Director Asignado <span class="required">*</span></label>
+                            <select class="form-select" id="director" required>
+                                <option value="">Seleccione un director</option>
+                                <option value="Director de Bacheo">Director de Bacheo</option>
+                                <option value="Director de Alumbrado">Director de Alumbrado Público</option>
+                                <option value="Director de Recolección">Director de Recolección</option>
+                                <option value="Director de Limpieza">Director de Limpieza</option>
+                                <option value="Director General">Director General</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Nombre del Evento <span class="required">*</span></label>
+                            <input type="text" class="form-input" id="evento" placeholder="Ej: Supervisión de Obra Calle 38" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Fecha <span class="required">*</span></label>
+                            <input type="date" class="form-input" id="fecha" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Hora <span class="required">*</span></label>
+                            <input type="time" class="form-input" id="hora" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Lugar <span class="required">*</span></label>
+                            <input type="text" class="form-input" id="lugar" placeholder="Ej: Calle 38, Colonia Centro" required>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Comentarios / Observaciones</label>
+                            <textarea class="form-textarea" id="comentario" placeholder="Notas adicionales sobre el evento..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-map-marked-alt"></i> Ubicación en el Mapa</label>
+                        <div class="map-instructions">
+                            <i class="fas fa-info-circle"></i>
+                            <span><strong>Haz clic en el mapa</strong> para marcar la ubicación exacta del evento. El marcador se puede mover.</span>
+                        </div>
+                        <div class="map-container">
+                            <div id="map"></div>
+                        </div>
+                        <div id="locationPreview" class="location-preview" style="display: none;">
+                            <strong>Ubicación seleccionada:</strong><br>
+                            Latitud: <span id="latValue">-</span>, Longitud: <span id="lngValue">-</span><br>
+                            <a href="#" id="googleMapsLink" target="_blank" style="color: var(--pink-600);">
+                                <i class="fas fa-external-link-alt"></i> Ver en Google Maps
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('nuevoEventoModal')">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button class="btn btn-success" onclick="document.getElementById('eventForm').requestSubmit()">
+                    <i class="fas fa-save"></i> Guardar Evento
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Compartir -->
+    <div class="modal" id="shareModal">
+        <div class="modal-content" style="border-radius: 15px; max-width: 600px; height: auto;">
+            <div class="modal-header" style="border-radius: 15px 15px 0 0; position: relative;">
+                <h2>Compartir Evento</h2>
+                <button class="btn-close" onclick="closeModal('shareModal')" style="padding: 0.3rem 0.8rem;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="recipient-section">
+                    <div style="font-size: 1rem; font-weight: 700; color: var(--gray-800); margin-bottom: 1rem;">
+                        ¿A quién deseas enviar?
+                    </div>
+                    <div class="recipient-options">
+                        <div class="recipient-option">
+                            <input type="radio" name="recipient" id="recTodo" value="todo" checked>
+                            <label for="recTodo">Todo el Personal</label>
+                        </div>
+                        <div class="recipient-option">
+                            <input type="radio" name="recipient" id="recBacheo" value="bacheo">
+                            <label for="recBacheo">Departamento de Bacheo</label>
+                        </div>
+                        <div class="recipient-option">
+                            <input type="radio" name="recipient" id="recAlumbrado" value="alumbrado">
+                            <label for="recAlumbrado">Departamento de Alumbrado</label>
+                        </div>
+                        <div class="recipient-option">
+                            <input type="radio" name="recipient" id="recRecoleccion" value="recoleccion">
+                            <label for="recRecoleccion">Departamento de Recolección</label>
+                        </div>
+                        <div class="recipient-option">
+                            <input type="radio" name="recipient" id="recLimpieza" value="limpieza">
+                            <label for="recLimpieza">Departamento de Limpieza</label>
+                        </div>
+                        <div class="recipient-option">
+                            <input type="radio" name="recipient" id="recDirector" value="director">
+                            <label for="recDirector">Solo al Director Asignado</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="share-options">
+                    <div class="share-btn whatsapp" onclick="compartirPor('whatsapp')">
+                        <i class="fab fa-whatsapp"></i>
+                        <div style="font-size: 0.9rem; font-weight: 600; color: var(--gray-700);">WhatsApp</div>
+                    </div>
+                    <div class="share-btn email" onclick="compartirPor('email')">
+                        <i class="fas fa-envelope"></i>
+                        <div style="font-size: 0.9rem; font-weight: 600; color: var(--gray-700);">Email</div>
+                    </div>
+                    <div class="share-btn sms" onclick="compartirPor('sms')">
+                        <i class="fas fa-sms"></i>
+                        <div style="font-size: 0.9rem; font-weight: 600; color: var(--gray-700);">SMS</div>
+                    </div>
+                    <div class="share-btn location" onclick="compartirUbicacion()">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div style="font-size: 0.9rem; font-weight: 600; color: var(--gray-700);">Ubicación</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="position: relative;">
+                <button class="btn btn-outline" onclick="closeModal('shareModal')">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let eventos = [];
+        let eventoActual = null;
+        let map = null;
+        let marker = null;
+        let selectedLocation = null;
+
+        function initMap() {
+            map = L.map('map', {
+                center: [26.9077, -101.4205],
+                zoom: 13,
+                scrollWheelZoom: false,
+                doubleClickZoom: true,
+                touchZoom: true,
+                dragging: true
+            });
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Habilitar zoom con scroll solo cuando el usuario hace clic en el mapa
+            map.on('focus', function() {
+                map.scrollWheelZoom.enable();
+            });
+
+            map.on('blur', function() {
+                map.scrollWheelZoom.disable();
+            });
+
+            map.on('click', function(e) {
+                const { lat, lng } = e.latlng;
+
+                if (marker) {
+                    marker.setLatLng([lat, lng]);
+                } else {
+                    marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+                    marker.on('dragend', function(event) {
+                        const position = marker.getLatLng();
+                        updateLocationPreview(position.lat, position.lng);
+                    });
+                }
+
+                updateLocationPreview(lat, lng);
+            });
+        }
+
+        function updateLocationPreview(lat, lng) {
+            selectedLocation = { lat, lng };
+            document.getElementById('latValue').textContent = lat.toFixed(6);
+            document.getElementById('lngValue').textContent = lng.toFixed(6);
+
+            const googleMapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+            document.getElementById('googleMapsLink').href = googleMapsUrl;
+            document.getElementById('locationPreview').style.display = 'block';
+        }
+
+        function abrirNuevoEvento() {
+            document.body.style.overflow = 'hidden';
+            document.getElementById('nuevoEventoModal').classList.add('active');
+            document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+
+            setTimeout(() => {
+                if (!map) {
+                    initMap();
+                } else {
+                    map.invalidateSize();
+                    map.setView([26.9077, -101.4205], 13);
+                }
+            }, 100);
+        }
+
+        function guardarEvento(e) {
+            e.preventDefault();
+
+            if (!selectedLocation) {
+                alert('Por favor selecciona una ubicación en el mapa');
+                return;
+            }
+
+            const evento = {
+                director: document.getElementById('director').value,
+                evento: document.getElementById('evento').value,
+                fecha: document.getElementById('fecha').value,
+                hora: document.getElementById('hora').value,
+                lugar: document.getElementById('lugar').value,
+                comentario: document.getElementById('comentario').value,
+                ubicacion: `https://www.google.com/maps?q=${selectedLocation.lat},${selectedLocation.lng}`,
+                coordenadas: selectedLocation
+            };
+
+            eventos.push(evento);
+            eventos.sort((a, b) => new Date(a.fecha + ' ' + a.hora) - new Date(b.fecha + ' ' + b.hora));
+
+            actualizarLista();
+            actualizarEstadisticas();
+
+            document.getElementById('eventForm').reset();
+
+            closeModal('nuevoEventoModal');
+            showNotification('Evento creado correctamente');
+        }
+
+        function actualizarLista() {
+            const container = document.getElementById('eventosLista');
+
+            if (eventos.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-times"></i>
+                        <h3>No hay eventos</h3>
+                        <p>Crea tu primer evento</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = eventos.map((evento, index) => `
+                <div class="event-card">
+                    <div class="event-header">
+                        <div>
+                            <div class="event-title">${evento.evento}</div>
+                            <div class="event-date">
+                                <i class="fas fa-user-tie"></i> ${evento.director}
+                            </div>
+                        </div>
+                        <div class="event-actions">
+                            <button class="btn-icon share" onclick="abrirCompartir(${index})" title="Compartir">
+                                <i class="fas fa-share-alt"></i>
+                            </button>
+                            <button class="btn-icon delete" onclick="eliminarEvento(${index})" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="event-details">
+                        <div class="event-detail-row">
+                            <i class="fas fa-calendar"></i>
+                            <span>${formatearFecha(evento.fecha)}</span>
+                        </div>
+                        <div class="event-detail-row">
+                            <i class="fas fa-clock"></i>
+                            <span>${evento.hora} Hrs.</span>
+                        </div>
+                        <div class="event-detail-row">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${evento.lugar}</span>
+                        </div>
+                        <div class="event-detail-row">
+                            <i class="fas fa-map"></i>
+                            <a href="${evento.ubicacion}" target="_blank" style="color: var(--pink-600); text-decoration: none;">
+                                <strong>Abrir en Google Maps</strong>
+                            </a>
+                        </div>
+                    </div>
+                    ${evento.comentario ? `
+                    <div class="event-comment">
+                        <strong><i class="fas fa-comment"></i> Comentario:</strong> ${evento.comentario}
+                    </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function formatearFecha(fecha) {
+            const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            const date = new Date(fecha + 'T00:00:00');
+            return `${date.getDate().toString().padStart(2, '0')}/${meses[date.getMonth()]}/${date.getFullYear()}`;
+        }
+
+        function eliminarEvento(index) {
+            if (confirm('¿Eliminar este evento?')) {
+                eventos.splice(index, 1);
+                actualizarLista();
+                actualizarEstadisticas();
+                showNotification('Evento eliminado');
+            }
+        }
+
+        function abrirCompartir(index) {
+            eventoActual = eventos[index];
+            document.getElementById('shareModal').classList.add('active');
+        }
+
+        function compartirPor(metodo) {
+            if (!eventoActual) return;
+
+            const destinatario = document.querySelector('input[name="recipient"]:checked').value;
+            const destinatarioTexto = document.querySelector('input[name="recipient"]:checked').nextElementSibling.textContent;
+
+            const mensaje = `📅 *EVENTO AGENDADO*\n\n` +
+                          `👤 *Director:* ${eventoActual.director}\n` +
+                          `📋 *Evento:* ${eventoActual.evento}\n` +
+                          `📆 *Fecha:* ${formatearFecha(eventoActual.fecha)}\n` +
+                          `⏰ *Hora:* ${eventoActual.hora} Hrs.\n` +
+                          `📍 *Lugar:* ${eventoActual.lugar}\n` +
+                          `🗺️ *Ubicación:* ${eventoActual.ubicacion}\n` +
+                          (eventoActual.comentario ? `💬 *Comentario:* ${eventoActual.comentario}\n` : '') +
+                          `\n📨 *Enviado a:* ${destinatarioTexto}`;
+
+            switch(metodo) {
+                case 'whatsapp':
+                    const urlWhatsApp = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
+                    window.open(urlWhatsApp, '_blank');
+                    break;
+                case 'email':
+                    const subject = `Evento: ${eventoActual.evento}`;
+                    const body = mensaje.replace(/\*/g, '').replace(/\n/g, '%0D%0A');
+                    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${body}`;
+                    break;
+                case 'sms':
+                    const urlSMS = `sms:?body=${encodeURIComponent(mensaje)}`;
+                    window.location.href = urlSMS;
+                    break;
+            }
+
+            showNotification(`Evento enviado por ${metodo.toUpperCase()}`);
+            closeModal('shareModal');
+        }
+
+        function compartirUbicacion() {
+            if (!eventoActual || !eventoActual.ubicacion) {
+                alert('Este evento no tiene ubicación');
+                return;
+            }
+
+            const destinatario = document.querySelector('input[name="recipient"]:checked').nextElementSibling.textContent;
+            const mensaje = `📍 *UBICACIÓN DEL EVENTO*\n\n` +
+                          `📋 ${eventoActual.evento}\n` +
+                          `📆 ${formatearFecha(eventoActual.fecha)} - ${eventoActual.hora}\n` +
+                          `🗺️ ${eventoActual.ubicacion}`;
+
+            const urlWhatsApp = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
+            window.open(urlWhatsApp, '_blank');
+
+            showNotification('Ubicación enviada');
+            closeModal('shareModal');
+        }
+
+        function filtrarEventos() {
+            const filterDirector = document.getElementById('filterDirector').value;
+            const filterFecha = document.getElementById('filterFecha').value;
+
+            const eventosFiltrados = eventos.filter(evento => {
+                const matchDirector = !filterDirector || evento.director === filterDirector;
+                const matchFecha = !filterFecha || evento.fecha === filterFecha;
+                return matchDirector && matchFecha;
+            });
+
+            const container = document.getElementById('eventosLista');
+
+            if (eventosFiltrados.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-filter"></i>
+                        <h3>Sin resultados</h3>
+                        <p>Ajusta los filtros</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = eventosFiltrados.map((evento, index) => {
+                const originalIndex = eventos.indexOf(evento);
+                return `
+                    <div class="event-card">
+                        <div class="event-header">
+                            <div>
+                                <div class="event-title">${evento.evento}</div>
+                                <div class="event-date">
+                                    <i class="fas fa-user-tie"></i> ${evento.director}
+                                </div>
+                            </div>
+                            <div class="event-actions">
+                                <button class="btn-icon share" onclick="abrirCompartir(${originalIndex})">
+                                    <i class="fas fa-share-alt"></i>
+                                </button>
+                                <button class="btn-icon delete" onclick="eliminarEvento(${originalIndex})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="event-details">
+                            <div class="event-detail-row">
+                                <i class="fas fa-calendar"></i>
+                                <span>${formatearFecha(evento.fecha)}</span>
+                            </div>
+                            <div class="event-detail-row">
+                                <i class="fas fa-clock"></i>
+                                <span>${evento.hora} Hrs.</span>
+                            </div>
+                            <div class="event-detail-row">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${evento.lugar}</span>
+                            </div>
+                            <div class="event-detail-row">
+                                <i class="fas fa-map"></i>
+                                <a href="${evento.ubicacion}" target="_blank" style="color: var(--pink-600);">
+                                    <strong>Abrir en Google Maps</strong>
+                                </a>
+                            </div>
+                        </div>
+                        ${evento.comentario ? `
+                        <div class="event-comment">
+                            <strong><i class="fas fa-comment"></i></strong> ${evento.comentario}
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function actualizarEstadisticas() {
+            document.getElementById('totalEventos').textContent = eventos.length;
+
+            const hoy = new Date();
+            const inicioSemana = new Date(hoy);
+            inicioSemana.setDate(hoy.getDate() - hoy.getDay());
+            const finSemana = new Date(inicioSemana);
+            finSemana.setDate(inicioSemana.getDate() + 6);
+
+            const eventosSemana = eventos.filter(e => {
+                const fecha = new Date(e.fecha + 'T00:00:00');
+                return fecha >= inicioSemana && fecha <= finSemana;
+            });
+
+            const eventosProximos = eventos.filter(e => {
+                const fecha = new Date(e.fecha + 'T00:00:00');
+                return fecha >= hoy;
+            });
+
+            document.getElementById('eventosSemana').textContent = eventosSemana.length;
+            document.getElementById('eventosProximos').textContent = eventosProximos.length;
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = '';
+
+            // Limpiar mapa si es el modal de nuevo evento
+            if (modalId === 'nuevoEventoModal') {
+                if (marker) {
+                    map.removeLayer(marker);
+                    marker = null;
+                }
+                selectedLocation = null;
+                document.getElementById('locationPreview').style.display = 'none';
+            }
+        }
+
+        function exportarAgenda() {
+            showNotification('Generando PDF...');
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `<i class="fas fa-check-circle" style="color: #ec4899; margin-right: 0.5rem;"></i>${message}`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                const modalId = event.target.id;
+                closeModal(modalId);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            actualizarEstadisticas();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1685 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes de Recolección - Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --verde-principal: #16a34a;
+            --verde-secundario: #15803d;
+            --verde-claro: #22c55e;
+            --verde-light: #86efac;
+            --verde-oscuro: #14532d;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #06b6d4;
+            --dark: #1F2937;
+            --light: #f0fdf4;
+            --border: #86efac;
+            --gris-claro: #f3f4f6;
+            --gris-medio: #9ca3af;
+            --bg-light: #f0fdf4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, var(--gris-claro) 100%);
+            color: #111827;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--verde-secundario) 0%, var(--verde-principal) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(22, 163, 74, 0.3);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-info h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-info p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+            .btn-back:hover {
+                background: rgba(255,255,255,0.3);
+                transform: translateY(-2px);
+            }
+
+        .btn-primary {
+            background: var(--verde-principal);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: var(--verde-secundario);
+                transform: translateY(-2px);
+            }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+            .btn-success:hover {
+                background: #059669;
+            }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+            .btn-warning:hover {
+                background: #D97706;
+            }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+            .btn-danger:hover {
+                background: #DC2626;
+            }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--verde-principal);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6B7280;
+            font-weight: 600;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--verde-principal);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: var(--light);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+            .form-input:focus {
+                outline: none;
+                border-color: var(--verde-principal);
+                box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            }
+
+        .reports-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .report-card {
+            background: white;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+            .report-card:hover {
+                border-color: var(--verde-principal);
+                box-shadow: 0 8px 25px rgba(22, 163, 74, 0.15);
+                transform: translateY(-2px);
+            }
+
+        .report-header {
+            background: linear-gradient(135deg, var(--light), white);
+            padding: 1.5rem;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .report-folio {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--verde-principal);
+        }
+
+        .report-badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-nuevo {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .badge-revision {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge-aprobado {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .badge-rechazado {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .badge-programado {
+            background: #E0E7FF;
+            color: #3730A3;
+        }
+
+        .badge-alta {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .badge-media {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge-baja {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .report-body {
+            padding: 1.5rem;
+        }
+
+        .report-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            color: #6B7280;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            font-size: 0.95rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .report-description {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--verde-principal);
+            margin-bottom: 1rem;
+        }
+
+        .report-photos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .photo-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .photo-item:hover {
+                border-color: var(--verde-principal);
+                transform: scale(1.05);
+            }
+
+            .photo-item img {
+                width: 100%;
+                height: 150px;
+                object-fit: cover;
+            }
+
+        .report-map {
+            height: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            margin-bottom: 1rem;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border);
+        }
+
+        .technical-data {
+            background: #FEF3C7;
+            border: 2px solid #F59E0B;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .technical-data-title {
+            font-weight: 700;
+            color: #92400E;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 2rem auto;
+            border-radius: 16px;
+            width: 95%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-secundario));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+            .close-modal:hover {
+                background: rgba(255,255,255,0.3);
+                transform: rotate(90deg);
+            }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1001;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .notification.success {
+                background: var(--success);
+            }
+
+            .notification.error {
+                background: var(--danger);
+            }
+
+            .notification.warning {
+                background: var(--warning);
+            }
+
+            .notification.info {
+                background: var(--info);
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6B7280;
+        }
+
+            .empty-state i {
+                font-size: 4rem;
+                margin-bottom: 1rem;
+                opacity: 0.5;
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-info">
+                <h1>Reportes de Recolección de Basura</h1>
+                <p>Gestión y Validación de Reportes Ciudadanos • Monclova, Coahuila 2025-2027</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-back" onclick="window.history.back()">
+                    <i class="fas fa-arrow-left"></i> Regresar
+                </button>
+                <button class="btn btn-info" onclick="sincronizarReportes()">
+                    <i class="fas fa-sync-alt"></i> Sincronizar
+                </button>
+                <button class="btn btn-success" onclick="exportarReportes()">
+                    <i class="fas fa-file-export"></i> Exportar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #16a34a, #15803d);">
+                    <i class="fas fa-inbox"></i>
+                </div>
+                <div class="stat-number" id="totalReportes">0</div>
+                <div class="stat-label">Total Reportes</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-number" id="nuevosReportes">0</div>
+                <div class="stat-label">Nuevos</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="stat-number" id="enRevision">0</div>
+                <div class="stat-label">En Revisión</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-number" id="aprobados">0</div>
+                <div class="stat-label">Aprobados</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-number" id="prioridadAlta">0</div>
+                <div class="stat-label">Prioridad Alta</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-filter"></i>
+                Filtros de Búsqueda
+            </h2>
+            <div class="filters-grid">
+                <div class="form-group">
+                    <label class="form-label">Buscar por Folio</label>
+                    <input type="text" class="form-input" id="searchFolio" placeholder="REC-1001">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Estado</label>
+                    <select class="form-input" id="filterEstado">
+                        <option value="">Todos los estados</option>
+                        <option value="nuevo">Nuevo</option>
+                        <option value="revision">En Revisión</option>
+                        <option value="aprobado">Aprobado</option>
+                        <option value="rechazado">Rechazado</option>
+                        <option value="programado">Programado</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Prioridad</label>
+                    <select class="form-input" id="filterPrioridad">
+                        <option value="">Todas las prioridades</option>
+                        <option value="alta">Alta</option>
+                        <option value="media">Media</option>
+                        <option value="baja">Baja</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Tipo de Problema</label>
+                    <select class="form-input" id="filterTipoProblema">
+                        <option value="">Todos los tipos</option>
+                        <option value="basura_acumulada">Basura Acumulada</option>
+                        <option value="falta_recoleccion">Falta de Recolección</option>
+                        <option value="contenedor_dañado">Contenedor Dañado</option>
+                        <option value="derrame">Derrame de Basura</option>
+                        <option value="punto_clandestino">Punto Clandestino</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Sector</label>
+                    <select class="form-input" id="filterSector">
+                        <option value="">Todos los sectores</option>
+                        <option value="centro">Centro</option>
+                        <option value="norte">Norte</option>
+                        <option value="sur">Sur</option>
+                        <option value="este">Este</option>
+                        <option value="oeste">Oeste</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Fecha Desde</label>
+                    <input type="date" class="form-input" id="filterFechaDesde">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Fecha Hasta</label>
+                    <input type="date" class="form-input" id="filterFechaHasta">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="aplicarFiltros()">
+                    <i class="fas fa-filter"></i> Aplicar Filtros
+                </button>
+                <button class="btn btn-warning" onclick="limpiarFiltros()">
+                    <i class="fas fa-eraser"></i> Limpiar
+                </button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-list"></i>
+                Reportes Ciudadanos
+            </h2>
+            <div class="reports-grid" id="reportsContainer">
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modalEvaluacion">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Evaluación Técnica del Reporte</h3>
+                <button class="close-modal" onclick="cerrarModal('modalEvaluacion')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="formEvaluacion">
+                    <input type="hidden" id="reporteIdEval">
+
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Problema Identificado *</label>
+                        <select class="form-input" id="evalTipoProblema" required>
+                            <option value="">Seleccione el tipo de problema</option>
+                            <option value="basura_acumulada">Basura Acumulada</option>
+                            <option value="falta_recoleccion">Falta de Recolección</option>
+                            <option value="contenedor_dañado">Contenedor Dañado</option>
+                            <option value="derrame">Derrame de Basura</option>
+                            <option value="punto_clandestino">Punto Clandestino</option>
+                            <option value="contenedor_lleno">Contenedor Lleno</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Volumen Estimado</label>
+                            <select class="form-input" id="evalVolumen">
+                                <option value="">Seleccione</option>
+                                <option value="bajo">Bajo (1-5 m³)</option>
+                                <option value="medio">Medio (5-15 m³)</option>
+                                <option value="alto">Alto (15+ m³)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Tipo de Residuos</label>
+                            <select class="form-input" id="evalTipoResiduos">
+                                <option value="">Seleccione</option>
+                                <option value="domesticos">Domésticos</option>
+                                <option value="voluminosos">Voluminosos</option>
+                                <option value="organicos">Orgánicos</option>
+                                <option value="mixtos">Mixtos</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Prioridad *</label>
+                            <select class="form-input" id="evalPrioridad" required>
+                                <option value="baja">Baja - 7-10 días</option>
+                                <option value="media" selected>Media - 3-5 días</option>
+                                <option value="alta">Alta - 24-48 horas</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Sector/Zona</label>
+                            <select class="form-input" id="evalSector">
+                                <option value="centro">Centro</option>
+                                <option value="norte">Norte</option>
+                                <option value="sur">Sur</option>
+                                <option value="este">Este</option>
+                                <option value="oeste">Oeste</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Equipo Necesario Estimado</label>
+                        <textarea class="form-input" id="evalEquipo" rows="3" placeholder="Ej: 1 Camión recolector, 3 trabajadores, equipo de limpieza..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Observaciones Técnicas</label>
+                        <textarea class="form-input" id="evalObservaciones" rows="3" placeholder="Detalles técnicos adicionales..."></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Accesibilidad</label>
+                            <select class="form-input" id="evalAccesibilidad">
+                                <option value="facil">Fácil</option>
+                                <option value="moderada">Moderada</option>
+                                <option value="dificil">Difícil</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Requiere Equipo Especial</label>
+                            <select class="form-input" id="evalRequiereEquipo">
+                                <option value="no">No</option>
+                                <option value="si">Sí</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <button type="button" class="btn btn-danger" style="flex: 1;" onclick="rechazarReporte()">
+                            <i class="fas fa-times"></i> Rechazar Reporte
+                        </button>
+                        <button type="submit" class="btn btn-success" style="flex: 2;">
+                            <i class="fas fa-check"></i> Aprobar y Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modalConfirmacion">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                <h3 class="modal-title">Confirmar Acción</h3>
+                <button class="close-modal" onclick="cerrarModal('modalConfirmacion')">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center; padding: 2rem;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem;"></i>
+                <h3 style="margin-bottom: 1rem;">¿Está seguro?</h3>
+                <p id="mensajeConfirmacion" style="margin-bottom: 1.5rem; color: #6B7280;">Esta acción no se puede deshacer.</p>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-warning" style="flex: 1;" onclick="cerrarModal('modalConfirmacion')">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button class="btn btn-danger" style="flex: 1;" id="btnConfirmarAccion">
+                        <i class="fas fa-check"></i> Confirmar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        let reportes = [];
+        let reportesFiltrados = [];
+        let reporteMaps = {};
+        const MONCLOVA_COORDS = [26.9077, -101.4203];
+
+        const reportesEjemplo = [
+            {
+                id: 1,
+                folio: 'REC-1001',
+                fechaReporte: '2025-01-10T08:30:00',
+                ciudadano: {
+                    nombre: 'María González López',
+                    telefono: '844-555-0101',
+                    email: 'maria.gonzalez@email.com'
+                },
+                ubicacion: {
+                    calle: 'Av. Juárez',
+                    numero: '456',
+                    colonia: 'Centro',
+                    entreCalles: 'Morelos y Hidalgo',
+                    codigoPostal: '25700',
+                    coordenadas: { lat: 26.9077, lng: -101.4203 }
+                },
+                descripcion: 'Acumulación de basura en la esquina desde hace una semana. No ha pasado el camión recolector.',
+                fotos: ['foto1.jpg', 'foto2.jpg'],
+                estado: 'nuevo',
+                evaluacionTecnica: null
+            },
+            {
+                id: 2,
+                folio: 'REC-1002',
+                fechaReporte: '2025-01-10T09:15:00',
+                ciudadano: {
+                    nombre: 'Carlos Hernández Ruiz',
+                    telefono: '844-555-0102',
+                    email: 'carlos.hernandez@email.com'
+                },
+                ubicacion: {
+                    calle: 'Calle Morelos',
+                    numero: '789',
+                    colonia: 'Las Flores',
+                    entreCalles: 'Juárez y Allende',
+                    codigoPostal: '25710',
+                    coordenadas: { lat: 26.9087, lng: -101.4213 }
+                },
+                descripcion: 'Contenedor de basura roto, la basura se derrama en la calle.',
+                fotos: ['foto3.jpg'],
+                estado: 'nuevo',
+                evaluacionTecnica: null
+            },
+            {
+                id: 3,
+                folio: 'REC-1003',
+                fechaReporte: '2025-01-09T14:20:00',
+                ciudadano: {
+                    nombre: 'Ana Rodríguez Pérez',
+                    telefono: '844-555-0103',
+                    email: 'ana.rodriguez@email.com'
+                },
+                ubicacion: {
+                    calle: 'Av. Universidad',
+                    numero: '321',
+                    colonia: 'Universitaria',
+                    entreCalles: 'Tecnológico y Reforma',
+                    codigoPostal: '25720',
+                    coordenadas: { lat: 26.9097, lng: -101.4193 }
+                },
+                descripcion: 'Punto de tiradero clandestino con escombros y muebles viejos.',
+                fotos: ['foto4.jpg', 'foto5.jpg', 'foto6.jpg'],
+                estado: 'revision',
+                evaluacionTecnica: {
+                    tipoProblema: 'punto_clandestino',
+                    volumen: 'alto',
+                    tipoResiduos: 'voluminosos',
+                    prioridad: 'alta',
+                    sector: 'este',
+                    equipo: '1 Camión de volteo, 4 trabajadores, herramienta para carga',
+                    observaciones: 'Requiere atención urgente, residuos voluminosos',
+                    accesibilidad: 'moderada',
+                    requiereEquipo: 'si',
+                    evaluadoPor: 'Ing. Roberto Sánchez',
+                    fechaEvaluacion: '2025-01-09T15:30:00'
+                }
+            },
+            {
+                id: 4,
+                folio: 'REC-1004',
+                fechaReporte: '2025-01-08T16:45:00',
+                ciudadano: {
+                    nombre: 'Roberto Sánchez Gómez',
+                    telefono: '844-555-0104',
+                    email: 'roberto.sanchez@email.com'
+                },
+                ubicacion: {
+                    calle: 'Calle Hidalgo',
+                    numero: '234',
+                    colonia: 'Centro',
+                    entreCalles: 'Zaragoza y Allende',
+                    codigoPostal: '25700',
+                    coordenadas: { lat: 26.9065, lng: -101.4195 }
+                },
+                descripcion: 'Basura orgánica sin recolectar, generando mal olor.',
+                fotos: ['foto7.jpg'],
+                estado: 'aprobado',
+                evaluacionTecnica: {
+                    tipoProblema: 'falta_recoleccion',
+                    volumen: 'bajo',
+                    tipoResiduos: 'organicos',
+                    prioridad: 'media',
+                    sector: 'centro',
+                    equipo: '1 Camión recolector estándar, 2 trabajadores',
+                    observaciones: 'Recolección regular atrasada',
+                    accesibilidad: 'facil',
+                    requiereEquipo: 'no',
+                    evaluadoPor: 'Ing. Roberto Sánchez',
+                    fechaEvaluacion: '2025-01-08T17:00:00'
+                }
+            },
+            {
+                id: 5,
+                folio: 'REC-1005',
+                fechaReporte: '2025-01-07T11:20:00',
+                ciudadano: {
+                    nombre: 'Laura Martínez Torres',
+                    telefono: '844-555-0105',
+                    email: 'laura.martinez@email.com'
+                },
+                ubicacion: {
+                    calle: 'Blvd. Fundadores',
+                    numero: '567',
+                    colonia: 'Los Pinos',
+                    entreCalles: 'Revolución y Constitución',
+                    codigoPostal: '25730',
+                    coordenadas: { lat: 26.9110, lng: -101.4180 }
+                },
+                descripcion: 'Contenedor desbordado, bolsas de basura en el suelo.',
+                fotos: ['foto8.jpg', 'foto9.jpg'],
+                estado: 'aprobado',
+                evaluacionTecnica: {
+                    tipoProblema: 'contenedor_lleno',
+                    volumen: 'medio',
+                    tipoResiduos: 'domesticos',
+                    prioridad: 'alta',
+                    sector: 'norte',
+                    equipo: '1 Camión recolector, 2 trabajadores',
+                    observaciones: 'Requiere vaciado inmediato del contenedor',
+                    accesibilidad: 'facil',
+                    requiereEquipo: 'no',
+                    evaluadoPor: 'Ing. Roberto Sánchez',
+                    fechaEvaluacion: '2025-01-07T12:00:00'
+                }
+            },
+            {
+                id: 6,
+                folio: 'REC-1006',
+                fechaReporte: '2025-01-11T07:30:00',
+                ciudadano: {
+                    nombre: 'Pedro Ramírez Luna',
+                    telefono: '844-555-0106',
+                    email: 'pedro.ramirez@email.com'
+                },
+                ubicacion: {
+                    calle: 'Calle Reforma',
+                    numero: '890',
+                    colonia: 'Obrera',
+                    entreCalles: 'Independencia y Libertad',
+                    codigoPostal: '25740',
+                    coordenadas: { lat: 26.9050, lng: -101.4225 }
+                },
+                descripcion: 'Basura regada por perros callejeros.',
+                fotos: ['foto10.jpg'],
+                estado: 'nuevo',
+                evaluacionTecnica: null
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarReportes();
+            configurarEventos();
+            actualizarEstadisticas();
+            console.log('Sistema de Reportes de Recolección cargado');
+        });
+
+        function cargarReportes() {
+            const reportesGuardados = localStorage.getItem('reportesRecoleccion');
+
+            if (reportesGuardados) {
+                try {
+                    reportes = JSON.parse(reportesGuardados);
+                    console.log('Reportes cargados desde localStorage:', reportes.length);
+                } catch (error) {
+                    console.error('Error al cargar reportes guardados:', error);
+                    reportes = [...reportesEjemplo];
+                    localStorage.setItem('reportesRecoleccion', JSON.stringify(reportes));
+                }
+            } else {
+                reportes = [...reportesEjemplo];
+                localStorage.setItem('reportesRecoleccion', JSON.stringify(reportes));
+                console.log('Datos de ejemplo cargados:', reportes.length);
+            }
+
+            const reportesCiudadanos = localStorage.getItem('userReports');
+            if (reportesCiudadanos) {
+                try {
+                    const reportesPortal = JSON.parse(reportesCiudadanos);
+                    const reportesRecoleccionPortal = reportesPortal.filter(r =>
+                        r.department === 'recoleccion' || r.departamento === 'recoleccion'
+                    );
+
+                    reportesRecoleccionPortal.forEach(reportePortal => {
+                        const existe = reportes.find(r => r.folio === reportePortal.folio);
+                        if (!existe) {
+                            const reporteConvertido = {
+                                id: Date.now() + Math.random(),
+                                folio: reportePortal.folio,
+                                fechaReporte: reportePortal.timestamp || reportePortal.fechaReporte,
+                                ciudadano: {
+                                    nombre: reportePortal.name || reportePortal.ciudadano?.nombre || 'Ciudadano',
+                                    telefono: reportePortal.phone || reportePortal.ciudadano?.telefono || '',
+                                    email: reportePortal.email || reportePortal.ciudadano?.email || ''
+                                },
+                                ubicacion: {
+                                    calle: reportePortal.street || reportePortal.ubicacion?.calle || '',
+                                    numero: reportePortal.houseNumber || reportePortal.ubicacion?.numero || '',
+                                    colonia: reportePortal.neighborhood || reportePortal.ubicacion?.colonia || '',
+                                    entreCalles: reportePortal.betweenStreets || reportePortal.ubicacion?.entreCalles || '',
+                                    codigoPostal: reportePortal.postalCode || reportePortal.ubicacion?.codigoPostal || '',
+                                    coordenadas: reportePortal.location || reportePortal.ubicacion?.coordenadas || {lat: MONCLOVA_COORDS[0], lng: MONCLOVA_COORDS[1]}
+                                },
+                                descripcion: reportePortal.description || reportePortal.descripcion || '',
+                                fotos: reportePortal.images || reportePortal.fotos || [],
+                                estado: 'nuevo',
+                                evaluacionTecnica: null
+                            };
+
+                            reportes.push(reporteConvertido);
+                            console.log('Nuevo reporte del portal agregado:', reporteConvertido.folio);
+                        }
+                    });
+
+                    localStorage.setItem('reportesRecoleccion', JSON.stringify(reportes));
+                } catch (error) {
+                    console.error('Error al procesar reportes del portal:', error);
+                }
+            }
+
+            reportesFiltrados = [...reportes];
+            renderizarReportes();
+        }
+
+        function configurarEventos() {
+            ['searchFolio', 'filterEstado', 'filterPrioridad', 'filterTipoProblema', 'filterSector'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', aplicarFiltros);
+                    element.addEventListener('change', aplicarFiltros);
+                }
+            });
+
+            const formEval = document.getElementById('formEvaluacion');
+            if (formEval) {
+                formEval.addEventListener('submit', guardarEvaluacion);
+            }
+
+            window.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal')) {
+                    e.target.style.display = 'none';
+                }
+            });
+        }
+
+        function renderizarReportes() {
+            const container = document.getElementById('reportsContainer');
+            if (!container) return;
+
+            if (reportesFiltrados.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No se encontraron reportes</h3>
+                        <p>No hay reportes que coincidan con los filtros seleccionados</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = reportesFiltrados.map(reporte => {
+                const fecha = new Date(reporte.fechaReporte);
+                const fechaFormateada = fecha.toLocaleDateString('es-MX', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                const eval = reporte.evaluacionTecnica;
+                const prioridadBadge = eval ? `<span class="badge badge-${eval.prioridad}">${eval.prioridad.toUpperCase()}</span>` : '';
+
+                const tipoProblemaLabels = {
+                    'basura_acumulada': 'Basura Acumulada',
+                    'falta_recoleccion': 'Falta de Recolección',
+                    'contenedor_dañado': 'Contenedor Dañado',
+                    'derrame': 'Derrame de Basura',
+                    'punto_clandestino': 'Punto Clandestino',
+                    'contenedor_lleno': 'Contenedor Lleno'
+                };
+
+                return `
+                    <div class="report-card">
+                        <div class="report-header">
+                            <div class="report-folio">${reporte.folio}</div>
+                            <div class="report-badges">
+                                <span class="badge badge-${reporte.estado}">${reporte.estado.toUpperCase()}</span>
+                                ${prioridadBadge}
+                            </div>
+                        </div>
+
+                        <div class="report-body">
+                            <div class="report-info-grid">
+                                <div class="info-item">
+                                    <div class="info-icon" style="background: linear-gradient(135deg, #16a34a, #15803d);">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <div class="info-label">Reportado por</div>
+                                        <div class="info-value">${reporte.ciudadano.nombre}</div>
+                                        <div class="info-value" style="font-size: 0.85rem; color: #6B7280;">
+                                            <i class="fas fa-phone"></i> ${reporte.ciudadano.telefono}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="info-item">
+                                    <div class="info-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <div class="info-label">Ubicación</div>
+                                        <div class="info-value">${reporte.ubicacion.calle} ${reporte.ubicacion.numero}</div>
+                                        <div class="info-value" style="font-size: 0.85rem; color: #6B7280;">
+                                            Col. ${reporte.ubicacion.colonia}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="info-item">
+                                    <div class="info-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <div class="info-label">Fecha de Reporte</div>
+                                        <div class="info-value">${fechaFormateada}</div>
+                                    </div>
+                                </div>
+
+                                ${eval ? `
+                                    <div class="info-item">
+                                        <div class="info-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </div>
+                                        <div class="info-content">
+                                            <div class="info-label">Tipo de Problema</div>
+                                            <div class="info-value">${tipoProblemaLabels[eval.tipoProblema] || eval.tipoProblema}</div>
+                                        </div>
+                                    </div>
+                                ` : ''}
+                            </div>
+
+                            <div class="report-description">
+                                <strong><i class="fas fa-file-alt"></i> Descripción del Problema:</strong>
+                                <p style="margin: 0.5rem 0 0 0;">${reporte.descripcion}</p>
+                            </div>
+
+                            ${eval ? `
+                                <div class="technical-data">
+                                    <div class="technical-data-title">
+                                        <i class="fas fa-clipboard-check"></i>
+                                        Evaluación Técnica
+                                    </div>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-top: 0.75rem;">
+                                        <div><strong>Volumen:</strong> ${eval.volumen || 'N/A'}</div>
+                                        <div><strong>Tipo Residuos:</strong> ${eval.tipoResiduos || 'N/A'}</div>
+                                        <div><strong>Sector:</strong> ${eval.sector || 'N/A'}</div>
+                                        <div><strong>Accesibilidad:</strong> ${eval.accesibilidad || 'N/A'}</div>
+                                        <div><strong>Equipo Especial:</strong> ${eval.requiereEquipo === 'si' ? 'Sí' : 'No'}</div>
+                                    </div>
+                                    ${eval.equipo ? `<div style="margin-top: 0.5rem;"><strong>Equipo Necesario:</strong> ${eval.equipo}</div>` : ''}
+                                    ${eval.observaciones ? `<div style="margin-top: 0.5rem;"><strong>Observaciones:</strong> ${eval.observaciones}</div>` : ''}
+                                    <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #92400E;">
+                                        <i class="fas fa-user"></i> Evaluado por: ${eval.evaluadoPor} - ${new Date(eval.fechaEvaluacion).toLocaleDateString('es-MX')}
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            ${reporte.fotos && reporte.fotos.length > 0 ? `
+                                <div>
+                                    <strong style="display: block; margin-bottom: 0.5rem;">
+                                        <i class="fas fa-camera"></i> Fotografías (${reporte.fotos.length})
+                                    </strong>
+                                    <div class="report-photos">
+                                        ${reporte.fotos.map((foto, idx) => `
+                                            <div class="photo-item">
+                                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Crect fill='%2386efac' width='150' height='150'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='14' fill='%2315803d'%3EFoto ${idx + 1}%3C/text%3E%3C/svg%3E" alt="Foto ${idx + 1}">
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            <div>
+                                <strong style="display: block; margin-bottom: 0.5rem;">
+                                    <i class="fas fa-map"></i> Ubicación en Mapa
+                                </strong>
+                                <div style="background: #f3f4f6; padding: 0.75rem; border-radius: 8px; margin-bottom: 0.5rem; font-size: 0.85rem;">
+                                    <i class="fas fa-map-pin"></i>
+                                    <strong>Coordenadas GPS:</strong>
+                                    ${reporte.ubicacion.coordenadas.lat.toFixed(6)}, ${reporte.ubicacion.coordenadas.lng.toFixed(6)}
+                                    <button class="btn btn-info btn-sm" style="margin-left: 0.5rem; padding: 0.25rem 0.75rem;" onclick="copiarCoordenadas(${reporte.ubicacion.coordenadas.lat}, ${reporte.ubicacion.coordenadas.lng})">
+                                        <i class="fas fa-copy"></i> Copiar
+                                    </button>
+                                </div>
+                                <div class="report-map" id="map-${reporte.id}"></div>
+                            </div>
+
+                            <div class="report-actions">
+                                ${reporte.estado === 'nuevo' || reporte.estado === 'revision' ? `
+                                    <button class="btn btn-primary btn-sm" onclick="abrirEvaluacion(${reporte.id})">
+                                        <i class="fas fa-clipboard-check"></i> ${reporte.estado === 'nuevo' ? 'Evaluar' : 'Editar Evaluación'}
+                                    </button>
+                                ` : ''}
+
+                                ${reporte.estado === 'aprobado' ? `
+                                    <button class="btn btn-success btn-sm" onclick="enviarAProgramacion(${reporte.id})">
+                                        <i class="fas fa-calendar-alt"></i> Enviar a Programación
+                                    </button>
+                                ` : ''}
+
+                                <button class="btn btn-info btn-sm" onclick="verDetalles(${reporte.id})">
+                                    <i class="fas fa-eye"></i> Ver Detalles Completos
+                                </button>
+
+                                ${reporte.estado !== 'programado' ? `
+                                    <button class="btn btn-danger btn-sm" onclick="confirmarRechazar(${reporte.id})">
+                                        <i class="fas fa-times"></i> Rechazar
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            setTimeout(() => {
+                reportesFiltrados.forEach(reporte => {
+                    inicializarMapa(reporte);
+                });
+            }, 100);
+        }
+
+        function inicializarMapa(reporte) {
+            const mapId = `map-${reporte.id}`;
+            const mapContainer = document.getElementById(mapId);
+
+            if (!mapContainer || reporteMaps[mapId]) return;
+
+            try {
+                const map = L.map(mapId).setView(
+                    [reporte.ubicacion.coordenadas.lat, reporte.ubicacion.coordenadas.lng],
+                    16
+                );
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+
+                L.marker([reporte.ubicacion.coordenadas.lat, reporte.ubicacion.coordenadas.lng])
+                    .addTo(map)
+                    .bindPopup(`<b>${reporte.folio}</b><br>${reporte.ubicacion.calle} ${reporte.ubicacion.numero}`);
+
+                reporteMaps[mapId] = map;
+
+                setTimeout(() => map.invalidateSize(), 250);
+            } catch (error) {
+                console.error('Error al inicializar mapa:', error);
+            }
+        }
+
+        function actualizarEstadisticas() {
+            const stats = {
+                total: reportes.length,
+                nuevos: reportes.filter(r => r.estado === 'nuevo').length,
+                revision: reportes.filter(r => r.estado === 'revision').length,
+                aprobados: reportes.filter(r => r.estado === 'aprobado').length,
+                alta: reportes.filter(r => r.evaluacionTecnica?.prioridad === 'alta').length
+            };
+
+            document.getElementById('totalReportes').textContent = stats.total;
+            document.getElementById('nuevosReportes').textContent = stats.nuevos;
+            document.getElementById('enRevision').textContent = stats.revision;
+            document.getElementById('aprobados').textContent = stats.aprobados;
+            document.getElementById('prioridadAlta').textContent = stats.alta;
+        }
+
+        function aplicarFiltros() {
+            const folio = document.getElementById('searchFolio').value.toLowerCase().trim();
+            const estado = document.getElementById('filterEstado').value;
+            const prioridad = document.getElementById('filterPrioridad').value;
+            const tipoProblema = document.getElementById('filterTipoProblema').value;
+            const sector = document.getElementById('filterSector').value;
+            const fechaDesde = document.getElementById('filterFechaDesde').value;
+            const fechaHasta = document.getElementById('filterFechaHasta').value;
+
+            reportesFiltrados = reportes.filter(reporte => {
+                if (folio && !reporte.folio.toLowerCase().includes(folio)) return false;
+                if (estado && reporte.estado !== estado) return false;
+                if (prioridad && (!reporte.evaluacionTecnica || reporte.evaluacionTecnica.prioridad !== prioridad)) return false;
+                if (tipoProblema && (!reporte.evaluacionTecnica || reporte.evaluacionTecnica.tipoProblema !== tipoProblema)) return false;
+                if (sector && (!reporte.evaluacionTecnica || reporte.evaluacionTecnica.sector !== sector)) return false;
+
+                if (fechaDesde || fechaHasta) {
+                    const fechaReporte = new Date(reporte.fechaReporte);
+                    if (fechaDesde && fechaReporte < new Date(fechaDesde + 'T00:00:00')) return false;
+                    if (fechaHasta && fechaReporte > new Date(fechaHasta + 'T23:59:59')) return false;
+                }
+
+                return true;
+            });
+
+            renderizarReportes();
+            mostrarNotificacion(`Se encontraron ${reportesFiltrados.length} reporte${reportesFiltrados.length !== 1 ? 's' : ''}`, 'info');
+        }
+
+        function limpiarFiltros() {
+            document.getElementById('searchFolio').value = '';
+            document.getElementById('filterEstado').value = '';
+            document.getElementById('filterPrioridad').value = '';
+            document.getElementById('filterTipoProblema').value = '';
+            document.getElementById('filterSector').value = '';
+            document.getElementById('filterFechaDesde').value = '';
+            document.getElementById('filterFechaHasta').value = '';
+
+            reportesFiltrados = [...reportes];
+            renderizarReportes();
+            mostrarNotificacion('Filtros limpiados', 'info');
+        }
+
+        function abrirEvaluacion(reporteId) {
+            const reporte = reportes.find(r => r.id === reporteId);
+            if (!reporte) return;
+
+            document.getElementById('reporteIdEval').value = reporteId;
+
+            if (reporte.evaluacionTecnica) {
+                const eval = reporte.evaluacionTecnica;
+                document.getElementById('evalTipoProblema').value = eval.tipoProblema || '';
+                document.getElementById('evalVolumen').value = eval.volumen || '';
+                document.getElementById('evalTipoResiduos').value = eval.tipoResiduos || '';
+                document.getElementById('evalPrioridad').value = eval.prioridad || 'media';
+                document.getElementById('evalSector').value = eval.sector || 'centro';
+                document.getElementById('evalEquipo').value = eval.equipo || '';
+                document.getElementById('evalObservaciones').value = eval.observaciones || '';
+                document.getElementById('evalAccesibilidad').value = eval.accesibilidad || 'facil';
+                document.getElementById('evalRequiereEquipo').value = eval.requiereEquipo || 'no';
+            } else {
+                document.getElementById('formEvaluacion').reset();
+            }
+
+            abrirModal('modalEvaluacion');
+        }
+
+        function guardarEvaluacion(e) {
+            e.preventDefault();
+
+            const reporteId = parseInt(document.getElementById('reporteIdEval').value);
+            const reporte = reportes.find(r => r.id === reporteId);
+
+            if (!reporte) return;
+
+            reporte.evaluacionTecnica = {
+                tipoProblema: document.getElementById('evalTipoProblema').value,
+                volumen: document.getElementById('evalVolumen').value,
+                tipoResiduos: document.getElementById('evalTipoResiduos').value,
+                prioridad: document.getElementById('evalPrioridad').value,
+                sector: document.getElementById('evalSector').value,
+                equipo: document.getElementById('evalEquipo').value,
+                observaciones: document.getElementById('evalObservaciones').value,
+                accesibilidad: document.getElementById('evalAccesibilidad').value,
+                requiereEquipo: document.getElementById('evalRequiereEquipo').value,
+                evaluadoPor: 'Ing. Roberto Sánchez',
+                fechaEvaluacion: new Date().toISOString()
+            };
+
+            reporte.estado = 'aprobado';
+
+            localStorage.setItem('reportesRecoleccion', JSON.stringify(reportes));
+
+            cerrarModal('modalEvaluacion');
+            renderizarReportes();
+            actualizarEstadisticas();
+            mostrarNotificacion(`✅ Reporte ${reporte.folio} evaluado y aprobado correctamente`, 'success');
+        }
+
+        function rechazarReporte() {
+            const reporteId = parseInt(document.getElementById('reporteIdEval').value);
+            confirmarRechazar(reporteId);
+            cerrarModal('modalEvaluacion');
+        }
+
+        function confirmarRechazar(reporteId) {
+            const reporte = reportes.find(r => r.id === reporteId);
+            if (!reporte) return;
+
+            document.getElementById('mensajeConfirmacion').innerHTML = `
+                <strong>¿Está seguro que desea rechazar el reporte ${reporte.folio}?</strong><br><br>
+                <div style="text-align: left; background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    Esta acción notificará al ciudadano:<br>
+                    <strong>${reporte.ciudadano.nombre}</strong><br>
+                    Tel: ${reporte.ciudadano.telefono}<br><br>
+                    El reporte será archivado y no se enviará a programación.
+                </div>
+            `;
+
+            document.getElementById('btnConfirmarAccion').onclick = function() {
+                reporte.estado = 'rechazado';
+                reporte.fechaRechazo = new Date().toISOString();
+
+                localStorage.setItem('reportesRecoleccion', JSON.stringify(reportes));
+
+                cerrarModal('modalConfirmacion');
+                renderizarReportes();
+                actualizarEstadisticas();
+                mostrarNotificacion(`⚠️ Reporte ${reporte.folio} rechazado`, 'warning');
+            };
+
+            abrirModal('modalConfirmacion');
+        }
+
+        function enviarAProgramacion(reporteId) {
+            const reporte = reportes.find(r => r.id === reporteId);
+            if (!reporte) return;
+
+            document.getElementById('mensajeConfirmacion').innerHTML = `
+                <strong>¿Enviar el reporte ${reporte.folio} al área de Programación?</strong><br><br>
+                <div style="text-align: left; background: rgba(22, 163, 74, 0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <strong>Ubicación:</strong> ${reporte.ubicacion.calle} ${reporte.ubicacion.numero}, Col. ${reporte.ubicacion.colonia}<br>
+                    <strong>Tipo de Problema:</strong> ${reporte.evaluacionTecnica.tipoProblema}<br>
+                    <strong>Prioridad:</strong> ${reporte.evaluacionTecnica.prioridad.toUpperCase()}<br>
+                    <strong>Requiere Equipo Especial:</strong> ${reporte.evaluacionTecnica.requiereEquipo === 'si' ? 'Sí' : 'No'}
+                </div>
+            `;
+
+            document.getElementById('btnConfirmarAccion').onclick = function() {
+                reporte.estado = 'programado';
+                reporte.fechaEnvioProgramacion = new Date().toISOString();
+
+                const reporteParaProgramacion = {
+                    folio: reporte.folio,
+                    fechaReporte: reporte.fechaReporte,
+                    fechaEnvioProgramacion: reporte.fechaEnvioProgramacion,
+                    ciudadano: reporte.ciudadano,
+                    ubicacion: reporte.ubicacion,
+                    direccion: `${reporte.ubicacion.calle} ${reporte.ubicacion.numero}, Col. ${reporte.ubicacion.colonia}`,
+                    descripcion: reporte.descripcion,
+                    fotos: reporte.fotos || [],
+                    tipoProblema: reporte.evaluacionTecnica.tipoProblema,
+                    volumen: reporte.evaluacionTecnica.volumen,
+                    tipoResiduos: reporte.evaluacionTecnica.tipoResiduos,
+                    prioridad: reporte.evaluacionTecnica.prioridad,
+                    sector: reporte.evaluacionTecnica.sector,
+                    equipoNecesario: reporte.evaluacionTecnica.equipo,
+                    observacionesTecnicas: reporte.evaluacionTecnica.observaciones,
+                    accesibilidad: reporte.evaluacionTecnica.accesibilidad,
+                    requiereEquipo: reporte.evaluacionTecnica.requiereEquipo,
+                    evaluadoPor: reporte.evaluacionTecnica.evaluadoPor,
+                    fechaEvaluacion: reporte.evaluacionTecnica.fechaEvaluacion,
+                    estado: 'Pendiente'
+                };
+
+                let reportesProgramacion = JSON.parse(localStorage.getItem('reportesProgramacionRecoleccion') || '[]');
+
+                const existeIndex = reportesProgramacion.findIndex(r => r.folio === reporte.folio);
+                if (existeIndex !== -1) {
+                    reportesProgramacion[existeIndex] = reporteParaProgramacion;
+                } else {
+                    reportesProgramacion.push(reporteParaProgramacion);
+                }
+
+                localStorage.setItem('reportesProgramacionRecoleccion', JSON.stringify(reportesProgramacion));
+                localStorage.setItem('reportesRecoleccion', JSON.stringify(reportes));
+
+                cerrarModal('modalConfirmacion');
+                renderizarReportes();
+                actualizarEstadisticas();
+
+                mostrarNotificacion(`✅ Reporte ${reporte.folio} enviado a Programación correctamente`, 'success');
+            };
+
+            abrirModal('modalConfirmacion');
+        }
+
+        function verDetalles(reporteId) {
+            const reporte = reportes.find(r => r.id === reporteId);
+            if (!reporte) return;
+            mostrarNotificacion(`Ver detalles completos del reporte ${reporte.folio}`, 'info');
+        }
+
+        function copiarCoordenadas(lat, lng) {
+            const coordenadas = `${lat}, ${lng}`;
+            navigator.clipboard.writeText(coordenadas).then(() => {
+                mostrarNotificacion(`📍 Coordenadas copiadas: ${coordenadas}`, 'success');
+            }).catch(err => {
+                const textarea = document.createElement('textarea');
+                textarea.value = coordenadas;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                mostrarNotificacion(`📍 Coordenadas copiadas: ${coordenadas}`, 'success');
+            });
+        }
+
+        function sincronizarReportes() {
+            cargarReportes();
+            mostrarNotificacion('🔄 Reportes sincronizados correctamente', 'success');
+        }
+
+        function exportarReportes() {
+            const fecha = new Date().toLocaleDateString('es-MX').replace(/\//g, '-');
+            let contenido = `REPORTES DE RECOLECCIÓN DE BASURA\n`;
+            contenido += `PRESIDENCIA MUNICIPAL DE MONCLOVA, COAHUILA\n`;
+            contenido += `Fecha de exportación: ${fecha}\n`;
+            contenido += `Total de reportes: ${reportesFiltrados.length}\n\n`;
+            contenido += `${'='.repeat(80)}\n\n`;
+
+            reportesFiltrados.forEach((reporte, index) => {
+                contenido += `${index + 1}. FOLIO: ${reporte.folio}\n`;
+                contenido += `   Estado: ${reporte.estado.toUpperCase()}\n`;
+                contenido += `   Fecha: ${new Date(reporte.fechaReporte).toLocaleString('es-MX')}\n`;
+                contenido += `   Ciudadano: ${reporte.ciudadano.nombre}\n`;
+                contenido += `   Teléfono: ${reporte.ciudadano.telefono}\n`;
+                contenido += `   Ubicación: ${reporte.ubicacion.calle} ${reporte.ubicacion.numero}, Col. ${reporte.ubicacion.colonia}\n`;
+                contenido += `   Descripción: ${reporte.descripcion}\n`;
+
+                if (reporte.evaluacionTecnica) {
+                    const eval = reporte.evaluacionTecnica;
+                    contenido += `\n   EVALUACIÓN TÉCNICA:\n`;
+                    contenido += `   - Tipo de Problema: ${eval.tipoProblema}\n`;
+                    contenido += `   - Prioridad: ${eval.prioridad}\n`;
+                    contenido += `   - Sector: ${eval.sector}\n`;
+                    contenido += `   - Equipo: ${eval.equipo || 'N/A'}\n`;
+                    contenido += `   - Requiere Equipo Especial: ${eval.requiereEquipo === 'si' ? 'Sí' : 'No'}\n`;
+                    contenido += `   - Evaluado por: ${eval.evaluadoPor}\n`;
+                }
+
+                contenido += `\n${'-'.repeat(80)}\n\n`;
+            });
+
+            const blob = new Blob([contenido], { type: 'text/plain;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Reportes_Recoleccion_${fecha}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+            mostrarNotificacion('Reportes exportados correctamente', 'success');
+        }
+
+        function abrirModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function cerrarModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        function mostrarNotificacion(mensaje, tipo = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${tipo}`;
+            notification.innerHTML = `<i class="fas fa-${getIconoNotificacion(tipo)}"></i> ${mensaje}`;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        function getIconoNotificacion(tipo) {
+            switch(tipo) {
+                case 'success': return 'check-circle';
+                case 'error': return 'exclamation-triangle';
+                case 'warning': return 'exclamation-circle';
+                default: return 'info-circle';
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                cerrarModal('modalEvaluacion');
+                cerrarModal('modalConfirmacion');
+            }
+        });
+
+        console.log('✅ Sistema de Reportes de Recolección inicializado');
+    </script>
+</body>
+</html>

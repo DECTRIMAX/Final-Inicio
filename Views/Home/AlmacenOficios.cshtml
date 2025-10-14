@@ -1,0 +1,1068 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Almacén de Oficios | Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --pri-pink: #ec4899;
+            --pri-pink-light: #f472b6;
+            --pri-pink-dark: #be185d;
+            --pri-red: #D32F2F;
+            --pri-white: #FFFFFF;
+            --bg-light: #fdf2f8;
+            --bg-dark: #fce7f3;
+            --text-dark: #212121;
+            --text-gray: #616161;
+            --shadow: rgba(236, 72, 153, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-dark) 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--pri-pink) 0%, var(--pri-pink-dark) 100%);
+            color: var(--pri-white);
+            padding: clamp(0.5rem, 2vw, 1rem) clamp(0.8rem, 3vw, 1.5rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--pri-red);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            gap: clamp(0.5rem, 2vw, 1.5rem);
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 2vw, 1rem);
+            flex: 1 1 auto;
+        }
+
+        .logo {
+            width: clamp(65px, 10vw, 80px);
+            height: clamp(65px, 10vw, 80px);
+            background: var(--pri-white);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--pri-pink-light);
+            flex-shrink: 0;
+        }
+
+            .logo i {
+                font-size: clamp(1.8rem, 5vw, 2.5rem);
+                color: var(--pri-pink);
+            }
+
+        .header-info h1 {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            font-weight: 800;
+            margin-bottom: 0.2rem;
+        }
+
+        .header-info p {
+            font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+            opacity: 0.9;
+        }
+
+        .btn-back {
+            background: var(--pri-white);
+            color: var(--pri-pink);
+            padding: clamp(0.5rem, 1.5vw, 0.8rem) clamp(0.8rem, 2vw, 1.2rem);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: clamp(0.8rem, 2vw, 0.95rem);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+            .btn-back:hover {
+                background: var(--pri-pink-light);
+                color: var(--pri-white);
+                transform: translateY(-2px);
+            }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2rem);
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+            padding: clamp(1rem, 4vw, 2rem) clamp(0.8rem, 3vw, 1.5rem);
+            background: var(--pri-white);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px var(--shadow);
+            border-left: 4px solid var(--pri-pink);
+            position: relative;
+        }
+
+        .welcome-title {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-weight: 900;
+            color: var(--pri-pink);
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-subtitle {
+            font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-create {
+            background: linear-gradient(135deg, var(--pri-pink), var(--pri-pink-dark));
+            color: white;
+            border: none;
+            padding: clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2.5rem);
+            border-radius: 10px;
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+            .btn-create:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 30px var(--shadow);
+            }
+
+            .btn-create i {
+                font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            }
+
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+            gap: clamp(1rem, 2vw, 1.5rem);
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        .stat-card {
+            background: var(--pri-white);
+            padding: clamp(1rem, 3vw, 1.5rem);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border-left: 4px solid var(--pri-pink);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px var(--shadow);
+            }
+
+        .stat-icon {
+            width: clamp(40px, 8vw, 50px);
+            height: clamp(40px, 8vw, 50px);
+            background: linear-gradient(135deg, var(--pri-pink), var(--pri-pink-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--pri-white);
+            margin: 0 auto clamp(0.5rem, 2vw, 1rem);
+        }
+
+        .stat-number {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 900;
+            color: var(--pri-pink);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .table-section {
+            background: var(--pri-white);
+            border-radius: 15px;
+            padding: clamp(1.5rem, 3vw, 2rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            border-left: 5px solid var(--pri-pink);
+            overflow-x: auto;
+        }
+
+        .section-title {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: 800;
+            color: var(--pri-pink);
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+            .section-title i {
+                font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+            }
+
+        .oficios-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            min-width: 800px;
+        }
+
+            .oficios-table thead {
+                background: linear-gradient(135deg, var(--pri-pink), var(--pri-pink-light));
+                color: white;
+            }
+
+            .oficios-table th {
+                padding: clamp(0.8rem, 2vw, 1rem);
+                text-align: left;
+                font-weight: 700;
+                font-size: clamp(0.85rem, 2vw, 0.95rem);
+                white-space: nowrap;
+            }
+
+            .oficios-table td {
+                padding: clamp(0.8rem, 2vw, 1rem);
+                border-bottom: 1px solid #e0e0e0;
+                font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+            }
+
+            .oficios-table tbody tr {
+                transition: all 0.3s ease;
+            }
+
+                .oficios-table tbody tr:hover {
+                    background: var(--bg-light);
+                }
+
+        .btn-action {
+            padding: 0.4rem 0.8rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: clamp(0.75rem, 1.5vw, 0.85rem);
+            transition: all 0.3s ease;
+            margin: 0 0.2rem;
+            font-weight: 600;
+        }
+
+        .btn-view {
+            background: var(--pri-pink-light);
+            color: white;
+        }
+
+            .btn-view:hover {
+                background: var(--pri-pink);
+                transform: scale(1.05);
+            }
+
+        .btn-delete {
+            background: var(--pri-red);
+            color: white;
+        }
+
+            .btn-delete:hover {
+                background: #b71c1c;
+                transform: scale(1.05);
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: clamp(2rem, 4vw, 3rem);
+            color: var(--text-gray);
+        }
+
+            .empty-state i {
+                font-size: clamp(3rem, 6vw, 4rem);
+                color: var(--pri-pink-light);
+                margin-bottom: 1rem;
+            }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+            .modal-overlay.show {
+                display: flex;
+                opacity: 1;
+            }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            transform: translateY(50px);
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--pri-pink), var(--pri-pink-dark));
+            color: white;
+            padding: clamp(1.2rem, 3vw, 1.8rem);
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .modal-title {
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .btn-close-modal {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+            .btn-close-modal:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .modal-body {
+            padding: clamp(1.5rem, 3vw, 2.5rem);
+        }
+
+        .form-group {
+            margin-bottom: clamp(1.2rem, 2.5vw, 1.5rem);
+        }
+
+        .form-label {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+            .form-label i {
+                color: var(--pri-pink);
+            }
+
+            .form-label .optional {
+                font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+                color: var(--text-gray);
+                font-weight: 400;
+                font-style: italic;
+            }
+
+        .form-input {
+            width: 100%;
+            padding: clamp(0.8rem, 2vw, 1rem);
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            transition: all 0.3s ease;
+            background: var(--bg-light);
+        }
+
+            .form-input:focus {
+                outline: none;
+                border-color: var(--pri-pink);
+                box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.1);
+            }
+
+            .form-input:disabled {
+                background: #f0f0f0;
+                cursor: not-allowed;
+            }
+
+        textarea.form-input {
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .file-upload-area {
+            border: 3px dashed var(--pri-pink-light);
+            border-radius: 12px;
+            padding: clamp(1.5rem, 3vw, 2rem);
+            text-align: center;
+            background: var(--bg-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .file-upload-area:hover {
+                border-color: var(--pri-pink);
+                background: var(--bg-dark);
+                transform: scale(1.02);
+            }
+
+            .file-upload-area.has-file {
+                border-color: var(--pri-pink);
+                background: rgba(236, 72, 153, 0.1);
+            }
+
+        .upload-icon {
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            color: var(--pri-pink);
+            margin-bottom: 0.8rem;
+        }
+
+        .upload-text {
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .file-info {
+            margin-top: 0.8rem;
+            padding: 0.8rem;
+            background: var(--pri-white);
+            border-radius: 8px;
+            display: none;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+            .file-info.show {
+                display: flex;
+            }
+
+            .file-info i {
+                font-size: 1.5rem;
+                color: var(--pri-pink);
+            }
+
+        .file-details {
+            flex: 1;
+            text-align: left;
+        }
+
+        .file-name {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+        }
+
+        .file-size {
+            font-size: clamp(0.75rem, 1.5vw, 0.85rem);
+            color: var(--text-gray);
+        }
+
+        .btn-remove-file {
+            background: var(--pri-red);
+            color: white;
+            border: none;
+            padding: 0.5rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+            .btn-remove-file:hover {
+                background: #b71c1c;
+                transform: scale(1.05);
+            }
+
+        .modal-footer {
+            padding: clamp(1.2rem, 3vw, 1.5rem);
+            border-top: 2px solid var(--bg-dark);
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            background: var(--bg-light);
+            border-radius: 0 0 20px 20px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--pri-pink), var(--pri-pink-dark));
+            color: white;
+            border: none;
+            padding: clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem);
+            border-radius: 10px;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+            .btn-submit:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 25px var(--shadow);
+            }
+
+        .btn-cancel {
+            background: var(--text-gray);
+            color: white;
+            border: none;
+            padding: clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem);
+            border-radius: 10px;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .btn-cancel:hover {
+                background: #424242;
+                transform: translateY(-2px);
+            }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: clamp(0.8rem, 2vw, 1rem) clamp(1rem, 2.5vw, 1.5rem);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 10000;
+            max-width: min(350px, 90vw);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+        }
+
+            .notification.success {
+                background: var(--pri-pink);
+                color: white;
+            }
+
+            .notification.error {
+                background: var(--pri-red);
+                color: white;
+            }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+        .hidden-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <input type="file" id="pdfInput" class="hidden-input" accept=".pdf">
+    <input type="file" id="photoInput" class="hidden-input" accept="image/*">
+
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="header-info">
+                    <h1>Almacén de Oficios</h1>
+                    <p>Gestión y Control de Oficios Administrativos</p>
+                </div>
+            </div>
+            <a href="/Home/PanelGeneralJefeAdministracion" class="btn-back">
+                <i class="fas fa-arrow-left"></i>
+                Regresar al Panel
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1 class="welcome-title">Sistema de Almacén de Oficios</h1>
+            <p class="welcome-subtitle">
+                Registro y control de oficios administrativos del municipio
+            </p>
+            <button class="btn-create" onclick="openModal()">
+                <i class="fas fa-plus-circle"></i>
+                Crear Nuevo Oficio
+            </button>
+        </div>
+
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+                <div class="stat-number" id="totalOficios">0</div>
+                <div class="stat-label">Total de Oficios</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+                <div class="stat-number" id="oficiosHoy">0</div>
+                <div class="stat-label">Oficios Hoy</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-calendar-week"></i></div>
+                <div class="stat-number" id="oficiosSemana">0</div>
+                <div class="stat-label">Esta Semana</div>
+            </div>
+        </div>
+
+        <div class="table-section">
+            <h2 class="section-title">
+                <i class="fas fa-list"></i>
+                Oficios Registrados
+            </h2>
+
+            <table class="oficios-table" id="tablaOficios">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Descripción</th>
+                        <th>Fecha de Registro</th>
+                        <th>PDF</th>
+                        <th>Foto</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="oficiosBody">
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p>No hay oficios registrados</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOficio">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-file-plus"></i>
+                    Registrar Nuevo Oficio
+                </h2>
+                <button class="btn-close-modal" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="formOficio">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-hashtag"></i>
+                            ID del Oficio
+                        </label>
+                        <input type="text" id="oficioId" class="form-input" value="OF-2024-001" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-align-left"></i>
+                            Descripción
+                            <span class="optional">(Opcional)</span>
+                        </label>
+                        <textarea id="descripcion" class="form-input" placeholder="Ingrese una descripción del oficio (opcional)"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-file-pdf"></i>
+                            Documento PDF del Oficio
+                        </label>
+                        <div class="file-upload-area" id="pdfUploadArea" onclick="document.getElementById('pdfInput').click()">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="upload-text">
+                                <strong>Click para seleccionar PDF</strong><br>
+                                o arrastra el archivo aquí
+                            </div>
+                            <div class="file-info" id="pdfFileInfo">
+                                <i class="fas fa-file-pdf"></i>
+                                <div class="file-details">
+                                    <div class="file-name" id="pdfFileName">documento.pdf</div>
+                                    <div class="file-size" id="pdfFileSize">2.5 MB</div>
+                                </div>
+                                <button type="button" class="btn-remove-file" onclick="removeFile('pdf', event)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-image"></i>
+                            Foto del Oficio Firmado
+                        </label>
+                        <div class="file-upload-area" id="photoUploadArea" onclick="document.getElementById('photoInput').click()">
+                            <div class="upload-icon">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <div class="upload-text">
+                                <strong>Click para seleccionar Foto</strong><br>
+                                o arrastra la imagen aquí
+                            </div>
+                            <div class="file-info" id="photoFileInfo">
+                                <i class="fas fa-image"></i>
+                                <div class="file-details">
+                                    <div class="file-name" id="photoFileName">foto.jpg</div>
+                                    <div class="file-size" id="photoFileSize">1.8 MB</div>
+                                </div>
+                                <button type="button" class="btn-remove-file" onclick="removeFile('photo', event)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i>
+                        Guardar Oficio
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let oficios = [];
+        let oficioCounter = 1;
+        let pdfFile = null;
+        let photoFile = null;
+
+        function openModal() {
+            document.getElementById('modalOficio').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOficio').classList.remove('show');
+            document.body.style.overflow = 'auto';
+            limpiarFormulario();
+        }
+
+        document.getElementById('modalOficio').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.getElementById('pdfInput').addEventListener('change', function(e) {
+            handleFileSelect(e, 'pdf');
+        });
+
+        document.getElementById('photoInput').addEventListener('change', function(e) {
+            handleFileSelect(e, 'photo');
+        });
+
+        const pdfArea = document.getElementById('pdfUploadArea');
+        pdfArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            pdfArea.style.borderColor = 'var(--pri-pink)';
+        });
+
+        pdfArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            pdfArea.style.borderColor = 'var(--pri-pink-light)';
+        });
+
+        pdfArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            pdfArea.style.borderColor = 'var(--pri-pink-light)';
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type === 'application/pdf') {
+                handleFileObject(files[0], 'pdf');
+            }
+        });
+
+        const photoArea = document.getElementById('photoUploadArea');
+        photoArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            photoArea.style.borderColor = 'var(--pri-pink)';
+        });
+
+        photoArea.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            photoArea.style.borderColor = 'var(--pri-pink-light)';
+        });
+
+        photoArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            photoArea.style.borderColor = 'var(--pri-pink-light)';
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type.startsWith('image/')) {
+                handleFileObject(files[0], 'photo');
+            }
+        });
+
+        function handleFileSelect(event, type) {
+            const file = event.target.files[0];
+            if (file) {
+                handleFileObject(file, type);
+            }
+        }
+
+        function handleFileObject(file, type) {
+            const fileInfo = document.getElementById(type + 'FileInfo');
+            const fileName = document.getElementById(type + 'FileName');
+            const fileSize = document.getElementById(type + 'FileSize');
+            const uploadArea = document.getElementById(type + 'UploadArea');
+
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            fileInfo.classList.add('show');
+            uploadArea.classList.add('has-file');
+
+            if (type === 'pdf') {
+                pdfFile = file;
+            } else {
+                photoFile = file;
+            }
+
+            showNotification('Archivo ' + file.name + ' cargado correctamente', 'success');
+        }
+
+        function removeFile(type, event) {
+            event.stopPropagation();
+
+            const fileInfo = document.getElementById(type + 'FileInfo');
+            const uploadArea = document.getElementById(type + 'UploadArea');
+            const input = document.getElementById(type + 'Input');
+
+            fileInfo.classList.remove('show');
+            uploadArea.classList.remove('has-file');
+            input.value = '';
+
+            if (type === 'pdf') {
+                pdfFile = null;
+            } else {
+                photoFile = null;
+            }
+
+            showNotification('Archivo eliminado', 'success');
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        document.getElementById('formOficio').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            if (!pdfFile) {
+                showNotification('Por favor, selecciona un archivo PDF', 'error');
+                return;
+            }
+
+            if (!photoFile) {
+                showNotification('Por favor, selecciona una foto del oficio firmado', 'error');
+                return;
+            }
+
+            const descripcion = document.getElementById('descripcion').value.trim();
+            const oficioId = 'OF-2024-' + String(oficioCounter).padStart(3, '0');
+
+            const nuevoOficio = {
+                id: oficioId,
+                descripcion: descripcion || 'Sin descripción',
+                fecha: new Date().toLocaleDateString('es-MX'),
+                pdfName: pdfFile.name,
+                photoName: photoFile.name,
+                pdfFile: pdfFile,
+                photoFile: photoFile
+            };
+
+            oficios.push(nuevoOficio);
+            oficioCounter++;
+
+            actualizarTabla();
+            actualizarEstadisticas();
+            closeModal();
+
+            showNotification('Oficio ' + oficioId + ' registrado exitosamente', 'success');
+        });
+
+        function actualizarTabla() {
+            const tbody = document.getElementById('oficiosBody');
+
+            if (oficios.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p>No hay oficios registrados</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = oficios.map(oficio => `
+                <tr>
+                    <td><strong>${oficio.id}</strong></td>
+                    <td>${oficio.descripcion}</td>
+                    <td>${oficio.fecha}</td>
+                    <td>
+                        <i class="fas fa-file-pdf" style="color: var(--pri-red);"></i>
+                        ${oficio.pdfName}
+                    </td>
+                    <td>
+                        <i class="fas fa-image" style="color: var(--pri-pink);"></i>
+                        ${oficio.photoName}
+                    </td>
+                    <td>
+                        <button class="btn-action btn-view" onclick="verOficio('${oficio.id}')">
+                            <i class="fas fa-eye"></i> Ver
+                        </button>
+                        <button class="btn-action btn-delete" onclick="eliminarOficio('${oficio.id}')">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function actualizarEstadisticas() {
+            document.getElementById('totalOficios').textContent = oficios.length;
+
+            const hoy = new Date().toLocaleDateString('es-MX');
+            const oficiosHoy = oficios.filter(o => o.fecha === hoy).length;
+            document.getElementById('oficiosHoy').textContent = oficiosHoy;
+
+            const hoyDate = new Date();
+            const semanaAtras = new Date(hoyDate);
+            semanaAtras.setDate(hoyDate.getDate() - 7);
+
+            const oficiosSemana = oficios.filter(o => {
+                const fechaOficio = new Date(o.fecha.split('/').reverse().join('-'));
+                return fechaOficio >= semanaAtras;
+            }).length;
+
+            document.getElementById('oficiosSemana').textContent = oficiosSemana;
+        }
+
+        function verOficio(id) {
+            const oficio = oficios.find(o => o.id === id);
+            if (oficio) {
+                showNotification('Abriendo oficio ' + id, 'success');
+            }
+        }
+
+        function eliminarOficio(id) {
+            if (confirm('¿Estás seguro de eliminar el oficio ' + id + '?')) {
+                oficios = oficios.filter(o => o.id !== id);
+                actualizarTabla();
+                actualizarEstadisticas();
+                showNotification('Oficio ' + id + ' eliminado', 'success');
+            }
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('descripcion').value = '';
+            removeFile('pdf', { stopPropagation: () => {} });
+            removeFile('photo', { stopPropagation: () => {} });
+            document.getElementById('oficioId').value = 'OF-2024-' + String(oficioCounter).padStart(3, '0');
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = 'notification ' + type;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            showNotification('Sistema de Almacén de Oficios inicializado', 'success');
+        });
+    </script>
+</body>
+</html>

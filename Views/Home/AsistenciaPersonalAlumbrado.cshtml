@@ -1,0 +1,1495 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistencia Personal - Alumbrado Público</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #16a34a;
+            --secondary: #15803d;
+            --accent: #22c55e;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+            --border: #E5E7EB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%);
+            color: #111827;
+            min-height: 100vh;
+        }
+
+        /* PANEL DE NAVEGACIÓN */
+        .nav-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #f0f9f4 100%);
+            box-shadow: -10px 0 30px rgba(22, 163, 74, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10000;
+            overflow: hidden;
+            border-left: 1px solid #d4edda;
+        }
+
+            .nav-panel.open {
+                right: 0;
+            }
+
+        .nav-panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(22, 163, 74, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 9999;
+        }
+
+            .nav-panel-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .nav-toggle {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 20px 25px -5px rgba(22, 163, 74, 0.2);
+            transition: all 0.3s ease;
+            z-index: 9998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-toggle:hover {
+                transform: translateY(-50%) scale(1.1);
+                box-shadow: 0 25px 35px -5px rgba(22, 163, 74, 0.4);
+            }
+
+            .nav-toggle.active {
+                background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                transform: translateY(-50%) rotate(180deg);
+            }
+
+        .nav-panel-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 2rem 1.5rem;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-panel-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-panel-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-panel-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-panel-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .nav-panel-body {
+            padding: 1.5rem;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            background: #ffffff;
+            border-radius: 12px;
+            color: #334155;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid #d4edda;
+            cursor: pointer;
+        }
+
+            .nav-item:hover {
+                background: #f0f9f4;
+                transform: translateX(-5px);
+                border-color: var(--primary);
+                box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.1);
+            }
+
+            .nav-item.active {
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+                color: white;
+                border-color: var(--primary);
+            }
+
+        .nav-item-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active .nav-item-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-item:hover .nav-item-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .nav-item-content {
+            flex: 1;
+        }
+
+        .nav-item-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #1e293b;
+        }
+
+        .nav-item.active .nav-item-title {
+            color: white;
+        }
+
+        .nav-item-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .nav-item.active .nav-item-desc {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-item-arrow {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-item-arrow {
+            color: var(--primary);
+            transform: translateX(3px);
+        }
+
+        .nav-item.active .nav-item-arrow {
+            color: white;
+        }
+
+        .nav-panel-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-track {
+            background: #f0f9f4;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-thumb {
+            background: #5cb85c;
+            border-radius: 3px;
+        }
+
+            .nav-panel-body::-webkit-scrollbar-thumb:hover {
+                background: var(--primary);
+            }
+
+        .header {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(22, 163, 74, 0.3);
+            position: relative;
+            z-index: 9997;
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            width: 65px;
+            height: 65px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .header-info h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-info p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+            .btn-back:hover {
+                background: rgba(255,255,255,0.3);
+                transform: translateX(-5px);
+            }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .date-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            text-align: center;
+            border: 2px solid var(--primary);
+        }
+
+        .date-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .date-subtitle {
+            font-size: 1.2rem;
+            color: #6B7280;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            border-top: 4px solid var(--primary);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6B7280;
+            font-weight: 600;
+        }
+
+        .actions-bar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: var(--secondary);
+                transform: translateY(-2px);
+            }
+
+        .btn-secondary {
+            background: #6B7280;
+            color: white;
+        }
+
+            .btn-secondary:hover {
+                background: #4B5563;
+            }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+            .btn-success:hover {
+                background: #059669;
+            }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.8rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+            .search-input:focus {
+                outline: none;
+                border-color: var(--primary);
+            }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9CA3AF;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        th {
+            padding: 1.2rem 1rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+            tbody tr:hover {
+                background: #F0FDF4;
+            }
+
+        td {
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .employee-number {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .employee-name {
+            font-weight: 600;
+            color: #1F2937;
+        }
+
+        .time-input {
+            padding: 0.6rem;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            width: 120px;
+            transition: all 0.3s;
+        }
+
+            .time-input:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            }
+
+        .status-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .badge-present {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .badge-absent {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .badge-pending {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-check {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+            .btn-check:hover {
+                background: #A7F3D0;
+            }
+
+        .btn-clear {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+            .btn-clear:hover {
+                background: #FECACA;
+            }
+
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 10001;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            max-width: 350px;
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .notification.success {
+                background: var(--success);
+                color: white;
+            }
+
+            .notification.error {
+                background: var(--danger);
+                color: white;
+            }
+
+        .print-mode .actions-bar,
+        .print-mode .btn-back,
+        .print-mode .action-buttons,
+        .print-mode .search-box {
+            display: none;
+        }
+
+        .print-mode body {
+            background: white;
+        }
+
+        .print-mode .table-container {
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay para el panel -->
+    <div class="nav-panel-overlay" id="navPanelOverlay" onclick="toggleNavPanel()"></div>
+
+    <!-- Botón flotante para abrir panel -->
+    <button class="nav-toggle" id="navToggle" onclick="toggleNavPanel()">
+        <i class="fas fa-th-large"></i>
+    </button>
+
+    <!-- Panel de Navegación Lateral -->
+    <div class="nav-panel" id="navPanel">
+        <div class="nav-panel-header">
+            <button class="nav-panel-close" onclick="toggleNavPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="nav-panel-title">Sistema de Alumbrado</h3>
+            <p class="nav-panel-subtitle">Navegación Principal</p>
+        </div>
+
+        <div class="nav-panel-body">
+            <div class="nav-item" onclick="redirectTo('captura')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Captura</div>
+                    <div class="nav-item-desc">Registro de trabajos</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('programacion')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Programación</div>
+                    <div class="nav-item-desc">Horarios y cuadrillas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('mapa')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Mapa Interactivo</div>
+                    <div class="nav-item-desc">Ubicación de luminarias</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('rastreo')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Rastreo GPS</div>
+                    <div class="nav-item-desc">Monitoreo de unidades</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('dashboard')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Dashboard</div>
+                    <div class="nav-item-desc">Estadísticas y reportes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('reportes')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Reportes</div>
+                    <div class="nav-item-desc">Incidencias ciudadanas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('inventario')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-toolbox"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Material Utilizado</div>
+                    <div class="nav-item-desc">Control de inventario</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item active">
+                <div class="nav-item-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Asistencia Personal</div>
+                    <div class="nav-item-desc">Control de personal</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('oficios')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Oficios a Almacén</div>
+                    <div class="nav-item-desc">Envío de solicitudes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('placas')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Repositorio Vehicular</div>
+                    <div class="nav-item-desc">Gestión de unidades</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="header-info">
+                    <h1>Control de Asistencia Personal</h1>
+                    <p>Alumbrado Público - Monclova, Coahuila</p>
+                </div>
+            </div>
+            <a href="/Home/DashboardAdministradorAlumbrado" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Volver al Dashboard
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="date-header">
+            <h2 class="date-title" id="currentDate">LUNES 20 DE OCTUBRE 2025</h2>
+            <p class="date-subtitle">Lista de Asistencia - Personal Operativo</p>
+            <div style="margin-top: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                <label style="font-weight: 600; color: #6B7280;">Seleccionar Fecha:</label>
+                <input type="date" id="dateSelector" style="padding: 0.8rem 1.2rem; border: 2px solid var(--primary); border-radius: 8px; font-size: 1rem; font-weight: 600; color: var(--primary); cursor: pointer;">
+                <button class="btn btn-primary" onclick="irHoy()" style="padding: 0.8rem 1.5rem;">
+                    <i class="fas fa-calendar-day"></i> Ir a Hoy
+                </button>
+            </div>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-number" id="totalEmpleados">23</div>
+                <div class="stat-label">Total Personal</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="presentesCount">0</div>
+                <div class="stat-label">Presentes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="ausentesCount">0</div>
+                <div class="stat-label">Ausentes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendientesCount">23</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+        </div>
+
+        <div class="actions-bar">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; width: 100%;">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar por número o nombre...">
+                </div>
+
+                <select id="filterEstado" class="filter-select" onchange="applyFilters()">
+                    <option value="">Todos los estados</option>
+                    <option value="presente">Presentes</option>
+                    <option value="ausente">Ausentes</option>
+                    <option value="pendiente">Pendientes</option>
+                </select>
+
+                <select id="vistaSelector" class="filter-select" onchange="cambiarVista()">
+                    <option value="dia">Vista Diaria</option>
+                    <option value="semana">Vista Semanal</option>
+                </select>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-success" onclick="marcarTodosPresentes()">
+                    <i class="fas fa-check-double"></i> Marcar Todos
+                </button>
+                <button class="btn btn-primary" onclick="exportarExcel()">
+                    <i class="fas fa-file-excel"></i> Exportar
+                </button>
+                <button class="btn btn-secondary" onclick="imprimirLista()">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+            </div>
+        </div>
+
+        <div id="weekSelector" style="display: none; background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.08); margin-bottom: 2rem;">
+            <div style="display: flex; gap: 1rem; align-items: center; justify-content: center; flex-wrap: wrap;">
+                <button class="btn btn-secondary" onclick="cambiarSemana(-1)">
+                    <i class="fas fa-chevron-left"></i> Semana Anterior
+                </button>
+                <h3 style="color: var(--primary); font-size: 1.2rem; margin: 0;">
+                    <i class="fas fa-calendar-week"></i> <span id="weekRange"></span>
+                </h3>
+                <button class="btn btn-secondary" onclick="cambiarSemana(1)">
+                    Semana Siguiente <i class="fas fa-chevron-right"></i>
+                </button>
+                <button class="btn btn-primary" onclick="irSemanaActual()">
+                    <i class="fas fa-calendar-day"></i> Semana Actual
+                </button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-wrapper">
+                <table id="asistenciaTable">
+                    <thead id="tableHead">
+                        <tr>
+                            <th>No.</th>
+                            <th>Nombre Completo</th>
+                            <th>Hr. Entrada</th>
+                            <th>Hr. Salida</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p><strong>Sistema de Alumbrado Público</strong> - Municipio de Monclova, Coahuila</p>
+        <p>&copy; 2024 H. Ayuntamiento de Monclova. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        let navPanelOpen = false;
+
+        function toggleNavPanel() {
+            const navPanel = document.getElementById('navPanel');
+            const overlay = document.getElementById('navPanelOverlay');
+            const toggleBtn = document.getElementById('navToggle');
+
+            navPanelOpen = !navPanelOpen;
+
+            if (navPanelOpen) {
+                navPanel.classList.add('open');
+                overlay.classList.add('active');
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '<i class="fas fa-times"></i>';
+                document.body.style.overflow = 'hidden';
+            } else {
+                navPanel.classList.remove('open');
+                overlay.classList.remove('active');
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '<i class="fas fa-th-large"></i>';
+                document.body.style.overflow = '';
+            }
+        }
+
+        function redirectTo(module) {
+            if (navPanelOpen) toggleNavPanel();
+
+            const urls = {
+                'captura': '/Home/CapturaAlumbrado',
+                'programacion': '/Home/ProgramacionAlumbrado',
+                'mapa': '/Home/MapaAlumbrado',
+                'rastreo': '/Home/RastreoAlumbrado',
+                'dashboard': '/Home/DashboardAlumbrado',
+                'reportes': '/Home/ReportesAlumbrado',
+                'inventario': '/Home/MaterialUtilizadoAlumbrado',
+                'oficios': '/Home/EnviarOficiosAlmacen',
+                'placas': '/Home/RepositorioPlacasAlumbrado'
+            };
+
+            if (urls[module]) {
+                window.location.href = urls[module];
+            }
+        }
+
+        const empleados = [
+            { id: 10, nombre: 'GERARDO GABRIEL GARCIA GARCIA' },
+            { id: 13, nombre: 'ALFREDO GAYTAN GARZA' },
+            { id: 121, nombre: 'JUAN JAVIER MORALES' },
+            { id: 2530, nombre: 'JORGE ALBERTO CARRILLO BERNAL' },
+            { id: 3054, nombre: 'MIGUEL ANGEL MARTINEZ RIVERA' },
+            { id: 3059, nombre: 'JESUS AVILA CEDILLO' },
+            { id: 3081, nombre: 'HILARIO TOVAR GUERRERO' },
+            { id: 4035, nombre: 'ELEAZAR AGUILAR TORRES' },
+            { id: 5856, nombre: 'CELSO GUADALUPE ZAPATA TRUJILLO' },
+            { id: 5911, nombre: 'GILBERTO ORTIZ MEDINA' },
+            { id: 7855, nombre: 'JOSE RAMON BARBOZA RAMOS' },
+            { id: 7860, nombre: 'LUIS JAVIER GONZALEZ FLORES' },
+            { id: 7913, nombre: 'MIGUEL RANGEL AGUILAR' },
+            { id: 7965, nombre: 'ALEJANDRA GUADALUPE MARTINEZ TAPIA' },
+            { id: 8254, nombre: 'JESUS CONRADO GUERRERO GARCIA' },
+            { id: 8259, nombre: 'JOSE LUIS RODRIGUEZ GONZALEZ' },
+            { id: 8522, nombre: 'NESTOR DANIEL SALAZAR SANDOVAL' },
+            { id: 9588, nombre: 'LUIS ALBERTO CHAVEZ CORONADO' },
+            { id: 10350, nombre: 'JUAN JAIME CHAVEZ CORONADO' },
+            { id: 10466, nombre: 'FIDENCIO FLORES PALACIOS' },
+            { id: 10516, nombre: 'SERGIO HERNANDEZ HERNANDEZ' },
+            { id: 11032, nombre: 'JOEL NEFTALI ABREGO PARDO' },
+            { id: 11033, nombre: 'BRANDO ISRAEL GUZMAN GUAJARDO' }
+        ];
+
+        // Almacenar asistencias por fecha
+        let asistenciasPorFecha = {};
+        let fechaActual = new Date().toISOString().split('T')[0];
+        let vistaActual = 'dia';
+        let semanaActual = 0; // Offset de semanas desde hoy
+
+        function getAsistenciaActual() {
+            if (!asistenciasPorFecha[fechaActual]) {
+                asistenciasPorFecha[fechaActual] = {};
+            }
+            return asistenciasPorFecha[fechaActual];
+        }
+
+        function getAsistenciaPorFecha(fecha) {
+            if (!asistenciasPorFecha[fecha]) {
+                asistenciasPorFecha[fecha] = {};
+            }
+            return asistenciasPorFecha[fecha];
+        }
+
+        function cambiarVista() {
+            vistaActual = document.getElementById('vistaSelector').value;
+
+            if (vistaActual === 'semana') {
+                document.getElementById('dateSelector').parentElement.style.display = 'none';
+                document.getElementById('weekSelector').style.display = 'block';
+                renderVistaSemanal();
+            } else {
+                document.getElementById('dateSelector').parentElement.style.display = 'flex';
+                document.getElementById('weekSelector').style.display = 'none';
+                renderTable();
+            }
+        }
+
+        function getWeekDates(offset = 0) {
+            const hoy = new Date();
+            hoy.setDate(hoy.getDate() + (offset * 7));
+
+            const dia = hoy.getDay();
+            const diff = hoy.getDate() - dia + (dia === 0 ? -6 : 1);
+
+            const lunes = new Date(hoy.setDate(diff));
+            const fechas = [];
+
+            for (let i = 0; i < 7; i++) {
+                const fecha = new Date(lunes);
+                fecha.setDate(lunes.getDate() + i);
+                fechas.push(fecha.toISOString().split('T')[0]);
+            }
+
+            return fechas;
+        }
+
+        function cambiarSemana(offset) {
+            semanaActual += offset;
+            renderVistaSemanal();
+        }
+
+        function irSemanaActual() {
+            semanaActual = 0;
+            renderVistaSemanal();
+        }
+
+        function renderVistaSemanal() {
+            const fechas = getWeekDates(semanaActual);
+            const dias = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+
+            // Actualizar el rango de la semana
+            const fechaInicio = new Date(fechas[0]);
+            const fechaFin = new Date(fechas[6]);
+            const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+            document.getElementById('weekRange').textContent =
+                `${fechaInicio.getDate()} ${meses[fechaInicio.getMonth()]} - ${fechaFin.getDate()} ${meses[fechaFin.getMonth()]} ${fechaFin.getFullYear()}`;
+
+            // Renderizar tabla semanal
+            const thead = document.getElementById('tableHead');
+            thead.innerHTML = `
+                <tr>
+                    <th rowspan="2">No.</th>
+                    <th rowspan="2">Nombre</th>
+                    ${fechas.map((f, i) => {
+                        const d = new Date(f + 'T12:00:00');
+                        return `<th colspan="2" style="text-align: center;">${dias[i]} ${d.getDate()}</th>`;
+                    }).join('')}
+                    <th rowspan="2">Total</th>
+                </tr>
+                <tr>
+                    ${fechas.map(() => '<th style="font-size: 0.8rem;">Entrada</th><th style="font-size: 0.8rem;">Salida</th>').join('')}
+                </tr>
+            `;
+
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            const empleadosFiltrados = getCurrentFilteredEmpleados();
+
+            empleadosFiltrados.forEach(emp => {
+                let diasPresentes = 0;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><span class="employee-number">${emp.id}</span></td>
+                    <td style="min-width: 200px;"><span class="employee-name">${emp.nombre}</span></td>
+                    ${fechas.map(fecha => {
+                        const data = getAsistenciaPorFecha(fecha)[emp.id] || { entrada: '', salida: '' };
+                        if (data.entrada || data.salida) diasPresentes++;
+                        return `
+                            <td style="padding: 0.5rem;">
+                                <input type="time" class="time-input" value="${data.entrada}"
+                                       style="width: 90px; padding: 0.4rem; font-size: 0.85rem;"
+                                       onchange="updateTimeWeek(${emp.id}, '${fecha}', 'entrada', this.value)">
+                            </td>
+                            <td style="padding: 0.5rem;">
+                                <input type="time" class="time-input" value="${data.salida}"
+                                       style="width: 90px; padding: 0.4rem; font-size: 0.85rem;"
+                                       onchange="updateTimeWeek(${emp.id}, '${fecha}', 'salida', this.value)">
+                            </td>
+                        `;
+                    }).join('')}
+                    <td style="text-align: center; font-weight: 700; color: var(--primary); font-size: 1.1rem;">
+                        ${diasPresentes}/7
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            updateStatsWeek(fechas);
+        }
+
+        function updateTimeWeek(id, fecha, tipo, valor) {
+            const asistenciaData = getAsistenciaPorFecha(fecha);
+
+            if (!asistenciaData[id]) {
+                asistenciaData[id] = { entrada: '', salida: '', estado: 'pendiente' };
+            }
+
+            asistenciaData[id][tipo] = valor;
+
+            if (asistenciaData[id].entrada && asistenciaData[id].salida) {
+                asistenciaData[id].estado = 'presente';
+            } else if (asistenciaData[id].entrada || asistenciaData[id].salida) {
+                asistenciaData[id].estado = 'presente';
+            }
+
+            guardarEnLocalStorage();
+            renderVistaSemanal();
+        }
+
+        function updateStatsWeek(fechas) {
+            let totalPresentes = 0;
+            let totalAusentes = 0;
+            let totalPendientes = 0;
+
+            fechas.forEach(fecha => {
+                const asistenciaData = getAsistenciaPorFecha(fecha);
+
+                empleados.forEach(emp => {
+                    const data = asistenciaData[emp.id];
+                    if (!data || data.estado === 'pendiente') {
+                        totalPendientes++;
+                    } else if (data.estado === 'presente') {
+                        totalPresentes++;
+                    } else if (data.estado === 'ausente') {
+                        totalAusentes++;
+                    }
+                });
+            });
+
+            document.getElementById('totalEmpleados').textContent = empleados.length * 7;
+            document.getElementById('presentesCount').textContent = totalPresentes;
+            document.getElementById('ausentesCount').textContent = totalAusentes;
+            document.getElementById('pendientesCount').textContent = totalPendientes;
+        }
+
+        function applyFilters() {
+            if (vistaActual === 'semana') {
+                renderVistaSemanal();
+            } else {
+                renderTable();
+            }
+        }
+
+        function renderTable(filteredEmpleados = null) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            const asistenciaData = getAsistenciaActual();
+
+            filteredEmpleados.forEach(emp => {
+                const data = asistenciaData[emp.id] || { entrada: '', salida: '', estado: 'pendiente' };
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><span class="employee-number">${emp.id}</span></td>
+                    <td><span class="employee-name">${emp.nombre}</span></td>
+                    <td>
+                        <input type="time" class="time-input" value="${data.entrada}"
+                               onchange="updateTime(${emp.id}, 'entrada', this.value)">
+                    </td>
+                    <td>
+                        <input type="time" class="time-input" value="${data.salida}"
+                               onchange="updateTime(${emp.id}, 'salida', this.value)">
+                    </td>
+                    <td>
+                        <span class="status-badge badge-${data.estado}">
+                            ${data.estado === 'presente' ? 'Presente' :
+                              data.estado === 'ausente' ? 'Ausente' : 'Pendiente'}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-icon btn-check" onclick="marcarPresente(${emp.id})" title="Marcar presente">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn-icon btn-clear" onclick="limpiarRegistro(${emp.id})" title="Limpiar">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            updateStats();
+        }
+
+        function updateTime(id, tipo, valor) {
+            const asistenciaData = getAsistenciaActual();
+
+            if (!asistenciaData[id]) {
+                asistenciaData[id] = { entrada: '', salida: '', estado: 'pendiente' };
+            }
+
+            asistenciaData[id][tipo] = valor;
+
+            if (asistenciaData[id].entrada && asistenciaData[id].salida) {
+                asistenciaData[id].estado = 'presente';
+            } else if (asistenciaData[id].entrada || asistenciaData[id].salida) {
+                asistenciaData[id].estado = 'presente';
+            }
+
+            guardarEnLocalStorage();
+            renderTable(getCurrentFilteredEmpleados());
+            showNotification(`Hora de ${tipo} registrada correctamente`, 'success');
+        }
+
+        function marcarPresente(id) {
+            const asistenciaData = getAsistenciaActual();
+
+            if (!asistenciaData[id]) {
+                asistenciaData[id] = { entrada: '', salida: '', estado: 'presente' };
+            }
+
+            const now = new Date();
+            const horaActual = now.toTimeString().slice(0, 5);
+
+            if (!asistenciaData[id].entrada) {
+                asistenciaData[id].entrada = horaActual;
+            }
+
+            asistenciaData[id].estado = 'presente';
+
+            guardarEnLocalStorage();
+            renderTable(getCurrentFilteredEmpleados());
+            showNotification('Empleado marcado como presente', 'success');
+        }
+
+        function limpiarRegistro(id) {
+            const asistenciaData = getAsistenciaActual();
+            delete asistenciaData[id];
+            guardarEnLocalStorage();
+            renderTable(getCurrentFilteredEmpleados());
+            showNotification('Registro limpiado', 'success');
+        }
+
+        function marcarTodosPresentes() {
+            if (!confirm('¿Marcar a todos los empleados como presentes con la hora actual?')) {
+                return;
+            }
+
+            const asistenciaData = getAsistenciaActual();
+            const now = new Date();
+            const horaActual = now.toTimeString().slice(0, 5);
+
+            empleados.forEach(emp => {
+                asistenciaData[emp.id] = {
+                    entrada: horaActual,
+                    salida: '',
+                    estado: 'presente'
+                };
+            });
+
+            guardarEnLocalStorage();
+            renderTable();
+            showNotification('Todos los empleados marcados como presentes', 'success');
+        }
+
+        function updateStats() {
+            const asistenciaData = getAsistenciaActual();
+            let presentes = 0;
+            let ausentes = 0;
+            let pendientes = 0;
+
+            empleados.forEach(emp => {
+                const data = asistenciaData[emp.id];
+                if (!data || data.estado === 'pendiente') {
+                    pendientes++;
+                } else if (data.estado === 'presente') {
+                    presentes++;
+                } else if (data.estado === 'ausente') {
+                    ausentes++;
+                }
+            });
+
+            document.getElementById('totalEmpleados').textContent = empleados.length;
+            document.getElementById('presentesCount').textContent = presentes;
+            document.getElementById('ausentesCount').textContent = ausentes;
+            document.getElementById('pendientesCount').textContent = pendientes;
+        }
+
+        function getCurrentFilteredEmpleados() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const estadoFilter = document.getElementById('filterEstado').value;
+
+            let filtered = empleados;
+
+            // Filtrar por búsqueda
+            if (searchTerm) {
+                filtered = filtered.filter(emp =>
+                    emp.id.toString().includes(searchTerm) ||
+                    emp.nombre.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Filtrar por estado
+            if (estadoFilter && vistaActual === 'dia') {
+                const asistenciaData = getAsistenciaActual();
+                filtered = filtered.filter(emp => {
+                    const data = asistenciaData[emp.id];
+                    if (!data) return estadoFilter === 'pendiente';
+                    return data.estado === estadoFilter;
+                });
+            }
+
+            return filtered;
+        }
+
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+        document.getElementById('filterEstado').addEventListener('change', applyFilters);
+
+        function exportarExcel() {
+            if (vistaActual === 'semana') {
+                exportarExcelSemanal();
+                return;
+            }
+
+            const asistenciaData = getAsistenciaActual();
+            let csv = 'No.,Nombre,Hora Entrada,Hora Salida,Estado\n';
+
+            empleados.forEach(emp => {
+                const data = asistenciaData[emp.id] || { entrada: '', salida: '', estado: 'Pendiente' };
+                const estado = data.estado === 'presente' ? 'Presente' :
+                              data.estado === 'ausente' ? 'Ausente' : 'Pendiente';
+                csv += `${emp.id},"${emp.nombre}",${data.entrada},${data.salida},${estado}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `asistencia_${fechaActual}.csv`);
+            link.click();
+
+            showNotification('Archivo exportado correctamente', 'success');
+        }
+
+        function exportarExcelSemanal() {
+            const fechas = getWeekDates(semanaActual);
+            const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+
+            let csv = 'No.,Nombre,';
+            fechas.forEach((f, i) => {
+                csv += `${dias[i]} Entrada,${dias[i]} Salida,`;
+            });
+            csv += 'Total Días\n';
+
+            empleados.forEach(emp => {
+                let diasPresentes = 0;
+                csv += `${emp.id},"${emp.nombre}",`;
+
+                fechas.forEach(fecha => {
+                    const data = getAsistenciaPorFecha(fecha)[emp.id] || { entrada: '', salida: '' };
+                    if (data.entrada || data.salida) diasPresentes++;
+                    csv += `${data.entrada},${data.salida},`;
+                });
+
+                csv += `${diasPresentes}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `asistencia_semanal_${fechas[0]}_${fechas[6]}.csv`);
+            link.click();
+
+            showNotification('Archivo semanal exportado correctamente', 'success');
+        }
+
+        function imprimirLista() {
+            document.body.classList.add('print-mode');
+
+            setTimeout(() => {
+                window.print();
+                setTimeout(() => {
+                    document.body.classList.remove('print-mode');
+                }, 100);
+            }, 100);
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        function setCurrentDate() {
+            const dias = ['DOMINGO', 'LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SÁBADO'];
+            const meses = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO',
+                          'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+
+            const fecha = new Date(fechaActual + 'T12:00:00');
+            const diaSemana = dias[fecha.getDay()];
+            const dia = fecha.getDate();
+            const mes = meses[fecha.getMonth()];
+            const año = fecha.getFullYear();
+
+            document.getElementById('currentDate').textContent =
+                `${diaSemana} ${dia} DE ${mes} ${año}`;
+        }
+
+        function cambiarFecha(nuevaFecha) {
+            fechaActual = nuevaFecha;
+            setCurrentDate();
+            renderTable();
+            showNotification(`Mostrando asistencia del ${fechaActual}`, 'success');
+        }
+
+        function irHoy() {
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('dateSelector').value = hoy;
+            cambiarFecha(hoy);
+        }
+
+        function guardarEnLocalStorage() {
+            try {
+                localStorage.setItem('asistenciaAlumbrado', JSON.stringify(asistenciasPorFecha));
+            } catch (e) {
+                console.warn('No se pudo guardar en localStorage', e);
+            }
+        }
+
+        function cargarDeLocalStorage() {
+            try {
+                const data = localStorage.getItem('asistenciaAlumbrado');
+                if (data) {
+                    asistenciasPorFecha = JSON.parse(data);
+                }
+            } catch (e) {
+                console.warn('No se pudo cargar de localStorage', e);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarDeLocalStorage();
+
+            const dateSelector = document.getElementById('dateSelector');
+            dateSelector.value = fechaActual;
+
+            dateSelector.addEventListener('change', (e) => {
+                cambiarFecha(e.target.value);
+            });
+
+            setCurrentDate();
+            renderTable();
+            showNotification('Sistema de asistencia cargado correctamente', 'success');
+        });
+    </script>
+</body>
+</html>

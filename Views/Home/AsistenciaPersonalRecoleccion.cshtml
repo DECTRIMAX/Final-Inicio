@@ -1,0 +1,917 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistencia Personal Boteo - Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --verde-principal: #16a34a;
+            --verde-secundario: #15803d;
+            --verde-claro: #22c55e;
+            --verde-light: #86efac;
+            --verde-oscuro: #14532d;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #06b6d4;
+            --dark: #1F2937;
+            --light: #f0fdf4;
+            --border: #86efac;
+            --gris-claro: #f3f4f6;
+            --gris-medio: #9ca3af;
+            --bg-light: #f0fdf4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, var(--gris-claro) 100%);
+            color: #111827;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--verde-secundario) 0%, var(--verde-principal) 100%);
+            color: white;
+            padding: clamp(1rem, 2vw, 1.5rem) clamp(1rem, 3vw, 2rem);
+            box-shadow: 0 4px 20px rgba(22, 163, 74, 0.3);
+        }
+
+        .header-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: clamp(0.75rem, 2vw, 1rem);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.75rem, 2vw, 1.2rem);
+            flex: 1 1 auto;
+            min-width: min(250px, 100%);
+            flex-wrap: wrap;
+        }
+
+        .logo-container {
+            display: flex;
+            gap: clamp(0.5rem, 1.5vw, 0.8rem);
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            width: clamp(50px, 8vw, 80px);
+            height: clamp(50px, 8vw, 80px);
+            background: white;
+            border-radius: clamp(8px, 1.5vw, 12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--verde-light);
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+            overflow: hidden;
+            padding: 6px;
+            flex-shrink: 0;
+        }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                background: white;
+            }
+
+            .logo i {
+                font-size: clamp(1.5rem, 2.5vw, 2rem);
+                color: var(--verde-principal);
+            }
+
+        .header-info h1 {
+            font-size: clamp(1.1rem, 3vw, 1.8rem);
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-info p {
+            font-size: clamp(0.75rem, 1.8vw, 1rem);
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+            flex-wrap: wrap;
+            flex: 0 1 auto;
+        }
+
+        .btn {
+            padding: clamp(0.5rem, 1.2vw, 0.75rem) clamp(0.75rem, 2vw, 1.5rem);
+            border: none;
+            border-radius: 8px;
+            font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+            .btn-back:hover {
+                background: rgba(255,255,255,0.3);
+                transform: translateY(-2px);
+            }
+
+        .btn-primary {
+            background: var(--verde-principal);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: var(--verde-secundario);
+                transform: translateY(-2px);
+            }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+            .btn-success:hover {
+                background: #059669;
+            }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+            .btn-danger:hover {
+                background: #DC2626;
+            }
+
+        .btn-sm {
+            padding: clamp(0.35rem, 1vw, 0.5rem) clamp(0.6rem, 1.5vw, 1rem);
+            font-size: clamp(0.7rem, 1.3vw, 0.8rem);
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2rem);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
+            gap: clamp(0.75rem, 2vw, 1.5rem);
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+        }
+
+        .stat-card {
+            background: white;
+            padding: clamp(1rem, 2.5vw, 1.5rem);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            }
+
+        .stat-icon {
+            width: clamp(45px, 7vw, 60px);
+            height: clamp(45px, 7vw, 60px);
+            margin: 0 auto clamp(0.5rem, 1.5vw, 1rem);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            color: white;
+        }
+
+        .stat-number {
+            font-size: clamp(1.4rem, 3.5vw, 2rem);
+            font-weight: 800;
+            color: var(--verde-principal);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+            color: #6B7280;
+            font-weight: 600;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: clamp(1rem, 3vw, 2rem);
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            font-weight: 700;
+            color: var(--verde-principal);
+            margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr));
+            gap: clamp(0.75rem, 1.5vw, 1rem);
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+        }
+
+        .form-input, .form-select {
+            padding: clamp(0.5rem, 1.2vw, 0.75rem);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+            .form-input:focus, .form-select:focus {
+                outline: none;
+                border-color: var(--verde-principal);
+                box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            -webkit-overflow-scrolling: touch;
+        }
+
+            .table-container::-webkit-scrollbar {
+                height: 8px;
+            }
+
+            .table-container::-webkit-scrollbar-track {
+                background: var(--light);
+                border-radius: 4px;
+            }
+
+            .table-container::-webkit-scrollbar-thumb {
+                background: var(--verde-light);
+                border-radius: 4px;
+            }
+
+                .table-container::-webkit-scrollbar-thumb:hover {
+                    background: var(--verde-principal);
+                }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px;
+        }
+
+        th {
+            background: var(--light);
+            padding: clamp(0.6rem, 1.5vw, 1rem);
+            text-align: left;
+            font-weight: 600;
+            color: var(--verde-principal);
+            border-bottom: 2px solid var(--border);
+            font-size: clamp(0.7rem, 1.3vw, 0.85rem);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            padding: clamp(0.6rem, 1.5vw, 1rem);
+            border-bottom: 1px solid var(--border);
+            color: var(--dark);
+            font-size: clamp(0.75rem, 1.4vw, 0.9rem);
+        }
+
+        tr:hover {
+            background: var(--light);
+        }
+
+        .badge {
+            padding: clamp(0.25rem, 0.6vw, 0.35rem) clamp(0.5rem, 1.2vw, 0.85rem);
+            border-radius: 20px;
+            font-size: clamp(0.65rem, 1.2vw, 0.75rem);
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .badge-op {
+            background: rgba(59, 130, 246, 0.15);
+            color: #1E40AF;
+        }
+
+        .badge-ayud {
+            background: rgba(16, 185, 129, 0.15);
+            color: #065F46;
+        }
+
+        .badge-turno-1 {
+            background: rgba(251, 191, 36, 0.15);
+            color: #B45309;
+        }
+
+        .badge-turno-2 {
+            background: rgba(168, 85, 247, 0.15);
+            color: #6B21A8;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-present {
+            background: var(--success);
+        }
+
+        .status-absent {
+            background: var(--danger);
+        }
+
+        .status-partial {
+            background: #FBBF24;
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+            .modal.show {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: clamp(0.5rem, 2vw, 1rem);
+            }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: min(500px, 95%);
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-secundario));
+            color: white;
+            padding: clamp(1rem, 2vw, 1.5rem);
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+            .close-modal:hover {
+                background: rgba(255,255,255,0.3);
+                transform: rotate(90deg);
+            }
+
+        .modal-body {
+            padding: clamp(1rem, 2.5vw, 1.5rem);
+        }
+
+        .notification {
+            position: fixed;
+            top: clamp(1rem, 3vw, 20px);
+            right: clamp(1rem, 3vw, 20px);
+            left: auto;
+            padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.5rem);
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1001;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            max-width: min(400px, calc(100vw - 2rem));
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .notification.success {
+                background: var(--success);
+            }
+
+            .notification.error {
+                background: var(--danger);
+            }
+
+            .notification.info {
+                background: var(--info);
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-container">
+                    <div class="logo">
+                        <img src="~/imagenes/LOGO.png" alt="Logo Municipal" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-landmark\'></i>'">
+                    </div>
+                    <div class="logo">
+                        <img src="~/imagenes/RecoleccionDeBasura.png" alt="Limpieza" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-users\'></i>'">
+                    </div>
+                </div>
+                <div class="header-info">
+                    <h1>Asistencia Personal Boteo</h1>
+                    <p>Control de Personal • Presidencia Municipal - Monclova, Coahuila</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-back" onclick="window.history.back()">
+                    <i class="fas fa-arrow-left"></i> Regresar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #16a34a, #15803d);">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-number" id="totalPersonal">13</div>
+                <div class="stat-label">Personal Total</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-number" id="presentCount">12</div>
+                <div class="stat-label">Presentes Hoy</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="stat-number" id="operatorCount">6</div>
+                <div class="stat-label">Operadores</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                    <i class="fas fa-user-friends"></i>
+                </div>
+                <div class="stat-number" id="helperCount">7</div>
+                <div class="stat-label">Ayudantes</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="stat-number" id="attendanceRate">92%</div>
+                <div class="stat-label">Asistencia</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-filter"></i>
+                <span>Filtros y Controles</span>
+            </h2>
+            <div class="filters-grid">
+                <div class="form-group">
+                    <label class="form-label">Fecha Desde</label>
+                    <input type="date" class="form-input" id="dateFrom" value="2024-12-29">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Fecha Hasta</label>
+                    <input type="date" class="form-input" id="dateTo" value="2025-01-05">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Puesto</label>
+                    <select class="form-select" id="filterPosition">
+                        <option value="">Todos</option>
+                        <option value="OP">Operador</option>
+                        <option value="AYUD">Ayudante</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Turno</label>
+                    <select class="form-select" id="filterTurno">
+                        <option value="">Todos</option>
+                        <option value="1">Turno 1</option>
+                        <option value="2">Turno 2</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Buscar</label>
+                    <input type="text" class="form-input" id="searchInput" placeholder="Nombre o ficha...">
+                </div>
+
+                <div class="form-group" style="align-self: flex-end;">
+                    <button class="btn btn-success" onclick="openModal('add')">
+                        <i class="fas fa-plus"></i> Agregar Personal
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-table"></i>
+                <span>Registro de Asistencia</span>
+            </h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>N° Ficha</th>
+                            <th>Nombre</th>
+                            <th>Puesto</th>
+                            <th>Tipo</th>
+                            <th>Turno</th>
+                            <th style="text-align: center;">Lun 29</th>
+                            <th style="text-align: center;">Mar 30</th>
+                            <th style="text-align: center;">Mié 01</th>
+                            <th style="text-align: center;">Jue 02</th>
+                            <th style="text-align: center;">Vie 03</th>
+                            <th style="text-align: center;">Sáb 04</th>
+                            <th style="text-align: center;">Dom 05</th>
+                            <th style="text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="personnelTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="personnelModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Agregar Personal</h3>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="personnelForm">
+                    <div class="form-group">
+                        <label class="form-label">N° Ficha *</label>
+                        <input type="number" class="form-input" id="formFicha" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nombre Completo *</label>
+                        <input type="text" class="form-input" id="formName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Puesto *</label>
+                        <select class="form-select" id="formPosition" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="OP">Operador</option>
+                            <option value="AYUD">Ayudante</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tipo *</label>
+                        <select class="form-select" id="formType" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="S">Sindicalizado</option>
+                            <option value="C">Confianza</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Turno *</label>
+                        <select class="form-select" id="formTurno" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="1">Turno 1</option>
+                            <option value="2">Turno 2</option>
+                            <option value="INC">Incapacidad</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                        <button type="button" class="btn btn-danger" onclick="closeModal()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let personnelData = [
+            { ficha: 285, name: "JUAN MANUEL DE LA CRUZ RODRIGUEZ", position: "OP", type: "S", turno: "1", attendance: [1, 1, 1, 1, 1, 1, 1] },
+            { ficha: 303, name: "ATILANO GACIA RAMOS", position: "AYUD", type: "S", turno: "1", attendance: [1, 1, 1, 1, 1, 1, 1] },
+            { ficha: 336, name: "JUAN MARTINEZ DE LA PAZ", position: "OP", type: "S", turno: "1", attendance: [1, 1, 1, 1, 1, 1, 1] },
+            { ficha: 387, name: "LUIS ERNESTO TELLEZ CASTRO", position: "OP", type: "S", turno: "1", attendance: [1, 1, 1, 1, 1, 1, 1] },
+            { ficha: 391, name: "ERNESTO VALDEZ GONZALEZ", position: "AYUD", type: "S", turno: "1", attendance: [1, 1, 1, 1, 1, 1, 1] },
+            { ficha: 559, name: "ALVARO BENJAMIN NARVAEZ ARANDA", position: "AYUD", type: "S", turno: "1", attendance: [1, 1, 1, 1, 1, 1, 1] },
+            { ficha: 747, name: "JOSE ELOY ESTUPIÑAN TORRES", position: "AYUD", type: "C", turno: "INC", attendance: [0, 0, 0, 0, 0, 0, 0] },
+            { ficha: 837, name: "AMADOR GAMEZ MORENO", position: "AYUD", type: "S", turno: "1", attendance: [1, 1, 1, 1, 1, 1, 1] },
+            { ficha: 1360, name: "RUBEN SANCHEZ SEGURA", position: "OP", type: "S", turno: "1", attendance: [1, 1, 1, 1, 1, 1, 1] },
+            { ficha: 1928, name: "ARSENIO MUÑOZ MORENO", position: "OP", type: "S", turno: "1", attendance: [1, 1, 1, 1, 1, 1, 1] },
+            { ficha: 2278, name: "ARMANDO CARRILLO SANCHEZ", position: "OP", type: "S", turno: "1", attendance: [1, 1, 1, 1, 1, 1, 1] },
+            { ficha: 3049, name: "VICTOR MANUEL DE LA CRUZ ESCAMILLA", position: "AYUD", type: "S", turno: "1", attendance: [1, 1, 1, 1, 1, 1, 1] },
+            { ficha: 3137, name: "FRANCISCO GUTIERREZ MEDRANO", position: "AYUD", type: "S", turno: "2", attendance: [1, 1, 1, 1, 1, 1, 1] }
+        ];
+
+        let currentEditIndex = -1;
+
+        function renderPersonnelTable() {
+            const tbody = document.getElementById('personnelTableBody');
+            tbody.innerHTML = '';
+
+            personnelData.forEach((person, index) => {
+                const row = document.createElement('tr');
+
+                const attendanceCells = person.attendance.map((status, dayIndex) => {
+                    const statusClass = status === 1 ? 'status-present' : status === 0.5 ? 'status-partial' : 'status-absent';
+                    const statusIcon = status === 1 ? 'check' : status === 0.5 ? 'clock' : 'times';
+                    const statusColor = status === 1 ? 'var(--success)' : status === 0.5 ? '#FBBF24' : 'var(--danger)';
+                    return `
+                        <td style="text-align: center; cursor: pointer;" onclick="toggleAttendance(${index}, ${dayIndex})">
+                            <span class="status-dot ${statusClass}"></span>
+                            <i class="fas fa-${statusIcon}" style="margin-left: 5px; color: ${statusColor}"></i>
+                        </td>
+                    `;
+                }).join('');
+
+                row.innerHTML = `
+                    <td><strong>${person.ficha}</strong></td>
+                    <td>${person.name}</td>
+                    <td>
+                        <span class="badge badge-${person.position.toLowerCase()}">
+                            <i class="fas fa-${person.position === 'OP' ? 'user-tie' : 'user-friends'}"></i>
+                            ${person.position}
+                        </span>
+                    </td>
+                    <td>${person.type}</td>
+                    <td>
+                        <span class="badge badge-turno-${person.turno === 'INC' ? '1' : person.turno}">
+                            <i class="fas fa-${person.turno === 'INC' ? 'exclamation-triangle' : 'clock'}"></i>
+                            ${person.turno === 'INC' ? 'INCAP.' : 'Turno ' + person.turno}
+                        </span>
+                    </td>
+                    ${attendanceCells}
+                    <td>
+                        <div class="actions-cell">
+                            <button class="btn btn-primary btn-sm" onclick="editPersonnel(${index})" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deletePersonnel(${index})" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            updateStats();
+        }
+
+        function toggleAttendance(personIndex, dayIndex) {
+            const person = personnelData[personIndex];
+
+            if (person.attendance[dayIndex] === 0) {
+                person.attendance[dayIndex] = 0.5;
+            } else if (person.attendance[dayIndex] === 0.5) {
+                person.attendance[dayIndex] = 1;
+            } else {
+                person.attendance[dayIndex] = 0;
+            }
+
+            renderPersonnelTable();
+            showNotification(`Asistencia actualizada para ${person.name}`, 'success');
+        }
+
+        function updateStats() {
+            const totalPersonal = personnelData.length;
+            const operatorCount = personnelData.filter(p => p.position === 'OP').length;
+            const helperCount = personnelData.filter(p => p.position === 'AYUD').length;
+
+            const presentToday = personnelData.filter(p => p.attendance[p.attendance.length - 1] >= 0.5).length;
+            const attendanceRate = Math.round((presentToday / totalPersonal) * 100);
+
+            document.getElementById('totalPersonal').textContent = totalPersonal;
+            document.getElementById('presentCount').textContent = presentToday;
+            document.getElementById('operatorCount').textContent = operatorCount;
+            document.getElementById('helperCount').textContent = helperCount;
+            document.getElementById('attendanceRate').textContent = attendanceRate + '%';
+        }
+
+        function openModal(mode, index = -1) {
+            const modal = document.getElementById('personnelModal');
+            const title = document.getElementById('modalTitle');
+            const form = document.getElementById('personnelForm');
+
+            if (mode === 'add') {
+                title.textContent = 'Agregar Personal';
+                form.reset();
+                currentEditIndex = -1;
+            } else if (mode === 'edit' && index >= 0) {
+                title.textContent = 'Editar Personal';
+                const person = personnelData[index];
+                document.getElementById('formFicha').value = person.ficha;
+                document.getElementById('formName').value = person.name;
+                document.getElementById('formPosition').value = person.position;
+                document.getElementById('formType').value = person.type;
+                document.getElementById('formTurno').value = person.turno;
+                currentEditIndex = index;
+            }
+
+            modal.classList.add('show');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('personnelModal');
+            modal.classList.remove('show');
+            currentEditIndex = -1;
+        }
+
+        function editPersonnel(index) {
+            openModal('edit', index);
+        }
+
+        function deletePersonnel(index) {
+            const person = personnelData[index];
+            if (confirm(`¿Está seguro de eliminar a ${person.name}?`)) {
+                personnelData.splice(index, 1);
+                renderPersonnelTable();
+                showNotification('Personal eliminado correctamente', 'success');
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notif => {
+                if (document.body.contains(notif)) {
+                    document.body.removeChild(notif);
+                }
+            });
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'}"></i> ${message}`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (document.body.contains(notification)) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 400);
+                }
+            }, 3500);
+        }
+
+        document.getElementById('personnelForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = {
+                ficha: parseInt(document.getElementById('formFicha').value),
+                name: document.getElementById('formName').value.toUpperCase(),
+                position: document.getElementById('formPosition').value,
+                type: document.getElementById('formType').value,
+                turno: document.getElementById('formTurno').value,
+                attendance: [1, 1, 1, 1, 1, 1, 1]
+            };
+
+            if (currentEditIndex >= 0) {
+                formData.attendance = personnelData[currentEditIndex].attendance;
+                personnelData[currentEditIndex] = formData;
+                showNotification('Personal actualizado correctamente', 'success');
+            } else {
+                personnelData.push(formData);
+                showNotification('Personal agregado correctamente', 'success');
+            }
+
+            closeModal();
+            renderPersonnelTable();
+        });
+
+        document.getElementById('personnelModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPersonnelTable();
+            showNotification('Sistema de asistencia cargado correctamente', 'success');
+        });
+
+        console.log('✅ Sistema de Asistencia Personal Boteo inicializado');
+    </script>
+</body>
+</html>

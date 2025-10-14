@@ -1,0 +1,1025 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistencia Personal Contenedores | Sistema Municipal Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #059669;
+            --light-green: #10B981;
+            --dark-green: #047857;
+            --bg-light: #F0FDF4;
+            --bg-card: #DCFCE7;
+            --text-dark: #064E3B;
+            --text-medium: #166534;
+            --text-light: #15803D;
+            --border-color: #86EFAC;
+            --accent-yellow: #FBBF24;
+            --accent-blue: #3B82F6;
+            --accent-red: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, #ECFDF5 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: white;
+            padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1rem, 3vw, 2rem);
+            box-shadow: 0 8px 32px rgba(5, 150, 105, 0.4);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 4px solid var(--light-green);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1800px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            flex: 1;
+            min-width: min(250px, 100%);
+        }
+
+        .logo {
+            width: clamp(55px, 12vw, 75px);
+            height: clamp(55px, 12vw, 75px);
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            color: var(--primary-green);
+            border: clamp(3px, 0.8vw, 4px) solid var(--light-green);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+        }
+
+            .logo:hover {
+                transform: scale(1.1) rotate(10deg);
+                box-shadow: 0 8px 30px rgba(255, 255, 255, 0.5);
+            }
+
+        .header-info h1 {
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            font-weight: 900;
+            margin-bottom: 0.4rem;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-info p {
+            font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+
+        .btn-back {
+            background: white;
+            color: var(--primary-green);
+            padding: clamp(0.7rem, 1.8vw, 0.9rem) clamp(1.2rem, 3vw, 1.8rem);
+            border: none;
+            border-radius: 50px;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: clamp(0.4rem, 1vw, 0.6rem);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+
+            .btn-back:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+                background: var(--bg-light);
+            }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+            padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 3vw, 2rem);
+            background: white;
+            border-radius: clamp(16px, 3vw, 24px);
+            box-shadow: 0 10px 40px rgba(5, 150, 105, 0.15);
+            border: clamp(2px, 0.5vw, 3px) solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .page-header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 6px;
+                background: linear-gradient(90deg, var(--primary-green), var(--light-green), var(--accent-yellow));
+            }
+
+            .page-header h2 {
+                font-size: clamp(2.2rem, 5vw, 3.5rem);
+                font-weight: 900;
+                background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 1rem;
+            }
+
+            .page-header p {
+                color: var(--text-medium);
+                font-size: clamp(1rem, 2.5vw, 1.3rem);
+                font-weight: 500;
+            }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+            gap: clamp(1rem, 2vw, 1.5rem);
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+        }
+
+        .stat-card {
+            background: white;
+            padding: clamp(1.5rem, 3vw, 2rem);
+            border-radius: clamp(16px, 3vw, 20px);
+            box-shadow: 0 8px 32px rgba(5, 150, 105, 0.15);
+            border: clamp(2px, 0.5vw, 3px) solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 5px;
+                background: linear-gradient(90deg, var(--primary-green), var(--light-green));
+            }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 16px 40px rgba(5, 150, 105, 0.3);
+            }
+
+        .stat-icon {
+            width: clamp(50px, 10vw, 70px);
+            height: clamp(50px, 10vw, 70px);
+            background: var(--primary-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin: 0 auto 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover .stat-icon {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
+        }
+
+        .stat-number {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 900;
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            color: var(--text-medium);
+            font-weight: 600;
+        }
+
+        .controls-section {
+            background: white;
+            padding: clamp(1.5rem, 3vw, 2rem);
+            border-radius: clamp(16px, 3vw, 20px);
+            box-shadow: 0 8px 32px rgba(5, 150, 105, 0.15);
+            border: clamp(2px, 0.5vw, 3px) solid var(--border-color);
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+        }
+
+        .controls-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+            .controls-header h3 {
+                font-size: clamp(1.2rem, 3vw, 1.6rem);
+                font-weight: 800;
+                color: var(--primary-green);
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+            }
+
+        .filters-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            min-width: 150px;
+        }
+
+            .filter-group label {
+                font-size: 0.9rem;
+                font-weight: 600;
+                color: var(--text-medium);
+            }
+
+        .filter-input {
+            padding: 0.7rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: var(--bg-light);
+        }
+
+            .filter-input:focus {
+                outline: none;
+                border-color: var(--primary-green);
+                box-shadow: 0 0 15px rgba(5, 150, 105, 0.2);
+            }
+
+        .btn {
+            padding: clamp(0.7rem, 1.5vw, 0.9rem) clamp(1.2rem, 2.5vw, 1.8rem);
+            border: none;
+            border-radius: 50px;
+            font-size: clamp(0.85rem, 1.8vw, 1rem);
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: clamp(0.4rem, 1vw, 0.6rem);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            color: white;
+            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
+                background: var(--dark-green);
+            }
+
+        .btn-success {
+            background: var(--light-green);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+            .btn-success:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+                background: var(--primary-green);
+            }
+
+        .btn-danger {
+            background: var(--accent-red);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+            .btn-danger:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+                background: #DC2626;
+            }
+
+        .table-container {
+            background: white;
+            border-radius: clamp(16px, 3vw, 20px);
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(5, 150, 105, 0.15);
+            border: clamp(2px, 0.5vw, 3px) solid var(--border-color);
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            padding: 1.5rem 2rem;
+            color: white;
+        }
+
+            .table-header h3 {
+                font-size: 1.4rem;
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+            }
+
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 70vh;
+        }
+
+        .personnel-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+            .personnel-table th {
+                background: var(--bg-card);
+                color: var(--text-dark);
+                padding: 1rem 0.8rem;
+                text-align: left;
+                font-weight: 700;
+                border-bottom: 2px solid var(--border-color);
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+
+            .personnel-table td {
+                padding: 1rem 0.8rem;
+                border-bottom: 1px solid var(--border-color);
+                transition: all 0.3s ease;
+            }
+
+            .personnel-table tr:hover {
+                background: var(--bg-light);
+                transform: scale(1.01);
+            }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .badge-op {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid var(--accent-blue);
+            color: #1E40AF;
+        }
+
+        .badge-type-c {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--light-green);
+            color: #065F46;
+        }
+
+        .time-input {
+            padding: 0.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            width: 100px;
+            transition: all 0.3s ease;
+        }
+
+            .time-input:focus {
+                outline: none;
+                border-color: var(--primary-green);
+                box-shadow: 0 0 10px rgba(5, 150, 105, 0.2);
+            }
+
+        .signature-box {
+            width: 80px;
+            height: 40px;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            color: var(--text-medium);
+        }
+
+            .signature-box:hover {
+                border-color: var(--primary-green);
+                background: var(--bg-light);
+            }
+
+            .signature-box.signed {
+                background: var(--light-green);
+                color: white;
+                border-color: var(--primary-green);
+            }
+
+        .actions-cell {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            border-radius: 8px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .modal.show {
+                display: flex;
+            }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 3px solid var(--border-color);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+            .modal-header h3 {
+                font-size: 1.5rem;
+                font-weight: 800;
+                color: var(--primary-green);
+            }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-medium);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .btn-close:hover {
+                color: var(--accent-red);
+                transform: scale(1.2);
+            }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 0.5rem;
+                font-weight: 600;
+                color: var(--text-medium);
+            }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--bg-light);
+        }
+
+            .form-input:focus {
+                outline: none;
+                border-color: var(--primary-green);
+                box-shadow: 0 0 15px rgba(5, 150, 105, 0.2);
+            }
+
+        .notification {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            padding: 1.2rem 1.8rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(5, 150, 105, 0.4);
+            z-index: 10000;
+            font-size: 1rem;
+            max-width: 380px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.4s ease;
+            font-weight: 700;
+            border: 3px solid;
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .notification.success {
+                background: white;
+                color: var(--primary-green);
+                border-color: var(--light-green);
+            }
+
+            .notification.error {
+                background: white;
+                color: var(--accent-red);
+                border-color: var(--accent-red);
+            }
+
+            .notification.info {
+                background: white;
+                color: var(--accent-blue);
+                border-color: var(--accent-blue);
+            }
+
+     
+
+        .filter-group {
+            min-width: 100%;
+        }
+
+        .table-wrapper {
+            font-size: 0.8rem;
+        }
+
+        .personnel-table th,
+        .personnel-table td {
+            padding: 0.5rem 0.3rem;
+        }
+
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">
+                    <i class="fas fa-dumpster"></i>
+                </div>
+                <div class="header-info">
+                    <h1>Asistencia Personal Contenedores</h1>
+                    <p>Control de Personal - Sistema Municipal Monclova</p>
+                </div>
+            </div>
+            <button class="btn-back" onclick="window.history.back()">
+                <i class="fas fa-arrow-left"></i>
+                Regresar
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Control de Asistencia Contenedores</h2>
+            <p>Gestión de personal del área de contenedores y gestión de residuos</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-number" id="totalPersonal">14</div>
+                <div class="stat-label">Personal Total</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-number" id="presentCount">13</div>
+                <div class="stat-label">Presentes Hoy</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="stat-number" id="operatorCount">14</div>
+                <div class="stat-label">Operadores</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-number" id="entryRate">85%</div>
+                <div class="stat-label">Puntualidad</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="stat-number" id="attendanceRate">93%</div>
+                <div class="stat-label">Asistencia</div>
+            </div>
+        </div>
+
+        <div class="controls-section">
+            <div class="controls-header">
+                <h3><i class="fas fa-filter"></i> Filtros y Controles</h3>
+                <button class="btn btn-success" onclick="openModal('add')">
+                    <i class="fas fa-plus"></i>
+                    Agregar Personal
+                </button>
+            </div>
+
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label>Fecha</label>
+                    <input type="date" class="filter-input" id="filterDate" value="">
+                </div>
+                <div class="filter-group">
+                    <label>Turno</label>
+                    <select class="filter-input" id="filterTurno">
+                        <option value="">Todos</option>
+                        <option value="Matutino">Matutino</option>
+                        <option value="Vespertino">Vespertino</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Buscar</label>
+                    <input type="text" class="filter-input" id="searchInput" placeholder="Nombre o ficha...">
+                </div>
+                <div class="filter-group" style="align-self: flex-end;">
+                    <button class="btn btn-primary" onclick="applyFilters()">
+                        <i class="fas fa-search"></i>
+                        Buscar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <h3><i class="fas fa-table"></i> Registro de Asistencia - Contenedores</h3>
+            </div>
+            <div class="table-wrapper">
+                <table class="personnel-table">
+                    <thead>
+                        <tr>
+                            <th>N° Ficha</th>
+                            <th>Nombre</th>
+                            <th>Puesto</th>
+                            <th>Tipo</th>
+                            <th>Hora Entrada</th>
+                            <th>Firma Entrada</th>
+                            <th>Hora Salida</th>
+                            <th>Firma Salida</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="personnelTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Agregar/Editar Personal -->
+    <div class="modal" id="personnelModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Agregar Personal</h3>
+                <button class="btn-close" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="personnelForm">
+                <div class="form-group">
+                    <label>N° Ficha</label>
+                    <input type="number" class="form-input" id="formFicha" required>
+                </div>
+                <div class="form-group">
+                    <label>Nombre Completo</label>
+                    <input type="text" class="form-input" id="formName" required>
+                </div>
+                <div class="form-group">
+                    <label>Puesto</label>
+                    <select class="form-input" id="formPosition" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="OP">Operador</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tipo</label>
+                    <select class="form-input" id="formType" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="C">Confianza</option>
+                        <option value="S">Sindicalizado</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" class="btn btn-danger" onclick="closeModal()">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i>
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let personnelData = [
+            { ficha: 3187, name: "JUAN DE DIOS LARA VAZQUEZ", position: "OP", type: "C", entryTime: "", entrySignature: false, exitTime: "", exitSignature: false },
+            { ficha: 6035, name: "JESUS MARTINEZ DE LA PAZ", position: "OP", type: "C", entryTime: "08:00", entrySignature: true, exitTime: "", exitSignature: false },
+            { ficha: 7539, name: "JOAQUIN PEÑA TORRES", position: "OP", type: "C", entryTime: "08:15", entrySignature: true, exitTime: "", exitSignature: false },
+            { ficha: 9442, name: "JOEL CASTRO MARTINEZ", position: "OP", type: "C", entryTime: "", entrySignature: false, exitTime: "", exitSignature: false },
+            { ficha: 9715, name: "JUAN LUIS VALDES CASTILLO", position: "OP", type: "C", entryTime: "", entrySignature: false, exitTime: "", exitSignature: false },
+            { ficha: 10173, name: "FEDERICO GUILLERMO ALDERETE SANCHEZ", position: "OP", type: "C", entryTime: "", entrySignature: false, exitTime: "", exitSignature: false },
+            { ficha: 10515, name: "OSCAR ENRIQUE GARAY HERNANDEZ", position: "OP", type: "C", entryTime: "07:45", entrySignature: true, exitTime: "", exitSignature: false },
+            { ficha: 11035, name: "KENNY VARGAS AGUILAR", position: "OP", type: "C", entryTime: "08:30", entrySignature: true, exitTime: "", exitSignature: false },
+            { ficha: 11036, name: "JOSE JULIO RANGEL CASTILLO", position: "OP", type: "C", entryTime: "08:10", entrySignature: true, exitTime: "", exitSignature: false },
+            { ficha: 11052, name: "MIGUEL ANGEL DE LUNA ZAPATA", position: "OP", type: "C", entryTime: "08:05", entrySignature: true, exitTime: "", exitSignature: false },
+            { ficha: 11053, name: "JUAN DANIEL MATA RIOS", position: "OP", type: "C", entryTime: "08:20", entrySignature: true, exitTime: "", exitSignature: false },
+            { ficha: 0, name: "RAUL TOBIAS VEGA", position: "OP", type: "C", entryTime: "07:55", entrySignature: true, exitTime: "", exitSignature: false }
+        ];
+
+        let currentEditIndex = -1;
+
+        function renderPersonnelTable() {
+            const tbody = document.getElementById('personnelTableBody');
+            tbody.innerHTML = '';
+
+            personnelData.forEach((person, index) => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td><strong>${person.ficha || 'N/A'}</strong></td>
+                    <td>${person.name}</td>
+                    <td>
+                        <span class="badge badge-op">
+                            <i class="fas fa-user-tie"></i>
+                            ${person.position}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-type-c">
+                            <i class="fas fa-certificate"></i>
+                            ${person.type}
+                        </span>
+                    </td>
+                    <td>
+                        <input type="time" class="time-input" value="${person.entryTime}"
+                               onchange="updateTime(${index}, 'entryTime', this.value)">
+                    </td>
+                    <td>
+                        <div class="signature-box ${person.entrySignature ? 'signed' : ''}"
+                             onclick="toggleSignature(${index}, 'entrySignature')">
+                            ${person.entrySignature ? '<i class="fas fa-check"></i>' : 'Firmar'}
+                        </div>
+                    </td>
+                    <td>
+                        <input type="time" class="time-input" value="${person.exitTime}"
+                               onchange="updateTime(${index}, 'exitTime', this.value)">
+                    </td>
+                    <td>
+                        <div class="signature-box ${person.exitSignature ? 'signed' : ''}"
+                             onclick="toggleSignature(${index}, 'exitSignature')">
+                            ${person.exitSignature ? '<i class="fas fa-check"></i>' : 'Firmar'}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="btn btn-primary btn-sm" onclick="editPersonnel(${index})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deletePersonnel(${index})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            updateStats();
+        }
+
+        function updateTime(personIndex, timeType, value) {
+            personnelData[personIndex][timeType] = value;
+            showNotification(`Hora ${timeType === 'entryTime' ? 'de entrada' : 'de salida'} actualizada`, 'success');
+            updateStats();
+        }
+
+        function toggleSignature(personIndex, signatureType) {
+            personnelData[personIndex][signatureType] = !personnelData[personIndex][signatureType];
+            renderPersonnelTable();
+            showNotification(`Firma ${signatureType === 'entrySignature' ? 'de entrada' : 'de salida'} actualizada`, 'success');
+        }
+
+        function updateStats() {
+            const totalPersonal = personnelData.length;
+            const presentCount = personnelData.filter(p => p.entryTime && p.entrySignature).length;
+            const operatorCount = personnelData.filter(p => p.position === 'OP').length;
+            const entrySignatures = personnelData.filter(p => p.entrySignature).length;
+
+            const attendanceRate = Math.round((presentCount / totalPersonal) * 100);
+            const entryRate = Math.round((entrySignatures / totalPersonal) * 100);
+
+            document.getElementById('totalPersonal').textContent = totalPersonal;
+            document.getElementById('presentCount').textContent = presentCount;
+            document.getElementById('operatorCount').textContent = operatorCount;
+            document.getElementById('entryRate').textContent = entryRate + '%';
+            document.getElementById('attendanceRate').textContent = attendanceRate + '%';
+        }
+
+        function openModal(mode, index = -1) {
+            const modal = document.getElementById('personnelModal');
+            const title = document.getElementById('modalTitle');
+            const form = document.getElementById('personnelForm');
+
+            if (mode === 'add') {
+                title.textContent = 'Agregar Personal';
+                form.reset();
+                currentEditIndex = -1;
+            } else if (mode === 'edit' && index >= 0) {
+                title.textContent = 'Editar Personal';
+                const person = personnelData[index];
+                document.getElementById('formFicha').value = person.ficha;
+                document.getElementById('formName').value = person.name;
+                document.getElementById('formPosition').value = person.position;
+                document.getElementById('formType').value = person.type;
+                currentEditIndex = index;
+            }
+
+            modal.classList.add('show');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('personnelModal');
+            modal.classList.remove('show');
+            currentEditIndex = -1;
+        }
+
+        function editPersonnel(index) {
+            openModal('edit', index);
+        }
+
+        function deletePersonnel(index) {
+            const person = personnelData[index];
+            if (confirm(`¿Está seguro de eliminar a ${person.name}?`)) {
+                personnelData.splice(index, 1);
+                renderPersonnelTable();
+                showNotification('Personal eliminado correctamente', 'success');
+            }
+        }
+
+        function applyFilters() {
+            const filterDate = document.getElementById('filterDate').value;
+            const filterTurno = document.getElementById('filterTurno').value;
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+
+            showNotification('Filtros aplicados correctamente', 'info');
+            // Aquí podrías implementar la lógica de filtrado real
+        }
+
+        function showNotification(message, type = 'info') {
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notif => {
+                if (document.body.contains(notif)) {
+                    document.body.removeChild(notif);
+                }
+            });
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (document.body.contains(notification)) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 400);
+                }
+            }, 3500);
+        }
+
+        // Event Listeners
+        document.getElementById('personnelForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = {
+                ficha: parseInt(document.getElementById('formFicha').value) || 0,
+                name: document.getElementById('formName').value.toUpperCase(),
+                position: document.getElementById('formPosition').value,
+                type: document.getElementById('formType').value,
+                entryTime: "",
+                entrySignature: false,
+                exitTime: "",
+                exitSignature: false
+            };
+
+            if (currentEditIndex >= 0) {
+                // Mantener los horarios y firmas actuales al editar
+                formData.entryTime = personnelData[currentEditIndex].entryTime;
+                formData.entrySignature = personnelData[currentEditIndex].entrySignature;
+                formData.exitTime = personnelData[currentEditIndex].exitTime;
+                formData.exitSignature = personnelData[currentEditIndex].exitSignature;
+                personnelData[currentEditIndex] = formData;
+                showNotification('Personal actualizado correctamente', 'success');
+            } else {
+                personnelData.push(formData);
+                showNotification('Personal agregado correctamente', 'success');
+            }
+
+            closeModal();
+            renderPersonnelTable();
+        });
+
+        // Cerrar modal al hacer click fuera
+        document.getElementById('personnelModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            // Establecer fecha actual
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('filterDate').value = today;
+
+            renderPersonnelTable();
+            showNotification('Sistema de asistencia de contenedores cargado correctamente', 'success');
+        });
+    </script>
+</body>
+</html>

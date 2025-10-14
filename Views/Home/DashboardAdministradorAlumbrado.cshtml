@@ -1,0 +1,623 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Alumbrado Público | Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #16a34a;
+            --secondary: #15803d;
+            --accent: #22c55e;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+            --border: #E5E7EB;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%);
+            color: #111827;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(22, 163, 74, 0.3);
+            position: relative;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logos-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 65px;
+            height: 65px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                padding: 5px;
+            }
+
+        .header-info h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-info p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border: 3px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+            .user-avatar:hover {
+                background: rgba(255,255,255,0.3);
+                border-color: rgba(255,255,255,0.6);
+                transform: scale(1.05);
+            }
+
+            .user-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .user-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .user-role {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .welcome-title {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .welcome-subtitle {
+            font-size: 1.3rem;
+            color: #6B7280;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                background: linear-gradient(90deg, var(--primary), var(--accent));
+            }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 40px rgba(22, 163, 74, 0.15);
+            }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: #6B7280;
+            font-weight: 600;
+        }
+
+        .navigation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .nav-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .nav-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 12px 50px rgba(22, 163, 74, 0.2);
+                border-color: var(--primary);
+            }
+
+        .nav-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .nav-description {
+            font-size: 1rem;
+            color: #6B7280;
+            line-height: 1.6;
+        }
+
+        .hidden-input {
+            display: none;
+        }
+
+        .photo-uploaded {
+            border: 3px solid var(--success) !important;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2) !important;
+        }
+
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-info {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .footer-copyright {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Input oculto para subir foto de usuario -->
+    <input type="file" id="userPhotoInput" class="hidden-input" accept="image/*">
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logos-container">
+                    <div class="logo" title="Escudo Municipal">
+                        <img src="~/imagenes/M.png" alt="Escudo Municipal" onerror="this.parentElement.innerHTML='<i class=\'fas fa-landmark\'></i>'">
+                    </div>
+                    <div class="logo" title="Alumbrado Público">
+                        <img src="~/imagenes/Alumbrado.png" alt="Alumbrado Público" onerror="this.parentElement.innerHTML='<i class=\'fas fa-street-view\'></i>'">
+                    </div>
+                </div>
+                <div class="header-info">
+                    <h1>Sistema de Alumbrado Público</h1>
+                    <p>Municipio de Monclova, Coahuila</p>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="user-profile">
+                    <div class="user-avatar" id="userAvatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name">Auxiliar de Alumbrado</div>
+                        <div class="user-role">Personal Administrativo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1 class="welcome-title">Bienvenido al Sistema</h1>
+            <p class="welcome-subtitle">
+                Gestiona de manera eficiente el alumbrado público de Monclova con nuestra plataforma integral de monitoreo y control
+            </p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <div class="stat-number">2,847</div>
+                <div class="stat-label">Luminarias Totales</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-circle-check"></i>
+                </div>
+                <div class="stat-number">2,654</div>
+                <div class="stat-label">Funcionando</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-screwdriver-wrench"></i>
+                </div>
+                <div class="stat-number">193</div>
+                <div class="stat-label">En Mantenimiento</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-route"></i>
+                </div>
+                <div class="stat-number">85</div>
+                <div class="stat-label">Rutas de Servicio</div>
+            </div>
+        </div>
+
+        <!-- Navigation Grid -->
+        <div class="navigation-grid">
+            <a href="/Home/CapturaAlumbrado" class="nav-card">
+                <div class="nav-icon">
+                    <i class="fas fa-camera-retro"></i>
+                </div>
+                <div class="nav-title">Captura Alumbrado</div>
+                <div class="nav-description">
+                    Registra incidencias, toma fotografías de reportes y documenta el estado de las luminarias en campo
+                </div>
+            </a>
+
+            <a href="/Home/MapaAlumbrado" class="nav-card">
+                <div class="nav-icon">
+                    <i class="fas fa-map-location-dot"></i>
+                </div>
+                <div class="nav-title">Mapa Alumbrado</div>
+                <div class="nav-description">
+                    Visualiza la ubicación de todas las luminarias en tiempo real con estado de funcionamiento y alertas
+                </div>
+            </a>
+
+            <a href="/Home/RastreoAlumbrado" class="nav-card">
+                <div class="nav-icon">
+                    <i class="fas fa-location-arrow"></i>
+                </div>
+                <div class="nav-title">Rastreo Alumbrado</div>
+                <div class="nav-description">
+                    Monitorea la ubicación y actividad de las unidades de mantenimiento en tiempo real por GPS
+                </div>
+            </a>
+
+            <a href="/Home/DashboardAlumbrado" class="nav-card">
+                <div class="nav-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="nav-title">Dashboard Alumbrado</div>
+                <div class="nav-description">
+                    Accede a estadísticas detalladas, reportes de rendimiento y análisis de consumo energético
+                </div>
+            </a>
+
+            <a href="/Home/ReportesAlumbrado" class="nav-card">
+                <div class="nav-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="nav-title">Reportes Alumbrado</div>
+                <div class="nav-description">
+                    Gestiona y da seguimiento a los reportes de problemas de alumbrado público enviados por ciudadanos
+                </div>
+            </a>
+
+            <a href="/Home/MaterialUtilizadoAlumbrado" class="nav-card">
+                <div class="nav-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <div class="nav-title">Material Utilizado</div>
+                <div class="nav-description">
+                    Registra y controla el inventario de materiales utilizados en cada servicio de mantenimiento
+                </div>
+            </a>
+
+            <a href="/Home/ProgramacionAlumbrado" class="nav-card">
+                <div class="nav-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="nav-title">Programación</div>
+                <div class="nav-description">
+                    Programa horarios de encendido y apagado automático de las luminarias según zonas y necesidades específicas
+                </div>
+            </a>
+
+            <a href="/Home/AsistenciaPersonalAlumbrado" class="nav-card">
+                <div class="nav-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="nav-title">Asistencia Personal</div>
+                <div class="nav-description">
+                    Control y registro de asistencia del personal operativo, técnicos y cuadrillas de mantenimiento
+                </div>
+            </a>
+
+            <a href="/Home/EnviarOficiosAlmacenAlumbrado" class="nav-card">
+                <div class="nav-icon">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="nav-title">Enviar Oficios</div>
+                <div class="nav-description">
+                    Generar y enviar oficios de solicitud de materiales y refacciones al almacén municipal
+                </div>
+            </a>
+
+            <a href="/Home/RepositorioPlacasAlumbrado" class="nav-card">
+                <div class="nav-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div class="nav-title">Repositorio de Unidades</div>
+                <div class="nav-description">
+                    Consulta información completa de todas las unidades vehiculares, placas y documentación
+                </div>
+            </a>
+
+            <a href="/Home/AgendarCitasMantenimiento" class="nav-card">
+                <div class="nav-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="nav-title">Agendar Cita en Taller</div>
+                <div class="nav-description">
+                    Programa citas de mantenimiento preventivo y correctivo para las unidades en el taller mecánico
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-info">
+                <p><strong>Sistema de Alumbrado Público</strong></p>
+                <p>Municipio de Monclova, Coahuila de Zaragoza</p>
+                <p>Dirección: Presidencia Municipal, Centro, 25700 Monclova, Coah.</p>
+                <p>Teléfono: (866) 634-7890 | Email: alumbrado@monclova.gob.mx</p>
+                <p>Emergencias 24/7: (866) 911-2345 | WhatsApp: (866) 555-0199</p>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2024 Municipio de Monclova. Todos los derechos reservados. | Desarrollado para el área de Alumbrado Público</p>
+                <p>Sistema versión 2.1.0 | Última actualización: Octubre 2024</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function setupPhotoUpload(avatarId, inputId) {
+            const avatar = document.getElementById(avatarId);
+            const input = document.getElementById(inputId);
+
+            if (!avatar || !input) return;
+
+            avatar.addEventListener('click', () => input.click());
+
+            input.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    if (!file.type.startsWith('image/')) {
+                        showNotification('Por favor selecciona un archivo de imagen válido', 'error');
+                        return;
+                    }
+
+                    if (file.size > 5 * 1024 * 1024) {
+                        showNotification('La imagen es demasiado grande. Máximo 5MB', 'error');
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        avatar.innerHTML = `<img src="${e.target.result}" alt="Foto de perfil">`;
+                        avatar.classList.add('photo-uploaded');
+                        showNotification('Foto actualizada correctamente', 'success');
+                    };
+                    reader.onerror = () => showNotification('Error al cargar la imagen', 'error');
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const bgColor = type === 'success' ? '#10B981' : type === 'error' ? '#EF4444' : '#16a34a';
+
+            notification.style.cssText = `
+                position: fixed; top: 20px; right: 20px; padding: 1rem 1.5rem;
+                background: ${bgColor}; color: white; border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 10000;
+                font-size: 0.9rem; max-width: 300px; opacity: 0;
+                transform: translateX(100%); transition: all 0.3s ease; cursor: pointer;
+            `;
+
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            notification.addEventListener('click', () => hideNotification(notification));
+            setTimeout(() => hideNotification(notification), 4000);
+        }
+
+        function hideNotification(notification) {
+            if (notification && document.body.contains(notification)) {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupPhotoUpload('userAvatar', 'userPhotoInput');
+
+            setTimeout(() => {
+                showNotification('Sistema de Alumbrado Público iniciado correctamente', 'success');
+            }, 1000);
+        });
+
+        console.log('✅ Sistema de Alumbrado Público de Monclova - Cargado completamente');
+    </script>
+</body>
+</html>

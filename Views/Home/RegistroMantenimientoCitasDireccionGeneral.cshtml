@@ -1,0 +1,1385 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Mantenimiento - Dirección General</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --verde-principal: #16a34a;
+            --verde-secundario: #15803d;
+            --verde-claro: #22c55e;
+            --verde-light: #86efac;
+            --verde-oscuro: #14532d;
+            --gris-oscuro: #1f2937;
+            --gris-medio: #9ca3af;
+            --gris-claro: #f3f4f6;
+            --blanco: #FFFFFF;
+            --negro: #111827;
+            --bg-light: #f9fafb;
+            --amarillo: #fbbf24;
+            --rojo: #ef4444;
+            --azul: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, var(--gris-claro) 100%);
+            color: var(--negro);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--verde-secundario) 0%, var(--verde-principal) 100%);
+            color: white;
+            padding: clamp(0.5rem, 2vw, 1.5rem) clamp(0.7rem, 2.5vw, 2rem);
+            box-shadow: 0 4px 20px rgba(22, 163, 74, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1800px;
+            margin: 0 auto;
+            gap: clamp(0.5rem, 2vw, 2rem);
+            flex-wrap: wrap;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.4rem, 1.5vw, 1rem);
+        }
+
+        .logo-container {
+            width: clamp(35px, 8vw, 65px);
+            height: clamp(35px, 8vw, 65px);
+            background: white;
+            border-radius: clamp(8px, 2vw, 12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: clamp(2px, 0.5vw, 3px) solid var(--verde-light);
+        }
+
+            .logo-container i {
+                font-size: clamp(1rem, 4vw, 2rem);
+                color: var(--verde-principal);
+            }
+
+            .logo-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+        .header-center {
+            flex: 1;
+            text-align: center;
+        }
+
+            .header-center h1 {
+                font-size: clamp(0.75rem, 2.5vw, 1.6rem);
+                font-weight: 800;
+                margin-bottom: clamp(0.1rem, 0.5vw, 0.3rem);
+                line-height: 1.2;
+            }
+
+            .header-center p {
+                font-size: clamp(0.65rem, 1.8vw, 0.9rem);
+                opacity: 0.95;
+                line-height: 1.2;
+            }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.4rem, 1.5vw, 1rem);
+        }
+
+        .user-info {
+            text-align: right;
+            display: none;
+        }
+
+        .user-name {
+            font-size: clamp(0.75rem, 2vw, 1rem);
+            font-weight: 700;
+        }
+
+        .user-role {
+            font-size: clamp(0.65rem, 1.5vw, 0.85rem);
+            opacity: 0.9;
+        }
+
+        .user-avatar {
+            width: clamp(35px, 8vw, 60px);
+            height: clamp(35px, 8vw, 60px);
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: clamp(2px, 0.5vw, 3px) solid var(--verde-light);
+        }
+
+            .user-avatar i {
+                font-size: clamp(1rem, 4vw, 1.6rem);
+                color: var(--verde-principal);
+            }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: clamp(0.5rem, 1.5vw, 0.7rem) clamp(0.8rem, 2vw, 1.2rem);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: clamp(0.75rem, 2vw, 0.95rem);
+            display: flex;
+            align-items: center;
+            gap: clamp(0.3rem, 1vw, 0.5rem);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+            .btn-back:hover {
+                background: white;
+                color: var(--verde-principal);
+                transform: translateX(-3px);
+            }
+
+            .btn-back i {
+                font-size: clamp(0.85rem, 2.2vw, 1.1rem);
+            }
+
+        .main-container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-title {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            border-left: 5px solid var(--verde-principal);
+        }
+
+            .page-title h2 {
+                font-size: 2rem;
+                font-weight: 900;
+                color: var(--verde-principal);
+                margin-bottom: 0.5rem;
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+            }
+
+            .page-title p {
+                color: var(--gris-oscuro);
+                font-size: 1.1rem;
+            }
+
+        .filters-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--gris-oscuro);
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-input, .filter-select {
+            padding: 0.75rem;
+            border: 2px solid var(--gris-claro);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+            .filter-input:focus, .filter-select:focus {
+                outline: none;
+                border-color: var(--verde-principal);
+                box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            }
+
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-verde {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            color: white;
+        }
+
+            .btn-verde:hover {
+                background: linear-gradient(135deg, var(--verde-secundario), var(--verde-principal));
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+            }
+
+        .btn-outline {
+            background: white;
+            color: var(--verde-principal);
+            border: 2px solid var(--verde-principal);
+        }
+
+            .btn-outline:hover {
+                background: #f0fdf4;
+            }
+
+        .maintenance-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .maintenance-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            border-left: 5px solid var(--verde-principal);
+            transition: all 0.3s ease;
+        }
+
+            .maintenance-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            }
+
+        .maintenance-header {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .maintenance-id {
+            font-size: 1.3rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .maintenance-date {
+            font-size: 0.95rem;
+            opacity: 0.95;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .maintenance-body {
+            padding: 1.8rem;
+        }
+
+        .vehicle-info {
+            background: #f0fdf4;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 2px solid var(--verde-light);
+        }
+
+        .vehicle-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--verde-principal);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .vehicle-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--gris-medio);
+            text-transform: uppercase;
+            margin-bottom: 0.3rem;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--negro);
+        }
+
+        .maintenance-info {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid var(--gris-claro);
+        }
+
+        .info-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--verde-principal);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .info-section {
+            margin-top: 1.2rem;
+        }
+
+        .section-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--gris-oscuro);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-content {
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border-left: 3px solid var(--verde-principal);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .badge {
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .badge-completado {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-pendiente {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-cancelado {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-type {
+            padding: 0.35rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .badge-preventivo {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-correctivo {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-urgente {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 0.7rem 1.3rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .btn-view {
+            background: var(--azul);
+            color: white;
+        }
+
+            .btn-view:hover {
+                background: #2563eb;
+            }
+
+        .btn-print {
+            background: var(--gris-medio);
+            color: white;
+        }
+
+            .btn-print:hover {
+                background: var(--gris-oscuro);
+            }
+
+        .btn-download {
+            background: var(--rojo);
+            color: white;
+        }
+
+            .btn-download:hover {
+                background: #dc2626;
+            }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .pagination-btn {
+            padding: 0.7rem 1.3rem;
+            background: var(--verde-principal);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+            .pagination-btn:disabled {
+                background: var(--gris-claro);
+                color: var(--gris-medio);
+                cursor: not-allowed;
+            }
+
+            .pagination-btn:not(:disabled):hover {
+                background: var(--verde-secundario);
+                transform: translateY(-2px);
+            }
+
+        .pagination-info {
+            color: var(--gris-oscuro);
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid var(--verde-principal);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin: 0 auto 1rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--verde-principal);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gris-medio);
+            font-weight: 600;
+        }
+
+        .footer {
+            background: var(--negro);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+            .footer p {
+                margin: 0.3rem 0;
+            }
+
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid var(--verde-principal);
+            z-index: 10000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            max-width: 350px;
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+            .empty-state i {
+                font-size: 4rem;
+                color: var(--verde-principal);
+                margin-bottom: 1rem;
+            }
+
+            .empty-state h3 {
+                font-size: 1.5rem;
+                color: var(--gris-oscuro);
+                margin-bottom: 0.5rem;
+            }
+
+            .empty-state p {
+                color: var(--gris-medio);
+            }
+
+        .photos-section {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--gris-claro);
+        }
+
+        .photos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .photo-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--verde-light);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .photo-header {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            color: white;
+            padding: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .photo-body {
+            padding: 0;
+            position: relative;
+        }
+
+        .photo-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 250px;
+            background: var(--gris-claro);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--gris-medio);
+        }
+
+            .photo-placeholder i {
+                font-size: 3rem;
+                margin-bottom: 0.5rem;
+                color: var(--verde-principal);
+            }
+
+        .photo-caption {
+            padding: 0.8rem;
+            background: var(--bg-light);
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            text-align: center;
+        }
+
+        .zoom-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(22, 163, 74, 0.9);
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+            .zoom-btn:hover {
+                background: var(--verde-secundario);
+                transform: scale(1.1);
+            }
+
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            padding: 2rem;
+        }
+
+            .image-modal.active {
+                display: flex;
+            }
+
+        .image-modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+        }
+
+        .image-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            color: var(--negro);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+            .image-modal-close:hover {
+                background: var(--gris-claro);
+                transform: rotate(90deg);
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <button class="btn-back" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+                <span>Regresar</span>
+            </button>
+            <div class="header-left">
+                <div class="logo-container">
+                    <img src="~/imagenes/ESCUDO.png" alt="Escudo" onerror="this.parentElement.innerHTML='<i class=\'fas fa-landmark\'></i>'">
+                </div>
+            </div>
+            <div class="header-center">
+                <h1>Historial de Mantenimiento de Unidades</h1>
+                <p>Registro Completo de Citas y Servicios - Dirección General</p>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <div class="user-name">Reginaldo Rodriguez</div>
+                    <div class="user-role">Director Servicios Primarios</div>
+                </div>
+                <div class="user-avatar">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="page-title">
+            <h2>
+                <i class="fas fa-clipboard-list"></i>
+                Historial Completo de Mantenimiento
+            </h2>
+            <p>Consulta y gestión de todos los mantenimientos realizados a las unidades vehiculares</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-number">45</div>
+                <div class="stat-label">Mantenimientos Completados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-tools"></i></div>
+                <div class="stat-number">28</div>
+                <div class="stat-label">Preventivos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="stat-number">17</div>
+                <div class="stat-label">Correctivos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-box"></i></div>
+                <div class="stat-number">124</div>
+                <div class="stat-label">Materiales Usados</div>
+            </div>
+        </div>
+
+        <div class="filters-section">
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Buscar por Placas/Nombre</label>
+                    <input type="text" class="filter-input" id="searchInput" placeholder="Buscar unidad...">
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Tipo de Mantenimiento</label>
+                    <select class="filter-select" id="filterTipo">
+                        <option value="">Todos los tipos</option>
+                        <option value="preventivo">Preventivo</option>
+                        <option value="correctivo">Correctivo</option>
+                        <option value="urgente">Urgente</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Fecha Desde</label>
+                    <input type="date" class="filter-input" id="filterFechaDesde">
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Fecha Hasta</label>
+                    <input type="date" class="filter-input" id="filterFechaHasta">
+                </div>
+            </div>
+            <div class="filter-buttons">
+                <button class="btn btn-verde" onclick="applyFilters()">
+                    <i class="fas fa-search"></i>
+                    Buscar
+                </button>
+                <button class="btn btn-outline" onclick="clearFilters()">
+                    <i class="fas fa-redo"></i>
+                    Limpiar
+                </button>
+            </div>
+        </div>
+
+        <div class="maintenance-list" id="maintenanceList">
+            <!-- Los mantenimientos se cargarán aquí dinámicamente -->
+        </div>
+
+        <div class="pagination">
+            <button class="pagination-btn" onclick="previousPage()" id="prevBtn">
+                <i class="fas fa-chevron-left"></i> Anterior
+            </button>
+            <span class="pagination-info" id="pageInfo">Página 1 de 1</span>
+            <button class="pagination-btn" onclick="nextPage()" id="nextBtn">
+                Siguiente <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+        <button class="image-modal-close" onclick="closeImageModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <img id="modalImage" class="image-modal-content" src="" alt="Imagen ampliada">
+    </div>
+
+    <footer class="footer">
+        <p><strong>Sistema de Gestión de Mantenimiento - Servicios Primarios Monclova</strong></p>
+        <p>&copy; 2024 H. Ayuntamiento de Monclova. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        const maintenanceRecords = [
+            {
+                id: 'MNT-2024-001',
+                fecha: '2024-01-15',
+                tipo: 'preventivo',
+                estado: 'completado',
+                vehiculo: {
+                    placas: 'XYZ-1234',
+                    nombre: 'Camioneta Alumbrado 1',
+                    marca: 'Ford',
+                    modelo: 2022,
+                    economico: 'ECO-001',
+                    tipo: 'Alumbrado Público',
+                    poliza: 'POL-2023-001',
+                    noSerie: '1HGBH41JXMN109186'
+                },
+                detalles: {
+                    descripcion: 'Cambio de aceite y filtros, revisión de frenos y sistema eléctrico',
+                    mecanico: 'Ing. Carlos Hernández',
+                    duracion: '3 horas',
+                    kilometraje: '45,280 km',
+                    proximoServicio: '50,000 km'
+                },
+                materialesUtilizados: 'Aceite sintético 5W-30 (5 litros), Filtro de aceite, Filtro de aire, Pastillas de freno traseras, Líquido de frenos DOT 4 (1 litro), Lubricante multiusos',
+                observaciones: 'Unidad en excelente estado. Se recomienda revisar llantas en próximo servicio. Sistema de suspensión operando correctamente.',
+                fotoMaterial: 'https://via.placeholder.com/400x300/22c55e/ffffff?text=Materiales+Mantenimiento',
+                fotoUnidad: 'https://via.placeholder.com/400x300/16a34a/ffffff?text=Camioneta+Alumbrado+1'
+            },
+            {
+                id: 'MNT-2024-002',
+                fecha: '2024-01-18',
+                tipo: 'correctivo',
+                estado: 'completado',
+                vehiculo: {
+                    placas: 'ABC-5678',
+                    nombre: 'Pipa Ola 1',
+                    marca: 'Kenworth',
+                    modelo: 2021,
+                    economico: 'ECO-002',
+                    tipo: 'Ola Monclovense',
+                    poliza: 'POL-2023-002',
+                    noSerie: '2HGBH41JXMN109187'
+                },
+                detalles: {
+                    descripcion: 'Reparación de sistema hidráulico y cambio de bomba de agua',
+                    mecanico: 'Ing. Roberto Martínez',
+                    duracion: '6 horas',
+                    kilometraje: '82,450 km',
+                    proximoServicio: '85,000 km'
+                },
+                materialesUtilizados: 'Bomba de agua hidráulica (1 pieza), Mangueras hidráulicas alta presión (3 metros), Kit de sellos y empaques, Aceite hidráulico (10 litros), Válvulas de presión (2 piezas), Abrazaderas metálicas',
+                observaciones: 'Se encontró desgaste excesivo en bomba de agua debido a operación continua. Se recomienda monitoreo semanal de presión del sistema hidráulico.',
+                fotoMaterial: 'https://via.placeholder.com/400x300/22c55e/ffffff?text=Bomba+y+Mangueras',
+                fotoUnidad: 'https://via.placeholder.com/400x300/16a34a/ffffff?text=Pipa+Ola+1'
+            },
+            {
+                id: 'MNT-2024-003',
+                fecha: '2024-01-22',
+                tipo: 'preventivo',
+                estado: 'completado',
+                vehiculo: {
+                    placas: 'GHI-3456',
+                    nombre: 'Recolector 1',
+                    marca: 'International',
+                    modelo: 2023,
+                    economico: 'ECO-004',
+                    tipo: 'Boteo',
+                    poliza: 'POL-2023-004',
+                    noSerie: '4HGBH41JXMN109189'
+                },
+                detalles: {
+                    descripcion: 'Servicio mayor: cambio de aceite, filtros y revisión completa',
+                    mecanico: 'Ing. José Luis Ramírez',
+                    duracion: '4 horas',
+                    kilometraje: '28,900 km',
+                    proximoServicio: '35,000 km'
+                },
+                materialesUtilizados: 'Aceite de motor 15W-40 (8 litros), Aceite de transmisión (4 litros), Filtro de aceite motor, Filtro de aire, Filtro de combustible, Grasa para mecanismos (2 tubos), Líquido limpiador de inyectores',
+                observaciones: 'Unidad relativamente nueva en buen estado. Sistema de compactación operando al 100%. No se detectaron anomalías.',
+                fotoMaterial: 'https://via.placeholder.com/400x300/22c55e/ffffff?text=Aceites+y+Filtros',
+                fotoUnidad: 'https://via.placeholder.com/400x300/16a34a/ffffff?text=Recolector+1'
+            },
+            {
+                id: 'MNT-2024-004',
+                fecha: '2024-01-25',
+                tipo: 'urgente',
+                estado: 'completado',
+                vehiculo: {
+                    placas: 'DEF-9012',
+                    nombre: 'Barredora 1',
+                    marca: 'Schwarze',
+                    modelo: 2020,
+                    economico: 'ECO-003',
+                    tipo: 'Cuadrillas de Limpieza',
+                    poliza: 'POL-2023-003',
+                    noSerie: '3HGBH41JXMN109188'
+                },
+                detalles: {
+                    descripcion: 'Reparación de emergencia del sistema de barrido',
+                    mecanico: 'Ing. Miguel Ángel Torres',
+                    duracion: '5 horas',
+                    kilometraje: '65,320 km',
+                    proximoServicio: '70,000 km'
+                },
+                materialesUtilizados: 'Cepillos laterales (2 piezas), Motor de barrido (1 pieza), Banda transportadora (3 metros), Kit de tensores, Mangueras de aspiración (2 metros), Filtros de aire industrial (2 piezas)',
+                observaciones: 'Falla debido a acumulación de escombros en sistema. Se realizó capacitación al operador sobre limpieza preventiva diaria. Recomendación: revisión semanal del sistema de aspiración.',
+                fotoMaterial: 'https://via.placeholder.com/400x300/22c55e/ffffff?text=Cepillos+y+Motor',
+                fotoUnidad: 'https://via.placeholder.com/400x300/16a34a/ffffff?text=Barredora+1'
+            },
+            {
+                id: 'MNT-2024-005',
+                fecha: '2024-02-01',
+                tipo: 'preventivo',
+                estado: 'completado',
+                vehiculo: {
+                    placas: 'JKL-7890',
+                    nombre: 'Roll Off 1',
+                    marca: 'Freightliner',
+                    modelo: 2022,
+                    economico: 'ECO-005',
+                    tipo: 'Contenedores',
+                    poliza: 'POL-2023-005',
+                    noSerie: '5HGBH41JXMN109190'
+                },
+                detalles: {
+                    descripcion: 'Mantenimiento preventivo trimestral programado',
+                    mecanico: 'Ing. Fernando García',
+                    duracion: '3.5 horas',
+                    kilometraje: '52,180 km',
+                    proximoServicio: '58,000 km'
+                },
+                materialesUtilizados: 'Aceite motor sintético (6 litros), Filtros múltiples (aceite, aire, combustible), Grasa para rodamientos (1 kg), Cable de acero reforzado (repuesto), Lubricante penetrante spray, Limpiador de contactos eléctricos',
+                observaciones: 'Sistema roll-off en perfectas condiciones. Cable de arrastre con desgaste normal. Se aplicó lubricante especial en todos los puntos de fricción.',
+                fotoMaterial: 'https://via.placeholder.com/400x300/22c55e/ffffff?text=Materiales+Roll-Off',
+                fotoUnidad: 'https://via.placeholder.com/400x300/16a34a/ffffff?text=Roll+Off+1'
+            },
+            {
+                id: 'MNT-2024-006',
+                fecha: '2024-02-05',
+                tipo: 'correctivo',
+                estado: 'completado',
+                vehiculo: {
+                    placas: 'VWX-4567',
+                    nombre: 'Camioneta Alumbrado 2',
+                    marca: 'RAM',
+                    modelo: 2022,
+                    economico: 'ECO-009',
+                    tipo: 'Alumbrado Público',
+                    poliza: 'POL-2023-009',
+                    noSerie: '9HGBH41JXMN109194'
+                },
+                detalles: {
+                    descripcion: 'Reparación de sistema eléctrico y cambio de alternador',
+                    mecanico: 'Ing. Carlos Hernández',
+                    duracion: '4 horas',
+                    kilometraje: '38,920 km',
+                    proximoServicio: '45,000 km'
+                },
+                materialesUtilizados: 'Alternador 150A (1 pieza), Batería 12V 850 CCA (1 pieza), Kit de cables eléctricos, Fusibles variados (caja), Terminales eléctricas, Cinta aislante profesional, Grasa dieléctrica',
+                observaciones: 'Alternador presentó falla completa. Se instaló alternador de mayor amperaje para soportar equipo de trabajo. Batería reemplazada preventivamente.',
+                fotoMaterial: 'https://via.placeholder.com/400x300/22c55e/ffffff?text=Alternador+y+Bateria',
+                fotoUnidad: 'https://via.placeholder.com/400x300/16a34a/ffffff?text=Camioneta+Alumbrado+2'
+            }
+        ];
+
+        let filteredRecords = [...maintenanceRecords];
+        let currentPage = 1;
+        const itemsPerPage = 3;
+
+        function getTipoBadge(tipo) {
+            const badges = {
+                'preventivo': 'badge-preventivo',
+                'correctivo': 'badge-correctivo',
+                'urgente': 'badge-urgente'
+            };
+            return badges[tipo] || 'badge-preventivo';
+        }
+
+        function getTipoLabel(tipo) {
+            const labels = {
+                'preventivo': 'Preventivo',
+                'correctivo': 'Correctivo',
+                'urgente': 'Urgente'
+            };
+            return labels[tipo] || tipo;
+        }
+
+        function renderMaintenanceList() {
+            const container = document.getElementById('maintenanceList');
+            container.innerHTML = '';
+
+            const totalPages = Math.ceil(filteredRecords.length / itemsPerPage);
+            const startIdx = (currentPage - 1) * itemsPerPage;
+            const endIdx = startIdx + itemsPerPage;
+            const pageRecords = filteredRecords.slice(startIdx, endIdx);
+
+            if (pageRecords.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3>No se encontraron registros</h3>
+                        <p>No hay mantenimientos que coincidan con los filtros seleccionados</p>
+                    </div>
+                `;
+            } else {
+                pageRecords.forEach(record => {
+                    const card = `
+                        <div class="maintenance-card">
+                            <div class="maintenance-header">
+                                <div class="maintenance-id">
+                                    <i class="fas fa-wrench"></i>
+                                    ${record.id}
+                                    <span class="badge-type ${getTipoBadge(record.tipo)}">
+                                        ${getTipoLabel(record.tipo)}
+                                    </span>
+                                </div>
+                                <div class="maintenance-date">
+                                    <i class="fas fa-calendar"></i>
+                                    ${formatDate(record.fecha)}
+                                </div>
+                            </div>
+
+                            <div class="maintenance-body">
+                                <div class="vehicle-info">
+                                    <div class="vehicle-title">
+                                        <i class="fas fa-truck"></i>
+                                        Información del Vehículo
+                                    </div>
+                                    <div class="vehicle-details">
+                                        <div class="detail-item">
+                                            <span class="detail-label">Placas</span>
+                                            <span class="detail-value">${record.vehiculo.placas}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">Nombre</span>
+                                            <span class="detail-value">${record.vehiculo.nombre}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">Marca/Modelo</span>
+                                            <span class="detail-value">${record.vehiculo.marca} ${record.vehiculo.modelo}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">No. Económico</span>
+                                            <span class="detail-value">${record.vehiculo.economico}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">Tipo</span>
+                                            <span class="detail-value">${record.vehiculo.tipo}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">Póliza</span>
+                                            <span class="detail-value">${record.vehiculo.poliza}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">No. Serie</span>
+                                            <span class="detail-value">${record.vehiculo.noSerie}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="maintenance-info">
+                                    <div class="info-title">
+                                        <i class="fas fa-clipboard-check"></i>
+                                        Detalles del Mantenimiento
+                                    </div>
+                                    <div class="info-grid">
+                                        <div class="detail-item">
+                                            <span class="detail-label">Descripción</span>
+                                            <span class="detail-value">${record.detalles.descripcion}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">Mecánico</span>
+                                            <span class="detail-value">${record.detalles.mecanico}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">Duración</span>
+                                            <span class="detail-value">${record.detalles.duracion}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">Kilometraje</span>
+                                            <span class="detail-value">${record.detalles.kilometraje}</span>
+                                        </div>
+                                        <div class="detail-item">
+                                            <span class="detail-label">Próximo Servicio</span>
+                                            <span class="detail-value">${record.detalles.proximoServicio}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="info-section">
+                                        <div class="section-label">Materiales Utilizados</div>
+                                        <div class="section-content">${record.materialesUtilizados}</div>
+                                    </div>
+
+                                    <div class="info-section">
+                                        <div class="section-label">Observaciones</div>
+                                        <div class="section-content">${record.observaciones}</div>
+                                    </div>
+                                </div>
+
+                                <div class="photos-section">
+                                    <div class="section-label">Evidencia Fotográfica</div>
+                                    <div class="photos-grid">
+                                        <div class="photo-container">
+                                            <div class="photo-header">
+                                                <i class="fas fa-box"></i>
+                                                Materiales Utilizados
+                                            </div>
+                                            <div class="photo-body">
+                                                <img src="${record.fotoMaterial}" alt="Materiales" class="photo-img">
+                                                <button class="zoom-btn" onclick="openImageModal('${record.fotoMaterial}', event)">
+                                                    <i class="fas fa-search-plus"></i>
+                                                </button>
+                                            </div>
+                                            <div class="photo-caption">
+                                                Materiales y refacciones usadas
+                                            </div>
+                                        </div>
+
+                                        <div class="photo-container">
+                                            <div class="photo-header">
+                                                <i class="fas fa-truck"></i>
+                                                Unidad Vehicular
+                                            </div>
+                                            <div class="photo-body">
+                                                <img src="${record.fotoUnidad}" alt="Unidad" class="photo-img">
+                                                <button class="zoom-btn" onclick="openImageModal('${record.fotoUnidad}', event)">
+                                                    <i class="fas fa-search-plus"></i>
+                                                </button>
+                                            </div>
+                                            <div class="photo-caption">
+                                                ${record.vehiculo.nombre}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-view" onclick="viewDetails('${record.id}')">
+                                        <i class="fas fa-eye"></i>
+                                        Ver Detalles
+                                    </button>
+                                    <button class="btn-action btn-print" onclick="printRecord('${record.id}')">
+                                        <i class="fas fa-print"></i>
+                                        Imprimir
+                                    </button>
+                                    <button class="btn-action btn-download" onclick="downloadPDF('${record.id}')">
+                                        <i class="fas fa-file-pdf"></i>
+                                        Descargar PDF
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+            }
+
+            updatePagination();
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('es-MX', options);
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredRecords.length / itemsPerPage);
+            document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages || 1} (${filteredRecords.length} registros)`;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(filteredRecords.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderMaintenanceList();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderMaintenanceList();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const tipo = document.getElementById('filterTipo').value;
+            const fechaDesde = document.getElementById('filterFechaDesde').value;
+            const fechaHasta = document.getElementById('filterFechaHasta').value;
+
+            filteredRecords = maintenanceRecords.filter(record => {
+                const matchSearch = !searchTerm ||
+                    record.vehiculo.placas.toLowerCase().includes(searchTerm) ||
+                    record.vehiculo.nombre.toLowerCase().includes(searchTerm);
+
+                const matchTipo = !tipo || record.tipo === tipo;
+
+                const matchFechaDesde = !fechaDesde || record.fecha >= fechaDesde;
+                const matchFechaHasta = !fechaHasta || record.fecha <= fechaHasta;
+
+                return matchSearch && matchTipo && matchFechaDesde && matchFechaHasta;
+            });
+
+            currentPage = 1;
+            renderMaintenanceList();
+            showNotification(`Filtros aplicados: ${filteredRecords.length} registros encontrados`);
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterTipo').value = '';
+            document.getElementById('filterFechaDesde').value = '';
+            document.getElementById('filterFechaHasta').value = '';
+
+            filteredRecords = [...maintenanceRecords];
+            currentPage = 1;
+            renderMaintenanceList();
+            showNotification('Filtros limpiados');
+        }
+
+        function viewDetails(id) {
+            showNotification(`Mostrando detalles completos de ${id}`);
+        }
+
+        function printRecord(id) {
+            showNotification(`Imprimiendo registro ${id}`);
+            window.print();
+        }
+
+        function downloadPDF(id) {
+            showNotification(`Descargando PDF de ${id}`);
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `<i class="fas fa-check-circle" style="color: var(--verde-principal); margin-right: 0.5rem;"></i>${message}`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        function openImageModal(imageSrc, event) {
+            event.stopPropagation();
+            document.getElementById('modalImage').src = imageSrc;
+            document.getElementById('imageModal').classList.add('active');
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderMaintenanceList();
+            showNotification('Sistema cargado - 6 mantenimientos registrados');
+        });
+    </script>
+</body>
+</html>

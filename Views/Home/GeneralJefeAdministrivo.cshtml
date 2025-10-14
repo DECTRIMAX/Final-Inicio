@@ -1,0 +1,1004 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel General de Jefe Administración | Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --pri-pink: #ec4899;
+            --pri-pink-light: #f472b6;
+            --pri-pink-dark: #be185d;
+            --pri-red: #D32F2F;
+            --pri-white: #FFFFFF;
+            --bg-light: #fdf2f8;
+            --bg-dark: #fce7f3;
+            --text-dark: #212121;
+            --text-gray: #616161;
+            --shadow: rgba(236, 72, 153, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-dark) 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--pri-pink) 0%, var(--pri-pink-dark) 100%);
+            color: var(--pri-white);
+            padding: clamp(0.5rem, 2vw, 1rem) clamp(0.8rem, 3vw, 1.5rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--pri-red);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            gap: clamp(0.5rem, 2vw, 1.5rem);
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 2vw, 1rem);
+            flex: 1 1 auto;
+            min-width: min(250px, 100%);
+        }
+
+        .logo {
+            width: clamp(65px, 10vw, 80px);
+            height: clamp(65px, 10vw, 80px);
+            background: var(--pri-white);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--pri-pink-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+            .logo:hover {
+                transform: scale(1.05);
+            }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+            .logo i {
+                font-size: clamp(1.8rem, 5vw, 2.5rem);
+                color: var(--pri-pink);
+            }
+
+        .header-info {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+            .header-info h1 {
+                font-size: clamp(1rem, 2.5vw, 1.5rem);
+                font-weight: 800;
+                margin-bottom: 0.2rem;
+                word-wrap: break-word;
+            }
+
+            .header-info p {
+                font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+                opacity: 0.9;
+            }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 0.8rem);
+            flex-shrink: 0;
+        }
+
+        .user-avatar {
+            width: clamp(55px, 9vw, 70px);
+            height: clamp(55px, 9vw, 70px);
+            border-radius: 50%;
+            background: var(--pri-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--pri-pink-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+            .user-avatar:hover {
+                transform: scale(1.05);
+            }
+
+            .user-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .user-avatar i {
+                font-size: clamp(1.3rem, 4vw, 2rem);
+                color: var(--pri-pink);
+            }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: clamp(0.75rem, 2vw, 0.95rem);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .user-role {
+            font-size: clamp(0.65rem, 1.5vw, 0.8rem);
+            opacity: 0.9;
+            white-space: nowrap;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2rem);
+            width: 100%;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+            padding: clamp(1rem, 4vw, 2rem) clamp(0.8rem, 3vw, 1.5rem);
+            background: var(--pri-white);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px var(--shadow);
+            border-left: 4px solid var(--pri-pink);
+        }
+
+        .welcome-title {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-weight: 900;
+            color: var(--pri-pink);
+            margin-bottom: 0.5rem;
+            word-wrap: break-word;
+        }
+
+        .welcome-subtitle {
+            font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+            color: var(--text-gray);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+            gap: clamp(0.8rem, 2vw, 1rem);
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+        }
+
+        .stat-card {
+            background: var(--pri-white);
+            padding: clamp(1rem, 3vw, 1.5rem);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border-left: 4px solid var(--pri-pink);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px var(--shadow);
+            }
+
+        .stat-icon {
+            width: clamp(40px, 8vw, 50px);
+            height: clamp(40px, 8vw, 50px);
+            background: linear-gradient(135deg, var(--pri-pink), var(--pri-pink-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--pri-white);
+            margin: 0 auto clamp(0.5rem, 2vw, 1rem);
+        }
+
+        .stat-number {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 900;
+            color: var(--pri-pink);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(1.3rem, 4vw, 2rem);
+            margin: clamp(1.5rem, 3vw, 2rem) 0 clamp(1rem, 2.5vw, 1.5rem) 0;
+            font-weight: 900;
+            padding: clamp(0.8rem, 2vw, 1rem);
+            background: linear-gradient(135deg, var(--pri-pink), var(--pri-pink-dark));
+            color: var(--pri-white);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .area-panel {
+            background: var(--pri-white);
+            border-radius: 15px;
+            margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            border-left: 5px solid var(--pri-pink);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .area-header {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 2vw, 1rem);
+            padding: clamp(1rem, 3vw, 1.5rem);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, var(--bg-light), var(--bg-dark));
+            flex-wrap: wrap;
+        }
+
+            .area-header:hover {
+                background: linear-gradient(135deg, var(--bg-dark), var(--pri-pink-light));
+            }
+
+            .area-header.active {
+                background: linear-gradient(135deg, var(--pri-pink), var(--pri-pink-light));
+            }
+
+                .area-header.active .area-icon,
+                .area-header.active .area-title h3,
+                .area-header.active .area-title p,
+                .area-header.active .toggle-icon {
+                    color: var(--pri-white);
+                }
+
+        .area-icon {
+            width: clamp(50px, 10vw, 60px);
+            height: clamp(50px, 10vw, 60px);
+            background: linear-gradient(135deg, var(--pri-pink), var(--pri-pink-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+            color: var(--pri-white);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+            .area-icon img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                padding: 5px;
+            }
+
+        .area-title {
+            flex: 1 1 auto;
+            min-width: min(200px, 100%);
+        }
+
+            .area-title h3 {
+                font-size: clamp(1.1rem, 3vw, 1.5rem);
+                font-weight: 800;
+                color: var(--pri-pink);
+                transition: all 0.3s ease;
+                word-wrap: break-word;
+            }
+
+            .area-title p {
+                font-size: clamp(0.75rem, 2vw, 0.9rem);
+                color: var(--text-gray);
+                transition: all 0.3s ease;
+            }
+
+        .toggle-icon {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--pri-pink);
+            transition: transform 0.3s ease, color 0.3s ease;
+            flex-shrink: 0;
+        }
+
+            .toggle-icon.active {
+                transform: rotate(180deg);
+            }
+
+        .area-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.3s ease;
+            padding: 0 clamp(0.8rem, 3vw, 1.5rem);
+        }
+
+            .area-content.active {
+                max-height: 5000px;
+                padding: clamp(1rem, 3vw, 1.5rem);
+            }
+
+        .subsection {
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            background: var(--bg-light);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid var(--pri-pink);
+        }
+
+        .subsection-header {
+            background: linear-gradient(135deg, var(--pri-pink-light), var(--pri-pink));
+            color: var(--pri-white);
+            padding: clamp(0.8rem, 2vw, 1rem);
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .subsection-header:hover {
+                background: linear-gradient(135deg, var(--pri-pink), var(--pri-pink-dark));
+            }
+
+        .subsection-header-content {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex: 1;
+        }
+
+        .subsection-header i.sub-icon {
+            font-size: clamp(1.1rem, 2.8vw, 1.4rem);
+        }
+
+        .subsection-toggle {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+            .subsection-toggle.active {
+                transform: rotate(180deg);
+            }
+
+        .subsection-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.3s ease;
+            padding: 0 clamp(0.8rem, 2vw, 1rem);
+        }
+
+            .subsection-content.active {
+                max-height: 2000px;
+                padding: clamp(0.8rem, 2vw, 1rem);
+            }
+
+        .navigation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
+            gap: clamp(0.8rem, 2vw, 1rem);
+        }
+
+        .nav-card {
+            background: linear-gradient(135deg, var(--bg-light), var(--bg-dark));
+            border-radius: 12px;
+            padding: clamp(1rem, 2.5vw, 1.2rem);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+            .nav-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px var(--shadow);
+                border-color: var(--pri-pink);
+            }
+
+        .nav-card-icon {
+            width: clamp(40px, 8vw, 45px);
+            height: clamp(40px, 8vw, 45px);
+            background: var(--pri-pink);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            color: var(--pri-white);
+            margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
+        }
+
+        .nav-card-title {
+            font-size: clamp(0.9rem, 2.2vw, 1rem);
+            font-weight: 700;
+            color: var(--pri-pink);
+            margin-bottom: 0.5rem;
+            word-wrap: break-word;
+        }
+
+        .nav-card-description {
+            font-size: clamp(0.75rem, 1.8vw, 0.85rem);
+            color: var(--text-gray);
+            line-height: 1.4;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, var(--pri-pink), var(--pri-pink-dark));
+            color: var(--pri-white);
+            padding: clamp(1rem, 2.5vw, 1.5rem);
+            margin-top: clamp(2rem, 4vw, 3rem);
+            text-align: center;
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+        }
+
+            .footer p {
+                margin: 0.3rem 0;
+            }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: clamp(0.8rem, 2vw, 1rem) clamp(1rem, 2.5vw, 1.5rem);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 10000;
+            max-width: min(300px, 90vw);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+        }
+
+            .notification.success {
+                background: var(--pri-pink);
+                color: white;
+            }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+        .hidden-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <input type="file" id="logoInput" class="hidden-input" accept="image/*">
+    <input type="file" id="userPhotoInput" class="hidden-input" accept="image/*">
+    <input type="file" id="bacheoLogoInput" class="hidden-input" accept="image/*">
+    <input type="file" id="alumbradoLogoInput" class="hidden-input" accept="image/*">
+    <input type="file" id="recoleccionLogoInput" class="hidden-input" accept="image/*">
+
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo" id="municipalLogo" title="Click para cambiar logo">
+                    <img src="~/imagenes/M.png" alt="Escudo Municipal" onerror="this.parentElement.innerHTML='<i class=\'fas fa-landmark\'></i>'">
+                </div>
+                <div class="header-info">
+                    <h1>Panel General de Jefe Administración</h1>
+                    <p>Control de Auxiliares - Monclova</p>
+                </div>
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar" id="userAvatar" title="Claudia Mendoza - Click para cambiar foto">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="user-info">
+                    <div class="user-name">Claudia Mendoza</div>
+                    <div class="user-role">Jefe Administrativo</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1 class="welcome-title">Panel de Control General</h1>
+            <p class="welcome-subtitle">
+                Gestión integral de Bacheo, Alumbrado Público y Recolección de Residuos
+            </p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-number">127</div>
+                <div class="stat-label">Auxiliares Activos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+                <div class="stat-number">3</div>
+                <div class="stat-label">Áreas Operativas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-truck"></i></div>
+                <div class="stat-number">62</div>
+                <div class="stat-label">Unidades Activas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Eficiencia</div>
+            </div>
+        </div>
+
+        <!-- ÁREA DE BACHEO -->
+        <div class="area-panel">
+            <div class="area-header" onclick="toggleArea('bacheo')">
+                <div class="area-icon" id="bacheoLogo" title="Click para cambiar logo de Bacheo" style="cursor: pointer;">
+                    <img src="~/imagenes/Bacheo.png" alt="Logo Bacheo" onerror="this.parentElement.innerHTML='<i class=\'fas fa-road\'></i>'">
+                </div>
+                <div class="area-title">
+                    <h3>Administración de Bacheo</h3>
+                    <p>Control de operaciones de pavimentación y mantenimiento vial</p>
+                </div>
+                <i class="fas fa-chevron-down toggle-icon" id="toggle-bacheo"></i>
+            </div>
+            <div class="area-content" id="content-bacheo">
+                <div class="navigation-grid">
+                    <div class="nav-card" onclick="navigateTo('/Home/DashboardAdministradorBacheo')">
+                        <div class="nav-card-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        <div class="nav-card-title">Dashboard Principal</div>
+                        <div class="nav-card-description">Panel general de bacheo</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/ProgramacionBacheo')">
+                        <div class="nav-card-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <div class="nav-card-title">Programación de Obras</div>
+                        <div class="nav-card-description">Planificación de trabajos</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/CapturaBacheo')">
+                        <div class="nav-card-icon"><i class="fas fa-camera"></i></div>
+                        <div class="nav-card-title">Captura de Obras</div>
+                        <div class="nav-card-description">Registro fotográfico</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/MapaBacheo')">
+                        <div class="nav-card-icon"><i class="fas fa-map-marked-alt"></i></div>
+                        <div class="nav-card-title">Mapa de Bacheo</div>
+                        <div class="nav-card-description">Ubicación de obras</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/RastreoBacheo')">
+                        <div class="nav-card-icon"><i class="fas fa-location-dot"></i></div>
+                        <div class="nav-card-title">Rastreo GPS</div>
+                        <div class="nav-card-description">Seguimiento de unidades</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/ReportesBacheo')">
+                        <div class="nav-card-icon"><i class="fas fa-file-alt"></i></div>
+                        <div class="nav-card-title">Reportes Ciudadanos</div>
+                        <div class="nav-card-description">Quejas y solicitudes</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/MaterialUtilizadoBacheo')">
+                        <div class="nav-card-icon"><i class="fas fa-cubes"></i></div>
+                        <div class="nav-card-title">Control de Material</div>
+                        <div class="nav-card-description">Inventario de asfalto</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/AsistenciaPersonalBacheo')">
+                        <div class="nav-card-icon"><i class="fas fa-users-gear"></i></div>
+                        <div class="nav-card-title">Asistencia Personal</div>
+                        <div class="nav-card-description">Control de personal</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ÁREA DE ALUMBRADO -->
+        <div class="area-panel">
+            <div class="area-header" onclick="toggleArea('alumbrado')">
+                <div class="area-icon" id="alumbradoLogo" title="Click para cambiar logo de Alumbrado" style="cursor: pointer;">
+                    <img src="~/imagenes/Alumbrado.png" alt="Logo Alumbrado" onerror="this.parentElement.innerHTML='<i class=\'fas fa-lightbulb\'></i>'">
+                </div>
+                <div class="area-title">
+                    <h3>Administración de Alumbrado Público</h3>
+                    <p>Gestión del sistema de iluminación municipal</p>
+                </div>
+                <i class="fas fa-chevron-down toggle-icon" id="toggle-alumbrado"></i>
+            </div>
+            <div class="area-content" id="content-alumbrado">
+                <div class="navigation-grid">
+                    <div class="nav-card" onclick="navigateTo('/Home/DashboardAdministradorAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        <div class="nav-card-title">Dashboard Principal</div>
+                        <div class="nav-card-description">Panel general de alumbrado</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/ProgramacionAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-clock"></i></div>
+                        <div class="nav-card-title">Programación de Horarios</div>
+                        <div class="nav-card-description">Control de encendido/apagado</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/CapturaAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-camera-retro"></i></div>
+                        <div class="nav-card-title">Captura de Incidencias</div>
+                        <div class="nav-card-description">Registro de fallas</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/MapaAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-map-location-dot"></i></div>
+                        <div class="nav-card-title">Mapa de Luminarias</div>
+                        <div class="nav-card-description">Ubicación de postes</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/RastreoAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-location-arrow"></i></div>
+                        <div class="nav-card-title">Rastreo de Unidades</div>
+                        <div class="nav-card-description">GPS de cuadrillas</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/ReportesAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="nav-card-title">Reportes Ciudadanos</div>
+                        <div class="nav-card-description">Fallas reportadas</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/MaterialUtilizadoAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-tools"></i></div>
+                        <div class="nav-card-title">Material Utilizado</div>
+                        <div class="nav-card-description">Inventario de lámparas</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/AsistenciaPersonalAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-user-check"></i></div>
+                        <div class="nav-card-title">Asistencia Personal</div>
+                        <div class="nav-card-description">Control de técnicos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ÁREA DE RECOLECCIÓN -->
+        <div class="area-panel">
+            <div class="area-header" onclick="toggleArea('recoleccion')">
+                <div class="area-icon" id="recoleccionLogo" title="Click para cambiar logo de Recolección" style="cursor: pointer;">
+                    <img src="~/imagenes/RecoleccionDeBasura.png" alt="Logo Recolección" onerror="this.parentElement.innerHTML='<i class=\'fas fa-truck-loading\'></i>'">
+                </div>
+                <div class="area-title">
+                    <h3>Administración de Recolección</h3>
+                    <p>Control de recolección de residuos y contenedores</p>
+                </div>
+                <i class="fas fa-chevron-down toggle-icon" id="toggle-recoleccion"></i>
+            </div>
+            <div class="area-content" id="content-recoleccion">
+
+                <!-- Dashboard Principal -->
+                <div class="subsection">
+                    <div class="subsection-header" onclick="toggleSubsection('dashboard')">
+                        <div class="subsection-header-content">
+                            <i class="fas fa-tachometer-alt sub-icon"></i>
+                            <span>Dashboard Principal</span>
+                        </div>
+                        <i class="fas fa-chevron-down subsection-toggle" id="toggle-sub-dashboard"></i>
+                    </div>
+                    <div class="subsection-content" id="content-sub-dashboard">
+                        <div class="navigation-grid">
+                            <div class="nav-card" onclick="navigateTo('/Home/DashboardAdministradorRecoleccion')">
+                                <div class="nav-card-icon"><i class="fas fa-chart-bar"></i></div>
+                                <div class="nav-card-title">Dashboard Principal</div>
+                                <div class="nav-card-description">Panel general de recolección</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección Boteo -->
+                <div class="subsection">
+                    <div class="subsection-header" onclick="toggleSubsection('boteo')">
+                        <div class="subsection-header-content">
+                            <i class="fas fa-trash-alt sub-icon"></i>
+                            <span>Gestión de Boteo</span>
+                        </div>
+                        <i class="fas fa-chevron-down subsection-toggle" id="toggle-sub-boteo"></i>
+                    </div>
+                    <div class="subsection-content" id="content-sub-boteo">
+                        <div class="navigation-grid">
+                            <div class="nav-card" onclick="navigateTo('/Home/CapturaRecoleccion')">
+                                <div class="nav-card-icon"><i class="fas fa-camera"></i></div>
+                                <div class="nav-card-title">Captura de Boteo</div>
+                                <div class="nav-card-description">Registro de recolección</div>
+                            </div>
+                            <div class="nav-card" onclick="navigateTo('/Home/GPSRecoleccion')">
+                                <div class="nav-card-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                <div class="nav-card-title">GPS Boteo</div>
+                                <div class="nav-card-description">Rastreo de camiones</div>
+                            </div>
+                            <div class="nav-card" onclick="navigateTo('/Home/MantenimientoUnidadesRecoleccion')">
+                                <div class="nav-card-icon"><i class="fas fa-tools"></i></div>
+                                <div class="nav-card-title">Mantenimiento de Unidades</div>
+                                <div class="nav-card-description">Control de camiones</div>
+                            </div>
+                            <div class="nav-card" onclick="navigateTo('/Home/AsistenciaPersonalRecoleccion')">
+                                <div class="nav-card-icon"><i class="fas fa-user-clock"></i></div>
+                                <div class="nav-card-title">Asistencia Boteo</div>
+                                <div class="nav-card-description">Control de personal</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección Contenedores -->
+                <div class="subsection">
+                    <div class="subsection-header" onclick="toggleSubsection('contenedores')">
+                        <div class="subsection-header-content">
+                            <i class="fas fa-dumpster sub-icon"></i>
+                            <span>Gestión de Contenedores</span>
+                        </div>
+                        <i class="fas fa-chevron-down subsection-toggle" id="toggle-sub-contenedores"></i>
+                    </div>
+                    <div class="subsection-content" id="content-sub-contenedores">
+                        <div class="navigation-grid">
+                            <div class="nav-card" onclick="navigateTo('/Home/CapturaContenedores')">
+                                <div class="nav-card-icon"><i class="fas fa-camera"></i></div>
+                                <div class="nav-card-title">Captura Contenedores</div>
+                                <div class="nav-card-description">Registro de contenedores</div>
+                            </div>
+                            <div class="nav-card" onclick="navigateTo('/Home/GPSContenedores')">
+                                <div class="nav-card-icon"><i class="fas fa-satellite-dish"></i></div>
+                                <div class="nav-card-title">GPS Contenedores</div>
+                                <div class="nav-card-description">Ubicación de contenedores</div>
+                            </div>
+                            <div class="nav-card" onclick="navigateTo('/Home/MantenimientoContenedores')">
+                                <div class="nav-card-icon"><i class="fas fa-wrench"></i></div>
+                                <div class="nav-card-title">Mantenimiento Contenedores</div>
+                                <div class="nav-card-description">Reparación de contenedores</div>
+                            </div>
+                            <div class="nav-card" onclick="navigateTo('/Home/AsistenciaPersonalContenedores')">
+                                <div class="nav-card-icon"><i class="fas fa-user-clock"></i></div>
+                                <div class="nav-card-title">Asistencia Contenedores</div>
+                                <div class="nav-card-description">Control de personal</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección GPS Pipas -->
+                <div class="subsection">
+                    <div class="subsection-header" onclick="toggleSubsection('pipas')">
+                        <div class="subsection-header-content">
+                            <i class="fas fa-water sub-icon"></i>
+                            <span>GPS Pipas</span>
+                        </div>
+                        <i class="fas fa-chevron-down subsection-toggle" id="toggle-sub-pipas"></i>
+                    </div>
+                    <div class="subsection-content" id="content-sub-pipas">
+                        <div class="navigation-grid">
+                            <div class="nav-card" onclick="navigateTo('/Home/GPSPipas')">
+                                <div class="nav-card-icon"><i class="fas fa-location-arrow"></i></div>
+                                <div class="nav-card-title">GPS Pipas</div>
+                                <div class="nav-card-description">Rastreo de pipas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección General -->
+                <div class="subsection">
+                    <div class="subsection-header" onclick="toggleSubsection('general')">
+                        <div class="subsection-header-content">
+                            <i class="fas fa-cog sub-icon"></i>
+                            <span>Operaciones Generales</span>
+                        </div>
+                        <i class="fas fa-chevron-down subsection-toggle" id="toggle-sub-general"></i>
+                    </div>
+                    <div class="subsection-content" id="content-sub-general">
+                        <div class="navigation-grid">
+                            <div class="nav-card" onclick="navigateTo('/Home/RutasRecoleccion')">
+                                <div class="nav-card-icon"><i class="fas fa-route"></i></div>
+                                <div class="nav-card-title">Rutas de Recolección</div>
+                                <div class="nav-card-description">Planificación de rutas</div>
+                            </div>
+                            <div class="nav-card" onclick="navigateTo('/Home/ReportesRecoleccion')">
+                                <div class="nav-card-icon"><i class="fas fa-file-alt"></i></div>
+                                <div class="nav-card-title">Reportes</div>
+                                <div class="nav-card-description">Informes y estadísticas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <h2 class="section-title">Herramientas Generales</h2>
+        <div class="navigation-grid">
+            <div class="nav-card" onclick="navigateTo('/Home/PanelGeneralJefeAdministracion')">
+                <div class="nav-card-icon"><i class="fas fa-chart-pie"></i></div>
+                <div class="nav-card-title">Panel General de Jefe Administración</div>
+                <div class="nav-card-description">Vista consolidada de todas las áreas</div>
+            </div>
+            <div class="nav-card" onclick="navigateTo('/Home/AlmacenOficios')">
+                <div class="nav-card-icon"><i class="fas fa-file-invoice"></i></div>
+                <div class="nav-card-title">Almacén de Oficios</div>
+                <div class="nav-card-description">Gestión y control de oficios administrativos</div>
+            </div>
+            <div class="nav-card" onclick="navigateTo('/Home/RepositorioPlacas')">
+                <div class="nav-card-icon"><i class="fas fa-truck"></i></div>
+                <div class="nav-card-title">Información de Unidades</div>
+                <div class="nav-card-description">Consulta de vehículos y equipos</div>
+            </div>
+            <div class="nav-card" onclick="navigateTo('/Home/AgendarDirectores')">
+                <div class="nav-card-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="nav-card-title">Agendar Directores de Áreas</div>
+                <div class="nav-card-description">Programación de reuniones y citas</div>
+            </div>
+            <div class="nav-card" onclick="navigateTo('/Home/ReportesGeneralesServiciosPrimarios')">
+                <div class="nav-card-icon"><i class="fas fa-clipboard-list"></i></div>
+                <div class="nav-card-title">Reportes Generales</div>
+                <div class="nav-card-description">Reportes ejecutivos</div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p><strong>Sistema Administrativo - Municipio de Monclova</strong></p>
+        <p>&copy; 2024 H. Ayuntamiento de Monclova. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function toggleArea(areaId) {
+            const content = document.getElementById('content-' + areaId);
+            const toggle = document.getElementById('toggle-' + areaId);
+            const header = toggle.closest('.area-header');
+
+            const isActive = content.classList.contains('active');
+
+            const allContents = document.querySelectorAll('.area-content');
+            const allToggles = document.querySelectorAll('.toggle-icon');
+            const allHeaders = document.querySelectorAll('.area-header');
+
+            for (let i = 0; i < allContents.length; i++) {
+                allContents[i].classList.remove('active');
+            }
+            for (let i = 0; i < allToggles.length; i++) {
+                allToggles[i].classList.remove('active');
+            }
+            for (let i = 0; i < allHeaders.length; i++) {
+                allHeaders[i].classList.remove('active');
+            }
+
+            if (!isActive) {
+                content.classList.add('active');
+                toggle.classList.add('active');
+                header.classList.add('active');
+            }
+        }
+
+        function toggleSubsection(subsectionId) {
+            const content = document.getElementById('content-sub-' + subsectionId);
+            const toggle = document.getElementById('toggle-sub-' + subsectionId);
+
+            const isActive = content.classList.contains('active');
+
+            const allSubContents = document.querySelectorAll('.subsection-content');
+            const allSubToggles = document.querySelectorAll('.subsection-toggle');
+
+            for (let i = 0; i < allSubContents.length; i++) {
+                allSubContents[i].classList.remove('active');
+            }
+            for (let i = 0; i < allSubToggles.length; i++) {
+                allSubToggles[i].classList.remove('active');
+            }
+
+            if (!isActive) {
+                content.classList.add('active');
+                toggle.classList.add('active');
+            }
+        }
+
+        function navigateTo(url) {
+            showNotification('Accediendo al módulo...', 'success');
+            setTimeout(function() {
+                window.location.href = url;
+            }, 500);
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = 'notification ' + type;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(function() {
+                notification.classList.add('show');
+            }, 100);
+
+            setTimeout(function() {
+                notification.classList.remove('show');
+                setTimeout(function() {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 2000);
+        }
+
+        function setupPhotoUpload(elementId, inputId) {
+            const element = document.getElementById(elementId);
+            const input = document.getElementById(inputId);
+
+            element.addEventListener('click', function(e) {
+                e.stopPropagation();
+                input.click();
+            });
+
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        element.innerHTML = '<img src="' + event.target.result + '" alt="Foto">';
+                        showNotification('Imagen actualizada correctamente', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function setupAreaLogo(areaId, inputId) {
+            const element = document.getElementById(areaId);
+            const input = document.getElementById(inputId);
+
+            element.addEventListener('click', function(e) {
+                e.stopPropagation();
+                input.click();
+            });
+
+            input.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        element.innerHTML = '<img src="' + event.target.result + '" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">';
+                        showNotification('Logo de ' + areaId.replace('Logo', '') + ' actualizado', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setupPhotoUpload('municipalLogo', 'logoInput');
+            setupPhotoUpload('userAvatar', 'userPhotoInput');
+
+            setupAreaLogo('bacheoLogo', 'bacheoLogoInput');
+            setupAreaLogo('alumbradoLogo', 'alumbradoLogoInput');
+            setupAreaLogo('recoleccionLogo', 'recoleccionLogoInput');
+
+            setTimeout(function() {
+                showNotification('Sistema inicializado correctamente', 'success');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

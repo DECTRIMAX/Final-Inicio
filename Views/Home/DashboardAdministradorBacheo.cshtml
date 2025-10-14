@@ -1,0 +1,1108 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Bacheo Municipal | Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #16a34a;
+            --secondary: #15803d;
+            --accent: #22c55e;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+            --border: #E5E7EB;
+            --municipal-blue: #1E40AF;
+            --municipal-gold: #D97706;
+            --card-bg: #FFFFFF;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --text-muted: #9CA3AF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            box-shadow: 0 2px 15px rgba(22, 163, 74, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+            .logo:hover {
+                transform: scale(1.05);
+                border-color: rgba(255,255,255,0.4);
+            }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                padding: 5px;
+            }
+
+        .header-info h1 {
+            font-size: clamp(1.4rem, 3.5vw, 2rem);
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-info p {
+            font-size: clamp(0.9rem, 2.2vw, 1rem);
+            opacity: 0.9;
+        }
+
+        .municipal-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            background: rgba(255,255,255,0.15);
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            margin-top: 0.7rem;
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+        }
+
+            .municipal-badge i {
+                color: rgba(255,255,255,0.9);
+                font-size: 1rem;
+            }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border: 3px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+            .user-avatar:hover {
+                background: rgba(255,255,255,0.3);
+                border-color: rgba(255,255,255,0.6);
+                transform: scale(1.05);
+            }
+
+            .user-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .user-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .user-role {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 4rem;
+            background: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .welcome-section::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                background: linear-gradient(90deg, var(--primary), var(--accent));
+            }
+
+        .welcome-title {
+            font-size: clamp(2.2rem, 6vw, 3.5rem);
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .welcome-subtitle {
+            font-size: clamp(1.1rem, 3.5vw, 1.3rem);
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .municipal-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--light), #F3F4F6);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .municipal-seal {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                background: linear-gradient(90deg, var(--primary), var(--accent));
+            }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 40px rgba(22, 163, 74, 0.15);
+            }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .navigation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .nav-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .nav-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 12px 50px rgba(22, 163, 74, 0.2);
+                border-color: var(--primary);
+            }
+
+        .nav-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .nav-description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .info-section::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, var(--primary), var(--accent));
+            }
+
+        .info-title {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        .info-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .info-text {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+            .info-text p {
+                margin-bottom: 1.5rem;
+            }
+
+            .info-text h3 {
+                color: var(--primary);
+                margin-bottom: 1.5rem;
+                font-size: 1.3rem;
+                font-weight: 700;
+            }
+
+        .highlight {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .personnel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .personnel-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .personnel-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 12px 50px rgba(22, 163, 74, 0.15);
+                border-color: var(--primary);
+            }
+
+        .personnel-avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary);
+            margin: 0 auto 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            border: 4px solid var(--primary);
+            box-shadow: 0 8px 30px rgba(22, 163, 74, 0.2);
+        }
+
+            .personnel-avatar:hover {
+                transform: scale(1.05);
+                border-color: var(--accent);
+            }
+
+            .personnel-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 50%;
+            }
+
+        .personnel-name {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .personnel-title {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            text-align: left;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            padding: 0.7rem;
+            background: var(--light);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+            .contact-item:hover {
+                background: rgba(22, 163, 74, 0.05);
+                border-color: var(--primary);
+            }
+
+            .contact-item i {
+                width: 20px;
+                color: var(--primary);
+                font-size: 1.1rem;
+                text-align: center;
+            }
+
+        .municipal-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .municipal-image-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+            .municipal-image-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 40px rgba(22, 163, 74, 0.15);
+                border-color: var(--primary);
+            }
+
+        .municipal-image {
+            width: 100%;
+            height: 180px;
+            border-radius: 16px;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            position: relative;
+        }
+
+            .municipal-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                border-radius: 14px;
+                transition: all 0.3s ease;
+            }
+
+            .municipal-image:hover img {
+                transform: scale(1.05);
+            }
+
+            .municipal-image i {
+                color: var(--primary);
+            }
+
+        .institutional-image {
+            cursor: default !important;
+            position: relative;
+        }
+
+            .institutional-image::after {
+                content: '🛡️';
+                position: absolute;
+                top: 12px;
+                right: 12px;
+                background: linear-gradient(135deg, var(--dark), rgba(31, 41, 55, 0.9));
+                color: white;
+                padding: 6px 10px;
+                border-radius: 12px;
+                font-size: 0.9rem;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            }
+
+        .image-label {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.8rem;
+        }
+
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-info {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .footer-copyright {
+            font-size: 0.8rem;
+            opacity: 0.6;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .notification {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 10000;
+            font-size: 0.9rem;
+            max-width: 300px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+            .notification.success {
+                background: var(--success);
+                color: white;
+            }
+
+            .notification.error {
+                background: var(--danger);
+                color: white;
+            }
+
+            .notification.info {
+                background: var(--primary);
+                color: white;
+            }
+
+            .notification.warning {
+                background: var(--warning);
+                color: white;
+            }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--light);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 4px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: linear-gradient(135deg, var(--secondary), var(--primary));
+            }
+    </style>
+</head>
+<body>
+    <!-- Input oculto para subir foto de usuario -->
+    <input type="file" id="userPhotoInput" style="display: none;" accept="image/*">
+
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo" id="municipalLogo" title="Escudo Municipal">
+                    <img src="~/imagenes/M.png" alt="Escudo Municipal"
+                         onerror="this.style.display='none'; this.parentNode.innerHTML='<i class=\'fas fa-shield-alt\'></i>'">
+                </div>
+                <div class="header-info">
+                    <h1>Sistema de Bacheo Municipal</h1>
+                    <p>Municipio de Monclova, Coahuila</p>
+                    <div class="municipal-badge">
+                        <i class="fas fa-landmark"></i>
+                        <span>Gobierno Municipal 2025-2027</span>
+                    </div>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="user-profile">
+                    <div class="user-avatar" id="userAvatar" title="Angel Flores - Auxiliar de Bacheo">
+                        <img src="~/imagenes/angel.jpeg" alt="Angel Flores"
+                             onerror="this.style.display='none'; this.parentNode.innerHTML='<i class=\'fas fa-user-cog\'></i>'">
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name">Angel Flores</div>
+                        <div class="user-role">Auxiliar de Bacheo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1 class="welcome-title">Sistema de Bacheo Municipal</h1>
+            <p class="welcome-subtitle">
+                Gestiona de manera eficiente el mantenimiento y reparación de calles y avenidas de Monclova con nuestra plataforma integral de control de obras de bacheo
+            </p>
+            <div class="municipal-info">
+                <div class="municipal-seal">
+                    <i class="fas fa-city"></i>
+                </div>
+                <span><strong>Dirección de Servicios Públicos</strong> • Departamento de Bacheo</span>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2 class="info-title">Identidad Corporativa Municipal</h2>
+            <div class="municipal-images">
+                <div class="municipal-image-card">
+                    <div class="municipal-image institutional-image" id="escudoCoahuila" title="Escudo de Coahuila">
+                        <img src="~/imagenes/Coahuila.png" alt="COAHUILA"
+                             onerror="this.style.display='none'; this.parentNode.innerHTML='<i class=\'fas fa-shield-alt\'></i>'">
+                    </div>
+                    <div class="image-label">COAHUILA</div>
+                </div>
+                <div class="municipal-image-card">
+                    <div class="municipal-image institutional-image" id="escudoMonclova" title="Escudo de Monclova">
+                        <img src="~/imagenes/ESCUDO.png" alt="MONCLOVA"
+                             onerror="this.style.display='none'; this.parentNode.innerHTML='<i class=\'fas fa-award\'></i>'">
+                    </div>
+                    <div class="image-label">MONCLOVA</div>
+                </div>
+                <div class="municipal-image-card">
+                    <div class="municipal-image institutional-image" id="logoBacheo" title="Logo de Bacheo">
+                        <img src="~/imagenes/Bacheo.png" alt="BACHEO"
+                             onerror="this.style.display='none'; this.parentNode.innerHTML='<i class=\'fas fa-road\'></i>'">
+                    </div>
+                    <div class="image-label">BACHEO</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-road"></i></div>
+                <div class="stat-number">1,847</div>
+                <div class="stat-label">Baches Reparados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-route"></i></div>
+                <div class="stat-number">385</div>
+                <div class="stat-label">Calles Intervenidas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="stat-number">67</div>
+                <div class="stat-label">Reportes Pendientes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-truck"></i></div>
+                <div class="stat-number">15</div>
+                <div class="stat-label">Unidades Activas</div>
+            </div>
+        </div>
+
+        <div class="navigation-grid">
+            <div class="nav-card" onclick="navigateTo('captura')">
+                <div class="nav-icon"><i class="fas fa-camera"></i></div>
+                <div class="nav-title">Captura Bacheo</div>
+                <div class="nav-description">
+                    Registra incidencias de bacheo, toma fotografías antes y después de las reparaciones y documenta el estado de las vialidades
+                </div>
+            </div>
+
+            <div class="nav-card" onclick="navigateTo('mapa')">
+                <div class="nav-icon"><i class="fas fa-map-marked-alt"></i></div>
+                <div class="nav-title">Mapa de Bacheo</div>
+                <div class="nav-description">
+                    Visualiza la ubicación de todos los baches reportados y reparados con estado actual y prioridad de atención
+                </div>
+            </div>
+
+            <div class="nav-card" onclick="navigateTo('rastreo')">
+                <div class="nav-icon"><i class="fas fa-location-dot"></i></div>
+                <div class="nav-title">Rastreo de Unidades</div>
+                <div class="nav-description">
+                    Monitorea la ubicación y actividad de las unidades de bacheo en tiempo real por GPS durante sus operaciones
+                </div>
+            </div>
+
+            <div class="nav-card" onclick="navigateTo('dashboard')">
+                <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+                <div class="nav-title">Dashboard Bacheo</div>
+                <div class="nav-description">
+                    Accede a estadísticas detalladas, reportes de avance de obras y análisis de productividad por zona
+                </div>
+            </div>
+
+            <div class="nav-card" onclick="navigateTo('reportes')">
+                <div class="nav-icon"><i class="fas fa-file-alt"></i></div>
+                <div class="nav-title">Reportes Ciudadanos</div>
+                <div class="nav-description">
+                    Gestiona y da seguimiento a los reportes de baches enviados por ciudadanos a través del portal web y WhatsApp
+                </div>
+            </div>
+
+            <div class="nav-card" onclick="navigateTo('material')">
+                <div class="nav-icon"><i class="fas fa-cubes"></i></div>
+                <div class="nav-title">Control de Material</div>
+                <div class="nav-description">
+                    Registra y controla el inventario de asfalto, emulsión asfáltica, arena sílica y otros materiales de bacheo
+                </div>
+            </div>
+
+            <div class="nav-card" onclick="navigateTo('asistencia')">
+                <div class="nav-icon"><i class="fas fa-users-gear"></i></div>
+                <div class="nav-title">Asistencia Personal</div>
+                <div class="nav-description">
+                    Control de asistencia, horarios y registros de entrada y salida del personal operativo y técnico
+                </div>
+            </div>
+
+            <div class="nav-card" onclick="navigateTo('programacion')">
+                <div class="nav-icon"><i class="fas fa-calendar-alt"></i></div>
+                <div class="nav-title">Programación de Obras</div>
+                <div class="nav-description">
+                    Programa rutas diarias de bacheo, asigna cuadrillas y optimiza recursos según prioridad y ubicación
+                </div>
+            </div>
+
+            <div class="nav-card" onclick="navigateTo('repositorio')">
+                <div class="nav-icon"><i class="fas fa-id-card"></i></div>
+                <div class="nav-title">Repositorio de Unidades</div>
+                <div class="nav-description">
+                    Consulta información completa de todas las unidades de bacheo, placas, documentación y estado operativo
+                </div>
+            </div>
+
+            <div class="nav-card" onclick="navigateTo('oficios')">
+                <div class="nav-icon"><i class="fas fa-file-invoice"></i></div>
+                <div class="nav-title">Oficios de Bacheo</div>
+                <div class="nav-description">
+                    Generar y enviar oficios de solicitud de materiales, equipos y recursos al almacén municipal
+                </div>
+            </div>
+
+            <div class="nav-card" onclick="navigateTo('citas')">
+                <div class="nav-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="nav-title">Agendar Citas</div>
+                <div class="nav-description">
+                    Programa citas de mantenimiento preventivo y correctivo para unidades de bacheo en el taller mecánico
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-info">
+                <p><strong>Sistema Municipal de Bacheo - Monclova, Coahuila</strong></p>
+                <p>H. Ayuntamiento de Monclova 2024-2027</p>
+                <p><strong>Dirección:</strong> Presidencia Municipal, Blvd. Harold R. Pape 3000, Centro, 25700 Monclova, Coah.</p>
+                <p><strong>Teléfonos:</strong> (866) 634-7891 | Bacheo: (866) 634-2243</p>
+                <p><strong>Email:</strong> bacheo@monclova.gob.mx | servicios.publicos@monclova.gob.mx</p>
+                <p><strong>Reportes Ciudadanos 24/7:</strong> (866) 911-2243 | WhatsApp: (866) 555-BACHEO</p>
+                <p><strong>Portal Web:</strong> www.monclova.gob.mx | Sistema de Bacheo en línea</p>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2024 H. Ayuntamiento de Monclova, Coahuila de Zaragoza. Todos los derechos reservados.</p>
+                <p>Sistema de Bacheo versión 2.1.0 | Última actualización: Diciembre 2024 | Desarrollado por Dirección de Informática Municipal</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const systemData = {
+            version: '2.1.0',
+            lastUpdate: new Date().toLocaleDateString('es-MX'),
+            municipality: 'Monclova, Coahuila de Zaragoza',
+            status: 'Operativo',
+            uptime: '98.7%'
+        };
+
+        function navigateTo(section) {
+            console.log('Navegando a:', section);
+            const sectionNames = {
+                'programacion': 'Programación de Obras de Bacheo',
+                'captura': 'Sistema de Captura de Bacheo',
+                'mapa': 'Mapa Interactivo de Bacheo',
+                'rastreo': 'Sistema de Rastreo GPS de Unidades',
+                'dashboard': 'Dashboard Ejecutivo de Bacheo',
+                'reportes': 'Portal de Reportes Ciudadanos',
+                'material': 'Sistema de Control de Materiales',
+                'asistencia': 'Control de Asistencia de Personal',
+                'repositorio': 'Repositorio de Unidades de Bacheo',
+                'oficios': 'Sistema de Oficios de Bacheo',
+                'citas': 'Agendar Citas de Mantenimiento'
+            };
+
+            const sectionFiles = {
+                'captura': '/Home/CapturaBacheo',
+                'mapa': '/Home/MapaBacheo',
+                'rastreo': '/Home/RastreoBacheo',
+                'dashboard': '/Home/DashboardBacheo',
+                'reportes': '/Home/ReportesBacheo',
+                'material': '/Home/MaterialUtilizadoBacheo',
+                'asistencia': '/Home/AsistenciaPersonalBacheo',
+                'programacion': '/Home/ProgramacionBacheo',
+                'repositorio': '/Home/RepositorioPlacasBacheo',
+                'oficios': '/Home/EnviarOficiosAlmacenBacheo',
+                'citas': '/Home/AgendarCitasMantenimiento'
+            };
+
+            const sectionName = sectionNames[section] || section;
+            showNotification(`Accediendo a: ${sectionName}`, 'info');
+
+            setTimeout(() => {
+                if (sectionFiles[section]) {
+                    window.location.href = sectionFiles[section];
+                } else {
+                    showNotification(`Módulo cargado correctamente`, 'success');
+                }
+            }, 1500);
+        }
+
+        function showNotification(message, type = 'info') {
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notif => {
+                if (document.body.contains(notif)) {
+                    hideNotification(notif);
+                }
+            });
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            const hideDelay = type === 'error' ? 6000 : type === 'success' ? 4000 : 3000;
+
+            notification.addEventListener('click', () => {
+                hideNotification(notification);
+            });
+
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    hideNotification(notification);
+                }
+            }, hideDelay);
+        }
+
+        function hideNotification(notification) {
+            if (notification && document.body.contains(notification)) {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 400);
+            }
+        }
+
+        function protectInstitutionalImages() {
+            const institutionalElements = document.querySelectorAll('.institutional-image');
+            institutionalElements.forEach(element => {
+                element.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showNotification('Esta imagen está protegida por el sistema', 'warning');
+                });
+                element.style.cursor = 'default';
+            });
+        }
+
+        function setupPhotoUpload(avatarId, inputId) {
+            const avatar = document.getElementById(avatarId);
+            const input = document.getElementById(inputId);
+
+            if (!avatar || !input) return;
+
+            avatar.addEventListener('click', () => input.click());
+
+            input.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    if (!file.type.startsWith('image/')) {
+                        showNotification('Por favor selecciona un archivo de imagen válido', 'error');
+                        return;
+                    }
+
+                    if (file.size > 5 * 1024 * 1024) {
+                        showNotification('La imagen es demasiado grande. Máximo 5MB', 'error');
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        avatar.innerHTML = `<img src="${e.target.result}" alt="Foto de perfil">`;
+                        showNotification('Foto actualizada correctamente', 'success');
+                    };
+                    reader.onerror = () => showNotification('Error al cargar la imagen', 'error');
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function updateStats() {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            const baseValues = [
+                { base: 1847, variance: 25 },
+                { base: 385, variance: 12 },
+                { base: 67, variance: 15 },
+                { base: 15, variance: 3 },
+                { base: 3250, variance: 75 },
+                { base: 100, variance: 0, suffix: '%' },
+                { base: 24, variance: 0, suffix: '/7' },
+                { base: 48, variance: 0, suffix: 'hrs' },
+                { base: 88.5, variance: 2, suffix: '%' },
+                { base: 96.3, variance: 1.5, suffix: '%' },
+                { base: 85, variance: 5, suffix: '%' },
+                { base: 42, variance: 3 }
+            ];
+
+            statNumbers.forEach((element, index) => {
+                if (baseValues[index]) {
+                    const config = baseValues[index];
+                    const variation = (Math.random() - 0.5) * config.variance;
+                    const newValue = Math.max(0, config.base + variation);
+
+                    let displayValue;
+                    if (config.suffix === '%') {
+                        displayValue = newValue.toFixed(1) + '%';
+                    } else if (config.suffix === '/7') {
+                        displayValue = Math.round(newValue) + '/7';
+                    } else if (config.suffix === 'hrs') {
+                        displayValue = Math.round(newValue) + 'hrs';
+                    } else {
+                        displayValue = Math.round(newValue).toLocaleString();
+                    }
+
+                    if (element.textContent !== displayValue) {
+                        element.style.transition = 'all 0.3s ease';
+                        element.style.transform = 'scale(1.1)';
+                        element.textContent = displayValue;
+
+                        setTimeout(() => {
+                            element.style.transform = 'scale(1)';
+                        }, 300);
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setupPhotoUpload('userAvatar', 'userPhotoInput');
+            protectInstitutionalImages();
+
+            setTimeout(() => {
+                showNotification('Sistema Municipal de Bacheo inicializado correctamente', 'success');
+            }, 1000);
+
+            console.log('✅ Sistema de Bacheo Municipal de Monclova - Cargado completamente');
+            console.log('Versión:', systemData.version);
+            console.log('Estado: Operativo y Responsivo');
+        });
+
+        setInterval(updateStats, 60000);
+    </script>
+</body>
+</html>

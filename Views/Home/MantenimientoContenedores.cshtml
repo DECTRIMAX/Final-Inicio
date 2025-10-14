@@ -1,0 +1,1191 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Contenedores - Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #43a047 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: clamp(1rem, 3vw, 2rem);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0d3b14 0%, #1b5e20 100%);
+            color: white;
+            padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 4vw, 2.5rem);
+            border-radius: 25px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            margin-bottom: clamp(2rem, 5vw, 3rem);
+            text-align: center;
+            border: 3px solid rgba(102, 187, 106, 0.3);
+        }
+
+            .header h1 {
+                font-size: clamp(2rem, 6vw, 3.5rem);
+                font-weight: 900;
+                margin-bottom: 0.8rem;
+                text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+                letter-spacing: 1px;
+            }
+
+            .header p {
+                font-size: clamp(1.1rem, 3vw, 1.5rem);
+                opacity: 0.95;
+                font-weight: 500;
+            }
+
+        .controls-section {
+            background: rgba(255, 255, 255, 0.98);
+            padding: clamp(2rem, 4vw, 3rem);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+        }
+
+        .search-filter-row {
+            display: flex;
+            gap: clamp(1rem, 2.5vw, 2rem);
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: clamp(220px, 45vw, 320px);
+            position: relative;
+        }
+
+            .search-box input {
+                width: 100%;
+                padding: clamp(1rem, 2.5vw, 1.3rem) clamp(1.2rem, 3.5vw, 1.5rem) clamp(1rem, 2.5vw, 1.3rem) clamp(3rem, 7vw, 3.5rem);
+                border: 3px solid #66bb6a;
+                border-radius: 15px;
+                font-size: clamp(1rem, 2.3vw, 1.1rem);
+                transition: all 0.3s ease;
+                font-weight: 500;
+            }
+
+                .search-box input:focus {
+                    outline: none;
+                    border-color: #2e7d32;
+                    box-shadow: 0 0 0 5px rgba(46, 125, 50, 0.2);
+                    transform: translateY(-2px);
+                }
+
+            .search-box i {
+                position: absolute;
+                left: clamp(1rem, 2.5vw, 1.3rem);
+                top: 50%;
+                transform: translateY(-50%);
+                color: #43a047;
+                font-size: clamp(1.2rem, 3vw, 1.5rem);
+            }
+
+        .filter-select {
+            flex: 1;
+            min-width: clamp(200px, 40vw, 280px);
+        }
+
+            .filter-select select {
+                width: 100%;
+                padding: clamp(1rem, 2.5vw, 1.3rem);
+                border: 3px solid #66bb6a;
+                border-radius: 15px;
+                font-size: clamp(1rem, 2.3vw, 1.1rem);
+                background: white;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-weight: 600;
+                color: #1b5e20;
+            }
+
+                .filter-select select:focus {
+                    outline: none;
+                    border-color: #2e7d32;
+                    box-shadow: 0 0 0 5px rgba(46, 125, 50, 0.2);
+                    transform: translateY(-2px);
+                }
+
+        .btn {
+            padding: clamp(1rem, 2.5vw, 1.3rem) clamp(2rem, 4vw, 2.5rem);
+            border: none;
+            border-radius: 15px;
+            font-size: clamp(1rem, 2.3vw, 1.1rem);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            justify-content: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%);
+            color: white;
+            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
+            flex: 0 1 auto;
+        }
+
+            .btn-add:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(46, 125, 50, 0.5);
+                background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+            }
+
+        .carousel-section {
+            background: rgba(255, 255, 255, 0.98);
+            padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.5rem, 4vw, 2.5rem);
+            border-radius: 25px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+        }
+
+        .carousel-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .carousel-wrapper {
+            overflow: hidden;
+            border-radius: 20px;
+        }
+
+        .carousel-item {
+            opacity: 1;
+            transition: opacity 0.4s ease-in-out;
+        }
+
+        .truck-image-container {
+            width: 100%;
+            height: clamp(350px, 55vw, 550px);
+            background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: clamp(2rem, 4vw, 2.5rem);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 4px solid #66bb6a;
+        }
+
+            .truck-image-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+        .truck-placeholder {
+            font-size: clamp(5rem, 12vw, 9rem);
+            color: #66bb6a;
+        }
+
+        .truck-info {
+            padding: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        .truck-name {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-weight: 900;
+            color: #1b5e20;
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(220px, 45vw, 300px), 1fr));
+            gap: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: clamp(2rem, 4vw, 2.5rem);
+        }
+
+        .info-item {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: clamp(1.2rem, 3vw, 1.5rem);
+            border-radius: 15px;
+            border-left: 5px solid #43a047;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+            .info-item:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            }
+
+        .info-label {
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            color: #2e7d32;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-size: clamp(1rem, 2.3vw, 1.2rem);
+            color: #1b5e20;
+            font-weight: 600;
+        }
+
+        .observations {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: clamp(1.5rem, 3vw, 2rem);
+            border-radius: 15px;
+            border-left: 5px solid #43a047;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+            .observations h3 {
+                font-size: clamp(1.2rem, 3vw, 1.4rem);
+                color: #1b5e20;
+                margin-bottom: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.7rem;
+                font-weight: 800;
+                text-transform: uppercase;
+            }
+
+            .observations p {
+                font-size: clamp(1rem, 2.3vw, 1.1rem);
+                color: #2e7d32;
+                line-height: 1.7;
+                font-weight: 500;
+            }
+
+        .truck-actions {
+            display: flex;
+            gap: clamp(1rem, 2.5vw, 1.5rem);
+            justify-content: center;
+            margin-top: clamp(2rem, 4vw, 2.5rem);
+            flex-wrap: wrap;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
+            color: white;
+            box-shadow: 0 6px 20px rgba(25, 118, 210, 0.4);
+        }
+
+            .btn-edit:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(25, 118, 210, 0.5);
+                background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+            }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #c62828 0%, #e53935 100%);
+            color: white;
+            box-shadow: 0 6px 20px rgba(198, 40, 40, 0.4);
+        }
+
+            .btn-delete:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(198, 40, 40, 0.5);
+                background: linear-gradient(135deg, #b71c1c 0%, #c62828 100%);
+            }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            padding: 0 clamp(0.5rem, 2vw, 1rem);
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
+            color: white;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            width: clamp(50px, 10vw, 60px);
+            height: clamp(50px, 10vw, 60px);
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: clamp(1.5rem, 4vw, 1.8rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: all;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+            .nav-btn:hover {
+                background: linear-gradient(135deg, #0d3b14 0%, #1b5e20 100%);
+                transform: scale(1.15);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: clamp(0.6rem, 2vw, 1rem);
+            margin-top: clamp(2rem, 4vw, 2.5rem);
+            flex-wrap: wrap;
+        }
+
+        .indicator {
+            width: clamp(12px, 2.5vw, 15px);
+            height: clamp(12px, 2.5vw, 15px);
+            border-radius: 50%;
+            background: #c8e6c9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #66bb6a;
+        }
+
+            .indicator.active {
+                background: #2e7d32;
+                transform: scale(1.4);
+                box-shadow: 0 0 10px rgba(46, 125, 50, 0.6);
+            }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: clamp(1rem, 3vw, 2rem);
+        }
+
+            .modal.show {
+                display: flex;
+            }
+
+        .modal-content {
+            background: white;
+            border-radius: 25px;
+            padding: clamp(2rem, 5vw, 3.5rem);
+            max-width: 650px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+            border: 4px solid #66bb6a;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: clamp(2rem, 4vw, 2.5rem);
+        }
+
+            .modal-header h2 {
+                font-size: clamp(1.8rem, 5vw, 2.3rem);
+                color: #1b5e20;
+                font-weight: 900;
+                text-transform: uppercase;
+            }
+
+        .close-modal {
+            background: #f1f8e9;
+            border: 2px solid #66bb6a;
+            font-size: clamp(1.8rem, 5vw, 2.2rem);
+            color: #2e7d32;
+            cursor: pointer;
+            width: clamp(40px, 8vw, 45px);
+            height: clamp(40px, 8vw, 45px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+            .close-modal:hover {
+                background: #2e7d32;
+                color: white;
+                transform: rotate(90deg);
+            }
+
+        .form-group {
+            margin-bottom: clamp(1.5rem, 3.5vw, 2rem);
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 0.7rem;
+                font-weight: 700;
+                color: #1b5e20;
+                font-size: clamp(1rem, 2.3vw, 1.1rem);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                width: 100%;
+                padding: clamp(1rem, 2.5vw, 1.2rem);
+                border: 3px solid #c8e6c9;
+                border-radius: 12px;
+                font-size: clamp(1rem, 2.3vw, 1.1rem);
+                transition: all 0.3s ease;
+                font-family: inherit;
+                font-weight: 500;
+            }
+
+                .form-group input:focus,
+                .form-group textarea:focus,
+                .form-group select:focus {
+                    outline: none;
+                    border-color: #2e7d32;
+                    box-shadow: 0 0 0 5px rgba(46, 125, 50, 0.15);
+                    transform: translateY(-2px);
+                }
+
+            .form-group textarea {
+                resize: vertical;
+                min-height: 120px;
+            }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+            .file-input-wrapper input[type=file] {
+                position: absolute;
+                left: -9999px;
+            }
+
+        .file-input-label {
+            display: block;
+            padding: clamp(1.2rem, 3vw, 1.5rem);
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border: 3px dashed #43a047;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: clamp(1rem, 2.3vw, 1.1rem);
+            font-weight: 600;
+            color: #2e7d32;
+        }
+
+            .file-input-label:hover {
+                background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+                border-color: #2e7d32;
+                transform: scale(1.02);
+            }
+
+        .image-preview {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+            .image-preview img {
+                max-width: 100%;
+                max-height: 300px;
+                border-radius: 15px;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+                border: 3px solid #66bb6a;
+            }
+
+        .modal-actions {
+            display: flex;
+            gap: clamp(1rem, 2.5vw, 1.5rem);
+            margin-top: clamp(2rem, 4vw, 2.5rem);
+        }
+
+        .btn-cancel {
+            background: linear-gradient(135deg, #bdbdbd 0%, #9e9e9e 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            flex: 1;
+        }
+
+            .btn-cancel:hover {
+                background: linear-gradient(135deg, #9e9e9e 0%, #757575 100%);
+                transform: translateY(-3px);
+            }
+
+        .notification {
+            position: fixed;
+            top: clamp(1.5rem, 4vw, 2.5rem);
+            right: clamp(1.5rem, 4vw, 2.5rem);
+            background: white;
+            padding: clamp(1.5rem, 3vw, 2rem);
+            border-radius: 15px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            max-width: clamp(300px, 85vw, 450px);
+            transform: translateX(600px);
+            transition: transform 0.5s ease;
+            border: 3px solid #66bb6a;
+        }
+
+            .notification.show {
+                transform: translateX(0);
+            }
+
+            .notification.success {
+                border-left: 6px solid #2e7d32;
+            }
+
+            .notification.error {
+                border-left: 6px solid #c62828;
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: clamp(4rem, 10vw, 6rem) clamp(1.5rem, 4vw, 2.5rem);
+        }
+
+            .empty-state i {
+                font-size: clamp(5rem, 12vw, 7rem);
+                color: #a5d6a7;
+                margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+            }
+
+            .empty-state h3 {
+                font-size: clamp(1.5rem, 4vw, 2rem);
+                color: #2e7d32;
+                margin-bottom: 1.5rem;
+                font-weight: 800;
+            }
+
+            .empty-state p {
+                font-size: clamp(1.1rem, 3vw, 1.3rem);
+                color: #558b2f;
+                font-weight: 500;
+            }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-dumpster"></i> Sistema de Gestión de Contenedores</h1>
+            <p>Departamento de Contenedores - Municipio de Monclova, Coahuila</p>
+        </div>
+
+        <div class="controls-section">
+            <div class="search-filter-row">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar unidad o placas...">
+                </div>
+                <div class="filter-select">
+                    <select id="typeFilter">
+                        <option value="all">Todos los Tipos</option>
+                        <option value="M">Unidades M</option>
+                        <option value="LIC">Unidades LIC</option>
+                        <option value="LIB">Unidades LIB</option>
+                    </select>
+                </div>
+                <div class="filter-select">
+                    <select id="maintenanceFilter">
+                        <option value="all">Todo Mantenimiento</option>
+                        <option value="pending">Mantenimiento Pendiente</option>
+                        <option value="recent">Mantenimiento Reciente (30 días)</option>
+                        <option value="ok">Sin Mantenimiento Pendiente</option>
+                    </select>
+                </div>
+            </div>
+            <div class="search-filter-row">
+                <div class="filter-select">
+                    <select id="sortFilter">
+                        <option value="name-asc">Ordenar: Nombre (A-Z)</option>
+                        <option value="name-desc">Ordenar: Nombre (Z-A)</option>
+                        <option value="maintenance-recent">Ordenar: Último Mantenimiento (Reciente)</option>
+                        <option value="maintenance-old">Ordenar: Último Mantenimiento (Antiguo)</option>
+                    </select>
+                </div>
+                <button class="btn btn-add" id="addTruckBtn">
+                    <i class="fas fa-plus-circle"></i>
+                    Agregar Unidad
+                </button>
+            </div>
+        </div>
+
+        <div class="carousel-section">
+            <div id="carouselContainer" class="carousel-container"></div>
+        </div>
+    </div>
+
+    <!-- Imágenes ocultas en el body -->
+    <div class="hidden">
+        <img id="img-contenedor" src="~/imagenes/contenedores.jpeg" alt="Camión de Contenedores">
+    </div>
+
+    <div class="modal" id="truckModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Agregar Unidad</h2>
+                <button class="close-modal" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="truckForm">
+                <div class="form-group">
+                    <label for="truckName">Nombre de la Unidad *</label>
+                    <input type="text" id="truckName" required placeholder="Ej: M-05">
+                </div>
+                <div class="form-group">
+                    <label for="truckPlate">Placas</label>
+                    <input type="text" id="truckPlate" placeholder="Ej: COA-M-005">
+                </div>
+                <div class="form-group">
+                    <label for="lastMaintenance">Último Mantenimiento</label>
+                    <input type="date" id="lastMaintenance">
+                </div>
+                <div class="form-group">
+                    <label for="maintenanceType">Tipo de Mantenimiento</label>
+                    <select id="maintenanceType">
+                        <option value="">Sin mantenimiento</option>
+                        <option value="preventivo">Preventivo</option>
+                        <option value="correctivo">Correctivo</option>
+                        <option value="general">General</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="nextMaintenance">Próximo Mantenimiento</label>
+                    <input type="date" id="nextMaintenance">
+                </div>
+                <div class="form-group">
+                    <label for="observations">Observaciones</label>
+                    <textarea id="observations" placeholder="Detalles del recorrido, condición del vehículo, zona asignada, etc."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Fotografía de la Unidad</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="truckImage" accept="image/*">
+                        <label for="truckImage" class="file-input-label">
+                            <i class="fas fa-camera"></i> Seleccionar Fotografía
+                        </label>
+                    </div>
+                    <div class="image-preview" id="imagePreview"></div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-cancel" id="cancelBtn">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-add">
+                        <i class="fas fa-save"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const defaultImage = document.getElementById('img-contenedor').src;
+
+        let trucks = [
+            {
+                id: 1,
+                name: 'M-05',
+                plate: 'COA-M-005',
+                lastMaintenance: '2024-09-20',
+                maintenanceType: 'preventivo',
+                nextMaintenance: '2025-01-20',
+                observations: 'Unidad de contenedores en excelente estado. Sistema hidráulico de carga operando correctamente.',
+                image: defaultImage
+            },
+            {
+                id: 2,
+                name: 'M-06',
+                plate: 'COA-M-006',
+                lastMaintenance: '2024-10-01',
+                maintenanceType: 'general',
+                nextMaintenance: '2025-02-01',
+                observations: 'Servicio general completado. Brazo mecánico de contenedores en óptimas condiciones.',
+                image: defaultImage
+            },
+            {
+                id: 3,
+                name: 'M-11',
+                plate: 'COA-M-011',
+                lastMaintenance: '2024-08-15',
+                maintenanceType: 'correctivo',
+                nextMaintenance: '2024-11-15',
+                observations: 'Reparación de sistema de carga realizada. Pendiente revisión de ganchos.',
+                image: defaultImage
+            },
+            {
+                id: 4,
+                name: 'M-12',
+                plate: 'COA-M-012',
+                lastMaintenance: '2024-09-28',
+                maintenanceType: 'preventivo',
+                nextMaintenance: '2025-01-28',
+                observations: 'Mantenimiento preventivo completo. Sistema de elevación de contenedores operativo.',
+                image: defaultImage
+            },
+            {
+                id: 5,
+                name: 'LIC-40',
+                plate: 'COA-LIC-040',
+                lastMaintenance: '2024-10-10',
+                maintenanceType: 'general',
+                nextMaintenance: '2025-02-10',
+                observations: 'Servicio mayor realizado. Brazo hidráulico y sistema de volteo en perfectas condiciones.',
+                image: defaultImage
+            },
+            {
+                id: 6,
+                name: 'LIC-41',
+                plate: 'COA-LIC-041',
+                lastMaintenance: '2024-09-05',
+                maintenanceType: 'preventivo',
+                nextMaintenance: '2025-01-05',
+                observations: 'Revisión completa de motor y transmisión. Unidad operativa para contenedores de gran capacidad.',
+                image: defaultImage
+            },
+            {
+                id: 7,
+                name: 'LIC-42',
+                plate: 'COA-LIC-042',
+                lastMaintenance: '2024-08-25',
+                maintenanceType: 'correctivo',
+                nextMaintenance: '2024-11-25',
+                observations: 'Reparación de sistema hidráulico completada. Calibración de sensores de carga.',
+                image: defaultImage
+            },
+            {
+                id: 8,
+                name: 'LIB-56',
+                plate: 'COA-LIB-056',
+                lastMaintenance: '2024-10-15',
+                maintenanceType: 'general',
+                nextMaintenance: '2025-02-15',
+                observations: 'Mantenimiento general completado. Sistema de contenedores operando al 100%.',
+                image: defaultImage
+            },
+            {
+                id: 9,
+                name: 'LIB-57',
+                plate: 'COA-LIB-057',
+                lastMaintenance: '2024-09-12',
+                maintenanceType: 'preventivo',
+                nextMaintenance: '2025-01-12',
+                observations: 'Revisión preventiva completada. Frenos y suspensión para carga pesada en excelente estado.',
+                image: defaultImage
+            },
+            {
+                id: 10,
+                name: 'LIB-58',
+                plate: 'COA-LIB-058',
+                lastMaintenance: '2024-10-20',
+                maintenanceType: 'general',
+                nextMaintenance: '2025-02-20',
+                observations: 'Servicio completo realizado. Sistema de elevación y volteo de contenedores óptimo.',
+                image: defaultImage
+            }
+        ];
+
+        let currentIndex = 0;
+        let filteredTrucks = [...trucks];
+        let editingTruckId = null;
+        let isAnimating = false;
+
+        const carouselContainer = document.getElementById('carouselContainer');
+        const searchInput = document.getElementById('searchInput');
+        const typeFilter = document.getElementById('typeFilter');
+        const maintenanceFilter = document.getElementById('maintenanceFilter');
+        const sortFilter = document.getElementById('sortFilter');
+        const addTruckBtn = document.getElementById('addTruckBtn');
+        const truckModal = document.getElementById('truckModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const truckForm = document.getElementById('truckForm');
+        const modalTitle = document.getElementById('modalTitle');
+        const truckImage = document.getElementById('truckImage');
+        const imagePreview = document.getElementById('imagePreview');
+
+        function init() {
+            renderCarousel();
+            searchInput.addEventListener('input', filterTrucks);
+            typeFilter.addEventListener('change', filterTrucks);
+            maintenanceFilter.addEventListener('change', filterTrucks);
+            sortFilter.addEventListener('change', filterTrucks);
+            addTruckBtn.addEventListener('click', openAddModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            truckForm.addEventListener('submit', handleFormSubmit);
+            truckImage.addEventListener('change', handleImagePreview);
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft') prevTruck();
+                if (e.key === 'ArrowRight') nextTruck();
+                if (e.key === 'Escape' && truckModal.classList.contains('show')) closeModal();
+            });
+
+            truckModal.addEventListener('click', function(e) {
+                if (e.target === truckModal) closeModal();
+            });
+        }
+
+        function renderCarousel() {
+            if (filteredTrucks.length === 0) {
+                carouselContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-dumpster"></i>
+                        <h3>No se encontraron unidades</h3>
+                        <p>Intenta ajustar los filtros o agrega una nueva unidad</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const truck = filteredTrucks[currentIndex];
+
+            carouselContainer.innerHTML = `
+                <div class="carousel-wrapper">
+                    <div class="carousel-item active">
+                        <div class="truck-image-container">
+                            ${truck.image ?
+                                `<img src="${truck.image}" alt="${truck.name}">` :
+                                `<i class="fas fa-dumpster truck-placeholder"></i>`
+                            }
+                        </div>
+                        <div class="truck-info">
+                            <h2 class="truck-name">${truck.name}</h2>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-id-card"></i>
+                                        Placas
+                                    </div>
+                                    <div class="info-value">${truck.plate || 'Sin placas'}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-tools"></i>
+                                        Último Mantenimiento
+                                    </div>
+                                    <div class="info-value">${truck.lastMaintenance ? formatDate(truck.lastMaintenance) : 'Sin registro'}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-wrench"></i>
+                                        Tipo
+                                    </div>
+                                    <div class="info-value">${truck.maintenanceType ? capitalizeFirst(truck.maintenanceType) : 'No especificado'}</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">
+                                        <i class="fas fa-calendar-check"></i>
+                                        Próximo Mantenimiento
+                                    </div>
+                                    <div class="info-value">${truck.nextMaintenance ? formatDate(truck.nextMaintenance) : 'No programado'}</div>
+                                </div>
+                            </div>
+                            ${truck.observations ? `
+                                <div class="observations">
+                                    <h3><i class="fas fa-clipboard-list"></i> Observaciones</h3>
+                                    <p>${truck.observations}</p>
+                                </div>
+                            ` : ''}
+                            <div class="truck-actions">
+                                <button class="btn btn-edit" onclick="editTruck(${truck.id})">
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                                <button class="btn btn-delete" onclick="deleteTruck(${truck.id})">
+                                    <i class="fas fa-trash-alt"></i> Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                ${filteredTrucks.length > 1 ? `
+                    <div class="carousel-nav">
+                        <button class="nav-btn" onclick="prevTruck()">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="nav-btn" onclick="nextTruck()">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="carousel-indicators">
+                        ${filteredTrucks.map((_, index) => `
+                            <div class="indicator ${index === currentIndex ? 'active' : ''}"
+                                 onclick="goToSlide(${index})"></div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function nextTruck() {
+            if (isAnimating || filteredTrucks.length <= 1) return;
+            currentIndex = (currentIndex + 1) % filteredTrucks.length;
+            animateTransition();
+        }
+
+        function prevTruck() {
+            if (isAnimating || filteredTrucks.length <= 1) return;
+            currentIndex = (currentIndex - 1 + filteredTrucks.length) % filteredTrucks.length;
+            animateTransition();
+        }
+
+        function goToSlide(index) {
+            if (isAnimating || index === currentIndex) return;
+            currentIndex = index;
+            animateTransition();
+        }
+
+        function animateTransition() {
+            isAnimating = true;
+            const activeItem = document.querySelector('.carousel-item');
+            if (activeItem) {
+                activeItem.style.opacity = '0';
+                setTimeout(() => {
+                    renderCarousel();
+                    isAnimating = false;
+                }, 400);
+            }
+        }
+
+        function filterTrucks() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const typeValue = typeFilter.value;
+            const maintenanceStatus = maintenanceFilter.value;
+            const sortValue = sortFilter.value;
+
+            filteredTrucks = trucks.filter(truck => {
+                const matchesSearch = truck.name.toLowerCase().includes(searchTerm) ||
+                                     (truck.plate && truck.plate.toLowerCase().includes(searchTerm));
+
+                let matchesType = true;
+                if (typeValue !== 'all') {
+                    matchesType = truck.name.startsWith(typeValue);
+                }
+
+                let matchesFilter = true;
+                if (maintenanceStatus === 'pending') {
+                    matchesFilter = truck.nextMaintenance && new Date(truck.nextMaintenance) < new Date();
+                } else if (maintenanceStatus === 'recent') {
+                    const thirtyDaysAgo = new Date();
+                    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                    matchesFilter = truck.lastMaintenance && new Date(truck.lastMaintenance) >= thirtyDaysAgo;
+                } else if (maintenanceStatus === 'ok') {
+                    matchesFilter = !truck.nextMaintenance || new Date(truck.nextMaintenance) >= new Date();
+                }
+
+                return matchesSearch && matchesType && matchesFilter;
+            });
+
+            switch(sortValue) {
+                case 'name-asc':
+                    filteredTrucks.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'name-desc':
+                    filteredTrucks.sort((a, b) => b.name.localeCompare(a.name));
+                    break;
+                case 'maintenance-recent':
+                    filteredTrucks.sort((a, b) => {
+                        const dateA = a.lastMaintenance ? new Date(a.lastMaintenance) : new Date(0);
+                        const dateB = b.lastMaintenance ? new Date(b.lastMaintenance) : new Date(0);
+                        return dateB - dateA;
+                    });
+                    break;
+                case 'maintenance-old':
+                    filteredTrucks.sort((a, b) => {
+                        const dateA = a.lastMaintenance ? new Date(a.lastMaintenance) : new Date(0);
+                        const dateB = b.lastMaintenance ? new Date(b.lastMaintenance) : new Date(0);
+                        return dateA - dateB;
+                    });
+                    break;
+            }
+
+            currentIndex = 0;
+            renderCarousel();
+            showResultsCount();
+        }
+
+        function showResultsCount() {
+            const existingCounter = document.querySelector('.results-counter');
+            if (existingCounter) {
+                existingCounter.remove();
+            }
+
+            if (filteredTrucks.length > 0) {
+                const counter = document.createElement('div');
+                counter.className = 'results-counter';
+                counter.style.cssText = `
+                    text-align: center;
+                    color: #2e7d32;
+                    font-weight: 700;
+                    font-size: clamp(1rem, 2.5vw, 1.2rem);
+                    margin-bottom: 1rem;
+                    padding: 0.8rem;
+                    background: rgba(255, 255, 255, 0.9);
+                    border-radius: 10px;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                `;
+                counter.innerHTML = `
+                    <i class="fas fa-dumpster"></i>
+                    Mostrando ${filteredTrucks.length} de ${trucks.length} unidades
+                `;
+                carouselContainer.parentElement.insertBefore(counter, carouselContainer);
+            }
+        }
+
+        function openAddModal() {
+            editingTruckId = null;
+            modalTitle.textContent = 'Agregar Unidad';
+            truckForm.reset();
+            imagePreview.innerHTML = '';
+            truckModal.classList.add('show');
+        }
+
+        function editTruck(id) {
+            const truck = trucks.find(t => t.id === id);
+            if (!truck) return;
+
+            editingTruckId = id;
+            modalTitle.textContent = 'Editar Unidad';
+
+            document.getElementById('truckName').value = truck.name;
+            document.getElementById('truckPlate').value = truck.plate || '';
+            document.getElementById('lastMaintenance').value = truck.lastMaintenance || '';
+            document.getElementById('maintenanceType').value = truck.maintenanceType || '';
+            document.getElementById('nextMaintenance').value = truck.nextMaintenance || '';
+            document.getElementById('observations').value = truck.observations || '';
+
+            if (truck.image) {
+                imagePreview.innerHTML = `<img src="${truck.image}" alt="Preview">`;
+            } else {
+                imagePreview.innerHTML = '';
+            }
+
+            truckModal.classList.add('show');
+        }
+
+        function deleteTruck(id) {
+            if (confirm('¿Estás seguro de que deseas eliminar esta unidad? Esta acción no se puede deshacer.')) {
+                trucks = trucks.filter(t => t.id !== id);
+                filterTrucks();
+                showNotification('Unidad eliminada correctamente', 'success');
+            }
+        }
+
+        function closeModal() {
+            truckModal.classList.remove('show');
+            truckForm.reset();
+            imagePreview.innerHTML = '';
+            editingTruckId = null;
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            const truckData = {
+                id: editingTruckId || Date.now(),
+                name: document.getElementById('truckName').value,
+                plate: document.getElementById('truckPlate').value,
+                lastMaintenance: document.getElementById('lastMaintenance').value,
+                maintenanceType: document.getElementById('maintenanceType').value,
+                nextMaintenance: document.getElementById('nextMaintenance').value,
+                observations: document.getElementById('observations').value,
+                image: imagePreview.querySelector('img')?.src || defaultImage
+            };
+
+            if (editingTruckId) {
+                const index = trucks.findIndex(t => t.id === editingTruckId);
+                trucks[index] = truckData;
+                showNotification('Unidad actualizada correctamente', 'success');
+            } else {
+                trucks.push(truckData);
+                showNotification('Unidad agregada correctamente', 'success');
+            }
+
+            closeModal();
+            filterTrucks();
+        }
+
+        function handleImagePreview(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5000000) {
+                    showNotification('La imagen es demasiado grande. Máximo 5MB.', 'error');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    imagePreview.innerHTML = `<img src="${event.target.result}" alt="Preview">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"
+                       style="font-size: 1.8rem; color: ${type === 'success' ? '#2e7d32' : '#c62828'};"></i>
+                    <span style="color: #1b5e20; font-weight: 600; font-size: 1.1rem;">${message}</span>
+                </div>
+            `;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 500);
+            }, 3500);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-MX', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function capitalizeFirst(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        init();
+    </script>
+</body>
+</html>

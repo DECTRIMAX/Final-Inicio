@@ -1,0 +1,654 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Atención Servicios Primarios | Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --verde-principal: #16a34a;
+            --verde-secundario: #15803d;
+            --verde-claro: #22c55e;
+            --verde-light: #86efac;
+            --verde-oscuro: #14532d;
+            --pri-white: #FFFFFF;
+            --bg-light: #f0fdf4;
+            --bg-green-light: #d1fae5;
+            --text-dark: #1f2937;
+            --text-gray: #4b5563;
+            --shadow: rgba(22, 163, 74, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-green-light) 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--verde-secundario) 0%, var(--verde-principal) 100%);
+            color: var(--pri-white);
+            padding: clamp(0.5rem, 2vw, 1rem) clamp(0.8rem, 3vw, 1.5rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--verde-oscuro);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            gap: clamp(0.5rem, 2vw, 1.5rem);
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 2vw, 1rem);
+            flex: 1 1 auto;
+            min-width: min(250px, 100%);
+        }
+
+        .logo {
+            width: clamp(65px, 10vw, 80px);
+            height: clamp(65px, 10vw, 80px);
+            background: var(--pri-white);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--verde-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+            .logo:hover {
+                transform: scale(1.05);
+            }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                padding: 5px;
+            }
+
+            .logo i {
+                font-size: clamp(1.8rem, 5vw, 2.5rem);
+                color: var(--verde-principal);
+            }
+
+        .header-info {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+            .header-info h1 {
+                font-size: clamp(1rem, 2.5vw, 1.5rem);
+                font-weight: 800;
+                margin-bottom: 0.2rem;
+                word-wrap: break-word;
+            }
+
+            .header-info p {
+                font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+                opacity: 0.9;
+            }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 0.8rem);
+            flex-shrink: 0;
+        }
+
+        .user-avatar {
+            width: clamp(55px, 9vw, 70px);
+            height: clamp(55px, 9vw, 70px);
+            border-radius: 50%;
+            background: var(--pri-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--verde-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+            .user-avatar:hover {
+                transform: scale(1.05);
+            }
+
+            .user-avatar i {
+                font-size: clamp(1.3rem, 4vw, 2rem);
+                color: var(--verde-principal);
+            }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: clamp(0.75rem, 2vw, 0.95rem);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .user-role {
+            font-size: clamp(0.65rem, 1.5vw, 0.8rem);
+            opacity: 0.9;
+            white-space: nowrap;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2rem);
+            width: 100%;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+            padding: clamp(1rem, 4vw, 2rem) clamp(0.8rem, 3vw, 1.5rem);
+            background: var(--pri-white);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px var(--shadow);
+            border-left: 4px solid var(--verde-principal);
+        }
+
+        .welcome-title {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-weight: 900;
+            color: var(--verde-principal);
+            margin-bottom: 0.5rem;
+            word-wrap: break-word;
+        }
+
+        .welcome-subtitle {
+            font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+            color: var(--text-gray);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+            gap: clamp(0.8rem, 2vw, 1rem);
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+        }
+
+        .stat-card {
+            background: var(--pri-white);
+            padding: clamp(1rem, 3vw, 1.5rem);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border-left: 4px solid var(--verde-principal);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px var(--shadow);
+            }
+
+        .stat-icon {
+            width: clamp(40px, 8vw, 50px);
+            height: clamp(40px, 8vw, 50px);
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--pri-white);
+            margin: 0 auto clamp(0.5rem, 2vw, 1rem);
+        }
+
+        .stat-number {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 900;
+            color: var(--verde-principal);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(1.3rem, 4vw, 2rem);
+            margin: clamp(1.5rem, 3vw, 2rem) 0 clamp(1rem, 2.5vw, 1.5rem) 0;
+            font-weight: 900;
+            padding: clamp(0.8rem, 2vw, 1rem);
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-secundario));
+            color: var(--pri-white);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .area-panel {
+            background: var(--pri-white);
+            border-radius: 15px;
+            margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            border-left: 5px solid var(--verde-principal);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .area-header {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 2vw, 1rem);
+            padding: clamp(1rem, 3vw, 1.5rem);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, var(--bg-light), var(--bg-green-light));
+            flex-wrap: wrap;
+        }
+
+            .area-header:hover {
+                background: linear-gradient(135deg, var(--bg-green-light), var(--verde-light));
+            }
+
+            .area-header.active {
+                background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            }
+
+                .area-header.active .area-icon,
+                .area-header.active .area-title h3,
+                .area-header.active .area-title p,
+                .area-header.active .toggle-icon {
+                    color: var(--pri-white);
+                }
+
+        .area-icon {
+            width: clamp(50px, 10vw, 60px);
+            height: clamp(50px, 10vw, 60px);
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+            color: var(--pri-white);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+            .area-icon img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                padding: 5px;
+            }
+
+        .area-title {
+            flex: 1 1 auto;
+            min-width: min(200px, 100%);
+        }
+
+            .area-title h3 {
+                font-size: clamp(1.1rem, 3vw, 1.5rem);
+                font-weight: 800;
+                color: var(--verde-principal);
+                transition: all 0.3s ease;
+                word-wrap: break-word;
+            }
+
+            .area-title p {
+                font-size: clamp(0.75rem, 2vw, 0.9rem);
+                color: var(--text-gray);
+                transition: all 0.3s ease;
+            }
+
+        .toggle-icon {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--verde-principal);
+            transition: transform 0.3s ease, color 0.3s ease;
+            flex-shrink: 0;
+        }
+
+            .toggle-icon.active {
+                transform: rotate(180deg);
+            }
+
+        .area-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.3s ease;
+            padding: 0 clamp(0.8rem, 3vw, 1.5rem);
+        }
+
+            .area-content.active {
+                max-height: 5000px;
+                padding: clamp(1rem, 3vw, 1.5rem);
+            }
+
+        .navigation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
+            gap: clamp(0.8rem, 2vw, 1rem);
+        }
+
+        .nav-card {
+            background: linear-gradient(135deg, var(--bg-light), var(--pri-white));
+            border-radius: 12px;
+            padding: clamp(1rem, 2.5vw, 1.2rem);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+            .nav-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px var(--shadow);
+                border-color: var(--verde-principal);
+                background: var(--pri-white);
+            }
+
+        .nav-card-icon {
+            width: clamp(40px, 8vw, 45px);
+            height: clamp(40px, 8vw, 45px);
+            background: var(--verde-principal);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            color: var(--pri-white);
+            margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
+        }
+
+        .nav-card-title {
+            font-size: clamp(0.9rem, 2.2vw, 1rem);
+            font-weight: 700;
+            color: var(--verde-oscuro);
+            margin-bottom: 0.5rem;
+            word-wrap: break-word;
+        }
+
+        .nav-card-description {
+            font-size: clamp(0.75rem, 1.8vw, 0.85rem);
+            color: var(--text-gray);
+            line-height: 1.4;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-secundario));
+            color: var(--pri-white);
+            padding: clamp(1rem, 2.5vw, 1.5rem);
+            margin-top: clamp(2rem, 4vw, 3rem);
+            text-align: center;
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+        }
+
+            .footer p {
+                margin: 0.3rem 0;
+            }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: clamp(0.8rem, 2vw, 1rem) clamp(1rem, 2.5vw, 1.5rem);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 10000;
+            max-width: min(300px, 90vw);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+        }
+
+            .notification.success {
+                background: var(--verde-principal);
+                color: white;
+            }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">
+                    <img src="/imagenes/M.png" alt="Monclova" onerror="this.parentElement.innerHTML='<i class=\'fas fa-building\'></i>'">
+                </div>
+                <div class="logo">
+                    <img src="/imagenes/ServiciosPrimarios.png" alt="Servicios Primarios" onerror="this.parentElement.innerHTML='<i class=\'fas fa-tools\'></i>'">
+                </div>
+                <div class="header-info">
+                    <h1>Panel de Atención Servicios Primarios</h1>
+                    <p>Sistema de Reportes y Gestión - Monclova</p>
+                </div>
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="user-info">
+                    <div class="user-name">Miroslava</div>
+                    <div class="user-role">Administrador Servicios</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1 class="welcome-title">Centro de Atención y Reportes</h1>
+            <p class="welcome-subtitle">
+                Gestión centralizada de reportes de Recolección, Alumbrado y Bacheo
+            </p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
+                <div class="stat-number">342</div>
+                <div class="stat-label">Reportes Totales</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-number">89</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-number">253</div>
+                <div class="stat-label">Completados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="stat-number">94%</div>
+                <div class="stat-label">Eficiencia</div>
+            </div>
+        </div>
+
+        <!-- ÁREA DE REPORTES DE RECOLECCIÓN -->
+        <div class="area-panel">
+            <div class="area-header" onclick="toggleArea('recoleccion')">
+                <div class="area-icon">
+                    <img src="/imagenes/RecoleccionDeBasura.png" alt="Recolección" onerror="this.parentElement.innerHTML='<i class=\'fas fa-trash-alt\'></i>'">
+                </div>
+                <div class="area-title">
+                    <h3>Reportes de Recolección</h3>
+                    <p>Gestión de reportes de recolección de residuos</p>
+                </div>
+                <i class="fas fa-chevron-down toggle-icon" id="toggle-recoleccion"></i>
+            </div>
+            <div class="area-content" id="content-recoleccion">
+                <div class="navigation-grid">
+                    <div class="nav-card" onclick="navigateTo('/Home/ReportesRecoleccion')">
+                        <div class="nav-card-icon"><i class="fas fa-file-alt"></i></div>
+                        <div class="nav-card-title">Reportes de Recolección</div>
+                        <div class="nav-card-description">Acceder al panel administrativo de reportes</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ÁREA DE REPORTES DE ALUMBRADO -->
+        <div class="area-panel">
+            <div class="area-header" onclick="toggleArea('alumbrado')">
+                <div class="area-icon">
+                    <img src="/imagenes/Alumbrado.png" alt="Alumbrado" onerror="this.parentElement.innerHTML='<i class=\'fas fa-lightbulb\'></i>'">
+                </div>
+                <div class="area-title">
+                    <h3>Reportes de Alumbrado</h3>
+                    <p>Gestión de reportes de alumbrado público</p>
+                </div>
+                <i class="fas fa-chevron-down toggle-icon" id="toggle-alumbrado"></i>
+            </div>
+            <div class="area-content" id="content-alumbrado">
+                <div class="navigation-grid">
+                    <div class="nav-card" onclick="navigateTo('/Home/ReportesAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-file-alt"></i></div>
+                        <div class="nav-card-title">Reportes de Alumbrado</div>
+                        <div class="nav-card-description">Acceder al panel administrativo de reportes</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/ProgramacionAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <div class="nav-card-title">Programación de Alumbrado</div>
+                        <div class="nav-card-description">Ver programación de horarios y mantenimiento</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ÁREA DE REPORTES DE BACHEO -->
+        <div class="area-panel">
+            <div class="area-header" onclick="toggleArea('bacheo')">
+                <div class="area-icon">
+                    <img src="/imagenes/Bacheo.png" alt="Bacheo" onerror="this.parentElement.innerHTML='<i class=\'fas fa-road\'></i>'">
+                </div>
+                <div class="area-title">
+                    <h3>Reportes de Bacheo</h3>
+                    <p>Gestión de reportes de bacheo y pavimentación</p>
+                </div>
+                <i class="fas fa-chevron-down toggle-icon" id="toggle-bacheo"></i>
+            </div>
+            <div class="area-content" id="content-bacheo">
+                <div class="navigation-grid">
+                    <div class="nav-card" onclick="navigateTo('/Home/ReportesBacheo')">
+                        <div class="nav-card-icon"><i class="fas fa-file-alt"></i></div>
+                        <div class="nav-card-title">Reportes de Bacheo</div>
+                        <div class="nav-card-description">Acceder al panel administrativo de reportes</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/ProgramacionBacheo')">
+                        <div class="nav-card-icon"><i class="fas fa-calendar-check"></i></div>
+                        <div class="nav-card-title">Programación de Obras</div>
+                        <div class="nav-card-description">Ver programación de obras de bacheo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title"><i class="fas fa-clipboard-check"></i> Herramientas de Reportería</h2>
+
+        <div class="navigation-grid">
+            <div class="nav-card" onclick="navigateTo('/Home/ReportesGeneralesServiciosPrimarios')">
+                <div class="nav-card-icon"><i class="fas fa-file-invoice"></i></div>
+                <div class="nav-card-title">Reportes Generales</div>
+                <div class="nav-card-description">Consulta consolidada de todos los departamentos</div>
+            </div>
+            <div class="nav-card" onclick="navigateTo('/Home/GeneradorReportesServiciosPrimarios')">
+                <div class="nav-card-icon"><i class="fas fa-file-export"></i></div>
+                <div class="nav-card-title">Generador de Reportes</div>
+                <div class="nav-card-description">Crear reportes personalizados en PDF/Excel</div>
+            </div>
+            <div class="nav-card" onclick="navigateTo('/Home/DashboardReportesServiciosPrimarios')">
+                <div class="nav-card-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="nav-card-title">Dashboard de Reportes</div>
+                <div class="nav-card-description">Panel de control y análisis de reportes</div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p><strong>Sistema de Atención Servicios Primarios - Municipio de Monclova</strong></p>
+        <p>&copy; 2024 H. Ayuntamiento de Monclova. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function toggleArea(areaId) {
+            const content = document.getElementById('content-' + areaId);
+            const toggle = document.getElementById('toggle-' + areaId);
+            const header = toggle.closest('.area-header');
+
+            const isActive = content.classList.contains('active');
+
+            const allContents = document.querySelectorAll('.area-content');
+            const allToggles = document.querySelectorAll('.toggle-icon');
+            const allHeaders = document.querySelectorAll('.area-header');
+
+            allContents.forEach(c => c.classList.remove('active'));
+            allToggles.forEach(t => t.classList.remove('active'));
+            allHeaders.forEach(h => h.classList.remove('active'));
+
+            if (!isActive) {
+                content.classList.add('active');
+                toggle.classList.add('active');
+                header.classList.add('active');
+            }
+        }
+
+        function navigateTo(url) {
+            showNotification('Accediendo al módulo...', 'success');
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 2000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                showNotification('Sistema inicializado correctamente', 'success');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

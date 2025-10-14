@@ -1,0 +1,1892 @@
+﻿
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Servicios Primarios - Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #DC2626;
+            --primary-light: #F87171;
+            --secondary: #B91C1C;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --bg-primary: #0F0F0F;
+            --bg-secondary: #1A1A1A;
+            --bg-tertiary: #2A2A2A;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B3B3B3;
+            --border: #333333;
+            --card-bg: #1F1F1F;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #111111 0%, #2A2A2A 100%);
+            padding: 1.2rem 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            gap: 1.5rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .logo-container {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--primary);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+            overflow: hidden;
+            padding: 5px;
+        }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                background: white;
+            }
+
+        .header-info h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .header-info p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--primary);
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+        }
+
+            .user-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .nav-toggle {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border: none;
+            border-radius: 50% 0 0 50%;
+            color: white;
+            font-size: 1.15rem;
+            cursor: pointer;
+            box-shadow: -4px 0 20px rgba(220, 38, 38, 0.5);
+            z-index: 1500;
+            transition: all 0.3s ease;
+        }
+
+            .nav-toggle:hover {
+                width: 56px;
+            }
+
+        .nav-panel {
+            position: fixed;
+            right: -350px;
+            top: 0;
+            width: 320px;
+            height: 100vh;
+            background: var(--card-bg);
+            border-left: 2px solid var(--border);
+            box-shadow: -8px 0 40px rgba(0, 0, 0, 0.8);
+            z-index: 1400;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+            padding: 1.5rem 1rem;
+        }
+
+            .nav-panel.open {
+                right: 0;
+            }
+
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1399;
+            display: none;
+        }
+
+            .nav-overlay.show {
+                display: block;
+            }
+
+        .nav-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .nav-logo {
+            width: 48px;
+            height: 48px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .nav-header h3 {
+            font-size: 1.15rem;
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.95rem;
+            margin: 0.5rem 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .nav-item:hover {
+                background: var(--bg-tertiary);
+                border-color: var(--primary);
+                transform: translateX(-5px);
+            }
+
+            .nav-item.active {
+                background: var(--primary);
+                border-color: var(--primary);
+            }
+
+            .nav-item i {
+                font-size: 1.25rem;
+                color: var(--primary);
+                width: 30px;
+                text-align: center;
+            }
+
+            .nav-item.active i,
+            .nav-item.active span {
+                color: white;
+            }
+
+            .nav-item span {
+                font-weight: 600;
+                color: var(--text-secondary);
+                font-size: 0.92rem;
+            }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.9rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .stat-item {
+            background: var(--card-bg);
+            padding: 1.1rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+            .stat-item:hover {
+                border-color: var(--primary);
+                transform: translateY(-3px);
+            }
+
+        .stat-number {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.35rem;
+        }
+
+        .stat-label {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
+
+        .toolbar {
+            background: var(--card-bg);
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 1.2rem;
+            border: 1px solid var(--border);
+        }
+
+        .toolbar-row {
+            display: flex;
+            gap: 0.85rem;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 0.85rem;
+        }
+
+            .toolbar-row:last-child {
+                margin-bottom: 0;
+            }
+
+        .search-box {
+            flex: 1;
+            min-width: 230px;
+            position: relative;
+        }
+
+            .search-box input {
+                width: 100%;
+                padding: 0.75rem 1rem 0.75rem 2.4rem;
+                background: var(--bg-secondary);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                color: var(--text-primary);
+                font-size: 0.88rem;
+            }
+
+            .search-box i {
+                position: absolute;
+                left: 0.85rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--text-secondary);
+            }
+
+        .filter-group {
+            display: flex;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        select {
+            padding: 0.75rem 0.95rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.82rem;
+            cursor: pointer;
+            min-width: 125px;
+            flex: 1;
+        }
+
+        .btn {
+            padding: 0.75rem 1.35rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.88rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4);
+            }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+            .btn-secondary:hover {
+                border-color: var(--primary);
+                color: var(--text-primary);
+            }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            font-size: 1.65rem;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(220, 38, 38, 0.5);
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+            .fab:hover {
+                transform: scale(1.12) rotate(90deg);
+                box-shadow: 0 12px 40px rgba(220, 38, 38, 0.7);
+            }
+
+        .records-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .record-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 1.35rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+            .record-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 12px 40px rgba(220, 38, 38, 0.2);
+                border-color: var(--primary);
+            }
+
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .record-type {
+            padding: 0.38rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .type-bacheo {
+            background: rgba(220, 38, 38, 0.2);
+            color: var(--primary);
+        }
+
+        .type-bordo {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .type-general {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--info);
+        }
+
+        .type-simas {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+
+        .record-folio {
+            background: var(--bg-tertiary);
+            padding: 0.38rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .record-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            margin-top: 0.85rem;
+            padding-top: 0.85rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.87rem;
+            color: var(--text-secondary);
+        }
+
+            .detail-item i {
+                width: 17px;
+                color: var(--primary);
+            }
+
+            .detail-item a {
+                color: var(--info);
+                text-decoration: none;
+            }
+
+                .detail-item a:hover {
+                    text-decoration: underline;
+                }
+
+        .photos-preview {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.85rem;
+            padding-top: 0.85rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .photo-thumb {
+            width: 58px;
+            height: 58px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+            .photo-thumb:hover {
+                transform: scale(1.08);
+                border-color: var(--primary);
+            }
+
+            .photo-thumb img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .record-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.85rem;
+            padding-top: 0.85rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+            .modal.active {
+                display: flex;
+            }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 17px;
+            padding: 1.9rem;
+            max-width: 1050px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid var(--border);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.6rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.15rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.45rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.87rem;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 0.92rem;
+            font-family: inherit;
+        }
+
+            .form-input:focus, .form-select:focus, .form-textarea:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+            }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+            gap: 0.95rem;
+        }
+
+        .calculated-field {
+            background: rgba(220, 38, 38, 0.12) !important;
+            border-color: var(--primary) !important;
+            font-weight: 700;
+            color: var(--primary) !important;
+        }
+
+        .photo-capture-section {
+            margin: 1.25rem 0;
+            padding: 1.25rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .photo-capture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+            gap: 0.95rem;
+            margin-top: 0.95rem;
+        }
+
+        .photo-capture {
+            position: relative;
+            text-align: center;
+            padding: 1.25rem;
+            background: var(--bg-tertiary);
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 165px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .photo-capture:hover {
+                border-color: var(--primary);
+                background: var(--card-bg);
+                transform: translateY(-3px);
+            }
+
+            .photo-capture.has-photo {
+                border-style: solid;
+                border-color: var(--success);
+            }
+
+            .photo-capture img {
+                width: 100%;
+                height: 115px;
+                object-fit: cover;
+                border-radius: 8px;
+                margin-bottom: 0.45rem;
+            }
+
+            .photo-capture i {
+                font-size: 2.3rem;
+                color: var(--text-secondary);
+                margin-bottom: 0.45rem;
+            }
+
+            .photo-capture p {
+                font-size: 0.82rem;
+                color: var(--text-secondary);
+                font-weight: 600;
+            }
+
+        .photo-remove {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 26px;
+            height: 26px;
+            background: var(--danger);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+        }
+
+        .location-section {
+            margin: 1.25rem 0;
+            padding: 1.25rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .location-display {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.95rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--success);
+            border-radius: 10px;
+            margin-top: 0.95rem;
+        }
+
+            .location-display i {
+                color: var(--success);
+                font-size: 1.15rem;
+            }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3.5rem 2rem;
+            color: var(--text-secondary);
+        }
+
+            .empty-state i {
+                font-size: 3.8rem;
+                margin-bottom: 0.9rem;
+                color: var(--border);
+            }
+
+        .notification {
+            position: fixed;
+            top: 1.6rem;
+            right: 1.6rem;
+            padding: 0.95rem 1.4rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            z-index: 3000;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.92rem;
+        }
+
+            .notification.show {
+                display: flex;
+            }
+
+            .notification.success {
+                background: var(--success);
+                color: white;
+            }
+
+            .notification.error {
+                background: var(--danger);
+                color: white;
+            }
+
+            .notification.info {
+                background: var(--info);
+                color: white;
+            }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 1.25rem 0;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-secondary);
+        }
+
+        th {
+            background: var(--bg-tertiary);
+            padding: 0.95rem;
+            text-align: left;
+            font-weight: 700;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+            font-size: 0.82rem;
+        }
+
+        td {
+            padding: 0.75rem 0.95rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.87rem;
+        }
+
+            td input {
+                width: 100%;
+                padding: 0.52rem;
+                background: var(--card-bg);
+                border: 1px solid var(--border);
+                border-radius: 7px;
+                color: var(--text-primary);
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-container">
+                    <div class="logo">
+                        <img src="~/imagenes/bacheo.png" alt="Bacheo" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-road\' style=\'color: var(--primary); font-size: 1.4rem;\'></i>'">
+                    </div>
+                    <div class="logo">
+                        <img src="~/imagenes/LOGO.png" alt="Gobierno" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-landmark\' style=\'color: var(--primary); font-size: 1.4rem;\'></i>'">
+                    </div>
+                </div>
+                <div class="header-info">
+                    <h1>Sistema de Servicios Primarios</h1>
+                    <p>Municipio de Monclova, Coahuila</p>
+                </div>
+            </div>
+            <div class="user-avatar">
+                <img src="~/imagenes/angel.jpeg" alt="Usuario" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-user-cog\' style=\'color: var(--primary); font-size: 1.3rem;\'></i>'">
+            </div>
+        </div>
+    </header>
+
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <button class="nav-toggle" id="navToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="nav-panel" id="navPanel">
+        <div class="nav-header">
+            <div class="nav-logo">
+                <i class="fas fa-road" style="color: var(--primary);"></i>
+            </div>
+            <h3>Navegación</h3>
+        </div>
+        <div class="nav-item active" data-section="captura">
+            <i class="fas fa-edit"></i>
+            <span>Captura</span>
+        </div>
+        <div class="nav-item" data-section="mapa">
+            <i class="fas fa-map-marked-alt"></i>
+            <span>Mapa</span>
+        </div>
+        <div class="nav-item" data-section="rastreo">
+            <i class="fas fa-search-location"></i>
+            <span>Rastreo</span>
+        </div>
+        <div class="nav-item" data-section="dashboard">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+        </div>
+        <div class="nav-item" data-section="reportes">
+            <i class="fas fa-file-alt"></i>
+            <span>Reportes</span>
+        </div>
+        <div class="nav-item" data-section="material">
+            <i class="fas fa-boxes"></i>
+            <span>Material</span>
+        </div>
+        <div class="nav-item" data-section="asistencia">
+            <i class="fas fa-users"></i>
+            <span>Asistencia</span>
+        </div>
+        <div class="nav-item" data-section="programacion">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Programación</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-number" id="totalRecords">0</div>
+                <div class="stat-label">Total Registros</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalArea">0</div>
+                <div class="stat-label">Área Total (m²)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="monthRecords">0</div>
+                <div class="stat-label">Mes Actual</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalSimas">0</div>
+                <div class="stat-label">SIMAS</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalBordos">0</div>
+                <div class="stat-label">Bordos</div>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <div class="toolbar-row">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar por folio, colonia, dirección...">
+                </div>
+                <button class="btn btn-primary" id="exportBtn">
+                    <i class="fas fa-download"></i>
+                    Exportar
+                </button>
+            </div>
+            <div class="toolbar-row">
+                <div class="filter-group">
+                    <select id="filterType">
+                        <option value="all">Todos</option>
+                        <option value="BACHEO">Bacheo</option>
+                        <option value="BORDO">Bordo</option>
+                        <option value="GENERAL">General</option>
+                        <option value="SIMAS">SIMAS</option>
+                    </select>
+                    <select id="filterSector">
+                        <option value="">Sectores</option>
+                    </select>
+                    <select id="filterMonth">
+                        <option value="">Meses</option>
+                    </select>
+                    <select id="filterColony">
+                        <option value="">Colonias</option>
+                    </select>
+                    <select id="filterTruck">
+                        <option value="">Camiones</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div id="recordsContainer" class="records-grid"></div>
+    </div>
+
+    <button class="fab" id="addBtn">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <div id="typeModal" class="modal">
+        <div class="modal-content" style="max-width: 680px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Selecciona el Tipo de Trabajo</h2>
+                <button class="btn btn-secondary" onclick="closeTypeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem;">
+                <div class="photo-capture" onclick="selectWorkType('BACHEO')" style="cursor: pointer;">
+                    <i class="fas fa-road" style="color: var(--primary);"></i>
+                    <p style="color: var(--text-primary); font-weight: 700;">Bacheo</p>
+                </div>
+                <div class="photo-capture" onclick="selectWorkType('BORDO')" style="cursor: pointer;">
+                    <i class="fas fa-layer-group" style="color: var(--warning);"></i>
+                    <p style="color: var(--text-primary); font-weight: 700;">Bordo</p>
+                </div>
+                <div class="photo-capture" onclick="selectWorkType('GENERAL')" style="cursor: pointer;">
+                    <i class="fas fa-tools" style="color: var(--info);"></i>
+                    <p style="color: var(--text-primary); font-weight: 700;">General</p>
+                </div>
+                <div class="photo-capture" onclick="selectWorkType('SIMAS')" style="cursor: pointer;">
+                    <i class="fas fa-water" style="color: var(--success);"></i>
+                    <p style="color: var(--text-primary); font-weight: 700;">SIMAS</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="formModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Nuevo Registro</h2>
+                <button class="btn btn-secondary" onclick="closeFormModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="recordForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Trabajo</label>
+                        <input type="text" class="form-input" id="workTypeDisplay" readonly>
+                    </div>
+                    <div class="form-group" id="folioPersonalGroup" style="display:none;">
+                        <label class="form-label">Folio del Personal</label>
+                        <input type="text" class="form-input" id="personalFolio" placeholder="Ej: SIMAS-2024-001">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Sector</label>
+                        <input type="text" class="form-input" id="sector" required placeholder="Ej: 311">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fecha</label>
+                        <input type="date" class="form-input" id="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Camión</label>
+                        <input type="text" class="form-input" id="truck" required placeholder="Ej: 19">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Colonia</label>
+                    <input type="text" class="form-input" id="colony" required placeholder="Ej: ZONA CENTRO">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Dirección (Calle)</label>
+                    <input type="text" class="form-input" id="street" required placeholder="Ej: CALLE PROGRESO">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Entre qué calles</label>
+                    <input type="text" class="form-input" id="between" required placeholder="Ej: ALTOS IBARRA Y MUTUALISMO">
+                </div>
+
+                <div class="location-section">
+                    <label class="form-label">Ubicación GPS</label>
+                    <button type="button" class="btn btn-success" onclick="captureLocation()">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Capturar Ubicación
+                    </button>
+                    <div id="locationDisplay" class="location-display" style="display:none;">
+                        <i class="fas fa-check-circle"></i>
+                        <span id="locationText"></span>
+                    </div>
+                </div>
+
+                <div class="form-row" id="dimensionsSection">
+                    <div class="form-group">
+                        <label class="form-label">Largo (m)</label>
+                        <input type="number" step="0.01" class="form-input" id="base" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ancho (m)</label>
+                        <input type="number" step="0.01" class="form-input" id="height" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Área (m²)</label>
+                        <input type="number" step="0.01" class="form-input calculated-field" id="area" placeholder="Auto" readonly>
+                    </div>
+                    <div class="form-group" id="thicknessGroup" style="display:none;">
+                        <label class="form-label">Grosor (cm)</label>
+                        <input type="number" step="0.01" class="form-input" id="thickness" placeholder="0.00">
+                    </div>
+                </div>
+
+                <div class="photo-capture-section">
+                    <label class="form-label">Fotografías (Opcional)</label>
+                    <div class="photo-capture-grid" id="normalPhotosSection">
+                        <div class="photo-capture" id="photoCapture1" onclick="triggerPhotoInput('photo1')">
+                            <i class="fas fa-camera"></i>
+                            <p>Antes</p>
+                            <img id="preview1" style="display:none;">
+                            <button type="button" class="photo-remove" id="remove1" style="display:none;" onclick="removePhoto(event, 'photo1')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="photo-capture" id="photoCapture2" onclick="triggerPhotoInput('photo2')">
+                            <i class="fas fa-camera"></i>
+                            <p>Durante</p>
+                            <img id="preview2" style="display:none;">
+                            <button type="button" class="photo-remove" id="remove2" style="display:none;" onclick="removePhoto(event, 'photo2')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="photo-capture" id="photoCapture3" onclick="triggerPhotoInput('photo3')">
+                            <i class="fas fa-camera"></i>
+                            <p>Después</p>
+                            <img id="preview3" style="display:none;">
+                            <button type="button" class="photo-remove" id="remove3" style="display:none;" onclick="removePhoto(event, 'photo3')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="photo-capture-grid" id="simasPhotoSection" style="display:none;">
+                        <div class="photo-capture" id="photoCaptureSimasOnly" onclick="triggerPhotoInput('simasPhoto')" style="grid-column: 1 / -1; max-width: 400px; margin: 0 auto;">
+                            <i class="fas fa-camera"></i>
+                            <p>Fotografía de SIMAS</p>
+                            <img id="previewSimas" style="display:none;">
+                            <button type="button" class="photo-remove" id="removeSimas" style="display:none;" onclick="removePhoto(event, 'simasPhoto')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">¿Cuántos registros con esta dirección?</label>
+                    <input type="number" class="form-input" id="multipleCount" min="1" max="50" value="1" placeholder="1">
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1rem;">
+                    <i class="fas fa-save"></i>
+                    Guardar Registro
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="multipleModal" class="modal">
+        <div class="modal-content" style="max-width: 1150px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Captura Múltiple</h2>
+                <button class="btn btn-secondary" onclick="closeMultipleModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.92rem;">Complete las medidas para cada registro</p>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Largo (m)</th>
+                            <th>Ancho (m)</th>
+                            <th>Área (m²)</th>
+                            <th id="thicknessHeader" style="display:none;">Grosor (cm)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="multipleTableBody"></tbody>
+                </table>
+            </div>
+            <button type="button" class="btn btn-primary" style="width:100%; margin-top:1rem;" onclick="saveMultipleRecords()">
+                <i class="fas fa-save"></i>
+                Guardar Todos
+            </button>
+        </div>
+    </div>
+
+    <input type="file" id="photoInput1" accept="image/*" capture="environment" style="display:none;">
+    <input type="file" id="photoInput2" accept="image/*" capture="environment" style="display:none;">
+    <input type="file" id="photoInput3" accept="image/*" capture="environment" style="display:none;">
+    <input type="file" id="photoInputSimas" accept="image/*" capture="environment" style="display:none;">
+
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText"></span>
+    </div>
+
+    <script>
+        let records = [];
+        let currentWorkType = '';
+        let currentLocation = null;
+        let tempFormData = {};
+        let folioCounter = 1;
+        let editingRecordId = null;
+        const photos = { photo1: '', photo2: '', photo3: '', simasPhoto: '' };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRecords();
+            setupEventListeners();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+            updateStats();
+            populateFilters();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('navToggle').addEventListener('click', toggleNav);
+            document.getElementById('navOverlay').addEventListener('click', closeNav);
+            document.getElementById('addBtn').addEventListener('click', openTypeModal);
+            document.getElementById('recordForm').addEventListener('submit', handleFormSubmit);
+            document.getElementById('searchInput').addEventListener('input', renderRecords);
+            document.getElementById('filterType').addEventListener('change', renderRecords);
+            document.getElementById('filterSector').addEventListener('change', renderRecords);
+            document.getElementById('filterMonth').addEventListener('change', renderRecords);
+            document.getElementById('filterColony').addEventListener('change', renderRecords);
+            document.getElementById('filterTruck').addEventListener('change', renderRecords);
+            document.getElementById('exportBtn').addEventListener('click', exportToCSV);
+
+            document.getElementById('base').addEventListener('input', calculateArea);
+            document.getElementById('height').addEventListener('input', calculateArea);
+
+            document.getElementById('photoInput1').addEventListener('change', function(e) { handlePhotoUpload(e, 'photo1'); });
+            document.getElementById('photoInput2').addEventListener('change', function(e) { handlePhotoUpload(e, 'photo2'); });
+            document.getElementById('photoInput3').addEventListener('change', function(e) { handlePhotoUpload(e, 'photo3'); });
+            document.getElementById('photoInputSimas').addEventListener('change', function(e) { handlePhotoUpload(e, 'simasPhoto'); });
+
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    const section = this.getAttribute('data-section');
+                    handleNavigation(section);
+                });
+            });
+        }
+
+        function toggleNav() {
+            const navPanel = document.getElementById('navPanel');
+            const navOverlay = document.getElementById('navOverlay');
+            navPanel.classList.toggle('open');
+            navOverlay.classList.toggle('show');
+        }
+
+        function closeNav() {
+            const navPanel = document.getElementById('navPanel');
+            const navOverlay = document.getElementById('navOverlay');
+            navPanel.classList.remove('open');
+            navOverlay.classList.remove('show');
+        }
+
+        function handleNavigation(section) {
+            const routes = {
+                'captura': '/Home/CapturaBacheo',
+                'mapa': '/Home/MapaBacheo',
+                'rastreo': '/Home/RastreoBacheo',
+                'dashboard': '/Home/DashboardBacheo',
+                'reportes': '/Home/ReportesBacheo',
+                'material': '/Home/MaterialUtilizadoBacheo',
+                'asistencia': '/Home/AsistenciaPersonalBacheo',
+                'programacion': '/Home/ProgramacionBacheo'
+            };
+
+            const route = routes[section];
+            if (route) {
+                showNotification('Navegando a ' + section, 'info');
+                closeNav();
+                setTimeout(function() {
+                    window.location.href = route;
+                }, 800);
+            }
+        }
+
+        function calculateArea() {
+            const base = parseFloat(document.getElementById('base').value) || 0;
+            const height = parseFloat(document.getElementById('height').value) || 0;
+            const area = (base * height).toFixed(2);
+            document.getElementById('area').value = area;
+        }
+
+        function openTypeModal() {
+            document.getElementById('typeModal').classList.add('active');
+        }
+
+        function closeTypeModal() {
+            document.getElementById('typeModal').classList.remove('active');
+        }
+
+        function selectWorkType(type) {
+            currentWorkType = type;
+            document.getElementById('workTypeDisplay').value = type;
+
+            const folioGroup = document.getElementById('folioPersonalGroup');
+            const thicknessGroup = document.getElementById('thicknessGroup');
+            const dimensionsSection = document.getElementById('dimensionsSection');
+            const normalPhotosSection = document.getElementById('normalPhotosSection');
+            const simasPhotoSection = document.getElementById('simasPhotoSection');
+
+            if (type === 'SIMAS') {
+                folioGroup.style.display = 'block';
+                dimensionsSection.style.display = 'none';
+                normalPhotosSection.style.display = 'none';
+                simasPhotoSection.style.display = 'grid';
+            } else {
+                dimensionsSection.style.display = 'grid';
+                normalPhotosSection.style.display = 'grid';
+                simasPhotoSection.style.display = 'none';
+                if (type === 'BORDO') {
+                    folioGroup.style.display = 'block';
+                    thicknessGroup.style.display = 'block';
+                } else {
+                    folioGroup.style.display = 'none';
+                    thicknessGroup.style.display = 'none';
+                }
+            }
+
+            closeTypeModal();
+            document.getElementById('formModal').classList.add('active');
+        }
+
+        function closeFormModal() {
+            document.getElementById('formModal').classList.remove('active');
+            document.getElementById('recordForm').reset();
+            photos.photo1 = '';
+            photos.photo2 = '';
+            photos.photo3 = '';
+            photos.simasPhoto = '';
+            currentLocation = null;
+            editingRecordId = null;
+            resetPhotoPreviews();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+            document.querySelector('#formModal .modal-title').textContent = 'Nuevo Registro';
+            document.getElementById('locationDisplay').style.display = 'none';
+        }
+
+        function closeMultipleModal() {
+            document.getElementById('multipleModal').classList.remove('active');
+        }
+
+        function captureLocation() {
+            if (!navigator.geolocation) {
+                showNotification('Geolocalización no disponible', 'error');
+                return;
+            }
+
+            showNotification('Obteniendo ubicación...', 'info');
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    currentLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    document.getElementById('locationDisplay').style.display = 'flex';
+                    document.getElementById('locationText').textContent =
+                        'Lat: ' + currentLocation.lat.toFixed(6) + ', Lng: ' + currentLocation.lng.toFixed(6);
+                    showNotification('Ubicación capturada', 'success');
+                },
+                function(error) {
+                    showNotification('Error: ' + error.message, 'error');
+                }
+            );
+        }
+
+        function triggerPhotoInput(photoId) {
+            let inputId;
+            if (photoId === 'photo1') {
+                inputId = 'photoInput1';
+            } else if (photoId === 'photo2') {
+                inputId = 'photoInput2';
+            } else if (photoId === 'photo3') {
+                inputId = 'photoInput3';
+            } else if (photoId === 'simasPhoto') {
+                inputId = 'photoInputSimas';
+            }
+            document.getElementById(inputId).click();
+        }
+
+        function handlePhotoUpload(e, photoId) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                photos[photoId] = event.target.result;
+
+                let previewId, captureId, removeBtnId;
+                if (photoId === 'simasPhoto') {
+                    previewId = 'previewSimas';
+                    captureId = 'photoCaptureSimasOnly';
+                    removeBtnId = 'removeSimas';
+                } else {
+                    const num = photoId.slice(-1);
+                    previewId = 'preview' + num;
+                    captureId = 'photoCapture' + num;
+                    removeBtnId = 'remove' + num;
+                }
+
+                const preview = document.getElementById(previewId);
+                const capture = document.getElementById(captureId);
+                const removeBtn = document.getElementById(removeBtnId);
+
+                preview.src = event.target.result;
+                preview.style.display = 'block';
+                capture.classList.add('has-photo');
+                removeBtn.style.display = 'flex';
+
+                capture.querySelector('i').style.display = 'none';
+                capture.querySelector('p').style.display = 'none';
+
+                showNotification('Imagen cargada', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removePhoto(event, photoId) {
+            event.stopPropagation();
+            photos[photoId] = '';
+
+            let previewId, captureId, removeBtnId, inputId;
+            if (photoId === 'simasPhoto') {
+                previewId = 'previewSimas';
+                captureId = 'photoCaptureSimasOnly';
+                removeBtnId = 'removeSimas';
+                inputId = 'photoInputSimas';
+            } else {
+                const num = photoId.slice(-1);
+                previewId = 'preview' + num;
+                captureId = 'photoCapture' + num;
+                removeBtnId = 'remove' + num;
+                inputId = 'photoInput' + num;
+            }
+
+            const preview = document.getElementById(previewId);
+            const capture = document.getElementById(captureId);
+            const removeBtn = document.getElementById(removeBtnId);
+            const input = document.getElementById(inputId);
+
+            preview.style.display = 'none';
+            preview.src = '';
+            capture.classList.remove('has-photo');
+            removeBtn.style.display = 'none';
+            capture.querySelector('i').style.display = 'block';
+            capture.querySelector('p').style.display = 'block';
+            input.value = '';
+
+            showNotification('Imagen eliminada', 'info');
+        }
+
+        function resetPhotoPreviews() {
+            for (let i = 1; i <= 3; i++) {
+                const preview = document.getElementById('preview' + i);
+                const capture = document.getElementById('photoCapture' + i);
+                const removeBtn = document.getElementById('remove' + i);
+                const input = document.getElementById('photoInput' + i);
+
+                preview.style.display = 'none';
+                preview.src = '';
+                capture.classList.remove('has-photo');
+                removeBtn.style.display = 'none';
+                capture.querySelector('i').style.display = 'block';
+                capture.querySelector('p').style.display = 'block';
+                if (input) input.value = '';
+            }
+
+            const previewSimas = document.getElementById('previewSimas');
+            const captureSimas = document.getElementById('photoCaptureSimasOnly');
+            const removeBtnSimas = document.getElementById('removeSimas');
+            const inputSimas = document.getElementById('photoInputSimas');
+
+            if (previewSimas) {
+                previewSimas.style.display = 'none';
+                previewSimas.src = '';
+                captureSimas.classList.remove('has-photo');
+                removeBtnSimas.style.display = 'none';
+                captureSimas.querySelector('i').style.display = 'block';
+                captureSimas.querySelector('p').style.display = 'block';
+                inputSimas.value = '';
+            }
+        }
+
+        function generateFolio() {
+            const date = new Date();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear().toString().slice(-2);
+            const num = String(folioCounter).padStart(4, '0');
+            folioCounter++;
+            return 'BCH' + month + year + '-' + num;
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+
+            tempFormData = {
+                type: currentWorkType,
+                personalFolio: document.getElementById('personalFolio').value,
+                sector: document.getElementById('sector').value,
+                date: document.getElementById('date').value,
+                colony: document.getElementById('colony').value,
+                street: document.getElementById('street').value,
+                between: document.getElementById('between').value,
+                truck: document.getElementById('truck').value,
+                location: currentLocation,
+                photos: {
+                    photo1: photos.photo1,
+                    photo2: photos.photo2,
+                    photo3: photos.photo3
+                }
+            };
+
+            const count = parseInt(document.getElementById('multipleCount').value) || 1;
+
+            if (count === 1) {
+                const record = {
+                    id: Date.now(),
+                    folio: generateFolio(),
+                    type: tempFormData.type,
+                    personalFolio: tempFormData.personalFolio,
+                    sector: tempFormData.sector,
+                    date: tempFormData.date,
+                    colony: tempFormData.colony,
+                    street: tempFormData.street,
+                    between: tempFormData.between,
+                    truck: tempFormData.truck,
+                    base: document.getElementById('base').value,
+                    height: document.getElementById('height').value,
+                    area: document.getElementById('area').value,
+                    thickness: document.getElementById('thickness').value,
+                    location: tempFormData.location,
+                    photos: tempFormData.photos
+                };
+                records.push(record);
+                saveRecords();
+                showNotification('Registro guardado', 'success');
+                closeFormModal();
+                renderRecords();
+                updateStats();
+                populateFilters();
+            } else {
+                closeFormModal();
+                setupMultipleTable(count);
+                document.getElementById('multipleModal').classList.add('active');
+            }
+        }
+
+        function setupMultipleTable(count) {
+            const tbody = document.getElementById('multipleTableBody');
+            const thicknessHeader = document.getElementById('thicknessHeader');
+
+            thicknessHeader.style.display = currentWorkType === 'BORDO' ? 'table-cell' : 'none';
+
+            tbody.innerHTML = '';
+            for (let i = 1; i <= count; i++) {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td>' + i + '</td>' +
+                    '<td><input type="number" step="0.01" id="base_' + i + '" oninput="calcMultipleArea(' + i + ')" required placeholder="0.00"></td>' +
+                    '<td><input type="number" step="0.01" id="height_' + i + '" oninput="calcMultipleArea(' + i + ')" required placeholder="0.00"></td>' +
+                    '<td><input type="number" step="0.01" id="area_' + i + '" class="calculated-field" readonly placeholder="0.00"></td>' +
+                    (currentWorkType === 'BORDO' ? '<td><input type="number" step="0.01" id="thickness_' + i + '" placeholder="0.00"></td>' : '');
+                tbody.appendChild(row);
+            }
+        }
+
+        function calcMultipleArea(i) {
+            const base = parseFloat(document.getElementById('base_' + i).value) || 0;
+            const height = parseFloat(document.getElementById('height_' + i).value) || 0;
+            document.getElementById('area_' + i).value = (base * height).toFixed(2);
+        }
+
+        function saveMultipleRecords() {
+            const count = document.getElementById('multipleTableBody').children.length;
+            const newRecords = [];
+
+            for (let i = 1; i <= count; i++) {
+                const record = {
+                    id: Date.now() + i,
+                    folio: generateFolio(),
+                    type: tempFormData.type,
+                    personalFolio: tempFormData.personalFolio,
+                    sector: tempFormData.sector,
+                    date: tempFormData.date,
+                    colony: tempFormData.colony,
+                    street: tempFormData.street,
+                    between: tempFormData.between,
+                    truck: tempFormData.truck,
+                    base: document.getElementById('base_' + i).value,
+                    height: document.getElementById('height_' + i).value,
+                    area: document.getElementById('area_' + i).value,
+                    thickness: currentWorkType === 'BORDO' ? document.getElementById('thickness_' + i).value : '',
+                    location: tempFormData.location,
+                    photos: tempFormData.photos
+                };
+                newRecords.push(record);
+            }
+
+            records.push.apply(records, newRecords);
+            saveRecords();
+            showNotification(count + ' registros guardados', 'success');
+            closeMultipleModal();
+            renderRecords();
+            updateStats();
+            populateFilters();
+        }
+
+        function loadRecords() {
+            const saved = localStorage.getItem('serviciosPrimariosRecords');
+            if (saved) {
+                records = JSON.parse(saved);
+                folioCounter = parseInt(localStorage.getItem('folioCounter') || '1');
+            }
+            renderRecords();
+        }
+
+        function saveRecords() {
+            localStorage.setItem('serviciosPrimariosRecords', JSON.stringify(records));
+            localStorage.setItem('folioCounter', folioCounter.toString());
+        }
+
+        function renderRecords() {
+            const container = document.getElementById('recordsContainer');
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const typeFilter = document.getElementById('filterType').value;
+            const sectorFilter = document.getElementById('filterSector').value;
+            const monthFilter = document.getElementById('filterMonth').value;
+            const colonyFilter = document.getElementById('filterColony').value;
+            const truckFilter = document.getElementById('filterTruck').value;
+
+            let filtered = records.filter(function(r) {
+                const matchSearch = !search ||
+                    r.folio.toLowerCase().indexOf(search) > -1 ||
+                    r.colony.toLowerCase().indexOf(search) > -1 ||
+                    r.street.toLowerCase().indexOf(search) > -1 ||
+                    (r.personalFolio && r.personalFolio.toLowerCase().indexOf(search) > -1);
+                const matchType = typeFilter === 'all' || r.type === typeFilter;
+                const matchSector = !sectorFilter || r.sector === sectorFilter;
+                const matchMonth = !monthFilter || r.date.indexOf(monthFilter) === 0;
+                const matchColony = !colonyFilter || r.colony === colonyFilter;
+                const matchTruck = !truckFilter || r.truck === truckFilter;
+                return matchSearch && matchType && matchSector && matchMonth && matchColony && matchTruck;
+            });
+
+            filtered.sort(function(a, b) {
+                return new Date(b.date) - new Date(a.date);
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty-state">' +
+                    '<i class="fas fa-inbox"></i>' +
+                    '<h3>No hay registros</h3>' +
+                    '<p>Agrega tu primer registro</p>' +
+                    '</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(function(r) {
+                let photosHTML = '';
+                if (r.type === 'SIMAS' && r.photos.simasPhoto) {
+                    photosHTML = '<div class="photos-preview">' +
+                        '<div class="photo-thumb" onclick="viewPhoto(\'' + r.photos.simasPhoto + '\')"><img src="' + r.photos.simasPhoto + '"></div>' +
+                        '</div>';
+                } else if (r.photos.photo1 || r.photos.photo2 || r.photos.photo3) {
+                    photosHTML = '<div class="photos-preview">' +
+                        (r.photos.photo1 ? '<div class="photo-thumb" onclick="viewPhoto(\'' + r.photos.photo1 + '\')"><img src="' + r.photos.photo1 + '"></div>' : '') +
+                        (r.photos.photo2 ? '<div class="photo-thumb" onclick="viewPhoto(\'' + r.photos.photo2 + '\')"><img src="' + r.photos.photo2 + '"></div>' : '') +
+                        (r.photos.photo3 ? '<div class="photo-thumb" onclick="viewPhoto(\'' + r.photos.photo3 + '\')"><img src="' + r.photos.photo3 + '"></div>' : '') +
+                        '</div>';
+                }
+
+                return '<div class="record-card">' +
+                    '<div class="record-header">' +
+                    '<span class="record-type type-' + r.type.toLowerCase() + '">' + r.type + '</span>' +
+                    '<span class="record-folio">' + r.folio + '</span>' +
+                    '</div>' +
+                    '<h3 style="font-size:1.08rem; margin-bottom:0.45rem; color:var(--text-primary);">' + r.colony + '</h3>' +
+                    '<p style="color:var(--text-secondary); font-size:0.82rem;">' +
+                    '<i class="fas fa-calendar"></i> ' + formatDate(r.date) +
+                    '</p>' +
+                    '<div class="record-details">' +
+                    '<div class="detail-item"><i class="fas fa-map-pin"></i><span>Sector: ' + r.sector + '</span></div>' +
+                    '<div class="detail-item"><i class="fas fa-road"></i><span>' + r.street + '</span></div>' +
+                    '<div class="detail-item"><i class="fas fa-map-marker-alt"></i><span>Entre: ' + r.between + '</span></div>' +
+                    (r.area ? '<div class="detail-item"><i class="fas fa-ruler-combined"></i><span>' + r.base + 'm × ' + r.height + 'm = ' + r.area + ' m²</span></div>' : '') +
+                    (r.thickness ? '<div class="detail-item"><i class="fas fa-layer-group"></i><span>Grosor: ' + r.thickness + ' cm</span></div>' : '') +
+                    '<div class="detail-item"><i class="fas fa-truck"></i><span>Camión: ' + r.truck + '</span></div>' +
+                    (r.personalFolio ? '<div class="detail-item"><i class="fas fa-id-card"></i><span>' + r.personalFolio + '</span></div>' : '') +
+                    (r.location ? '<div class="detail-item"><i class="fas fa-location-arrow"></i><a href="https://www.google.com/maps?q=' + r.location.lat + ',' + r.location.lng + '" target="_blank">Ver en Maps</a></div>' : '') +
+                    '</div>' +
+                    photosHTML +
+                    '<div class="record-actions">' +
+                    '<button class="btn btn-secondary" onclick="editRecord(' + r.id + ')" style="flex:1;"><i class="fas fa-edit"></i> Editar</button>' +
+                    '<button class="btn btn-danger" onclick="deleteRecord(' + r.id + ')" style="flex:1;"><i class="fas fa-trash"></i> Eliminar</button>' +
+                    '</div>' +
+                    '</div>';
+            }).join('');
+        }
+
+        function viewPhoto(src) {
+            window.open(src, '_blank');
+        }
+
+        function deleteRecord(id) {
+            if (!confirm('¿Eliminar este registro?')) return;
+            records = records.filter(function(r) { return r.id !== id; });
+            saveRecords();
+            showNotification('Registro eliminado', 'success');
+            renderRecords();
+            updateStats();
+            populateFilters();
+        }
+
+        function editRecord(id) {
+            const record = records.find(function(r) { return r.id === id; });
+            if (!record) return;
+
+            editingRecordId = id;
+            currentWorkType = record.type;
+
+            document.getElementById('workTypeDisplay').value = record.type;
+            document.getElementById('personalFolio').value = record.personalFolio || '';
+            document.getElementById('sector').value = record.sector;
+            document.getElementById('date').value = record.date;
+            document.getElementById('colony').value = record.colony;
+            document.getElementById('street').value = record.street;
+            document.getElementById('between').value = record.between;
+            document.getElementById('truck').value = record.truck;
+            document.getElementById('base').value = record.base || '';
+            document.getElementById('height').value = record.height || '';
+            document.getElementById('area').value = record.area || '';
+            document.getElementById('thickness').value = record.thickness || '';
+            document.getElementById('multipleCount').value = 1;
+
+            currentLocation = record.location;
+            if (currentLocation) {
+                document.getElementById('locationDisplay').style.display = 'flex';
+                document.getElementById('locationText').textContent =
+                    'Lat: ' + currentLocation.lat.toFixed(6) + ', Lng: ' + currentLocation.lng.toFixed(6);
+            }
+
+            photos.photo1 = record.photos.photo1 || '';
+            photos.photo2 = record.photos.photo2 || '';
+            photos.photo3 = record.photos.photo3 || '';
+            photos.simasPhoto = record.photos.simasPhoto || '';
+
+            loadPhotoPreviews();
+
+            const folioGroup = document.getElementById('folioPersonalGroup');
+            const thicknessGroup = document.getElementById('thicknessGroup');
+            const dimensionsSection = document.getElementById('dimensionsSection');
+            const normalPhotosSection = document.getElementById('normalPhotosSection');
+            const simasPhotoSection = document.getElementById('simasPhotoSection');
+
+            if (record.type === 'SIMAS') {
+                folioGroup.style.display = 'block';
+                dimensionsSection.style.display = 'none';
+                normalPhotosSection.style.display = 'none';
+                simasPhotoSection.style.display = 'grid';
+            } else {
+                dimensionsSection.style.display = 'grid';
+                normalPhotosSection.style.display = 'grid';
+                simasPhotoSection.style.display = 'none';
+                if (record.type === 'BORDO') {
+                    folioGroup.style.display = 'block';
+                    thicknessGroup.style.display = 'block';
+                } else {
+                    folioGroup.style.display = 'none';
+                    thicknessGroup.style.display = 'none';
+                }
+            }
+
+            document.querySelector('#formModal .modal-title').textContent = 'Editar Registro';
+            document.getElementById('formModal').classList.add('active');
+            showNotification('Modo edición activado', 'info');
+        }
+
+        function loadPhotoPreviews() {
+            if (photos.photo1) {
+                document.getElementById('preview1').src = photos.photo1;
+                document.getElementById('preview1').style.display = 'block';
+                document.getElementById('photoCapture1').classList.add('has-photo');
+                document.getElementById('remove1').style.display = 'flex';
+                document.getElementById('photoCapture1').querySelector('i').style.display = 'none';
+                document.getElementById('photoCapture1').querySelector('p').style.display = 'none';
+            }
+            if (photos.photo2) {
+                document.getElementById('preview2').src = photos.photo2;
+                document.getElementById('preview2').style.display = 'block';
+                document.getElementById('photoCapture2').classList.add('has-photo');
+                document.getElementById('remove2').style.display = 'flex';
+                document.getElementById('photoCapture2').querySelector('i').style.display = 'none';
+                document.getElementById('photoCapture2').querySelector('p').style.display = 'none';
+            }
+            if (photos.photo3) {
+                document.getElementById('preview3').src = photos.photo3;
+                document.getElementById('preview3').style.display = 'block';
+                document.getElementById('photoCapture3').classList.add('has-photo');
+                document.getElementById('remove3').style.display = 'flex';
+                document.getElementById('photoCapture3').querySelector('i').style.display = 'none';
+                document.getElementById('photoCapture3').querySelector('p').style.display = 'none';
+            }
+            if (photos.simasPhoto) {
+                document.getElementById('previewSimas').src = photos.simasPhoto;
+                document.getElementById('previewSimas').style.display = 'block';
+                document.getElementById('photoCaptureSimasOnly').classList.add('has-photo');
+                document.getElementById('removeSimas').style.display = 'flex';
+                document.getElementById('photoCaptureSimasOnly').querySelector('i').style.display = 'none';
+                document.getElementById('photoCaptureSimasOnly').querySelector('p').style.display = 'none';
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('totalRecords').textContent = records.length;
+
+            const totalArea = records.reduce(function(sum, r) {
+                return sum + (parseFloat(r.area) || 0);
+            }, 0);
+            document.getElementById('totalArea').textContent = totalArea.toFixed(2);
+
+            const currentMonth = new Date().toISOString().substring(0, 7);
+            const monthRecords = records.filter(function(r) {
+                return r.date.indexOf(currentMonth) === 0;
+            }).length;
+            document.getElementById('monthRecords').textContent = monthRecords;
+
+            const simasCount = records.filter(function(r) { return r.type === 'SIMAS'; }).length;
+            document.getElementById('totalSimas').textContent = simasCount;
+
+            const bordosCount = records.filter(function(r) { return r.type === 'BORDO'; }).length;
+            document.getElementById('totalBordos').textContent = bordosCount;
+        }
+
+        function populateFilters() {
+            const sectorSelect = document.getElementById('filterSector');
+            const monthSelect = document.getElementById('filterMonth');
+            const colonySelect = document.getElementById('filterColony');
+            const truckSelect = document.getElementById('filterTruck');
+
+            const sectors = records.map(function(r) { return r.sector; }).filter(function(v, i, a) { return a.indexOf(v) === i; }).sort();
+            sectorSelect.innerHTML = '<option value="">Sectores</option>' +
+                sectors.map(function(s) { return '<option value="' + s + '">Sector ' + s + '</option>'; }).join('');
+
+            const colonies = records.map(function(r) { return r.colony; }).filter(function(v, i, a) { return a.indexOf(v) === i; }).sort();
+            colonySelect.innerHTML = '<option value="">Colonias</option>' +
+                colonies.map(function(c) { return '<option value="' + c + '">' + c + '</option>'; }).join('');
+
+            const trucks = records.map(function(r) { return r.truck; }).filter(function(v, i, a) { return a.indexOf(v) === i; }).sort();
+            truckSelect.innerHTML = '<option value="">Camiones</option>' +
+                trucks.map(function(t) { return '<option value="' + t + '">Camión ' + t + '</option>'; }).join('');
+
+            const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+            const year = new Date().getFullYear();
+            monthSelect.innerHTML = '<option value="">Meses</option>' +
+                months.map(function(m, i) {
+                    const monthValue = year + '-' + String(i + 1).padStart(2, '0');
+                    return '<option value="' + monthValue + '">' + m + ' ' + year + '</option>';
+                }).join('');
+        }
+
+        function formatDate(dateStr) {
+            const parts = dateStr.split('-');
+            const year = parts[0];
+            const month = parts[1];
+            const day = parts[2];
+            const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            return day + '-' + months[parseInt(month) - 1] + '-' + year;
+        }
+
+        function exportToCSV() {
+            if (records.length === 0) {
+                showNotification('No hay registros para exportar', 'error');
+                return;
+            }
+
+            let csv = '\uFEFFFOLIO,TIPO,FOLIO PERSONAL,SECTOR,COLONIA,DIRECCIÓN,ENTRE CALLES,FECHA,LARGO,ANCHO,ÁREA,GROSOR,CAMIÓN,LATITUD,LONGITUD\n';
+
+            records.forEach(function(r) {
+                const lat = r.location ? r.location.lat : '';
+                const lng = r.location ? r.location.lng : '';
+                csv += '"' + r.folio + '","' + r.type + '","' + (r.personalFolio || '') + '","' + r.sector + '","' + r.colony + '","' + r.street + '","' + r.between + '","' + r.date + '","' + (r.base || '') + '","' + (r.height || '') + '","' + (r.area || '') + '","' + (r.thickness || '') + '","' + r.truck + '","' + lat + '","' + lng + '"\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'SERVICIOS_PRIMARIOS_' + new Date().toISOString().split('T')[0] + '.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showNotification('Exportados ' + records.length + ' registros', 'success');
+        }
+
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            const icon = notification.querySelector('i');
+
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+            } else {
+                icon.className = 'fas fa-info-circle';
+            }
+
+            notification.className = 'notification ' + type + ' show';
+            text.textContent = message;
+
+            setTimeout(function() {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        console.log('Sistema de Servicios Primarios v3.0 - Iniciado correctamente');
+        console.log('Todos los sistemas operativos');
+    </script>
+</body>
+</html>

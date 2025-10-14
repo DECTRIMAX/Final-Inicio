@@ -1,0 +1,2430 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Interactivo - Alumbrado Público Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #28a745;
+            --secondary: #1e7e34;
+            --accent: #5cb85c;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #06b6d4;
+            --dark: #1f2937;
+            --light: #f0f9f4;
+            --border: #d4edda;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f0f9f4 0%, #e6f7eb 100%);
+            color: #1e293b;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* PANEL DE NAVEGACIÓN */
+        .nav-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #f0f9f4 100%);
+            box-shadow: -10px 0 30px rgba(40, 167, 69, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow: hidden;
+            border-left: 1px solid var(--border);
+        }
+
+            .nav-panel.open {
+                right: 0;
+            }
+
+        .nav-panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 167, 69, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+            .nav-panel-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .nav-toggle {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 20px 25px -5px rgba(40, 167, 69, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-toggle:hover {
+                transform: translateY(-50%) scale(1.1);
+                box-shadow: 0 25px 35px -5px rgba(40, 167, 69, 0.4);
+            }
+
+            .nav-toggle.active {
+                background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+                transform: translateY(-50%) rotate(180deg);
+            }
+
+        .nav-panel-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 2rem 1.5rem;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-panel-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-panel-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-panel-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-panel-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .nav-panel-body {
+            padding: 1.5rem;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            background: #ffffff;
+            border-radius: 12px;
+            color: #334155;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+            .nav-item:hover {
+                background: var(--light);
+                transform: translateX(-5px);
+                border-color: var(--primary);
+                box-shadow: 0 4px 6px -1px rgba(40, 167, 69, 0.1);
+            }
+
+            .nav-item.active {
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+                color: white;
+                border-color: var(--primary);
+            }
+
+        .nav-item-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active .nav-item-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-item:hover .nav-item-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .nav-item-content {
+            flex: 1;
+        }
+
+        .nav-item-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #1e293b;
+        }
+
+        .nav-item.active .nav-item-title {
+            color: white;
+        }
+
+        .nav-item-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .nav-item.active .nav-item-desc {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-item-arrow {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-item-arrow {
+            color: var(--primary);
+            transform: translateX(3px);
+        }
+
+        .nav-item.active .nav-item-arrow {
+            color: white;
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 20px 25px -5px rgba(40, 167, 69, 0.15);
+            z-index: 100;
+            position: relative;
+        }
+
+        .header-content {
+            max-width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-info h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-info p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+            .btn-back:hover {
+                background: rgba(255,255,255,0.3);
+                transform: translateY(-2px);
+            }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: var(--secondary);
+                transform: translateY(-2px);
+            }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+            .btn-success:hover {
+                background: #059669;
+            }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+            .btn-warning:hover {
+                background: #d97706;
+            }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+            .btn-danger:hover {
+                background: #dc2626;
+            }
+
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+        }
+
+        /* MAIN LAYOUT */
+        .main-layout {
+            display: flex;
+            height: calc(100vh - 80px);
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 320px;
+            background: white;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+            .sidebar.collapsed {
+                width: 50px;
+            }
+
+        .sidebar-toggle {
+            position: absolute;
+            top: 50%;
+            right: -12px;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            z-index: 101;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
+            transition: all 0.3s ease;
+        }
+
+            .sidebar-toggle:hover {
+                background: var(--secondary);
+                transform: translateY(-50%) scale(1.1);
+            }
+
+        .sidebar-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed .sidebar-header {
+            padding: 0.8rem 0.3rem;
+            text-align: center;
+        }
+
+        .sidebar-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed .sidebar-title {
+            font-size: 0;
+            margin: 0;
+        }
+
+            .sidebar.collapsed .sidebar-title::after {
+                content: "⚙️";
+                font-size: 1.2rem;
+            }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed .sidebar-content {
+            padding: 0.3rem;
+        }
+
+        .sidebar.collapsed .filters-section,
+        .sidebar.collapsed .stats-section,
+        .sidebar.collapsed .legend-section {
+            display: none;
+        }
+
+        .sidebar.collapsed .sidebar-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .sidebar-collapsed-icon {
+            display: none;
+            width: 32px;
+            height: 32px;
+            background: var(--light);
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+            color: var(--primary);
+            transition: all 0.3s ease;
+            margin-bottom: 0.3rem;
+        }
+
+        .sidebar.collapsed .sidebar-collapsed-icon {
+            display: flex;
+        }
+
+        .sidebar-collapsed-icon:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* FILTROS */
+        .filters-section {
+            margin-bottom: 1rem;
+        }
+
+        .filters-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .form-group {
+            margin-bottom: 0.8rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.75rem;
+            margin-bottom: 0.3rem;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+            .form-input:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.1);
+            }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.4rem;
+            margin-top: 0.8rem;
+        }
+
+            .filter-buttons .btn {
+                flex: 1;
+                padding: 0.4rem 0.6rem;
+                font-size: 0.7rem;
+            }
+
+        /* ESTADÍSTICAS */
+        .stats-section {
+            margin-bottom: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--light), #f8fafc);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.7rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(40, 167, 69, 0.1);
+            }
+
+        .stat-number {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* LEYENDA */
+        .legend-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem;
+            background: #f8fafc;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .legend-item:hover {
+                background: var(--light);
+                border-color: var(--primary);
+            }
+
+        .legend-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: white;
+            font-weight: bold;
+        }
+
+        .legend-text {
+            flex: 1;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .legend-count {
+            font-size: 0.75rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* MAPA */
+        .map-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* CONTROLES DEL MAPA */
+        .map-controls {
+            position: absolute;
+            top: 140px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .map-control-btn {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: var(--primary);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+            .map-control-btn:hover {
+                background: var(--primary);
+                color: white;
+                transform: scale(1.05);
+            }
+
+            .map-control-btn.active {
+                background: var(--primary);
+                color: white;
+            }
+
+        /* GPS STATUS */
+        .gps-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+            .gps-status.active {
+                border-color: var(--success);
+                background: linear-gradient(135deg, #ecfdf5, white);
+            }
+
+            .gps-status.error {
+                border-color: var(--danger);
+                background: linear-gradient(135deg, #fef2f2, white);
+            }
+
+        .gps-icon {
+            font-size: 1.2rem;
+        }
+
+        /* POPUP PERSONALIZADO */
+        .custom-popup {
+            min-width: 280px;
+        }
+
+        .popup-header {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem;
+            margin: -10px -10px 10px -10px;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .popup-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .popup-subtitle {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .popup-content {
+            padding: 0.5rem 0;
+        }
+
+        .popup-field {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .popup-label {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .popup-value {
+            color: #6b7280;
+        }
+
+        .popup-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        /* MODALES */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 167, 69, 0.5);
+            z-index: 2000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(40, 167, 69, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6B7280;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        /* BADGES */
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-instalada {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-reparada {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .badge-mantenimiento {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-defectuosa {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-apagada {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        /* SCROLLBARS */
+        .sidebar-content::-webkit-scrollbar,
+        .nav-panel-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar-content::-webkit-scrollbar-track,
+        .nav-panel-body::-webkit-scrollbar-track {
+            background: var(--light);
+        }
+
+        .sidebar-content::-webkit-scrollbar-thumb,
+        .nav-panel-body::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+
+            .sidebar-content::-webkit-scrollbar-thumb:hover,
+            .nav-panel-body::-webkit-scrollbar-thumb:hover {
+                background: var(--primary);
+            }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay para el panel -->
+    <div class="nav-panel-overlay" id="navPanelOverlay" onclick="toggleNavPanel()"></div>
+
+    <!-- Botón flotante para abrir panel -->
+    <button class="nav-toggle" id="navToggle" onclick="toggleNavPanel()">
+        <i class="fas fa-th-large"></i>
+    </button>
+
+    <!-- Panel de Navegación Lateral -->
+    <div class="nav-panel" id="navPanel">
+        <div class="nav-panel-header">
+            <button class="nav-panel-close" onclick="toggleNavPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="nav-panel-title">Sistema de Alumbrado</h3>
+            <p class="nav-panel-subtitle">Navegación Principal</p>
+        </div>
+
+        <div class="nav-panel-body">
+            <div class="nav-item" onclick="redirectTo('captura')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Captura</div>
+                    <div class="nav-item-desc">Registro de trabajos</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('programacion')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Programación</div>
+                    <div class="nav-item-desc">Horarios y cuadrillas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item active">
+                <div class="nav-item-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Mapa Interactivo</div>
+                    <div class="nav-item-desc">Ubicación de luminarias</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('rastreo')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Rastreo GPS</div>
+                    <div class="nav-item-desc">Monitoreo de unidades</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('dashboard')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Dashboard</div>
+                    <div class="nav-item-desc">Estadísticas y reportes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('reportes')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Reportes</div>
+                    <div class="nav-item-desc">Incidencias ciudadanas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('inventario')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-toolbox"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Material Utilizado</div>
+                    <div class="nav-item-desc">Control de inventario</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('asistencia')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Asistencia</div>
+                    <div class="nav-item-desc">Control de personal</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('oficios')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Oficios a Almacén</div>
+                    <div class="nav-item-desc">Envío de solicitudes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('placas')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Repositorio de Placas</div>
+                    <div class="nav-item-desc">Gestión de placas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-info">
+                <h1>Mapa Interactivo de Alumbrado Público</h1>
+                <p>Sistema de Monitoreo y Control de Luminarias - Monclova, Coahuila</p>
+            </div>
+            <div class="nav-menu">
+                <a href="/Home/DashboardAdministradorAlumbrado" class="btn btn-back">
+                    <i class="fas fa-arrow-left"></i> Dashboard
+                </a>
+                <button class="btn btn-success" onclick="exportarDatos()">
+                    <i class="fas fa-file-excel"></i> Exportar
+                </button>
+                <button class="btn btn-primary" onclick="openModal('nuevaLuminaria')">
+                    <i class="fas fa-plus"></i> Nueva Luminaria
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <!-- Sidebar con filtros -->
+        <div class="sidebar" id="sidebar">
+            <button class="sidebar-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-chevron-left" id="toggleIcon"></i>
+            </button>
+
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">
+                    <i class="fas fa-filter"></i> Filtros y Control
+                </h2>
+            </div>
+
+            <div class="sidebar-content">
+                <!-- Iconos para sidebar colapsado -->
+                <div class="sidebar-collapsed-icon" onclick="expandSidebar()" title="Estadísticas">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="sidebar-collapsed-icon" onclick="expandSidebar()" title="Filtros">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="sidebar-collapsed-icon" onclick="expandSidebar()" title="Leyenda">
+                    <i class="fas fa-map-signs"></i>
+                </div>
+                <div class="sidebar-collapsed-icon" onclick="openModal('nuevaLuminaria')" title="Nueva Luminaria">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="sidebar-collapsed-icon" onclick="centrarMapa()" title="Centrar Mapa">
+                    <i class="fas fa-crosshairs"></i>
+                </div>
+
+                <!-- Estadísticas -->
+                <div class="stats-section">
+                    <h3 class="filters-title">
+                        <i class="fas fa-chart-bar"></i> Estadísticas
+                    </h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalLuminarias">0</div>
+                            <div class="stat-label">Total</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="luminariasFuncionando">0</div>
+                            <div class="stat-label">Funcionando</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="luminariasDefectuosas">0</div>
+                            <div class="stat-label">Defectuosas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="luminariasMantenimiento">0</div>
+                            <div class="stat-label">Mantenimiento</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filtros -->
+                <div class="filters-section">
+                    <h3 class="filters-title">
+                        <i class="fas fa-search"></i> Búsqueda y Filtros
+                    </h3>
+
+                    <div class="form-group">
+                        <label class="form-label">Buscar</label>
+                        <input type="text" class="form-input" id="searchInput" placeholder="Dirección, número, colonia...">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Estado</label>
+                        <select class="form-input" id="estadoFilter">
+                            <option value="">Todos los estados</option>
+                            <option value="instalada">Instalada</option>
+                            <option value="reparada">Reparada</option>
+                            <option value="mantenimiento">Mantenimiento</option>
+                            <option value="defectuosa">Defectuosa</option>
+                            <option value="apagada">Apagada</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Lámpara</label>
+                        <select class="form-input" id="tipoFilter">
+                            <option value="">Todos los tipos</option>
+                            <option value="LED 20W">LED 20W</option>
+                            <option value="LED 30W">LED 30W</option>
+                            <option value="LED 50W">LED 50W</option>
+                            <option value="LED 85W">LED 85W</option>
+                            <option value="LED 100W">LED 100W</option>
+                            <option value="LED 130W">LED 130W</option>
+                            <option value="LED 150W">LED 150W</option>
+                            <option value="VAPOR SODIO">VAPOR SODIO</option>
+                            <option value="REFLECTOR">REFLECTOR</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Colonia</label>
+                        <input type="text" class="form-input" id="coloniaFilter" list="coloniasList" placeholder="Buscar colonia...">
+                        <datalist id="coloniasList">
+                            <option value="CIUDAD DEPORTIVA">
+                            <option value="CENTRO">
+                            <option value="RAMOS ARIZPE">
+                            <option value="GUADALUPE">
+                            <option value="REPÚBLICA">
+                            <option value="SANTA FE">
+                            <option value="CONDESA">
+                        </datalist>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Oficial Responsable</label>
+                        <input type="text" class="form-input" id="oficialFilter" list="oficialesList" placeholder="Buscar oficial...">
+                        <datalist id="oficialesList">
+                            <option value="FIDENCIO FLORES">
+                            <option value="MARIO HERNANDEZ">
+                            <option value="CARLOS RODRIGUEZ">
+                            <option value="LUIS MARTINEZ">
+                        </datalist>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Fecha Desde</label>
+                        <input type="date" class="form-input" id="fechaDesde">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Fecha Hasta</label>
+                        <input type="date" class="form-input" id="fechaHasta">
+                    </div>
+
+                    <div class="filter-buttons">
+                        <button class="btn btn-primary" onclick="aplicarFiltros()">
+                            <i class="fas fa-filter"></i> Aplicar
+                        </button>
+                        <button class="btn btn-warning" onclick="limpiarFiltros()">
+                            <i class="fas fa-eraser"></i> Limpiar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Leyenda -->
+                <div class="legend-section">
+                    <h3 class="filters-title">
+                        <i class="fas fa-map-signs"></i> Leyenda
+                    </h3>
+
+                    <div class="legend-item" onclick="toggleLeyenda('instalada')">
+                        <div class="legend-icon" style="background: #10b981;">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="legend-text">Instalada/Funcionando</div>
+                        <div class="legend-count" id="count-instalada">0</div>
+                    </div>
+
+                    <div class="legend-item" onclick="toggleLeyenda('reparada')">
+                        <div class="legend-icon" style="background: #3b82f6;">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <div class="legend-text">Reparada</div>
+                        <div class="legend-count" id="count-reparada">0</div>
+                    </div>
+
+                    <div class="legend-item" onclick="toggleLeyenda('mantenimiento')">
+                        <div class="legend-icon" style="background: #f59e0b;">
+                            <i class="fas fa-wrench"></i>
+                        </div>
+                        <div class="legend-text">En Mantenimiento</div>
+                        <div class="legend-count" id="count-mantenimiento">0</div>
+                    </div>
+
+                    <div class="legend-item" onclick="toggleLeyenda('defectuosa')">
+                        <div class="legend-icon" style="background: #ef4444;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="legend-text">Defectuosa</div>
+                        <div class="legend-count" id="count-defectuosa">0</div>
+                    </div>
+
+                    <div class="legend-item" onclick="toggleLeyenda('apagada')">
+                        <div class="legend-icon" style="background: #6b7280;">
+                            <i class="fas fa-power-off"></i>
+                        </div>
+                        <div class="legend-text">Apagada</div>
+                        <div class="legend-count" id="count-apagada">0</div>
+                    </div>
+                </div>
+
+                <!-- Acciones rápidas -->
+                <div class="filters-section">
+                    <h3 class="filters-title">
+                        <i class="fas fa-bolt"></i> Acciones Rápidas
+                    </h3>
+
+                    <button class="btn btn-primary" onclick="openModal('nuevaLuminaria')" style="width: 100%; margin-bottom: 0.5rem;">
+                        <i class="fas fa-plus"></i> Nueva Luminaria
+                    </button>
+
+                    <button class="btn btn-success" onclick="buscarUbicacion()" style="width: 100%; margin-bottom: 0.5rem;">
+                        <i class="fas fa-location-arrow"></i> Mi Ubicación GPS
+                    </button>
+
+                    <button class="btn btn-success" onclick="centrarMapa()" style="width: 100%; margin-bottom: 0.5rem;">
+                        <i class="fas fa-crosshairs"></i> Centrar Mapa
+                    </button>
+
+                    <button class="btn btn-warning" onclick="mostrarTodasLuminarias()" style="width: 100%; margin-bottom: 0.5rem;">
+                        <i class="fas fa-eye"></i> Mostrar Todas
+                    </button>
+
+                    <button class="btn btn-danger" onclick="reportarProblema()" style="width: 100%; margin-bottom: 0.5rem;">
+                        <i class="fas fa-bug"></i> Reportar Problema
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mapa -->
+        <div class="map-container">
+            <div id="map" class="map"></div>
+
+            <!-- Controles del mapa -->
+            <div class="map-controls">
+                <button class="map-control-btn" onclick="toggleCrearMode()" id="crearModeBtn" title="Modo Crear">
+                    <i class="fas fa-plus"></i>
+                </button>
+
+                <button class="map-control-btn" onclick="toggleFullscreen()" title="Pantalla Completa">
+                    <i class="fas fa-expand"></i>
+                </button>
+
+                <button class="map-control-btn" onclick="buscarUbicacion()" title="Mi Ubicación GPS">
+                    <i class="fas fa-location-arrow"></i>
+                </button>
+
+                <button class="map-control-btn" onclick="cambiarVistaMapa()" title="Cambiar Vista">
+                    <i class="fas fa-map"></i>
+                </button>
+            </div>
+
+            <!-- GPS Status -->
+            <div class="gps-status" id="gpsStatus">
+                <i class="fas fa-satellite-dish gps-icon" id="gpsIcon"></i>
+                <span id="gpsText">GPS desactivado</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Nueva/Editar Luminaria -->
+    <div class="modal" id="modalLuminaria">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Nueva Luminaria</h3>
+                <button class="close-modal" onclick="closeModal('modalLuminaria')">&times;</button>
+            </div>
+            <form id="luminariaForm">
+                <input type="hidden" id="luminariaId">
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Número de Luminaria</label>
+                        <input type="text" class="form-input" id="numeroLuminaria" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Estado</label>
+                        <select class="form-input" id="estado" required>
+                            <option value="">Seleccionar estado</option>
+                            <option value="instalada">Instalada</option>
+                            <option value="reparada">Reparada</option>
+                            <option value="mantenimiento">Mantenimiento</option>
+                            <option value="defectuosa">Defectuosa</option>
+                            <option value="apagada">Apagada</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Lámpara</label>
+                        <select class="form-input" id="tipoLampara">
+                            <option value="">Seleccionar tipo</option>
+                            <option value="LED 20W">LED 20W</option>
+                            <option value="LED 30W">LED 30W</option>
+                            <option value="LED 50W">LED 50W</option>
+                            <option value="LED 85W">LED 85W</option>
+                            <option value="LED 100W">LED 100W</option>
+                            <option value="LED 130W">LED 130W</option>
+                            <option value="LED 150W">LED 150W</option>
+                            <option value="VAPOR SODIO">VAPOR SODIO</option>
+                            <option value="REFLECTOR">REFLECTOR</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Potencia (W)</label>
+                        <input type="number" class="form-input" id="potencia" min="1" max="1000">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Dirección</label>
+                    <input type="text" class="form-input" id="direccion" placeholder="Dirección completa" required>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Colonia</label>
+                        <input type="text" class="form-input" id="colonia" list="coloniasList" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Entre Calles</label>
+                        <input type="text" class="form-input" id="entreCalles">
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Medidor</label>
+                        <input type="text" class="form-input" id="medidor">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Oficial Responsable</label>
+                        <input type="text" class="form-input" id="oficialResponsable" list="oficialesList">
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Fecha de Instalación</label>
+                        <input type="date" class="form-input" id="fechaInstalacion">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Última Revisión</label>
+                        <input type="date" class="form-input" id="ultimaRevision">
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Latitud</label>
+                        <input type="text" class="form-input" id="latitud" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Longitud</label>
+                        <input type="text" class="form-input" id="longitud" readonly>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" class="btn btn-success" onclick="usarUbicacionActual()" style="width: 100%;">
+                        <i class="fas fa-location-arrow"></i> Usar Mi Ubicación GPS
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Observaciones</label>
+                    <textarea class="form-input form-textarea" id="observaciones" placeholder="Observaciones adicionales..."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-warning" onclick="closeModal('modalLuminaria')">Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="eliminarLuminaria()" id="btnEliminar" style="display: none;">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Confirmar Eliminación -->
+    <div class="modal" id="modalConfirmar">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Confirmar Eliminación</h3>
+                <button class="close-modal" onclick="closeModal('modalConfirmar')">&times;</button>
+            </div>
+            <p style="margin-bottom: 1.5rem;">¿Está seguro de que desea eliminar esta luminaria?</p>
+            <div class="modal-actions">
+                <button class="btn btn-warning" onclick="closeModal('modalConfirmar')">Cancelar</button>
+                <button class="btn btn-danger" onclick="confirmarEliminacion()">
+                    <i class="fas fa-trash"></i> Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+    <script>
+        let navPanelOpen = false;
+        let sidebarCollapsed = false;
+        let map = null;
+        let markers = [];
+        let filteredMarkers = [];
+        let crearModeActive = false;
+        let currentEditId = null;
+        let luminariaIdCounter = 5;
+        let layerGroups = {};
+        let leyendaVisible = {
+            instalada: true,
+            reparada: true,
+            mantenimiento: true,
+            defectuosa: true,
+            apagada: true
+        };
+        let userLocationMarker = null;
+        let gpsWatchId = null;
+        let gpsActive = false;
+        let currentTileLayer = null;
+        let satelliteView = false;
+
+        let luminarias = [
+            {
+                id: 1,
+                numero: "LUM-001",
+                estado: "instalada",
+                tipo: "LED 50W",
+                potencia: 50,
+                direccion: "SEGUNDA #1226",
+                colonia: "CIUDAD DEPORTIVA",
+                entreCalles: "MOCTEZUMA",
+                medidor: "MED-001",
+                oficialResponsable: "FIDENCIO FLORES",
+                fechaInstalacion: "2024-12-01",
+                ultimaRevision: "2025-01-15",
+                latitud: 26.9087,
+                longitud: -101.4217,
+                observaciones: "Funcionando correctamente"
+            },
+            {
+                id: 2,
+                numero: "LUM-002",
+                estado: "defectuosa",
+                tipo: "LED 30W",
+                potencia: 30,
+                direccion: "MAXTLA #1522",
+                colonia: "CIUDAD DEPORTIVA",
+                entreCalles: "TIZOC Y TEZOZOMOC",
+                medidor: "MED-002",
+                oficialResponsable: "MARIO HERNANDEZ",
+                fechaInstalacion: "2024-11-15",
+                ultimaRevision: "2025-01-10",
+                latitud: 26.9100,
+                longitud: -101.4200,
+                observaciones: "Requiere cambio de foco"
+            },
+            {
+                id: 3,
+                numero: "LUM-003",
+                estado: "mantenimiento",
+                tipo: "LED 85W",
+                potencia: 85,
+                direccion: "HIDALGO #890",
+                colonia: "CENTRO",
+                entreCalles: "JUÁREZ Y MORELOS",
+                medidor: "MED-003",
+                oficialResponsable: "CARLOS RODRIGUEZ",
+                fechaInstalacion: "2024-10-20",
+                ultimaRevision: "2025-01-12",
+                latitud: 26.9120,
+                longitud: -101.4180,
+                observaciones: "En proceso de mantenimiento preventivo"
+            },
+            {
+                id: 4,
+                numero: "LUM-004",
+                estado: "reparada",
+                tipo: "LED 100W",
+                potencia: 100,
+                direccion: "REVOLUCIÓN #456",
+                colonia: "REPÚBLICA",
+                entreCalles: "INDEPENDENCIA",
+                medidor: "MED-004",
+                oficialResponsable: "LUIS MARTINEZ",
+                fechaInstalacion: "2024-09-10",
+                ultimaRevision: "2025-01-18",
+                latitud: 26.9110,
+                longitud: -101.4190,
+                observaciones: "Recientemente reparada"
+            },
+            {
+                id: 5,
+                numero: "LUM-005",
+                estado: "apagada",
+                tipo: "VAPOR SODIO",
+                potencia: 150,
+                direccion: "CONSTITUCIÓN #123",
+                colonia: "GUADALUPE",
+                entreCalles: "ALDAMA",
+                medidor: "MED-005",
+                oficialResponsable: "FIDENCIO FLORES",
+                fechaInstalacion: "2024-08-05",
+                ultimaRevision: "2025-01-08",
+                latitud: 26.9130,
+                longitud: -101.4160,
+                observaciones: "Apagada por problema eléctrico"
+            }
+        ];
+
+        const iconosEstado = {
+            instalada: {
+                color: '#10b981',
+                icon: 'fas fa-lightbulb',
+                html: '<i class="fas fa-lightbulb"></i>'
+            },
+            reparada: {
+                color: '#3b82f6',
+                icon: 'fas fa-tools',
+                html: '<i class="fas fa-tools"></i>'
+            },
+            mantenimiento: {
+                color: '#f59e0b',
+                icon: 'fas fa-wrench',
+                html: '<i class="fas fa-wrench"></i>'
+            },
+            defectuosa: {
+                color: '#ef4444',
+                icon: 'fas fa-exclamation-triangle',
+                html: '<i class="fas fa-exclamation-triangle"></i>'
+            },
+            apagada: {
+                color: '#6b7280',
+                icon: 'fas fa-power-off',
+                html: '<i class="fas fa-power-off"></i>'
+            }
+        };
+
+        function toggleNavPanel() {
+            const navPanel = document.getElementById('navPanel');
+            const overlay = document.getElementById('navPanelOverlay');
+            const toggleBtn = document.getElementById('navToggle');
+
+            navPanelOpen = !navPanelOpen;
+
+            if (navPanelOpen) {
+                navPanel.classList.add('open');
+                overlay.classList.add('active');
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '<i class="fas fa-times"></i>';
+                document.body.style.overflow = 'hidden';
+            } else {
+                navPanel.classList.remove('open');
+                overlay.classList.remove('active');
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '<i class="fas fa-th-large"></i>';
+                document.body.style.overflow = '';
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleIcon = document.getElementById('toggleIcon');
+
+            sidebarCollapsed = !sidebarCollapsed;
+
+            if (sidebarCollapsed) {
+                sidebar.classList.add('collapsed');
+                toggleIcon.className = 'fas fa-chevron-right';
+            } else {
+                sidebar.classList.remove('collapsed');
+                toggleIcon.className = 'fas fa-chevron-left';
+            }
+
+            setTimeout(() => {
+                if (map) {
+                    map.invalidateSize();
+                }
+            }, 300);
+        }
+
+        function expandSidebar() {
+            if (sidebarCollapsed) {
+                toggleSidebar();
+            }
+        }
+
+        function redirectTo(module) {
+            if (navPanelOpen) toggleNavPanel();
+
+            const urls = {
+                'captura': '/Home/CapturaAlumbrado',
+                'programacion': '/Home/ProgramacionAlumbrado',
+                'rastreo': '/Home/RastreoAlumbrado',
+                'dashboard': '/Home/DashboardAlumbrado',
+                'reportes': '/Home/ReportesAlumbrado',
+                'inventario': '/Home/MaterialUtilizadoAlumbrado',
+                'asistencia': '/Home/AsistenciaPersonalAlumbrado',
+                'oficios': '/Home/EnviarOficiosAlmacenAlumbrado',
+                'placas': '/Home/RepositorioPlacasAlumbrado'
+            };
+
+            if (urls[module]) {
+                showNotification(`Navegando a ${module}...`, 'info');
+                setTimeout(() => {
+                    window.location.href = urls[module];
+                }, 300);
+            }
+        }
+
+        function initMap() {
+            const monclovaCoords = [26.9087, -101.4217];
+
+            map = L.map('map').setView(monclovaCoords, 13);
+
+            currentTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            Object.keys(iconosEstado).forEach(estado => {
+                layerGroups[estado] = L.layerGroup().addTo(map);
+            });
+
+            map.on('click', function(e) {
+                if (crearModeActive) {
+                    crearLuminariaEnPunto(e.latlng);
+                }
+            });
+
+            cargarLuminariasEnMapa();
+            iniciarSeguimientoGPS();
+        }
+
+        function iniciarSeguimientoGPS() {
+            if (!navigator.geolocation) {
+                updateGPSStatus('error', 'GPS no disponible');
+                showNotification('Tu navegador no soporta geolocalización', 'error');
+                return;
+            }
+
+            updateGPSStatus('info', 'Solicitando permisos GPS...');
+            showNotification('Solicitando acceso a tu ubicación...', 'info');
+
+            const options = {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            };
+
+            gpsWatchId = navigator.geolocation.watchPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    const accuracy = position.coords.accuracy;
+
+                    gpsActive = true;
+                    updateGPSStatus('active', `GPS Activo (±${Math.round(accuracy)}m)`);
+
+                    if (userLocationMarker) {
+                        userLocationMarker.setLatLng([lat, lng]);
+                    } else {
+                        userLocationMarker = L.marker([lat, lng], {
+                            icon: L.divIcon({
+                                html: `<div style="
+                                    position: relative;
+                                    width: 20px;
+                                    height: 20px;
+                                ">
+                                    <div style="
+                                        position: absolute;
+                                        width: 20px;
+                                        height: 20px;
+                                        background: #10b981;
+                                        border-radius: 50%;
+                                        border: 3px solid white;
+                                        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                                        z-index: 2;
+                                    "></div>
+                                    <div style="
+                                        position: absolute;
+                                        width: ${accuracy}px;
+                                        height: ${accuracy}px;
+                                        left: ${10 - accuracy/2}px;
+                                        top: ${10 - accuracy/2}px;
+                                        background: rgba(16, 185, 129, 0.2);
+                                        border: 2px solid #10b981;
+                                        border-radius: 50%;
+                                        z-index: 1;
+                                    "></div>
+                                </div>`,
+                                className: 'user-location-marker',
+                                iconSize: [20, 20],
+                                iconAnchor: [10, 10]
+                            })
+                        }).addTo(map);
+
+                        userLocationMarker.bindPopup('Tu ubicación actual<br>Precisión: ±' + Math.round(accuracy) + 'm');
+
+                        if (!localStorage.getItem('gpsInitialNotificationShown')) {
+                            showNotification('¡GPS activado exitosamente!', 'success');
+                            localStorage.setItem('gpsInitialNotificationShown', 'true');
+                        }
+                    }
+                },
+                function(error) {
+                    gpsActive = false;
+                    let mensaje = 'Error GPS: ';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            mensaje += 'Permisos denegados';
+                            updateGPSStatus('error', 'Permisos GPS denegados');
+                            showNotification('Debes permitir el acceso a tu ubicación', 'error');
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            mensaje += 'Ubicación no disponible';
+                            updateGPSStatus('error', 'GPS no disponible');
+                            break;
+                        case error.TIMEOUT:
+                            mensaje += 'Tiempo agotado';
+                            updateGPSStatus('error', 'GPS timeout');
+                            break;
+                        default:
+                            mensaje += 'Error desconocido';
+                            updateGPSStatus('error', 'Error GPS');
+                            break;
+                    }
+                    console.error(mensaje, error);
+                },
+                options
+            );
+        }
+
+        function updateGPSStatus(status, text) {
+            const gpsStatus = document.getElementById('gpsStatus');
+            const gpsIcon = document.getElementById('gpsIcon');
+            const gpsText = document.getElementById('gpsText');
+
+            gpsStatus.className = 'gps-status';
+
+            switch(status) {
+                case 'active':
+                    gpsStatus.classList.add('active');
+                    gpsIcon.className = 'fas fa-satellite-dish gps-icon';
+                    gpsIcon.style.color = '#10b981';
+                    break;
+                case 'error':
+                    gpsStatus.classList.add('error');
+                    gpsIcon.className = 'fas fa-exclamation-triangle gps-icon';
+                    gpsIcon.style.color = '#ef4444';
+                    break;
+                case 'info':
+                    gpsIcon.className = 'fas fa-satellite-dish gps-icon';
+                    gpsIcon.style.color = '#f59e0b';
+                    break;
+                default:
+                    gpsIcon.className = 'fas fa-satellite-dish';
+                    gpsIcon.style.color = '#6b7280';
+            }
+
+            gpsText.textContent = text;
+        }
+
+        function buscarUbicacion() {
+            if (!gpsActive || !userLocationMarker) {
+                showNotification('Esperando señal GPS...', 'warning');
+
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+
+                        map.setView([lat, lng], 16);
+                        showNotification('Ubicación encontrada', 'success');
+                    },
+                    function(error) {
+                        showNotification('No se pudo obtener tu ubicación', 'error');
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                const latlng = userLocationMarker.getLatLng();
+                map.setView(latlng, 16);
+                userLocationMarker.openPopup();
+                showNotification('Centrado en tu ubicación', 'success');
+            }
+        }
+
+        function usarUbicacionActual() {
+            if (!gpsActive || !userLocationMarker) {
+                showNotification('GPS no disponible. Espera a que se active o haz clic en el mapa.', 'warning');
+                return;
+            }
+
+            const latlng = userLocationMarker.getLatLng();
+            document.getElementById('latitud').value = latlng.lat.toFixed(6);
+            document.getElementById('longitud').value = latlng.lng.toFixed(6);
+
+            showNotification('Ubicación GPS capturada correctamente', 'success');
+        }
+
+        function crearIcono(estado) {
+            const config = iconosEstado[estado];
+            return L.divIcon({
+                html: `<div style="
+                    background: ${config.color};
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-size: 14px;
+                    border: 3px solid white;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                ">${config.html}</div>`,
+                className: 'custom-marker',
+                iconSize: [32, 32],
+                iconAnchor: [16, 16]
+            });
+        }
+
+        function cargarLuminariasEnMapa() {
+            Object.values(layerGroups).forEach(group => {
+                group.clearLayers();
+            });
+            markers = [];
+
+            luminarias.forEach(luminaria => {
+                const marker = L.marker([luminaria.latitud, luminaria.longitud], {
+                    icon: crearIcono(luminaria.estado)
+                });
+
+                const popupContent = `
+                    <div class="custom-popup">
+                        <div class="popup-header">
+                            <div class="popup-title">Luminaria ${luminaria.numero}</div>
+                            <div class="popup-subtitle">${luminaria.direccion}</div>
+                        </div>
+                        <div class="popup-content">
+                            <div class="popup-field">
+                                <span class="popup-label">Estado:</span>
+                                <span class="popup-value">
+                                    <span class="badge badge-${luminaria.estado}">${luminaria.estado.toUpperCase()}</span>
+                                </span>
+                            </div>
+                            <div class="popup-field">
+                                <span class="popup-label">Tipo:</span>
+                                <span class="popup-value">${luminaria.tipo}</span>
+                            </div>
+                            <div class="popup-field">
+                                <span class="popup-label">Colonia:</span>
+                                <span class="popup-value">${luminaria.colonia}</span>
+                            </div>
+                            <div class="popup-field">
+                                <span class="popup-label">Oficial:</span>
+                                <span class="popup-value">${luminaria.oficialResponsable}</span>
+                            </div>
+                            <div class="popup-field">
+                                <span class="popup-label">Última Revisión:</span>
+                                <span class="popup-value">${formatearFecha(luminaria.ultimaRevision)}</span>
+                            </div>
+                        </div>
+                        <div class="popup-actions">
+                            <button class="btn btn-sm btn-warning" onclick="editarLuminaria(${luminaria.id})">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="btn btn-sm btn-primary" onclick="verDetalles(${luminaria.id})">
+                                <i class="fas fa-eye"></i> Ver
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                marker.bindPopup(popupContent, {
+                    maxWidth: 300,
+                    className: 'custom-popup-container'
+                });
+
+                layerGroups[luminaria.estado].addLayer(marker);
+                markers.push({
+                    marker: marker,
+                    luminaria: luminaria
+                });
+            });
+
+            actualizarEstadisticas();
+            actualizarContadores();
+        }
+
+        function formatearFecha(fecha) {
+            return new Date(fecha).toLocaleDateString('es-MX');
+        }
+
+        function actualizarEstadisticas() {
+            const total = luminarias.length;
+            const funcionando = luminarias.filter(l => l.estado === 'instalada' || l.estado === 'reparada').length;
+            const defectuosas = luminarias.filter(l => l.estado === 'defectuosa').length;
+            const mantenimiento = luminarias.filter(l => l.estado === 'mantenimiento').length;
+
+            document.getElementById('totalLuminarias').textContent = total;
+            document.getElementById('luminariasFuncionando').textContent = funcionando;
+            document.getElementById('luminariasDefectuosas').textContent = defectuosas;
+            document.getElementById('luminariasMantenimiento').textContent = mantenimiento;
+        }
+
+        function actualizarContadores() {
+            Object.keys(iconosEstado).forEach(estado => {
+                const count = luminarias.filter(l => l.estado === estado).length;
+                document.getElementById(`count-${estado}`).textContent = count;
+            });
+        }
+
+        function toggleLeyenda(estado) {
+            leyendaVisible[estado] = !leyendaVisible[estado];
+
+            if (leyendaVisible[estado]) {
+                map.addLayer(layerGroups[estado]);
+            } else {
+                map.removeLayer(layerGroups[estado]);
+            }
+
+            const item = document.querySelector(`[onclick="toggleLeyenda('${estado}')"]`);
+            if (leyendaVisible[estado]) {
+                item.style.opacity = '1';
+            } else {
+                item.style.opacity = '0.5';
+            }
+        }
+
+        function aplicarFiltros() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const estadoFilter = document.getElementById('estadoFilter').value;
+            const tipoFilter = document.getElementById('tipoFilter').value;
+            const coloniaFilter = document.getElementById('coloniaFilter').value.toLowerCase();
+            const oficialFilter = document.getElementById('oficialFilter').value.toLowerCase();
+            const fechaDesde = document.getElementById('fechaDesde').value;
+            const fechaHasta = document.getElementById('fechaHasta').value;
+
+            Object.values(layerGroups).forEach(group => {
+                group.clearLayers();
+            });
+
+            const filteredLuminarias = luminarias.filter(luminaria => {
+                let cumpleFiltros = true;
+
+                if (searchText) {
+                    cumpleFiltros = cumpleFiltros && (
+                        luminaria.numero.toLowerCase().includes(searchText) ||
+                        luminaria.direccion.toLowerCase().includes(searchText) ||
+                        luminaria.colonia.toLowerCase().includes(searchText) ||
+                        luminaria.observaciones.toLowerCase().includes(searchText)
+                    );
+                }
+
+                if (estadoFilter) {
+                    cumpleFiltros = cumpleFiltros && luminaria.estado === estadoFilter;
+                }
+
+                if (tipoFilter) {
+                    cumpleFiltros = cumpleFiltros && luminaria.tipo === tipoFilter;
+                }
+
+                if (coloniaFilter) {
+                    cumpleFiltros = cumpleFiltros && luminaria.colonia.toLowerCase().includes(coloniaFilter);
+                }
+
+                if (oficialFilter) {
+                    cumpleFiltros = cumpleFiltros && luminaria.oficialResponsable.toLowerCase().includes(oficialFilter);
+                }
+
+                if (fechaDesde && fechaHasta) {
+                    const fechaRevision = new Date(luminaria.ultimaRevision);
+                    const desde = new Date(fechaDesde);
+                    const hasta = new Date(fechaHasta);
+                    cumpleFiltros = cumpleFiltros && (fechaRevision >= desde && fechaRevision <= hasta);
+                }
+
+                return cumpleFiltros;
+            });
+
+            filteredLuminarias.forEach(luminaria => {
+                const markerData = markers.find(m => m.luminaria.id === luminaria.id);
+                if (markerData && leyendaVisible[luminaria.estado]) {
+                    layerGroups[luminaria.estado].addLayer(markerData.marker);
+                }
+            });
+
+            showNotification(`Se encontraron ${filteredLuminarias.length} luminarias`, 'info');
+        }
+
+        function limpiarFiltros() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('estadoFilter').value = '';
+            document.getElementById('tipoFilter').value = '';
+            document.getElementById('coloniaFilter').value = '';
+            document.getElementById('oficialFilter').value = '';
+            document.getElementById('fechaDesde').value = '';
+            document.getElementById('fechaHasta').value = '';
+
+            cargarLuminariasEnMapa();
+            showNotification('Filtros limpiados', 'success');
+        }
+
+        function centrarMapa() {
+            const monclovaCoords = [26.9087, -101.4217];
+            map.setView(monclovaCoords, 13);
+            showNotification('Mapa centrado en Monclova', 'info');
+        }
+
+        function mostrarTodasLuminarias() {
+            Object.keys(leyendaVisible).forEach(estado => {
+                leyendaVisible[estado] = true;
+                map.addLayer(layerGroups[estado]);
+                const item = document.querySelector(`[onclick="toggleLeyenda('${estado}')"]`);
+                item.style.opacity = '1';
+            });
+
+            if (luminarias.length > 0) {
+                const group = new L.featureGroup(markers.map(m => m.marker));
+                map.fitBounds(group.getBounds().pad(0.1));
+            }
+
+            showNotification('Mostrando todas las luminarias', 'success');
+        }
+
+        function toggleCrearMode() {
+            crearModeActive = !crearModeActive;
+            const btn = document.getElementById('crearModeBtn');
+
+            if (crearModeActive) {
+                btn.classList.add('active');
+                map.getContainer().style.cursor = 'crosshair';
+                showNotification('Modo crear activado. Haz clic en el mapa', 'info');
+            } else {
+                btn.classList.remove('active');
+                map.getContainer().style.cursor = '';
+                showNotification('Modo crear desactivado', 'warning');
+            }
+        }
+
+        function crearLuminariaEnPunto(latlng) {
+            document.getElementById('latitud').value = latlng.lat.toFixed(6);
+            document.getElementById('longitud').value = latlng.lng.toFixed(6);
+            openModal('nuevaLuminaria');
+            toggleCrearMode();
+        }
+
+        function cambiarVistaMapa() {
+            if (currentTileLayer) {
+                map.removeLayer(currentTileLayer);
+            }
+
+            satelliteView = !satelliteView;
+
+            if (satelliteView) {
+                currentTileLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    attribution: '© Esri'
+                }).addTo(map);
+                showNotification('Vista satelital activada', 'info');
+            } else {
+                currentTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+                showNotification('Vista de mapa activada', 'info');
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                showNotification('Modo pantalla completa activado', 'info');
+            } else {
+                document.exitFullscreen();
+                showNotification('Modo pantalla completa desactivado', 'info');
+            }
+        }
+
+        function openModal(tipo, id = null) {
+            if (tipo === 'nuevaLuminaria') {
+                document.getElementById('modalTitle').textContent = id ? 'Editar Luminaria' : 'Nueva Luminaria';
+
+                if (!id) {
+                    document.getElementById('luminariaForm').reset();
+                    document.getElementById('luminariaId').value = '';
+                    document.getElementById('btnEliminar').style.display = 'none';
+
+                    const hoy = new Date().toISOString().split('T')[0];
+                    document.getElementById('fechaInstalacion').value = hoy;
+                    document.getElementById('ultimaRevision').value = hoy;
+
+                    const ultimoNumero = Math.max(...luminarias.map(l => parseInt(l.numero.split('-')[1]) || 0));
+                    document.getElementById('numeroLuminaria').value = `LUM-${String(ultimoNumero + 1).padStart(3, '0')}`;
+                }
+            }
+
+            document.getElementById('modalLuminaria').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            currentEditId = null;
+        }
+
+        function editarLuminaria(id) {
+            const luminaria = luminarias.find(l => l.id === id);
+            if (!luminaria) return;
+
+            currentEditId = id;
+
+            document.getElementById('luminariaId').value = luminaria.id;
+            document.getElementById('numeroLuminaria').value = luminaria.numero;
+            document.getElementById('estado').value = luminaria.estado;
+            document.getElementById('tipoLampara').value = luminaria.tipo;
+            document.getElementById('potencia').value = luminaria.potencia;
+            document.getElementById('direccion').value = luminaria.direccion;
+            document.getElementById('colonia').value = luminaria.colonia;
+            document.getElementById('entreCalles').value = luminaria.entreCalles;
+            document.getElementById('medidor').value = luminaria.medidor;
+            document.getElementById('oficialResponsable').value = luminaria.oficialResponsable;
+            document.getElementById('fechaInstalacion').value = luminaria.fechaInstalacion;
+            document.getElementById('ultimaRevision').value = luminaria.ultimaRevision;
+            document.getElementById('latitud').value = luminaria.latitud;
+            document.getElementById('longitud').value = luminaria.longitud;
+            document.getElementById('observaciones').value = luminaria.observaciones;
+
+            document.getElementById('modalTitle').textContent = 'Editar Luminaria';
+            document.getElementById('btnEliminar').style.display = 'block';
+            document.getElementById('modalLuminaria').style.display = 'block';
+        }
+
+        function verDetalles(id) {
+            const luminaria = luminarias.find(l => l.id === id);
+            if (!luminaria) return;
+
+            map.setView([luminaria.latitud, luminaria.longitud], 18);
+
+            const markerData = markers.find(m => m.luminaria.id === id);
+            if (markerData) {
+                markerData.marker.openPopup();
+            }
+        }
+
+        function guardarLuminaria() {
+            const formData = {
+                numero: document.getElementById('numeroLuminaria').value,
+                estado: document.getElementById('estado').value,
+                tipo: document.getElementById('tipoLampara').value,
+                potencia: parseInt(document.getElementById('potencia').value) || 0,
+                direccion: document.getElementById('direccion').value,
+                colonia: document.getElementById('colonia').value,
+                entreCalles: document.getElementById('entreCalles').value,
+                medidor: document.getElementById('medidor').value,
+                oficialResponsable: document.getElementById('oficialResponsable').value,
+                fechaInstalacion: document.getElementById('fechaInstalacion').value,
+                ultimaRevision: document.getElementById('ultimaRevision').value,
+                latitud: parseFloat(document.getElementById('latitud').value),
+                longitud: parseFloat(document.getElementById('longitud').value),
+                observaciones: document.getElementById('observaciones').value
+            };
+
+            if (!formData.numero || !formData.estado || !formData.direccion || !formData.colonia) {
+                showNotification('Por favor completa todos los campos obligatorios', 'error');
+                return;
+            }
+
+            if (!formData.latitud || !formData.longitud) {
+                showNotification('Por favor selecciona una ubicación', 'error');
+                return;
+            }
+
+            if (currentEditId) {
+                const index = luminarias.findIndex(l => l.id === currentEditId);
+                if (index !== -1) {
+                    luminarias[index] = { ...luminarias[index], ...formData };
+                    showNotification('Luminaria actualizada correctamente', 'success');
+                }
+            } else {
+                const nuevaLuminaria = {
+                    id: ++luminariaIdCounter,
+                    ...formData
+                };
+                luminarias.push(nuevaLuminaria);
+                showNotification('Luminaria creada correctamente', 'success');
+            }
+
+            cargarLuminariasEnMapa();
+            closeModal('modalLuminaria');
+        }
+
+        function eliminarLuminaria() {
+            if (!currentEditId) return;
+            document.getElementById('modalConfirmar').style.display = 'block';
+        }
+
+        function confirmarEliminacion() {
+            if (!currentEditId) return;
+
+            luminarias = luminarias.filter(l => l.id !== currentEditId);
+            cargarLuminariasEnMapa();
+            closeModal('modalConfirmar');
+            closeModal('modalLuminaria');
+            showNotification('Luminaria eliminada correctamente', 'success');
+        }
+
+        function reportarProblema() {
+            const mensaje = prompt('Describe el problema que deseas reportar:');
+            if (mensaje) {
+                showNotification('Problema reportado correctamente', 'success');
+                console.log('Problema reportado:', mensaje);
+            }
+        }
+
+        function exportarDatos() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+
+            const headers = [
+                "Número", "Estado", "Tipo", "Potencia", "Dirección", "Colonia",
+                "Entre Calles", "Medidor", "Oficial", "Fecha Instalación",
+                "Última Revisión", "Latitud", "Longitud", "Observaciones"
+            ];
+
+            csvContent += headers.join(",") + "\r\n";
+
+            luminarias.forEach(luminaria => {
+                const row = [
+                    luminaria.numero,
+                    luminaria.estado,
+                    luminaria.tipo,
+                    luminaria.potencia,
+                    `"${luminaria.direccion}"`,
+                    luminaria.colonia,
+                    `"${luminaria.entreCalles}"`,
+                    luminaria.medidor,
+                    `"${luminaria.oficialResponsable}"`,
+                    luminaria.fechaInstalacion,
+                    luminaria.ultimaRevision,
+                    luminaria.latitud,
+                    luminaria.longitud,
+                    `"${luminaria.observaciones}"`
+                ];
+                csvContent += row.join(",") + "\r\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `luminarias_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showNotification('Datos exportados correctamente', 'success');
+        }
+
+        function configurarFormulario() {
+            const form = document.getElementById('luminariaForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    guardarLuminaria();
+                });
+            }
+        }
+
+        function configurarFiltrosEventos() {
+            const filtrosEnTiempoReal = ['searchInput', 'coloniaFilter', 'oficialFilter'];
+
+            filtrosEnTiempoReal.forEach(filtroId => {
+                const elemento = document.getElementById(filtroId);
+                if (elemento) {
+                    elemento.addEventListener('input', function() {
+                        if (this.value.length >= 2 || this.value.length === 0) {
+                            aplicarFiltros();
+                        }
+                    });
+                }
+            });
+
+            ['estadoFilter', 'tipoFilter', 'fechaDesde', 'fechaHasta'].forEach(filtroId => {
+                const elemento = document.getElementById(filtroId);
+                if (elemento) {
+                    elemento.addEventListener('change', aplicarFiltros);
+                }
+            });
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 3001;
+                opacity: 0;
+                transform: translateX(100%);
+                transition: all 0.3s ease;
+                max-width: 300px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+
+            const colors = {
+                success: 'linear-gradient(135deg, #10b981, #059669)',
+                error: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                warning: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                info: 'linear-gradient(135deg, #28a745, #1e7e34)'
+            };
+
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        window.addEventListener('click', function(e) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    currentEditId = null;
+                }
+            });
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'n':
+                        e.preventDefault();
+                        openModal('nuevaLuminaria');
+                        break;
+                    case 'f':
+                        e.preventDefault();
+                        document.getElementById('searchInput').focus();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        exportarDatos();
+                        break;
+                }
+            }
+
+            if (e.key === 'Escape') {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    if (modal.style.display === 'block') {
+                        modal.style.display = 'none';
+                    }
+                });
+
+                if (crearModeActive) {
+                    toggleCrearMode();
+                }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+            configurarFormulario();
+            configurarFiltrosEventos();
+
+            console.log('Mapa Interactivo de Alumbrado Público cargado correctamente');
+            showNotification('Sistema cargado correctamente - GPS activándose...', 'success');
+        });
+    </script>
+</body>
+</html>

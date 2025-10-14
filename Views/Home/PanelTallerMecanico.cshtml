@@ -1,0 +1,823 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taller Mecánico Municipal | Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --verde-principal: #16a34a;
+            --verde-secundario: #15803d;
+            --verde-claro: #22c55e;
+            --verde-light: #86efac;
+            --verde-oscuro: #14532d;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #06b6d4;
+            --dark: #1F2937;
+            --bg-light: #f0fdf4;
+            --bg-white: #ffffff;
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --border-gray: #86efac;
+            --shadow: rgba(22, 163, 74, 0.15);
+            --shadow-dark: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, #ffffff 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--verde-secundario) 0%, var(--verde-principal) 100%);
+            color: white;
+            padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1rem, 3vw, 2rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--verde-oscuro);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            flex: 1;
+            min-width: min(280px, 100%);
+        }
+
+        .logos-container {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+        }
+
+        .logo {
+            width: clamp(50px, 8vw, 70px);
+            height: clamp(50px, 8vw, 70px);
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--verde-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+            .logo:hover {
+                transform: scale(1.05);
+                box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+            }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                padding: 5px;
+            }
+
+            .logo i {
+                font-size: clamp(1.5rem, 4vw, 2.2rem);
+                color: var(--verde-principal);
+            }
+
+        .header-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+            .header-info h1 {
+                font-size: clamp(1rem, 2.5vw, 1.8rem);
+                font-weight: 800;
+                margin-bottom: 0.3rem;
+            }
+
+            .header-info p {
+                font-size: clamp(0.75rem, 1.8vw, 1rem);
+                opacity: 0.95;
+            }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+            background: rgba(255, 255, 255, 0.15);
+            padding: clamp(0.5rem, 1.5vw, 0.8rem) clamp(0.8rem, 2vw, 1.2rem);
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .user-avatar {
+            width: clamp(40px, 7vw, 55px);
+            height: clamp(40px, 7vw, 55px);
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--verde-light);
+            flex-shrink: 0;
+        }
+
+            .user-avatar i {
+                font-size: clamp(1.2rem, 3vw, 1.6rem);
+                color: var(--verde-principal);
+            }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            font-weight: 700;
+        }
+
+        .user-role {
+            font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+            padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 3vw, 2rem);
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px var(--shadow-dark);
+            border-left: 5px solid var(--verde-principal);
+        }
+
+        .welcome-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 900;
+            color: var(--verde-principal);
+            margin-bottom: clamp(0.8rem, 2vw, 1rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(0.8rem, 2vw, 1.2rem);
+            flex-wrap: wrap;
+        }
+
+        .welcome-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: var(--text-gray);
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
+            gap: clamp(1rem, 2.5vw, 1.5rem);
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+        }
+
+        .stat-card {
+            background: white;
+            padding: clamp(1.5rem, 3vw, 2rem);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px var(--shadow-dark);
+            border-left: 4px solid var(--verde-principal);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 12px 40px var(--shadow);
+            }
+
+        .stat-icon {
+            width: clamp(50px, 10vw, 65px);
+            height: clamp(50px, 10vw, 65px);
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: white;
+            margin: 0 auto clamp(1rem, 2vw, 1.5rem);
+            box-shadow: 0 8px 25px var(--shadow);
+        }
+
+        .stat-value {
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            font-weight: 900;
+            color: var(--verde-principal);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 800;
+            color: var(--verde-principal);
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+            text-align: center;
+            padding: clamp(1rem, 2vw, 1.5rem);
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px var(--shadow-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+            gap: clamp(1.5rem, 3vw, 2.5rem);
+        }
+
+        .module-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px var(--shadow-dark);
+            border: 3px solid var(--verde-principal);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+            .module-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 20px 60px var(--shadow);
+                border-color: var(--verde-claro);
+            }
+
+        .module-header {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            padding: clamp(2rem, 4vw, 3rem);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .module-header::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                right: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            }
+
+        .module-icon-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        .module-icon {
+            width: clamp(80px, 15vw, 120px);
+            height: clamp(80px, 15vw, 120px);
+            background: white;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: var(--verde-principal);
+            margin: 0 auto clamp(1rem, 2vw, 1.5rem);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            border: 3px solid var(--verde-light);
+        }
+
+        .module-title {
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+            font-weight: 800;
+            color: white;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .module-subtitle {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            color: rgba(255, 255, 255, 0.9);
+            position: relative;
+            z-index: 1;
+        }
+
+        .module-body {
+            padding: clamp(1.5rem, 3vw, 2.5rem);
+        }
+
+        .module-description {
+            font-size: clamp(0.95rem, 2vw, 1.05rem);
+            color: var(--text-gray);
+            line-height: 1.8;
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        .module-features {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.8rem, 2vw, 1rem);
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.8rem, 2vw, 1rem);
+            padding: clamp(0.8rem, 2vw, 1rem);
+            background: var(--bg-light);
+            border-radius: 10px;
+            border-left: 3px solid var(--verde-principal);
+        }
+
+        .feature-icon {
+            width: clamp(35px, 7vw, 45px);
+            height: clamp(35px, 7vw, 45px);
+            background: var(--verde-principal);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .btn-module {
+            width: 100%;
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            color: white;
+            border: none;
+            padding: clamp(1rem, 2.5vw, 1.3rem);
+            border-radius: 12px;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+            .btn-module:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 30px var(--shadow);
+            }
+
+        .btn-back {
+            background: white;
+            color: var(--verde-principal);
+            padding: clamp(0.6rem, 1.5vw, 0.9rem) clamp(1rem, 2vw, 1.5rem);
+            border: none;
+            border-radius: 10px;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+        }
+
+            .btn-back:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            }
+
+        .notification {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            padding: clamp(1rem, 2vw, 1.2rem) clamp(1.2rem, 3vw, 1.8rem);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            max-width: min(400px, 90vw);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.4s ease;
+            font-weight: 600;
+            border: 2px solid;
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .notification.success {
+                background: white;
+                color: var(--verde-principal);
+                border-color: var(--verde-principal);
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logos-container">
+                    <div class="logo" title="Escudo Municipal">
+                        <img src="~/imagenes/M.png" alt="Escudo Municipal" onerror="this.parentElement.innerHTML='<i class=\'fas fa-landmark\'></i>'">
+                    </div>
+                    <div class="logo" title="Taller Mecánico">
+                        <img src="~/imagenes/" alt="Logo Taller" onerror="this.parentElement.innerHTML='<i class=\'fas fa-tools\'></i>'">
+                    </div>
+                </div>
+                <div class="header-info">
+                    <h1>Taller Mecánico Municipal</h1>
+                    <p>Sistema de Gestión de Mantenimiento - Monclova</p>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: clamp(1rem, 2vw, 1.5rem); flex-wrap: wrap; justify-content: center;">
+                <a href="/Account/Login" class="btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    Regresar
+                </a>
+                <div class="user-section">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">Cervando</div>
+                        <div class="user-role">Jefe de Taller</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1 class="welcome-title">
+                <i class="fas fa-tools"></i>
+                Taller Mecánico Municipal
+            </h1>
+            <p class="welcome-subtitle">
+                Sistema integral de gestión de mantenimiento vehicular y citas de servicio
+            </p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-truck"></i></div>
+                <div class="stat-value">69</div>
+                <div class="stat-label">Total de Unidades</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="stat-value">12</div>
+                <div class="stat-label">Citas Programadas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-wrench"></i></div>
+                <div class="stat-value">8</div>
+                <div class="stat-label">En Mantenimiento</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-value">95%</div>
+                <div class="stat-label">Operatividad</div>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <i class="fas fa-clipboard-list"></i>
+            Módulos del Taller Mecánico
+        </div>
+
+        <div class="modules-grid">
+            <!-- Módulo 1: Mantenimiento de Unidades Boteo -->
+            <div class="module-card" onclick="navigateTo('/Home/MantenimientoUnidadesRecoleccion')">
+                <div class="module-header">
+                    <div class="module-icon-wrapper">
+                        <div class="module-icon">
+                            <i class="fas fa-truck-pickup"></i>
+                        </div>
+                        <h2 class="module-title">Mantenimiento Unidades Boteo</h2>
+                        <p class="module-subtitle">Camiones Recolectores</p>
+                    </div>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">
+                        Gestión completa del mantenimiento preventivo y correctivo de los 24 camiones recolectores municipales.
+                    </p>
+                    <div class="module-features">
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-clipboard-check"></i></div>
+                            <div class="feature-text">Registro de servicios</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-calendar-alt"></i></div>
+                            <div class="feature-text">Programación de mantenimiento</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-tools"></i></div>
+                            <div class="feature-text">Historial de reparaciones</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-gas-pump"></i></div>
+                            <div class="feature-text">Control de combustible</div>
+                        </div>
+                    </div>
+                    <button class="btn-module">
+                        <i class="fas fa-arrow-right"></i>
+                        Acceder al Módulo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Módulo 2: Mantenimiento de Contenedores -->
+            <div class="module-card" onclick="navigateTo('/Home/MantenimientoContenedores')">
+                <div class="module-header">
+                    <div class="module-icon-wrapper">
+                        <div class="module-icon">
+                            <i class="fas fa-dumpster"></i>
+                        </div>
+                        <h2 class="module-title">Mantenimiento de Unidades de contenedores</h2>
+                        <p class="module-subtitle">Equipos de Recolección</p>
+                    </div>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">
+                        Control y seguimiento del mantenimiento de los 45 contenedores y equipos auxiliares de recolección.
+                    </p>
+                    <div class="module-features">
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-wrench"></i></div>
+                            <div class="feature-text">Reparaciones y soldadura</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-paint-brush"></i></div>
+                            <div class="feature-text">Pintura y acabados</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="feature-text">Ubicación de contenedores</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-check-double"></i></div>
+                            <div class="feature-text">Inspección de calidad</div>
+                        </div>
+                    </div>
+                    <button class="btn-module">
+                        <i class="fas fa-arrow-right"></i>
+                        Acceder al Módulo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Módulo 3: Agendar Citas -->
+            <div class="module-card" onclick="navigateTo('/Home/AgendarCitasMantenimiento')">
+                <div class="module-header">
+                    <div class="module-icon-wrapper">
+                        <div class="module-icon">
+                            <i class="fas fa-calendar-plus"></i>
+                        </div>
+                        <h2 class="module-title">Agendar Citas</h2>
+                        <p class="module-subtitle">Programación de Mantenimiento</p>
+                    </div>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">
+                        Sistema de agendamiento de citas para mantenimiento preventivo y correctivo de todas las unidades.
+                    </p>
+                    <div class="module-features">
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-calendar-alt"></i></div>
+                            <div class="feature-text">Programación de citas</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-clock"></i></div>
+                            <div class="feature-text">Control de horarios</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-bell"></i></div>
+                            <div class="feature-text">Notificaciones automáticas</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-users"></i></div>
+                            <div class="feature-text">Asignación de técnicos</div>
+                        </div>
+                    </div>
+                    <button class="btn-module">
+                        <i class="fas fa-arrow-right"></i>
+                        Acceder al Módulo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Módulo 4: Registro de Citas Completadas -->
+            <div class="module-card" onclick="navigateTo('/Home/RegistroCitasCompletadas')">
+                <div class="module-header">
+                    <div class="module-icon-wrapper">
+                        <div class="module-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <h2 class="module-title">Citas Completadas</h2>
+                        <p class="module-subtitle">Historial de Servicios</p>
+                    </div>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">
+                        Registro y consulta del historial completo de citas de mantenimiento finalizadas y trabajos realizados.
+                    </p>
+                    <div class="module-features">
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-check-double"></i></div>
+                            <div class="feature-text">Historial completo</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-search"></i></div>
+                            <div class="feature-text">Búsqueda avanzada</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-chart-bar"></i></div>
+                            <div class="feature-text">Estadísticas de servicio</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-file-pdf"></i></div>
+                            <div class="feature-text">Exportar reportes</div>
+                        </div>
+                    </div>
+                    <button class="btn-module">
+                        <i class="fas fa-arrow-right"></i>
+                        Acceder al Módulo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Módulo 5: Información de Unidades -->
+            <div class="module-card" onclick="navigateTo('/Home/RepositorioPlacas')">
+                <div class="module-header">
+                    <div class="module-icon-wrapper">
+                        <div class="module-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <h2 class="module-title">Información de Unidades</h2>
+                        <p class="module-subtitle">Datos y Especificaciones</p>
+                    </div>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">
+                        Consulta detallada de especificaciones, datos técnicos y documentación de todas las unidades vehiculares.
+                    </p>
+                    <div class="module-features">
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
+                            <div class="feature-text">Fichas técnicas</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-id-card"></i></div>
+                            <div class="feature-text">Placas y documentación</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            <div class="feature-text">Kilometraje y estado</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-history"></i></div>
+                            <div class="feature-text">Historial vehicular</div>
+                        </div>
+                    </div>
+                    <button class="btn-module">
+                        <i class="fas fa-arrow-right"></i>
+                        Acceder al Módulo
+                    </button>
+                </div>
+            </div>
+
+            <!-- NUEVO MÓDULO 6: Enviar Oficios a Almacén -->
+            <div class="module-card" onclick="navigateTo('/Home/EnviarOficiosAlmacenTaller')">
+                <div class="module-header">
+                    <div class="module-icon-wrapper">
+                        <div class="module-icon">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <h2 class="module-title">Enviar Oficios a Almacén</h2>
+                        <p class="module-subtitle">Solicitudes de Refacciones</p>
+                    </div>
+                </div>
+                <div class="module-body">
+                    <p class="module-description">
+                        Sistema de generación y envío de oficios para solicitar refacciones, materiales y herramientas al almacén municipal.
+                    </p>
+                    <div class="module-features">
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
+                            <div class="feature-text">Generar oficios digitales</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-box"></i></div>
+                            <div class="feature-text">Solicitud de refacciones</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-paper-plane"></i></div>
+                            <div class="feature-text">Envío automático</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="fas fa-tasks"></i></div>
+                            <div class="feature-text">Seguimiento de solicitudes</div>
+                        </div>
+                    </div>
+                    <button class="btn-module">
+                        <i class="fas fa-arrow-right"></i>
+                        Acceder al Módulo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function navigateTo(url) {
+            showNotification('Cargando módulo...', 'success');
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        }
+
+        function showNotification(message, type = 'success') {
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notif => {
+                if (document.body.contains(notif)) {
+                    document.body.removeChild(notif);
+                }
+            });
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (document.body.contains(notification)) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 400);
+                }
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                showNotification('Sistema de Taller Mecánico inicializado', 'success');
+            }, 800);
+        });
+    </script>
+</body>
+</html>

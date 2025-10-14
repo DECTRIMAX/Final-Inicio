@@ -1,0 +1,1081 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Recolección - Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --verde-principal: #16a34a;
+            --verde-secundario: #15803d;
+            --verde-claro: #22c55e;
+            --verde-light: #86efac;
+            --verde-oscuro: #14532d;
+            --gris-oscuro: #1f2937;
+            --gris-medio: #9ca3af;
+            --gris-claro: #f3f4f6;
+            --blanco: #FFFFFF;
+            --negro: #111827;
+            --bg-light: #f0fdf4;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+            --shadow: rgba(22, 163, 74, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, var(--gris-claro) 100%);
+            color: var(--negro);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--verde-secundario) 0%, var(--verde-principal) 100%);
+            color: white;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            border-bottom: 3px solid var(--verde-claro);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .logo-container {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--verde-light);
+            box-shadow: 0 4px 12px var(--shadow);
+            overflow: hidden;
+            padding: 6px;
+        }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                background: white;
+            }
+
+            .logo i {
+                font-size: 2rem;
+                color: var(--verde-principal);
+            }
+
+        .header-info h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .header-info p {
+            font-size: 0.85rem;
+            opacity: 0.95;
+        }
+
+        .btn {
+            padding: 0.7rem 1.2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            color: white;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px var(--shadow);
+            }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .filters-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            border: 2px solid var(--verde-light);
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .filters-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--verde-principal);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--gris-medio);
+            letter-spacing: 0.5px;
+        }
+
+        .form-select {
+            padding: 0.7rem;
+            background: var(--gris-claro);
+            border: 2px solid var(--verde-light);
+            border-radius: 10px;
+            color: var(--negro);
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+            .form-select:focus {
+                outline: none;
+                border-color: var(--verde-principal);
+                box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
+                background: white;
+            }
+
+            .form-select option {
+                background: white;
+                color: var(--negro);
+            }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 2px solid var(--verde-light);
+            box-shadow: 0 4px 15px var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+            .kpi-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px var(--shadow);
+                border-color: var(--verde-principal);
+            }
+
+        .kpi-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            color: white;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--verde-principal);
+            margin-bottom: 0.3rem;
+        }
+
+        .kpi-label {
+            font-size: 0.8rem;
+            color: var(--gris-medio);
+            font-weight: 600;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 2px solid var(--verde-light);
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .chart-header {
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid var(--gris-claro);
+        }
+
+        .chart-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--verde-principal);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 280px;
+            width: 100%;
+        }
+
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            z-index: 3000;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+            .notification.show {
+                display: flex;
+            }
+
+            .notification.success {
+                background: var(--verde-principal);
+                color: white;
+            }
+
+        .alert-box {
+            background: rgba(251, 191, 36, 0.1);
+            border: 2px solid #F59E0B;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            color: #92400e;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+            .alert-box i {
+                font-size: 1.5rem;
+                color: #F59E0B;
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-container">
+                    <div class="logo">
+                        <img src="~/imagenes/LOGO.png" alt="Logo Municipal" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-landmark\'></i>'">
+                    </div>
+                    <div class="logo">
+                        <img src="~/imagenes/CuadrillaDeLimpieza.png" alt="Limpieza" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-recycle\'></i>'">
+                    </div>
+                </div>
+                <div class="header-info">
+                    <h1>Dashboard Analítico de Recolección</h1>
+                    <p>Presidencia Municipal - Monclova, Coahuila</p>
+                </div>
+            </div>
+            <div style="display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    Regresar
+                </button>
+                <button class="btn btn-primary" onclick="window.print()">
+                    <i class="fas fa-print"></i>
+                    Imprimir
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="alert-box" id="dataAlert" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div>
+                <strong>Sin datos disponibles:</strong> No se encontraron registros en el almacenamiento local. Las gráficas mostrarán datos de ejemplo.
+            </div>
+        </div>
+
+        <div class="filters-card">
+            <div class="filters-title">
+                <i class="fas fa-sliders-h"></i>
+                Filtros de Análisis
+            </div>
+            <div class="filters-grid">
+                <div class="form-group">
+                    <label class="form-label">Sistema</label>
+                    <select class="form-select" id="filterSistema" onchange="applyFilters()">
+                        <option value="all">Ambos Sistemas</option>
+                        <option value="boteo">Solo Boteo</option>
+                        <option value="contenedores">Solo Contenedores</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Mes</label>
+                    <select class="form-select" id="filterMes" onchange="applyFilters()">
+                        <option value="all">Todos los Meses</option>
+                        <option value="ENERO">Enero</option>
+                        <option value="FEBRERO">Febrero</option>
+                        <option value="MARZO">Marzo</option>
+                        <option value="ABRIL">Abril</option>
+                        <option value="MAYO">Mayo</option>
+                        <option value="JUNIO">Junio</option>
+                        <option value="JULIO">Julio</option>
+                        <option value="AGOSTO">Agosto</option>
+                        <option value="SEPTIEMBRE">Septiembre</option>
+                        <option value="OCTUBRE">Octubre</option>
+                        <option value="NOVIEMBRE">Noviembre</option>
+                        <option value="DICIEMBRE">Diciembre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Operador</label>
+                    <select class="form-select" id="filterOperador" onchange="applyFilters()">
+                        <option value="all">Todos</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Unidad</label>
+                    <select class="form-select" id="filterUnidad" onchange="applyFilters()">
+                        <option value="all">Todas</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" onclick="resetFilters()" style="width: 100%; margin-top: 1.3rem;">
+                        <i class="fas fa-redo"></i>
+                        Resetear
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon">
+                    <i class="fas fa-weight-hanging"></i>
+                </div>
+                <div class="kpi-value" id="totalToneladas">0</div>
+                <div class="kpi-label">Toneladas Totales</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="kpi-value" id="totalViajes">0</div>
+                <div class="kpi-label">Viajes Realizados</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">
+                    <i class="fas fa-gas-pump"></i>
+                </div>
+                <div class="kpi-value" id="totalDiesel">0</div>
+                <div class="kpi-label">Litros de Diesel</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="kpi-value" id="totalOperadores">0</div>
+                <div class="kpi-label">Operadores Activos</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">
+                    <i class="fas fa-dumpster"></i>
+                </div>
+                <div class="kpi-value" id="totalContenedores">0</div>
+                <div class="kpi-label">Contenedores</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon">
+                    <i class="fas fa-broom"></i>
+                </div>
+                <div class="kpi-value" id="totalBoteo">0</div>
+                <div class="kpi-label">Boteo</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-pie"></i>
+                        Distribución por Sistema
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartSistemas"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-bar"></i>
+                        Peso Mensual
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartMensual"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-trophy"></i>
+                        Top Operadores
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartOperadores"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-truck-loading"></i>
+                        Por Unidad
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartUnidades"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-gas-pump"></i>
+                        Diesel Mensual
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartDiesel"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-calendar-check"></i>
+                        Viajes Diarios
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartDiarios"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-clock"></i>
+                        Por Hora
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartHorario"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-balance-scale"></i>
+                        Eficiencia
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chartEficiencia"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText"></span>
+    </div>
+
+    <script>
+        let boteoData = [];
+        let contenedoresData = [];
+        const charts = {};
+
+        function generateSampleData() {
+            const meses = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO'];
+            const operadores = ['JUAN PÉREZ', 'MARÍA LÓPEZ', 'CARLOS GARCÍA', 'ANA MARTÍNEZ'];
+            const unidades = ['U-101', 'U-102', 'U-103', 'U-104'];
+
+            const sampleBoteo = [];
+            const sampleContenedores = [];
+
+            for (let i = 0; i < 50; i++) {
+                sampleBoteo.push({
+                    mes: meses[Math.floor(Math.random() * meses.length)],
+                    dia: Math.floor(Math.random() * 28) + 1,
+                    operador: operadores[Math.floor(Math.random() * operadores.length)],
+                    unidad: unidades[Math.floor(Math.random() * unidades.length)],
+                    pesoNeto: Math.floor(Math.random() * 5000) + 2000,
+                    diesel: Math.floor(Math.random() * 50) + 20,
+                    entrada: `${Math.floor(Math.random() * 6) + 7}:${Math.floor(Math.random() * 60)}`,
+                    sistema: 'boteo'
+                });
+            }
+
+            for (let i = 0; i < 30; i++) {
+                sampleContenedores.push({
+                    mes: meses[Math.floor(Math.random() * meses.length)],
+                    dia: Math.floor(Math.random() * 28) + 1,
+                    operador: operadores[Math.floor(Math.random() * operadores.length)],
+                    unidad: unidades[Math.floor(Math.random() * unidades.length)],
+                    pesoNeto: Math.floor(Math.random() * 3000) + 1000,
+                    viajes: Math.floor(Math.random() * 5) + 1,
+                    horaEntrada: `${Math.floor(Math.random() * 6) + 7}:${Math.floor(Math.random() * 60)}`,
+                    sistema: 'contenedores'
+                });
+            }
+
+            return { boteo: sampleBoteo, contenedores: sampleContenedores };
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            Chart.defaults.color = '#6b7280';
+            Chart.defaults.borderColor = '#e5e7eb';
+
+            loadData();
+            populateFilters();
+            applyFilters();
+        });
+
+        function loadData() {
+            const savedBoteo = localStorage.getItem('boteoMunicipalRecords');
+            const savedContenedores = sessionStorage.getItem('contenedoresMunicipales');
+
+            if (savedBoteo) {
+                boteoData = JSON.parse(savedBoteo);
+            }
+            if (savedContenedores) {
+                contenedoresData = JSON.parse(savedContenedores);
+            }
+
+            if (boteoData.length === 0 && contenedoresData.length === 0) {
+                const sampleData = generateSampleData();
+                boteoData = sampleData.boteo;
+                contenedoresData = sampleData.contenedores;
+                document.getElementById('dataAlert').style.display = 'flex';
+            }
+        }
+
+        function getAllData() {
+            return [
+                ...boteoData.map(r => ({...r, sistema: 'boteo'})),
+                ...contenedoresData.map(r => ({...r, sistema: 'contenedores'}))
+            ];
+        }
+
+        function getFilteredData() {
+            let data = getAllData();
+
+            const filterSistema = document.getElementById('filterSistema').value;
+            const filterMes = document.getElementById('filterMes').value;
+            const filterOperador = document.getElementById('filterOperador').value;
+            const filterUnidad = document.getElementById('filterUnidad').value;
+
+            if (filterSistema !== 'all') data = data.filter(r => r.sistema === filterSistema);
+            if (filterMes !== 'all') data = data.filter(r => r.mes === filterMes);
+            if (filterOperador !== 'all') data = data.filter(r => r.operador === filterOperador);
+            if (filterUnidad !== 'all') data = data.filter(r => r.unidad === filterUnidad);
+
+            return data;
+        }
+
+        function populateFilters() {
+            const allData = getAllData();
+
+            const operadores = [...new Set(allData.map(r => r.operador))].sort();
+            const unidades = [...new Set(allData.map(r => r.unidad))].sort();
+
+            const operadorSelect = document.getElementById('filterOperador');
+            operadores.forEach(op => {
+                const option = document.createElement('option');
+                option.value = op;
+                option.textContent = op;
+                operadorSelect.appendChild(option);
+            });
+
+            const unidadSelect = document.getElementById('filterUnidad');
+            unidades.forEach(un => {
+                const option = document.createElement('option');
+                option.value = un;
+                option.textContent = un;
+                unidadSelect.appendChild(option);
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('filterSistema').value = 'all';
+            document.getElementById('filterMes').value = 'all';
+            document.getElementById('filterOperador').value = 'all';
+            document.getElementById('filterUnidad').value = 'all';
+            applyFilters();
+            showNotification('Filtros reseteados');
+        }
+
+        function applyFilters() {
+            const data = getFilteredData();
+            updateKPIs(data);
+            updateCharts(data);
+        }
+
+        function updateKPIs(data) {
+            const boteo = data.filter(r => r.sistema === 'boteo');
+            const contenedores = data.filter(r => r.sistema === 'contenedores');
+
+            const totalPeso = data.reduce((sum, r) => sum + (r.pesoNeto || 0), 0);
+            const totalViajes = data.length + contenedores.reduce((sum, r) => sum + (r.viajes || 0) - 1, 0);
+            const totalDiesel = boteo.reduce((sum, r) => sum + (r.diesel || 0), 0);
+            const totalOperadores = new Set(data.map(r => r.operador)).size;
+
+            document.getElementById('totalToneladas').textContent = (totalPeso / 1000).toFixed(2);
+            document.getElementById('totalViajes').textContent = totalViajes;
+            document.getElementById('totalDiesel').textContent = totalDiesel.toFixed(0);
+            document.getElementById('totalOperadores').textContent = totalOperadores;
+            document.getElementById('totalContenedores').textContent = contenedores.length;
+            document.getElementById('totalBoteo').textContent = boteo.length;
+        }
+
+        function updateCharts(data) {
+            createChartSistemas(data);
+            createChartMensual(data);
+            createChartOperadores(data);
+            createChartUnidades(data);
+            createChartDiesel(data);
+            createChartDiarios(data);
+            createChartHorario(data);
+            createChartEficiencia(data);
+        }
+
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 1.5
+        };
+
+        function createChartSistemas(data) {
+            const boteoCount = data.filter(r => r.sistema === 'boteo').length;
+            const contenedoresCount = data.filter(r => r.sistema === 'contenedores').length;
+
+            const ctx = document.getElementById('chartSistemas');
+            if (charts.sistemas) charts.sistemas.destroy();
+
+            charts.sistemas = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Boteo', 'Contenedores'],
+                    datasets: [{
+                        data: [boteoCount, contenedoresCount],
+                        backgroundColor: ['#16a34a', '#22c55e'],
+                        borderWidth: 3,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#1f2937', padding: 12, font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createChartMensual(data) {
+            const meses = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+            const mesesFull = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO',
+                          'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+
+            const pesoData = mesesFull.map(mes =>
+                data.filter(r => r.mes === mes).reduce((sum, r) => sum + (r.pesoNeto || 0), 0) / 1000
+            );
+
+            const ctx = document.getElementById('chartMensual');
+            if (charts.mensual) charts.mensual.destroy();
+
+            charts.mensual = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: meses,
+                    datasets: [{
+                        label: 'Ton',
+                        data: pesoData,
+                        backgroundColor: '#16a34a',
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#6b7280' }, grid: { color: '#e5e7eb' } },
+                        x: { ticks: { color: '#6b7280' }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function createChartOperadores(data) {
+            const operadores = {};
+            data.forEach(r => {
+                if (!operadores[r.operador]) operadores[r.operador] = 0;
+                operadores[r.operador]++;
+                if (r.sistema === 'contenedores' && r.viajes) operadores[r.operador] += r.viajes - 1;
+            });
+
+            const sorted = Object.entries(operadores).sort((a, b) => b[1] - a[1]).slice(0, 6);
+
+            const ctx = document.getElementById('chartOperadores');
+            if (charts.operadores) charts.operadores.destroy();
+
+            charts.operadores = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sorted.map(s => s[0].split(' ')[0]),
+                    datasets: [{
+                        label: 'Viajes',
+                        data: sorted.map(s => s[1]),
+                        backgroundColor: '#22c55e',
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    indexAxis: 'y',
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { beginAtZero: true, ticks: { color: '#6b7280' }, grid: { color: '#e5e7eb' } },
+                        y: { ticks: { color: '#6b7280' }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function createChartUnidades(data) {
+            const unidades = {};
+            data.forEach(r => {
+                if (!unidades[r.unidad]) unidades[r.unidad] = { peso: 0, count: 0 };
+                unidades[r.unidad].peso += r.pesoNeto || 0;
+                unidades[r.unidad].count++;
+            });
+
+            const sorted = Object.entries(unidades)
+                .map(([unidad, stats]) => ({ unidad, promedio: stats.peso / stats.count }))
+                .sort((a, b) => b.promedio - a.promedio)
+                .slice(0, 8);
+
+            const ctx = document.getElementById('chartUnidades');
+            if (charts.unidades) charts.unidades.destroy();
+
+            charts.unidades = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sorted.map(s => s.unidad),
+                    datasets: [{
+                        label: 'kg',
+                        data: sorted.map(s => s.promedio),
+                        backgroundColor: '#15803d',
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#6b7280' }, grid: { color: '#e5e7eb' } },
+                        x: { ticks: { color: '#6b7280' }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function createChartDiesel(data) {
+            const meses = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+            const mesesFull = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO',
+                          'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+
+            const dieselData = mesesFull.map(mes =>
+                data.filter(r => r.mes === mes && r.sistema === 'boteo')
+                    .reduce((sum, r) => sum + (r.diesel || 0), 0)
+            );
+
+            const ctx = document.getElementById('chartDiesel');
+            if (charts.diesel) charts.diesel.destroy();
+
+            charts.diesel = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: meses,
+                    datasets: [{
+                        label: 'Litros',
+                        data: dieselData,
+                        backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                        borderColor: '#F59E0B',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#F59E0B',
+                        pointBorderWidth: 0,
+                        pointRadius: 3
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#6b7280' }, grid: { color: '#e5e7eb' } },
+                        x: { ticks: { color: '#6b7280' }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function createChartDiarios(data) {
+            const dias = {};
+            for (let i = 1; i <= 31; i++) dias[i] = 0;
+
+            data.forEach(r => {
+                const dia = parseInt(r.dia);
+                if (dias[dia] !== undefined) {
+                    dias[dia]++;
+                    if (r.sistema === 'contenedores' && r.viajes) dias[dia] += r.viajes - 1;
+                }
+            });
+
+            const ctx = document.getElementById('chartDiarios');
+            if (charts.diarios) charts.diarios.destroy();
+
+            charts.diarios = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Object.keys(dias),
+                    datasets: [{
+                        label: 'Viajes',
+                        data: Object.values(dias),
+                        backgroundColor: 'rgba(22, 163, 74, 0.2)',
+                        borderColor: '#16a34a',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#16a34a',
+                        pointBorderWidth: 0,
+                        pointRadius: 2
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#6b7280' }, grid: { color: '#e5e7eb' } },
+                        x: { ticks: { color: '#6b7280' }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function createChartHorario(data) {
+            const horas = Array(24).fill(0);
+
+            data.forEach(r => {
+                if (r.entrada) {
+                    const hora = parseInt(r.entrada.split(':')[0]);
+                    if (!isNaN(hora) && hora >= 0 && hora < 24) horas[hora]++;
+                }
+                if (r.horaEntrada && r.horaEntrada !== '-') {
+                    const hora = parseInt(r.horaEntrada.split(':')[0]);
+                    if (!isNaN(hora) && hora >= 0 && hora < 24) horas[hora]++;
+                }
+            });
+
+            const horasLabels = [];
+            const horasData = [];
+            for (let i = 6; i <= 18; i++) {
+                horasLabels.push(i + 'h');
+                horasData.push(horas[i]);
+            }
+
+            const ctx = document.getElementById('chartHorario');
+            if (charts.horario) charts.horario.destroy();
+
+            charts.horario = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: horasLabels,
+                    datasets: [{
+                        label: 'Registros',
+                        data: horasData,
+                        backgroundColor: 'rgba(22, 163, 74, 0.3)',
+                        borderColor: '#16a34a',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#16a34a',
+                        pointBorderWidth: 0,
+                        pointRadius: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 1.5,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            grid: { color: '#e5e7eb' },
+                            ticks: { color: '#6b7280', backdropColor: 'transparent' },
+                            pointLabels: { color: '#1f2937', font: { size: 10 } }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function createChartEficiencia(data) {
+            const operadores = {};
+            data.forEach(r => {
+                if (!operadores[r.operador]) operadores[r.operador] = { viajes: 0, peso: 0 };
+                operadores[r.operador].peso += r.pesoNeto || 0;
+                if (r.sistema === 'contenedores' && r.viajes) {
+                    operadores[r.operador].viajes += r.viajes;
+                } else {
+                    operadores[r.operador].viajes++;
+                }
+            });
+
+            const scatterData = Object.entries(operadores).map(([nombre, stats]) => ({
+                x: stats.viajes,
+                y: stats.peso
+            }));
+
+            const ctx = document.getElementById('chartEficiencia');
+            if (charts.eficiencia) charts.eficiencia.destroy();
+
+            charts.eficiencia = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Operadores',
+                        data: scatterData,
+                        backgroundColor: 'rgba(22, 163, 74, 0.6)',
+                        borderColor: '#16a34a',
+                        borderWidth: 1,
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 1.5,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#6b7280' },
+                            grid: { color: '#e5e7eb' },
+                            title: { display: true, text: 'Peso (kg)', color: '#1f2937', font: { size: 10 } }
+                        },
+                        x: {
+                            beginAtZero: true,
+                            ticks: { color: '#6b7280' },
+                            grid: { color: '#e5e7eb' },
+                            title: { display: true, text: 'Viajes', color: '#1f2937', font: { size: 10 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            notification.className = 'notification success show';
+            text.textContent = message;
+            setTimeout(() => notification.classList.remove('show'), 3000);
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

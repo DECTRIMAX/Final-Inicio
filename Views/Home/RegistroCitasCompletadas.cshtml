@@ -1,0 +1,1384 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Citas Completadas - Taller Mecánico</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --pri-green: #10b981;
+            --pri-green-light: #34d399;
+            --pri-green-dark: #059669;
+            --bg-light: #ecfdf5;
+            --bg-white: #ffffff;
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --border-gray: #d1d5db;
+            --shadow: rgba(16, 185, 129, 0.15);
+            --shadow-dark: rgba(0, 0, 0, 0.1);
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, #ffffff 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--pri-green) 0%, var(--pri-green-dark) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1800px;
+            margin: 0 auto;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-container {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--pri-green-light);
+            flex-shrink: 0;
+        }
+
+            .logo-container i {
+                font-size: 1.8rem;
+                color: var(--pri-green);
+            }
+
+        .header-center {
+            flex: 1;
+            text-align: center;
+            min-width: 250px;
+        }
+
+            .header-center h1 {
+                font-size: 1.5rem;
+                font-weight: 800;
+                margin-bottom: 0.3rem;
+            }
+
+            .header-center p {
+                font-size: 0.9rem;
+                opacity: 0.95;
+            }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-back {
+            background: white;
+            color: var(--pri-green);
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+        }
+
+            .btn-back:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.7rem 1.2rem;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--pri-green-light);
+            flex-shrink: 0;
+        }
+
+            .user-avatar i {
+                font-size: 1.5rem;
+                color: var(--pri-green);
+            }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .main-container {
+            display: flex;
+            max-width: 1800px;
+            margin: 0 auto;
+            gap: 1.5rem;
+            padding: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .sidebar {
+            width: 300px;
+            min-width: 280px;
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+            flex-shrink: 0;
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--pri-green-dark);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1.3rem;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .filter-input, .filter-select {
+            width: 100%;
+            padding: 0.7rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+            .filter-input:focus, .filter-select:focus {
+                outline: none;
+                border-color: var(--pri-green);
+                box-shadow: 0 0 0 3px var(--shadow);
+            }
+
+        .filter-range {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+            .filter-range input {
+                flex: 1;
+            }
+
+        .filter-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.7rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+            .filter-checkbox input {
+                width: 18px;
+                height: 18px;
+                cursor: pointer;
+            }
+
+        .filter-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.85rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-green {
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-dark));
+            color: white;
+        }
+
+            .btn-green:hover {
+                background: linear-gradient(135deg, var(--pri-green-dark), #047857);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px var(--shadow);
+            }
+
+        .btn-outline {
+            background: white;
+            color: var(--pri-green);
+            border: 2px solid var(--pri-green);
+        }
+
+            .btn-outline:hover {
+                background: var(--bg-light);
+            }
+
+        .content-area {
+            flex: 1;
+            min-width: 500px;
+        }
+
+        .search-bar {
+            background: white;
+            padding: 1.2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.9rem 1rem 0.9rem 3rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+            .search-input:focus {
+                outline: none;
+                border-color: var(--pri-green);
+                box-shadow: 0 0 0 3px var(--shadow);
+            }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            font-size: 1.1rem;
+        }
+
+        .stats-bar {
+            background: white;
+            padding: 1.2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--bg-light), #d1fae5);
+            border-radius: 10px;
+            border-left: 4px solid var(--pri-green);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--pri-green-dark);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            background: white;
+            padding: 1.2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 0.8rem 1.5rem;
+            background: var(--pri-green);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+            flex: 1 1 auto;
+            justify-content: center;
+            min-width: 160px;
+        }
+
+            .btn-action:hover {
+                background: var(--pri-green-dark);
+                transform: translateY(-2px);
+            }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1600px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-dark));
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--gray-200);
+            transition: all 0.3s ease;
+        }
+
+            tbody tr:hover {
+                background: var(--bg-light);
+            }
+
+        td {
+            padding: 1rem;
+            font-size: 0.9rem;
+            color: var(--gray-700);
+        }
+
+        .badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .badge-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-dept {
+            padding: 0.3rem 0.7rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .badge-alumbrado {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-bacheo {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-recoleccion {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-contenedores {
+            background: #fce7f3;
+            color: #9f1239;
+        }
+
+        .badge-limpieza {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .action-icon {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+            .action-icon.view {
+                color: #3b82f6;
+            }
+
+            .action-icon.download {
+                color: #10b981;
+            }
+
+            .action-icon.print {
+                color: #6366f1;
+            }
+
+            .action-icon:hover {
+                transform: scale(1.2);
+            }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .pagination-btn {
+            padding: 0.7rem 1.2rem;
+            background: var(--pri-green);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+            .pagination-btn:disabled {
+                background: var(--gray-300);
+                cursor: not-allowed;
+            }
+
+        .pagination-info {
+            color: var(--gray-600);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        .notification {
+            position: fixed;
+            top: 90px;
+            right: 2rem;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid var(--pri-green);
+            z-index: 10000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            max-width: 350px;
+            font-size: 0.95rem;
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+            .modal-overlay.active {
+                display: flex;
+            }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin: auto;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-dark));
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+            .modal-header h2 {
+                font-size: 1.5rem;
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+            }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+            .modal-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            background: var(--gray-50);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--pri-green);
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gray-600);
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .detail-section-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--pri-green-dark);
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--pri-green);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            background: var(--gray-50);
+            border-radius: 0 0 15px 15px;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .btn-modal {
+            padding: 0.8rem 1.8rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+            min-width: 120px;
+        }
+
+        .btn-modal-close {
+            background: white;
+            color: var(--gray-700);
+            border: 2px solid var(--gray-300);
+        }
+
+            .btn-modal-close:hover {
+                background: var(--gray-100);
+            }
+
+        .btn-modal-action {
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-dark));
+            color: white;
+        }
+
+            .btn-modal-action:hover {
+                background: linear-gradient(135deg, var(--pri-green-dark), #047857);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px var(--shadow);
+            }
+
+        .footer {
+            background: var(--gray-800);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+        }
+
+            .footer p {
+                margin: 0.3rem 0;
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo-container">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+            </div>
+            <div class="header-center">
+                <h1>Registro de Citas Completadas - Taller Mecánico</h1>
+                <p>Historial de Servicios y Mantenimientos Realizados</p>
+            </div>
+            <div class="header-right">
+                <a href="/Home/PanelTallerMecanico" class="btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    Regresar
+                </a>
+                <div class="user-section">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">Cervando</div>
+                        <div class="user-role">Jefe de Taller</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="sidebar-title">
+                <i class="fas fa-filter"></i>
+                Filtros Avanzados
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Departamento</label>
+                <select class="filter-select" id="filterDept" onchange="applyFilters()">
+                    <option value="">Todos los departamentos</option>
+                    <option value="alumbrado">Alumbrado Público</option>
+                    <option value="bacheo">Bacheo</option>
+                    <option value="recoleccion">Recolección de Basura</option>
+                    <option value="contenedores">Contenedores</option>
+                    <option value="limpieza">Cuadrillas de Limpieza</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Tipo de Servicio</label>
+                <select class="filter-select" id="filterService" onchange="applyFilters()">
+                    <option value="">Todos los servicios</option>
+                    <option value="preventivo">Mantenimiento Preventivo</option>
+                    <option value="correctivo">Mantenimiento Correctivo</option>
+                    <option value="revision">Revisión General</option>
+                    <option value="reparacion">Reparación Mayor</option>
+                    <option value="diagnostico">Diagnóstico</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Rango de Fechas</label>
+                <div class="filter-range">
+                    <input type="date" class="filter-input" id="filterDateFrom" onchange="applyFilters()">
+                    <span>—</span>
+                    <input type="date" class="filter-input" id="filterDateTo" onchange="applyFilters()">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">No. Económico</label>
+                <input type="text" class="filter-input" id="filterEconomico" placeholder="Buscar por económico" oninput="applyFilters()">
+            </div>
+
+            <div class="filter-checkbox">
+                <input type="checkbox" id="filterMonth" onchange="applyFilters()">
+                <label for="filterMonth">Solo este mes</label>
+            </div>
+
+            <div class="filter-buttons">
+                <button class="btn btn-green" onclick="applyFilters(true)">
+                    <i class="fas fa-search"></i>
+                    Aplicar Filtros
+                </button>
+                <button class="btn btn-outline" onclick="clearFilters()">
+                    <i class="fas fa-redo"></i>
+                    Limpiar Filtros
+                </button>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <div class="search-bar">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="globalSearch" placeholder="Búsqueda global: folio, unidad, técnico, descripción..." oninput="performGlobalSearch()">
+                </div>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-value">145</div>
+                    <div class="stat-label">Total Servicios</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">38</div>
+                    <div class="stat-label">Este Mes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">1,245</div>
+                    <div class="stat-label">Horas Trabajo</div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-action" onclick="exportCSV()">
+                    <i class="fas fa-file-csv"></i> Exportar CSV
+                </button>
+                <button class="btn-action" onclick="exportPDF()">
+                    <i class="fas fa-file-pdf"></i> Exportar PDF
+                </button>
+                <button class="btn-action" onclick="printHistory()">
+                    <i class="fas fa-print"></i> Imprimir Historial
+                </button>
+                <button class="btn-action" onclick="generateStats()">
+                    <i class="fas fa-chart-line"></i> Estadísticas
+                </button>
+            </div>
+
+            <div class="table-container">
+                <div class="table-wrapper">
+                    <table id="completedTable">
+                        <thead>
+                            <tr>
+                                <th>Folio</th>
+                                <th>Fecha Completado</th>
+                                <th>Departamento</th>
+                                <th>Unidad</th>
+                                <th>Económico</th>
+                                <th>Tipo Servicio</th>
+                                <th>Horas Trabajo</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="completedBody">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination">
+                    <button class="pagination-btn" onclick="previousPage()" id="prevBtn">
+                        <i class="fas fa-chevron-left"></i> Anterior
+                    </button>
+                    <span class="pagination-info" id="pageInfo">Página 1 de 1</span>
+                    <button class="pagination-btn" onclick="nextPage()" id="nextBtn">
+                        Siguiente <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">
+                    <i class="fas fa-file-alt"></i>
+                    Detalle del Servicio Completado
+                </h2>
+                <button class="modal-close" onclick="closeDetailModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal-body" id="modalBody">
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-modal btn-modal-close" onclick="closeDetailModal()">
+                    <i class="fas fa-times"></i>
+                    Cerrar
+                </button>
+                <button type="button" class="btn-modal btn-modal-action" onclick="downloadReport()">
+                    <i class="fas fa-download"></i>
+                    Descargar Reporte
+                </button>
+                <button type="button" class="btn-modal btn-modal-action" onclick="printServiceReport()">
+                    <i class="fas fa-print"></i>
+                    Imprimir
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Sistema de Taller Mecánico Municipal - Monclova, Coahuila</p>
+        <p>&copy; 2024 H. Ayuntamiento de Monclova. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        const allCompleted = [
+            {folio: 'TM-001', fechaCompletado: '2024-10-08', fechaInicio: '2024-10-08', departamento: 'alumbrado', unidad: 'Camioneta Alumbrado 1', economico: 'ECO-001', placas: 'ABC-1234', servicio: 'preventivo', tecnico: 'Martinez', horasTrabajo: 3.5, costoTotal: 2850, calidad: 'excellent', descripcion: 'Cambio de aceite y filtros, revisión general', partes: [{nombre: 'Aceite sintético 5W-30', cantidad: 5, costo: 850}, {nombre: 'Filtro de aceite', cantidad: 1, costo: 320}, {nombre: 'Filtro de aire', cantidad: 1, costo: 280}, {nombre: 'Mano de obra', cantidad: 3.5, costo: 1400}], observaciones: 'Servicio completado satisfactoriamente. Unidad en excelente estado.'},
+            {folio: 'TM-002', fechaCompletado: '2024-10-07', fechaInicio: '2024-10-06', departamento: 'bacheo', unidad: 'Camión Bacheo 2', economico: 'ECO-015', placas: 'DEF-5678', servicio: 'correctivo', tecnico: 'Rodriguez', horasTrabajo: 8.0, costoTotal: 12500, calidad: 'excellent', descripcion: 'Reparación completa del sistema de frenos', partes: [{nombre: 'Pastillas de freno', cantidad: 4, costo: 2800}, {nombre: 'Discos de freno', cantidad: 2, costo: 4200}, {nombre: 'Líquido de frenos', cantidad: 2, costo: 300}, {nombre: 'Mano de obra', cantidad: 8, costo: 5200}], observaciones: 'Sistema de frenos completamente reparado y probado. Garantía de 6 meses.'},
+            {folio: 'TM-003', fechaCompletado: '2024-10-07', fechaInicio: '2024-10-07', departamento: 'recoleccion', unidad: 'Recolector 3', economico: 'ECO-022', placas: 'GHI-9012', servicio: 'revision', tecnico: 'Gonzalez', horasTrabajo: 2.5, costoTotal: 1850, calidad: 'good', descripcion: 'Revisión general mensual programada', partes: [{nombre: 'Inspección completa', cantidad: 1, costo: 600}, {nombre: 'Lubricantes', cantidad: 3, costo: 450}, {nombre: 'Ajustes menores', cantidad: 1, costo: 300}, {nombre: 'Mano de obra', cantidad: 2.5, costo: 500}], observaciones: 'Unidad en buen estado general. Programar próximo servicio en 30 días.'},
+            {folio: 'TM-004', fechaCompletado: '2024-10-06', fechaInicio: '2024-10-05', departamento: 'contenedores', unidad: 'Roll Off 1', economico: 'ECO-030', placas: 'JKL-3456', servicio: 'reparacion', tecnico: 'Hernandez', horasTrabajo: 12.0, costoTotal: 18750, calidad: 'excellent', descripcion: 'Reparación sistema hidráulico completo', partes: [{nombre: 'Bomba hidráulica', cantidad: 1, costo: 8500}, {nombre: 'Mangueras hidráulicas', cantidad: 4, costo: 3200}, {nombre: 'Aceite hidráulico', cantidad: 20, costo: 2050}, {nombre: 'Mano de obra', cantidad: 12, costo: 5000}], observaciones: 'Sistema hidráulico completamente renovado. Pruebas exitosas.'},
+            {folio: 'TM-005', fechaCompletado: '2024-10-05', fechaInicio: '2024-10-04', departamento: 'limpieza', unidad: 'Barredora 2', economico: 'ECO-045', placas: 'MNO-7890', servicio: 'diagnostico', tecnico: 'Lopez', horasTrabajo: 4.0, costoTotal: 3200, calidad: 'good', descripcion: 'Diagnóstico y reparación de ruido en motor', partes: [{nombre: 'Diagnóstico completo', cantidad: 1, costo: 800}, {nombre: 'Banda de distribución', cantidad: 1, costo: 1200}, {nombre: 'Tensores', cantidad: 2, costo: 600}, {nombre: 'Mano de obra', cantidad: 4, costo: 600}], observaciones: 'Problema resuelto. Banda de distribución reemplazada.'},
+            {folio: 'TM-006', fechaCompletado: '2024-10-04', fechaInicio: '2024-10-04', departamento: 'alumbrado', unidad: 'Camioneta Alumbrado 3', economico: 'ECO-007', placas: 'PQR-2468', servicio: 'preventivo', tecnico: 'Martinez', horasTrabajo: 3.0, costoTotal: 2650, calidad: 'excellent', descripcion: 'Servicio de 5,000 km con rotación de llantas', partes: [{nombre: 'Aceite 10W-40', cantidad: 5, costo: 750}, {nombre: 'Filtro de aceite', cantidad: 1, costo: 280}, {nombre: 'Rotación de llantas', cantidad: 1, costo: 400}, {nombre: 'Balanceo', cantidad: 4, costo: 520}, {nombre: 'Mano de obra', cantidad: 3, costo: 700}], observaciones: 'Servicio preventivo completado. Llantas en buen estado.'},
+            {folio: 'TM-007', fechaCompletado: '2024-10-03', fechaInicio: '2024-10-02', departamento: 'bacheo', unidad: 'Camión Bacheo 4', economico: 'ECO-018', placas: 'STU-1357', servicio: 'correctivo', tecnico: 'Rodriguez', horasTrabajo: 10.0, costoTotal: 15800, calidad: 'good', descripcion: 'Reparación mayor de transmisión', partes: [{nombre: 'Kit de embrague', cantidad: 1, costo: 6500}, {nombre: 'Aceite de transmisión', cantidad: 8, costo: 1600}, {nombre: 'Sincronizadores', cantidad: 2, costo: 2700}, {nombre: 'Mano de obra', cantidad: 10, costo: 5000}], observaciones: 'Transmisión reparada. Cambios suaves nuevamente.'},
+            {folio: 'TM-008', fechaCompletado: '2024-10-02', fechaInicio: '2024-10-02', departamento: 'recoleccion', unidad: 'Recolector 5', economico: 'ECO-025', placas: 'VWX-9753', servicio: 'preventivo', tecnico: 'Gonzalez', horasTrabajo: 5.0, costoTotal: 4850, calidad: 'excellent', descripcion: 'Mantenimiento preventivo completo con revisión de compactador', partes: [{nombre: 'Aceite sintético', cantidad: 8, costo: 1600}, {nombre: 'Filtros múltiples', cantidad: 4, costo: 1200}, {nombre: 'Lubricación compactador', cantidad: 1, costo: 650}, {nombre: 'Mano de obra', cantidad: 5, costo: 1400}], observaciones: 'Mantenimiento completo. Compactador funcionando perfectamente.'},
+            {folio: 'TM-009', fechaCompletado: '2024-10-01', fechaInicio: '2024-09-30', departamento: 'contenedores', unidad: 'Roll Off 3', economico: 'ECO-033', placas: 'YZA-8642', servicio: 'reparacion', tecnico: 'Hernandez', horasTrabajo: 14.0, costoTotal: 22400, calidad: 'excellent', descripcion: 'Reparación urgente de fuga hidráulica mayor', partes: [{nombre: 'Cilindro hidráulico', cantidad: 2, costo: 12000}, {nombre: 'Sellos hidráulicos', cantidad: 8, costo: 2400}, {nombre: 'Aceite hidráulico', cantidad: 25, costo: 3000}, {nombre: 'Mano de obra', cantidad: 14, costo: 5000}], observaciones: 'Reparación exitosa. Sistema probado bajo carga.'},
+            {folio: 'TM-010', fechaCompletado: '2024-09-30', fechaInicio: '2024-09-30', departamento: 'limpieza', unidad: 'Barredora 4', economico: 'ECO-048', placas: 'BCD-1975', servicio: 'preventivo', tecnico: 'Lopez', horasTrabajo: 2.0, costoTotal: 1950, calidad: 'good', descripcion: 'Cambio de cepillos laterales desgastados', partes: [{nombre: 'Cepillo lateral izq.', cantidad: 1, costo: 650}, {nombre: 'Cepillo lateral der.', cantidad: 1, costo: 650}, {nombre: 'Ajustes y calibración', cantidad: 1, costo: 250}, {nombre: 'Mano de obra', cantidad: 2, costo: 400}], observaciones: 'Cepillos nuevos instalados. Barrido mejorado.'},
+            {folio: 'TM-011', fechaCompletado: '2024-09-29', fechaInicio: '2024-09-28', departamento: 'alumbrado', unidad: 'Camioneta Alumbrado 5', economico: 'ECO-009', placas: 'EFG-3698', servicio: 'diagnostico', tecnico: 'Martinez', horasTrabajo: 3.0, costoTotal: 2850, calidad: 'excellent', descripcion: 'Diagnóstico y reparación de check engine', partes: [{nombre: 'Scanner diagnóstico', cantidad: 1, costo: 500}, {nombre: 'Sensor de oxígeno', cantidad: 1, costo: 1200}, {nombre: 'Limpieza inyectores', cantidad: 1, costo: 550}, {nombre: 'Mano de obra', cantidad: 3, costo: 600}], observaciones: 'Sensor defectuoso reemplazado. Check engine apagado.'},
+            {folio: 'TM-012', fechaCompletado: '2024-09-28', fechaInicio: '2024-09-27', departamento: 'bacheo', unidad: 'Camión Bacheo 1', economico: 'ECO-014', placas: 'HIJ-7531', servicio: 'correctivo', tecnico: 'Rodriguez', horasTrabajo: 6.0, costoTotal: 8450, calidad: 'good', descripcion: 'Reparación del sistema eléctrico', partes: [{nombre: 'Alternador', cantidad: 1, costo: 3500}, {nombre: 'Batería nueva', cantidad: 1, costo: 2200}, {nombre: 'Cables eléctricos', cantidad: 5, costo: 750}, {nombre: 'Fusibles', cantidad: 10, costo: 200}, {nombre: 'Mano de obra', cantidad: 6, costo: 1800}], observaciones: 'Sistema eléctrico reparado completamente. Luces funcionando.'},
+            {folio: 'TM-013', fechaCompletado: '2024-09-27', fechaInicio: '2024-09-27', departamento: 'recoleccion', unidad: 'Recolector 7', economico: 'ECO-028', placas: 'KLM-9514', servicio: 'revision', tecnico: 'Gonzalez', horasTrabajo: 4.0, costoTotal: 3200, calidad: 'excellent', descripcion: 'Inspección de seguridad anual reglamentaria', partes: [{nombre: 'Inspección completa', cantidad: 1, costo: 1200}, {nombre: 'Pruebas de seguridad', cantidad: 1, costo: 800}, {nombre: 'Certificación', cantidad: 1, costo: 600}, {nombre: 'Mano de obra', cantidad: 4, costo: 600}], observaciones: 'Unidad aprobada. Certificación válida por 1 año.'},
+            {folio: 'TM-014', fechaCompletado: '2024-09-26', fechaInicio: '2024-09-25', departamento: 'contenedores', unidad: 'Roll Off 2', economico: 'ECO-031', placas: 'NOP-7532', servicio: 'preventivo', tecnico: 'Hernandez', horasTrabajo: 6.0, costoTotal: 6850, calidad: 'excellent', descripcion: 'Servicio mayor de 15,000 km', partes: [{nombre: 'Aceite 15W-40', cantidad: 12, costo: 2400}, {nombre: 'Filtro de aceite', cantidad: 1, costo: 450}, {nombre: 'Filtro de aire', cantidad: 1, costo: 380}, {nombre: 'Filtro de combustible', cantidad: 1, costo: 520}, {nombre: 'Revisión completa', cantidad: 1, costo: 1100}, {nombre: 'Mano de obra', cantidad: 6, costo: 2000}], observaciones: 'Servicio mayor completado. Unidad en óptimas condiciones.'},
+            {folio: 'TM-015', fechaCompletado: '2024-09-25', fechaInicio: '2024-09-24', departamento: 'limpieza', unidad: 'Barredora 1', economico: 'ECO-044', placas: 'QRS-1593', servicio: 'reparacion', tecnico: 'Lopez', horasTrabajo: 8.0, costoTotal: 11250, calidad: 'good', descripcion: 'Reparación urgente del sistema de aspiración', partes: [{nombre: 'Motor aspirador', cantidad: 1, costo: 5500}, {nombre: 'Mangueras succión', cantidad: 3, costo: 1800}, {nombre: 'Filtros HEPA', cantidad: 2, costo: 950}, {nombre: 'Rodamientos', cantidad: 4, costo: 800}, {nombre: 'Mano de obra', cantidad: 8, costo: 2200}], observaciones: 'Sistema de aspiración reparado. Funcionando al 100%.'},
+            {folio: 'TM-016', fechaCompletado: '2024-09-24', fechaInicio: '2024-09-24', departamento: 'alumbrado', unidad: 'Camioneta Alumbrado 2', economico: 'ECO-003', placas: 'TUV-3571', servicio: 'preventivo', tecnico: 'Martinez', horasTrabajo: 3.5, costoTotal: 2950, calidad: 'excellent', descripcion: 'Mantenimiento 10,000 km programado', partes: [{nombre: 'Aceite sintético', cantidad: 5, costo: 900}, {nombre: 'Filtros completos', cantidad: 3, costo: 750}, {nombre: 'Bujías', cantidad: 4, costo: 600}, {nombre: 'Mano de obra', cantidad: 3.5, costo: 700}], observaciones: 'Mantenimiento 10k completado exitosamente.'},
+            {folio: 'TM-017', fechaCompletado: '2024-09-23', fechaInicio: '2024-09-23', departamento: 'bacheo', unidad: 'Camión Bacheo 3', economico: 'ECO-016', placas: 'WXY-9512', servicio: 'correctivo', tecnico: 'Rodriguez', horasTrabajo: 1.5, costoTotal: 2850, calidad: 'excellent', descripcion: 'Cambio de batería descargada', partes: [{nombre: 'Batería 12V 800A', cantidad: 1, costo: 2300}, {nombre: 'Limpieza terminales', cantidad: 1, costo: 150}, {nombre: 'Mano de obra', cantidad: 1.5, costo: 400}], observaciones: 'Batería nueva instalada. Sistema eléctrico OK.'},
+            {folio: 'TM-018', fechaCompletado: '2024-09-22', fechaInicio: '2024-09-22', departamento: 'recoleccion', unidad: 'Recolector 1', economico: 'ECO-020', placas: 'ZAB-7532', servicio: 'revision', tecnico: 'Gonzalez', horasTrabajo: 3.0, costoTotal: 2200, calidad: 'excellent', descripcion: 'Revisión trimestral completa', partes: [{nombre: 'Inspección general', cantidad: 1, costo: 800}, {nombre: 'Lubricantes varios', cantidad: 1, costo: 600}, {nombre: 'Ajustes menores', cantidad: 1, costo: 300}, {nombre: 'Mano de obra', cantidad: 3, costo: 500}], observaciones: 'Revisión trimestral OK. Todo en orden.'},
+            {folio: 'TM-019', fechaCompletado: '2024-09-21', fechaInicio: '2024-09-20', departamento: 'contenedores', unidad: 'Roll Off 4', economico: 'ECO-034', placas: 'CDE-1597', servicio: 'diagnostico', tecnico: 'Hernandez', horasTrabajo: 5.0, costoTotal: 4750, calidad: 'good', descripcion: 'Diagnóstico y solución de pérdida de potencia', partes: [{nombre: 'Diagnóstico completo', cantidad: 1, costo: 900}, {nombre: 'Filtro aire obstruido', cantidad: 1, costo: 450}, {nombre: 'Limpieza inyección', cantidad: 1, costo: 1200}, {nombre: 'Limpieza turbo', cantidad: 1, costo: 1200}, {nombre: 'Mano de obra', cantidad: 5, costo: 1000}], observaciones: 'Filtro y sistema limpiados. Potencia restaurada.'},
+            {folio: 'TM-020', fechaCompletado: '2024-09-20', fechaInicio: '2024-09-20', departamento: 'limpieza', unidad: 'Barredora 3', economico: 'ECO-046', placas: 'FGH-3698', servicio: 'preventivo', tecnico: 'Lopez', horasTrabajo: 2.5, costoTotal: 1850, calidad: 'excellent', descripcion: 'Lubricación general programada', partes: [{nombre: 'Grasas industriales', cantidad: 5, costo: 650}, {nombre: 'Aceites lubricantes', cantidad: 3, costo: 550}, {nombre: 'Limpieza general', cantidad: 1, costo: 250}, {nombre: 'Mano de obra', cantidad: 2.5, costo: 400}], observaciones: 'Lubricación completa realizada. Excelente estado.'}
+        ];
+
+        let filteredCompleted = [...allCompleted];
+        let currentPage = 1;
+        const itemsPerPage = 10;
+
+        function getDeptBadgeClass(dept) {
+            const badges = {
+                'alumbrado': 'badge-alumbrado',
+                'bacheo': 'badge-bacheo',
+                'recoleccion': 'badge-recoleccion',
+                'contenedores': 'badge-contenedores',
+                'limpieza': 'badge-limpieza'
+            };
+            return badges[dept] || 'badge-alumbrado';
+        }
+
+        function getDeptLabel(dept) {
+            const labels = {
+                'alumbrado': 'Alumbrado',
+                'bacheo': 'Bacheo',
+                'recoleccion': 'Recolección',
+                'contenedores': 'Contenedores',
+                'limpieza': 'Limpieza'
+            };
+            return labels[dept] || dept;
+        }
+
+        function getServiceLabel(service) {
+            const labels = {
+                'preventivo': 'Preventivo',
+                'correctivo': 'Correctivo',
+                'revision': 'Revisión',
+                'reparacion': 'Reparación',
+                'diagnostico': 'Diagnóstico'
+            };
+            return labels[service] || service;
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('completedBody');
+            tbody.innerHTML = '';
+
+            const totalPages = Math.ceil(filteredCompleted.length / itemsPerPage);
+            const startIdx = (currentPage - 1) * itemsPerPage;
+            const endIdx = startIdx + itemsPerPage;
+            const pageCompleted = filteredCompleted.slice(startIdx, endIdx);
+
+            if (pageCompleted.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 2rem;">No se encontraron servicios completados</td></tr>';
+            } else {
+                pageCompleted.forEach(service => {
+                    const row = `
+                        <tr>
+                            <td><strong>${service.folio}</strong></td>
+                            <td>${service.fechaCompletado}</td>
+                            <td>
+                                <span class="badge-dept ${getDeptBadgeClass(service.departamento)}">
+                                    ${getDeptLabel(service.departamento)}
+                                </span>
+                            </td>
+                            <td>${service.unidad}</td>
+                            <td><strong>${service.economico}</strong></td>
+                            <td>${getServiceLabel(service.servicio)}</td>
+                            <td>${service.horasTrabajo} hrs</td>
+                            <td>
+                                <span class="badge badge-completed">
+                                    Completado
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-icons">
+                                    <i class="fas fa-eye action-icon view" onclick="viewService('${service.folio}')" title="Ver detalles"></i>
+                                    <i class="fas fa-download action-icon download" onclick="downloadServiceReport('${service.folio}')" title="Descargar reporte"></i>
+                                    <i class="fas fa-print action-icon print" onclick="printService('${service.folio}')" title="Imprimir"></i>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                });
+            }
+
+            updatePagination();
+            updateStats();
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredCompleted.length / itemsPerPage);
+            document.getElementById('pageInfo').textContent = `Página ${currentPage} de ${totalPages || 1} (${filteredCompleted.length} servicios)`;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+        }
+
+        function updateStats() {
+            const total = filteredCompleted.length;
+            const thisMonth = filteredCompleted.filter(s => {
+                const date = new Date(s.fechaCompletado);
+                const now = new Date();
+                return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+            }).length;
+            const totalHours = filteredCompleted.reduce((sum, s) => sum + s.horasTrabajo, 0);
+
+            const stats = document.querySelectorAll('.stat-value');
+            stats[0].textContent = total;
+            stats[1].textContent = thisMonth;
+            stats[2].textContent = Math.round(totalHours);
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(filteredCompleted.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+            }
+        }
+
+        function performGlobalSearch() {
+            const searchTerm = document.getElementById('globalSearch').value.toLowerCase();
+
+            if (!searchTerm) {
+                filteredCompleted = [...allCompleted];
+            } else {
+                filteredCompleted = allCompleted.filter(service => {
+                    return Object.values(service).some(value => {
+                        if (typeof value === 'object') return false;
+                        return String(value).toLowerCase().includes(searchTerm);
+                    });
+                });
+            }
+
+            currentPage = 1;
+            renderTable();
+        }
+
+        function applyFilters(showNotif = false) {
+            const dept = document.getElementById('filterDept').value.toLowerCase();
+            const service = document.getElementById('filterService').value.toLowerCase();
+            const dateFrom = document.getElementById('filterDateFrom').value;
+            const dateTo = document.getElementById('filterDateTo').value;
+            const economico = document.getElementById('filterEconomico').value.toLowerCase();
+            const month = document.getElementById('filterMonth').checked;
+
+            const now = new Date();
+            const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+            const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+
+            filteredCompleted = allCompleted.filter(s => {
+                if (dept && s.departamento !== dept) return false;
+                if (service && s.servicio !== service) return false;
+                if (dateFrom && s.fechaCompletado < dateFrom) return false;
+                if (dateTo && s.fechaCompletado > dateTo) return false;
+                if (economico && !s.economico.toLowerCase().includes(economico)) return false;
+                if (month && (s.fechaCompletado < firstDay || s.fechaCompletado > lastDay)) return false;
+                return true;
+            });
+
+            currentPage = 1;
+            renderTable();
+
+            if (showNotif) {
+                showNotification(`Filtros aplicados: ${filteredCompleted.length} servicios encontrados`);
+            }
+        }
+
+        function clearFilters() {
+            document.getElementById('filterDept').value = '';
+            document.getElementById('filterService').value = '';
+            document.getElementById('filterDateFrom').value = '';
+            document.getElementById('filterDateTo').value = '';
+            document.getElementById('filterEconomico').value = '';
+            document.getElementById('filterMonth').checked = false;
+            document.getElementById('globalSearch').value = '';
+
+            filteredCompleted = [...allCompleted];
+            currentPage = 1;
+            renderTable();
+            showNotification('Filtros limpiados - Mostrando todos los servicios');
+        }
+
+        function viewService(folio) {
+            const service = allCompleted.find(s => s.folio === folio);
+            if (!service) return;
+
+            const partsHTML = service.partes.map(part => `
+                <tr>
+                    <td>${part.nombre}</td>
+                    <td style="text-align: center;">${part.cantidad}</td>
+                    <td style="text-align: right;">$${part.costo.toLocaleString()}</td>
+                    <td style="text-align: right; font-weight: 700;">$${(part.cantidad * part.costo).toLocaleString()}</td>
+                </tr>
+            `).join('');
+
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <div class="detail-section-title">
+                    <i class="fas fa-calendar-check"></i>
+                    Información del Servicio
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Folio</div>
+                        <div class="detail-value">${service.folio}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Fecha Inicio</div>
+                        <div class="detail-value">${service.fechaInicio}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Fecha Completado</div>
+                        <div class="detail-value">${service.fechaCompletado}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Calidad</div>
+                        <div class="detail-value">
+                            <span class="badge-quality ${getQualityClass(service.calidad)}">
+                                ${getQualityLabel(service.calidad)}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section-title">
+                    <i class="fas fa-building"></i>
+                    Departamento y Vehículo
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Departamento</div>
+                        <div class="detail-value">
+                            <span class="badge-dept ${getDeptBadgeClass(service.departamento)}">
+                                ${getDeptLabel(service.departamento)}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Unidad</div>
+                        <div class="detail-value">${service.unidad}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">No. Económico</div>
+                        <div class="detail-value">${service.economico}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Placas</div>
+                        <div class="detail-value">${service.placas}</div>
+                    </div>
+                </div>
+
+                <div class="detail-section-title">
+                    <i class="fas fa-wrench"></i>
+                    Detalles del Servicio
+                </div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Tipo de Servicio</div>
+                        <div class="detail-value">${getServiceLabel(service.servicio)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Técnico Responsable</div>
+                        <div class="detail-value">${getTechFullName(service.tecnico)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Horas de Trabajo</div>
+                        <div class="detail-value">${service.horasTrabajo} horas</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Costo Total</div>
+                        <div class="detail-value" style="color: var(--pri-green); font-size: 1.3rem;">${service.costoTotal.toLocaleString()}</div>
+                    </div>
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <div class="detail-label">Descripción del Trabajo</div>
+                        <div class="detail-value">${service.descripcion}</div>
+                    </div>
+                </div>
+
+                <div class="detail-section-title">
+                    <i class="fas fa-cogs"></i>
+                    Partes y Refacciones Utilizadas
+                </div>
+                <table class="parts-table">
+                    <thead>
+                        <tr>
+                            <th>Descripción</th>
+                            <th style="text-align: center;">Cantidad</th>
+                            <th style="text-align: right;">Precio Unit.</th>
+                            <th style="text-align: right;">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${partsHTML}
+                        <tr style="background: var(--bg-light); font-weight: 700;">
+                            <td colspan="3" style="text-align: right; padding: 1rem;">TOTAL:</td>
+                            <td style="text-align: right; padding: 1rem; color: var(--pri-green); font-size: 1.1rem;">${service.costoTotal.toLocaleString()}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="detail-section-title">
+                    <i class="fas fa-clipboard"></i>
+                    Observaciones
+                </div>
+                <div class="detail-item" style="width: 100%;">
+                    <div class="detail-value">${service.observaciones}</div>
+                </div>
+            `;
+
+            openDetailModal();
+        }
+
+        function downloadServiceReport(folio) {
+            showNotification(`Descargando reporte de servicio ${folio}...`);
+        }
+
+        function printService(folio) {
+            showNotification(`Imprimiendo reporte de servicio ${folio}...`);
+        }
+
+        function downloadReport() {
+            showNotification('Descargando reporte detallado...');
+        }
+
+        function printServiceReport() {
+            window.print();
+        }
+
+        function openDetailModal() {
+            document.getElementById('detailModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function exportCSV() {
+            const headers = ['Folio', 'Fecha', 'Departamento', 'Unidad', 'Económico', 'Servicio', 'Horas'];
+            const csvContent = [
+                headers.join(','),
+                ...filteredCompleted.map(s => [
+                    s.folio, s.fechaCompletado, getDeptLabel(s.departamento),
+                    s.unidad, s.economico, getServiceLabel(s.servicio), s.horasTrabajo
+                ].join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `servicios_completados_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+
+            showNotification('✅ Archivo CSV exportado correctamente');
+        }
+
+        function exportPDF() {
+            showNotification('Generando PDF... (función en desarrollo)');
+        }
+
+        function printHistory() {
+            window.print();
+            showNotification('Imprimiendo historial...');
+        }
+
+        function generateStats() {
+            showNotification('Generando estadísticas detalladas...');
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `<i class="fas fa-check-circle" style="color: var(--pri-green); margin-right: 0.5rem;"></i>${message}`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable();
+            showNotification('Sistema de historial cargado - 20 servicios completados');
+
+            document.getElementById('detailModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeDetailModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

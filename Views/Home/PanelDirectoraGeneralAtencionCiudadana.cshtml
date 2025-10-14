@@ -1,0 +1,722 @@
+﻿
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Directora | Atención Ciudadana</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --pri-green: #16a34a;
+            --pri-green-light: #22c55e;
+            --pri-green-dark: #15803d;
+            --pri-green-darker: #14532d;
+            --pri-purple: #7c3aed;
+            --pri-purple-light: #a78bfa;
+            --pri-white: #FFFFFF;
+            --bg-light: #f0fdf4;
+            --bg-green-light: #dcfce7;
+            --text-dark: #1f2937;
+            --text-gray: #4b5563;
+            --shadow: rgba(22, 163, 74, 0.2);
+            --orange: #f97316;
+            --red: #dc2626;
+            --blue: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-green-light) 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--pri-green) 0%, var(--pri-green-dark) 100%);
+            color: var(--pri-white);
+            padding: 1rem 1.5rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--pri-green-darker);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1800px;
+            margin: 0 auto;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1 1 auto;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            background: var(--pri-white);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--pri-green-light);
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                padding: 5px;
+            }
+
+            .logo i {
+                font-size: 2rem;
+                color: var(--pri-green);
+            }
+
+        .header-info h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.2rem;
+        }
+
+        .header-info p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid var(--pri-white);
+            color: var(--pri-white);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+            .header-btn:hover {
+                background: var(--pri-white);
+                color: var(--pri-green);
+            }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(255,255,255,0.15);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--pri-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--pri-green-light);
+        }
+
+            .user-avatar i {
+                font-size: 1.5rem;
+                color: var(--pri-green);
+            }
+
+        .user-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--pri-purple), var(--pri-purple-light));
+            padding: 1.2rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 30px rgba(124, 58, 237, 0.3);
+        }
+
+            .dashboard-header h2 {
+                font-size: 1.5rem;
+                font-weight: 900;
+                margin-bottom: 0.3rem;
+            }
+
+            .dashboard-header p {
+                font-size: 0.95rem;
+                opacity: 0.95;
+            }
+
+        .date-time {
+            display: flex;
+            gap: 2rem;
+            margin-top: 0.6rem;
+            font-size: 0.85rem;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: var(--pri-white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border-left: 4px solid var(--pri-green);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .kpi-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px var(--shadow);
+            }
+
+            .kpi-card.urgent {
+                border-left-color: var(--red);
+            }
+
+            .kpi-card.warning {
+                border-left-color: var(--orange);
+            }
+
+            .kpi-card.success {
+                border-left-color: var(--pri-green);
+            }
+
+            .kpi-card.info {
+                border-left-color: var(--blue);
+            }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .kpi-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .kpi-card.urgent .kpi-icon {
+            background: linear-gradient(135deg, var(--red), #ef4444);
+        }
+
+        .kpi-card.warning .kpi-icon {
+            background: linear-gradient(135deg, var(--orange), #fb923c);
+        }
+
+        .kpi-card.info .kpi-icon {
+            background: linear-gradient(135deg, var(--blue), #60a5fa);
+        }
+
+        .kpi-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--pri-green);
+            line-height: 1;
+        }
+
+        .kpi-card.urgent .kpi-number {
+            color: var(--red);
+        }
+
+        .kpi-card.warning .kpi-number {
+            color: var(--orange);
+        }
+
+        .kpi-card.info .kpi-number {
+            color: var(--blue);
+        }
+
+        .kpi-label {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .kpi-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+
+        .trend-up {
+            color: var(--pri-green);
+        }
+
+        .trend-down {
+            color: var(--red);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--pri-green-dark);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+            .section-title i {
+                font-size: 1.3rem;
+            }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-card {
+            background: var(--pri-white);
+            border-radius: 15px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border: 3px solid transparent;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+            .action-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 12px 35px var(--shadow);
+                border-color: var(--pri-green);
+            }
+
+        .action-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-light));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .action-card:hover .action-icon-wrapper {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .action-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--pri-green-dark);
+            margin-bottom: 0.8rem;
+        }
+
+        .action-description {
+            font-size: 1rem;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        .quick-stats {
+            background: var(--pri-white);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 10px;
+            background: var(--bg-light);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--pri-green);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-dark));
+            color: white;
+            padding: 1.5rem;
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 10000;
+            max-width: 350px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+            .notification.success {
+                background: var(--pri-green);
+                color: white;
+            }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">
+                    <img src="/imagenes/M.png" alt="Monclova" onerror="this.parentElement.innerHTML='<i class=\'fas fa-building\'></i>'">
+                </div>
+                <div class="logo">
+                    <img src="/imagenes/ServiciosPrimarios.png" alt="Servicios Primarios" onerror="this.parentElement.innerHTML='<i class=\'fas fa-tools\'></i>'">
+                </div>
+                <div class="header-info">
+                    <h1>Panel de Dirección</h1>
+                    <p>Sistema de Gestión - Atención Ciudadana</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="header-btn" onclick="showNotification('Generando reporte...', 'success')">
+                    <i class="fas fa-file-export"></i> Exportar
+                </button>
+                <button class="header-btn" onclick="showNotification('Actualizando datos...', 'success')">
+                    <i class="fas fa-sync"></i> Actualizar
+                </button>
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="user-info">
+                    <div class="user-name">Directora</div>
+                    <div class="user-role">Atención Ciudadana</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="dashboard-header">
+            <h2><i class="fas fa-chart-line"></i> Panel de Control Ejecutivo</h2>
+            <p>Vista general de métricas y gestión de operaciones</p>
+            <div class="date-time">
+                <div><i class="fas fa-calendar"></i> <span id="currentDate"></span></div>
+                <div><i class="fas fa-clock"></i> <span id="currentTime"></span></div>
+            </div>
+        </div>
+
+        <h3 class="section-title">
+            <i class="fas fa-chart-pie"></i>
+            Indicadores Clave de Desempeño (KPI)
+        </h3>
+
+        <div class="kpi-grid">
+            <div class="kpi-card urgent">
+                <div class="kpi-header">
+                    <div>
+                        <div class="kpi-number">47</div>
+                        <div class="kpi-label">Reportes Urgentes</div>
+                        <div class="kpi-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> +12% vs ayer
+                        </div>
+                    </div>
+                    <div class="kpi-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kpi-card warning">
+                <div class="kpi-header">
+                    <div>
+                        <div class="kpi-number">128</div>
+                        <div class="kpi-label">En Proceso</div>
+                        <div class="kpi-trend trend-down">
+                            <i class="fas fa-arrow-down"></i> -5% vs ayer
+                        </div>
+                    </div>
+                    <div class="kpi-icon">
+                        <i class="fas fa-spinner"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kpi-card success">
+                <div class="kpi-header">
+                    <div>
+                        <div class="kpi-number">342</div>
+                        <div class="kpi-label">Resueltos Hoy</div>
+                        <div class="kpi-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> +18% vs ayer
+                        </div>
+                    </div>
+                    <div class="kpi-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kpi-card info">
+                <div class="kpi-header">
+                    <div>
+                        <div class="kpi-number">92%</div>
+                        <div class="kpi-label">Satisfacción</div>
+                        <div class="kpi-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> +3% vs mes
+                        </div>
+                    </div>
+                    <div class="kpi-icon">
+                        <i class="fas fa-smile"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kpi-card info">
+                <div class="kpi-header">
+                    <div>
+                        <div class="kpi-number">18h</div>
+                        <div class="kpi-label">Tiempo Promedio</div>
+                        <div class="kpi-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> Mejora 6h
+                        </div>
+                    </div>
+                    <div class="kpi-icon">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="kpi-card success">
+                <div class="kpi-header">
+                    <div>
+                        <div class="kpi-number">35</div>
+                        <div class="kpi-label">Personal Activo</div>
+                        <div class="kpi-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> 100% en línea
+                        </div>
+                    </div>
+                    <div class="kpi-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-stats">
+            <h3 class="section-title">
+                <i class="fas fa-tachometer-alt"></i>
+                Estadísticas por Departamento
+            </h3>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-value">156</div>
+                    <div class="stat-label">Recolección</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">243</div>
+                    <div class="stat-label">Alumbrado</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">118</div>
+                    <div class="stat-label">Bacheo</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">517</div>
+                    <div class="stat-label">Total Activos</div>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="section-title">
+            <i class="fas fa-tasks"></i>
+            Gestión y Administración
+        </h3>
+
+        <div class="actions-grid">
+            <div class="action-card" onclick="navigateTo('/Home/AtencionCiudadanoGenerarReportes')">
+                <div class="action-icon-wrapper">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="action-title">Crear Reportes</div>
+                <div class="action-description">
+                    Genera un nuevo reporte para cualquier departamento: Recolección, Alumbrado o Bacheo
+                </div>
+            </div>
+
+            <div class="action-card" onclick="navigateTo('/Home/AtencionCiudadanoTotalReportes')">
+                <div class="action-icon-wrapper">
+                    <i class="fas fa-list-alt"></i>
+                </div>
+                <div class="action-title">Total de Reportes</div>
+                <div class="action-description">
+                    Consulta todos los reportes de todos los departamentos en un solo lugar
+                </div>
+            </div>
+
+            <div class="action-card" onclick="navigateTo('/home/AtencionGraficasReportes')">
+                <div class="action-icon-wrapper">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="action-title">Gráficas de Reportes</div>
+                <div class="action-description">
+                    Visualiza estadísticas y gráficas de todos los reportes del sistema
+                </div>
+            </div>
+
+            <div class="action-card" onclick="navigateTo('/Home/DirectoraMapaReportes')">
+                <div class="action-icon-wrapper">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="action-title">Mapa de Reportes</div>
+                <div class="action-description">
+                    Visualiza geográficamente la distribución de reportes en la ciudad
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p><strong>Panel de Dirección - Atención Ciudadana Monclova</strong></p>
+        <p>&copy; 2024 H. Ayuntamiento de Monclova. Sistema de Gestión Administrativa.</p>
+    </footer>
+
+    <script>
+        function navigateTo(url) {
+            showNotification('Accediendo al módulo...', 'success');
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 2500);
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            const dateOptions = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            const timeOptions = {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            };
+
+            document.getElementById('currentDate').textContent =
+                now.toLocaleDateString('es-MX', dateOptions);
+            document.getElementById('currentTime').textContent =
+                now.toLocaleTimeString('es-MX', timeOptions);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+
+            setTimeout(() => {
+                showNotification('¡Bienvenida al Panel de Dirección!', 'success');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

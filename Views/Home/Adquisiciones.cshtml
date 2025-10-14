@@ -1,0 +1,1670 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adquisiciones - Sistema Almacén</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #8B0000 0%, #C41E3A 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-title p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+            .btn-back:hover {
+                background: rgba(255,255,255,0.3);
+            }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid;
+        }
+
+            .stat-card.recibido {
+                border-color: #007bff;
+            }
+
+            .stat-card.proceso {
+                border-color: #ffc107;
+            }
+
+            .stat-card.camino {
+                border-color: #17a2b8;
+            }
+
+            .stat-card.completado {
+                border-color: #28a745;
+            }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .filters-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .filters-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #8B0000;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+
+            .filter-group select:focus,
+            .filter-group input:focus {
+                outline: none;
+                border-color: #C41E3A;
+            }
+
+        .filter-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn-filter {
+            padding: 0.7rem 1.5rem;
+            background: #C41E3A;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+            .btn-filter:hover {
+                background: #8B0000;
+            }
+
+        .btn-clear {
+            padding: 0.7rem 1.5rem;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+            .btn-clear:hover {
+                background: #5a6268;
+            }
+
+        .solicitudes-list {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .list-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .solicitud-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+            .solicitud-card:hover {
+                border-color: #C41E3A;
+                box-shadow: 0 4px 12px rgba(196, 30, 58, 0.15);
+            }
+
+        .solicitud-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .solicitud-info h3 {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .solicitud-meta {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+            .meta-item i {
+                color: #C41E3A;
+            }
+
+        .badges-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-recibido {
+            background: #cfe2ff;
+            color: #084298;
+        }
+
+        .badge-proceso {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-camino {
+            background: #cff4fc;
+            color: #055160;
+        }
+
+        .badge-entregado {
+            background: #d1e7dd;
+            color: #0a3622;
+        }
+
+        .badge-completado {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-alta {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-media {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-baja {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .actions-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-oficio {
+            padding: 0.6rem 1.2rem;
+            background: #6f42c1;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+            .btn-oficio:hover {
+                background: #5a32a3;
+            }
+
+        .btn-info {
+            padding: 0.6rem 1.2rem;
+            background: #17a2b8;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+            .btn-info:hover {
+                background: #138496;
+            }
+
+        .btn-action {
+            padding: 0.6rem 1.2rem;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+            .btn-action:hover {
+                background: #0056b3;
+            }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.3rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+            .modal.active {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
+            }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #8B0000 0%, #C41E3A 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .modal-header h2 {
+                font-size: 1.5rem;
+                font-weight: 600;
+            }
+
+        .btn-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-item {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #C41E3A;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.3rem;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #8B0000;
+            margin: 1.5rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+            .form-group label {
+                display: block;
+                font-weight: 600;
+                color: #555;
+                margin-bottom: 0.5rem;
+                font-size: 0.95rem;
+            }
+
+            .form-group select,
+            .form-group textarea,
+            .form-group input {
+                width: 100%;
+                padding: 0.8rem;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                font-size: 0.95rem;
+            }
+
+            .form-group textarea {
+                resize: vertical;
+                min-height: 80px;
+            }
+
+        .material-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .material-table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+        }
+
+            .material-table th {
+                background: #f8f9fa;
+                padding: 1rem;
+                text-align: left;
+                font-weight: 600;
+                border-bottom: 2px solid #ddd;
+            }
+
+            .material-table td {
+                padding: 0.8rem;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .btn-complete {
+            padding: 0.8rem 2rem;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            min-width: 200px;
+        }
+
+            .btn-complete:hover {
+                background: #218838;
+            }
+
+        .btn-update {
+            padding: 0.8rem 2rem;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+            .btn-update:hover {
+                background: #0056b3;
+            }
+
+        .btn-cancel {
+            padding: 0.8rem 2rem;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            min-width: 120px;
+        }
+
+            .btn-cancel:hover {
+                background: #5a6268;
+            }
+
+        .info-full-item {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 0.8rem 1.5rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+            .tab-btn.active {
+                color: #C41E3A;
+                border-bottom-color: #C41E3A;
+            }
+
+        .tab-content {
+            display: none;
+        }
+
+            .tab-content.active {
+                display: block;
+            }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        .btn-add-row {
+            margin-top: 1rem;
+            padding: 0.6rem 1.2rem;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+            .btn-add-row:hover {
+                background: #218838;
+            }
+
+        .btn-delete-row {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .file-upload {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+            .file-upload:hover {
+                border-color: #C41E3A;
+                background: #fafafa;
+            }
+
+            .file-upload.has-file {
+                border-color: #28a745;
+                background: #f0f9f4;
+            }
+
+            .file-upload input {
+                display: none;
+            }
+
+        .file-icon {
+            font-size: 3rem;
+            color: #C41E3A;
+            margin-bottom: 1rem;
+        }
+
+        .file-preview {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .btn-remove-file {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>Gestión de Adquisiciones</h1>
+                <p>Control de Solicitudes y Estado de Material</p>
+            </div>
+            <a href="/Home/InicioAlmacen" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="stats-cards">
+            <div class="stat-card recibido">
+                <div class="stat-number" id="statRecibido">5</div>
+                <div class="stat-label">Recibidas</div>
+            </div>
+            <div class="stat-card proceso">
+                <div class="stat-number" id="statProceso">8</div>
+                <div class="stat-label">En Proceso</div>
+            </div>
+            <div class="stat-card camino">
+                <div class="stat-number" id="statCamino">3</div>
+                <div class="stat-label">En Camino</div>
+            </div>
+            <div class="stat-card completado">
+                <div class="stat-number" id="statCompletado">12</div>
+                <div class="stat-label">Completadas</div>
+            </div>
+        </div>
+
+        <div class="filters-section">
+            <div class="filters-title">
+                <i class="fas fa-filter"></i> Filtros de Búsqueda
+            </div>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label>Departamento</label>
+                    <select id="filterDept">
+                        <option value="">Todos</option>
+                        <option value="alumbrado">Alumbrado Público</option>
+                        <option value="bacheo">Bacheo</option>
+                        <option value="recoleccion">Recolección de Basura</option>
+                        <option value="cuadrillas">Cuadrillas de Limpieza</option>
+                        <option value="forestacion">Forestación</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Estado</label>
+                    <select id="filterStatus">
+                        <option value="">Todos</option>
+                        <option value="recibido">Recibido</option>
+                        <option value="proceso">En Proceso</option>
+                        <option value="camino">En Camino</option>
+                        <option value="entregado">Entregado</option>
+                        <option value="completado">Completado</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Prioridad</label>
+                    <select id="filterPriority">
+                        <option value="">Todas</option>
+                        <option value="alta">Alta</option>
+                        <option value="media">Media</option>
+                        <option value="baja">Baja</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Fecha Desde</label>
+                    <input type="date" id="filterDateFrom">
+                </div>
+                <div class="filter-group">
+                    <label>Fecha Hasta</label>
+                    <input type="date" id="filterDateTo">
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button class="btn-filter" onclick="applyFilters()">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+                <button class="btn-clear" onclick="clearFilters()">
+                    <i class="fas fa-times"></i> Limpiar
+                </button>
+            </div>
+        </div>
+
+        <div class="solicitudes-list">
+            <div class="list-header">
+                <h2 class="list-title">Solicitudes de Material</h2>
+                <span style="color: #666; font-size: 0.95rem;">Total: <strong>3</strong> solicitudes</span>
+            </div>
+
+            <div class="solicitud-card"
+                 data-departamento="recoleccion"
+                 data-estado="proceso"
+                 data-prioridad="alta"
+                 data-fecha="2025-10-03">
+                <div class="solicitud-header">
+                    <div class="solicitud-info">
+                        <h3>Oficio No. DSERVPRIM/1445/09/2025</h3>
+                        <div class="solicitud-meta">
+                            <span class="meta-item">
+                                <i class="fas fa-truck"></i>
+                                <strong>Recolección de Basura</strong>
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-calendar"></i>
+                                03/Octubre/2025
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-user"></i>
+                                María Uscanga
+                            </span>
+                        </div>
+                    </div>
+                    <div class="badges-group">
+                        <span class="badge badge-proceso">En Proceso</span>
+                        <span class="badge badge-alta">Prioridad Alta</span>
+                    </div>
+                </div>
+                <p style="color: #666; margin-bottom: 0.5rem;">
+                    Acumulador G-47 para unidad NP-300
+                </p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: 60%;"></div>
+                </div>
+                <div class="progress-text">Progreso: 60% - Material en cotización</div>
+                <div class="actions-buttons">
+                    <button class="btn-oficio" onclick="verOficio('sol1')">
+                        <i class="fas fa-file-alt"></i> Información del Oficio
+                    </button>
+                    <button class="btn-info" onclick="verInformacion('sol1')">
+                        <i class="fas fa-info-circle"></i> Ver Resumen
+                    </button>
+                    <button class="btn-action" onclick="gestionarEstado('sol1')">
+                        <i class="fas fa-edit"></i> Gestionar Estado
+                    </button>
+                </div>
+            </div>
+
+            <div class="solicitud-card"
+                 data-departamento="alumbrado"
+                 data-estado="camino"
+                 data-prioridad="alta"
+                 data-fecha="2025-09-22">
+                <div class="solicitud-header">
+                    <div class="solicitud-info">
+                        <h3>Oficio No. DSERVPRIM/1393/2025</h3>
+                        <div class="solicitud-meta">
+                            <span class="meta-item">
+                                <i class="fas fa-lightbulb"></i>
+                                <strong>Alumbrado Público</strong>
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-calendar"></i>
+                                22/Septiembre/2025
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-user"></i>
+                                Luis Estrada
+                            </span>
+                        </div>
+                    </div>
+                    <div class="badges-group">
+                        <span class="badge badge-camino">En Camino</span>
+                        <span class="badge badge-alta">Prioridad Alta</span>
+                    </div>
+                </div>
+                <p style="color: #666; margin-bottom: 0.5rem;">
+                    12 Reflectores LED 100w luz blanca exterior
+                </p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: 85%;"></div>
+                </div>
+                <div class="progress-text">Progreso: 85% - Material en tránsito</div>
+                <div class="actions-buttons">
+                    <button class="btn-oficio" onclick="verOficio('sol2')">
+                        <i class="fas fa-file-alt"></i> Información del Oficio
+                    </button>
+                    <button class="btn-info" onclick="verInformacion('sol2')">
+                        <i class="fas fa-info-circle"></i> Ver Resumen
+                    </button>
+                    <button class="btn-action" onclick="gestionarEstado('sol2')">
+                        <i class="fas fa-edit"></i> Gestionar Estado
+                    </button>
+                </div>
+            </div>
+
+            <div class="solicitud-card"
+                 data-departamento="bacheo"
+                 data-estado="recibido"
+                 data-prioridad="media"
+                 data-fecha="2025-09-15">
+                <div class="solicitud-header">
+                    <div class="solicitud-info">
+                        <h3>Oficio No. BACHEO/0847/2025</h3>
+                        <div class="solicitud-meta">
+                            <span class="meta-item">
+                                <i class="fas fa-road"></i>
+                                <strong>Bacheo</strong>
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-calendar"></i>
+                                15/Septiembre/2025
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-user"></i>
+                                Director de Bacheo
+                            </span>
+                        </div>
+                    </div>
+                    <div class="badges-group">
+                        <span class="badge badge-recibido">Recibido</span>
+                        <span class="badge badge-media">Prioridad Media</span>
+                    </div>
+                </div>
+                <p style="color: #666; margin-bottom: 0.5rem;">
+                    Asfalto en frío 50kg para reparaciones
+                </p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: 25%;"></div>
+                </div>
+                <div class="progress-text">Progreso: 25% - Solicitud recibida, pendiente de revisión</div>
+                <div class="actions-buttons">
+                    <button class="btn-oficio" onclick="verOficio('sol3')">
+                        <i class="fas fa-file-alt"></i> Información del Oficio
+                    </button>
+                    <button class="btn-info" onclick="verInformacion('sol3')">
+                        <i class="fas fa-info-circle"></i> Ver Resumen
+                    </button>
+                    <button class="btn-action" onclick="gestionarEstado('sol3')">
+                        <i class="fas fa-edit"></i> Gestionar Estado
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Información del Oficio (Vista completa del oficio original) -->
+    <div class="modal" id="oficioModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Información Completa del Oficio</h2>
+                <button class="btn-close" onclick="closeOficioModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <h3 class="section-title">Información General</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Destinatario <span class="required">*</span></label>
+                            <input type="text" id="oficioDestinatario" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Cargo</label>
+                            <input type="text" id="oficioCargo" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha <span class="required">*</span></label>
+                            <input type="text" id="oficioFecha" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Oficio No. <span class="required">*</span></label>
+                            <input type="text" id="oficioNo" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Departamento Solicitante <span class="required">*</span></label>
+                        <input type="text" id="oficioDepartamento" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Contenido del Oficio <span class="required">*</span></label>
+                        <textarea id="oficioContenido" readonly style="min-height: 100px;"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section" id="oficioUnidadSection">
+                    <h3 class="section-title">Información de Unidad/Equipo</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Número Económico</label>
+                            <input type="text" id="oficioNumEconomico" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Unidad/Equipo</label>
+                            <input type="text" id="oficioUnidad" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo</label>
+                            <input type="text" id="oficioTipo" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Marca</label>
+                            <input type="text" id="oficioMarca" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Modelo/Año</label>
+                            <input type="text" id="oficioModelo" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Placa (Vehículos)</label>
+                            <input type="text" id="oficioPlaca" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Número de Serie</label>
+                            <input type="text" id="oficioSerie" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Material y/o Servicio Solicitado</h3>
+                    <div class="material-table-wrapper">
+                        <table class="material-table" id="oficioMaterialTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Cantidad</th>
+                                    <th style="width: 100px;">U.M.</th>
+                                    <th>Insumo/Servicio</th>
+                                    <th style="width: 180px;">Modelo / No. Parte</th>
+                                </tr>
+                            </thead>
+                            <tbody id="oficioMaterialTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Documentos</h3>
+                    <div class="info-grid">
+                        <div class="info-item" style="cursor: pointer;" onclick="alert('Abrir PDF del oficio')">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <i class="fas fa-file-pdf" style="font-size: 2.5rem; color: #dc3545;"></i>
+                                <div>
+                                    <div class="info-label">PDF del Oficio</div>
+                                    <div class="info-value" style="font-size: 0.9rem;">oficio.pdf</div>
+                                    <p style="font-size: 0.8rem; color: #666; margin: 0.3rem 0 0 0;">
+                                        <i class="fas fa-download"></i> Click para descargar
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-item" style="cursor: pointer;" onclick="alert('Abrir imagen del oficio')">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <i class="fas fa-image" style="font-size: 2.5rem; color: #17a2b8;"></i>
+                                <div>
+                                    <div class="info-label">Foto del Oficio (Opcional)</div>
+                                    <div class="info-value" style="font-size: 0.9rem;">oficio_foto.jpg</div>
+                                    <p style="font-size: 0.8rem; color: #666; margin: 0.3rem 0 0 0;">
+                                        <i class="fas fa-download"></i> Click para descargar
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeOficioModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Información Resumida -->
+    <div class="modal" id="infoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Resumen de la Solicitud</h2>
+                <button class="btn-close" onclick="closeInfoModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="changeTab('general')">Información General</button>
+                    <button class="tab-btn" onclick="changeTab('unidad')">Datos de Unidad</button>
+                    <button class="tab-btn" onclick="changeTab('materiales')">Materiales</button>
+                    <button class="tab-btn" onclick="changeTab('documentos')">Documentos</button>
+                </div>
+
+                <div class="tab-content active" id="tab-general">
+                    <h3 class="section-title">Información General del Oficio</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Oficio No.</div>
+                            <div class="info-value" id="infoOficio">DSERVPRIM/1445/09/2025</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Destinatario</div>
+                            <div class="info-value" id="infoDestinatario">María Argelia Uscanga Guerrero</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Cargo</div>
+                            <div class="info-value" id="infoCargo">Directora de Adquisiciones</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Departamento</div>
+                            <div class="info-value" id="infoDepartamento">Recolección de Basura</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Fecha de Solicitud</div>
+                            <div class="info-value" id="infoFecha">03/Octubre/2025</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Estado Actual</div>
+                            <div class="info-value" id="infoEstado">En Proceso</div>
+                        </div>
+                    </div>
+                    <div class="info-full-item">
+                        <div class="info-label">Contenido del Oficio</div>
+                        <div class="info-value" id="infoContenido" style="font-weight: 400; margin-top: 0.5rem;">
+                            Por medio de la presente le envío un cordial saludo, así mismo solicito su apoyo con la adquisición de materiales necesarios, para la unidad asignada a Recolección de Basura (Limpieza).
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-unidad">
+                    <h3 class="section-title">Datos de la Unidad/Equipo</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Número Económico</div>
+                            <div class="info-value" id="infoNumEconomico">TR-01</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Unidad/Equipo</div>
+                            <div class="info-value" id="infoUnidad">NP-300</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Tipo</div>
+                            <div class="info-value" id="infoTipo">CUADRILLA</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Marca</div>
+                            <div class="info-value" id="infoMarca">NISSAN ESTAQUITAS</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Modelo/Año</div>
+                            <div class="info-value" id="infoModelo">2015</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Placas</div>
+                            <div class="info-value" id="infoPlaca">EL7781D</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Número de Serie</div>
+                            <div class="info-value" id="infoSerie">3N6DD25X0FK032548</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-materiales">
+                    <h3 class="section-title">Material y/o Servicio Solicitado</h3>
+                    <div class="material-table-wrapper">
+                        <table class="material-table">
+                            <thead>
+                                <tr>
+                                    <th>Cantidad</th>
+                                    <th>U.M.</th>
+                                    <th>Insumo/Servicio</th>
+                                    <th>Modelo / No. Parte</th>
+                                </tr>
+                            </thead>
+                            <tbody id="infoMaterialesTable">
+                                <tr>
+                                    <td>1</td>
+                                    <td>PZA</td>
+                                    <td>ACUMULADOR</td>
+                                    <td>G-47</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-documentos">
+                    <h3 class="section-title">Documentos Adjuntos</h3>
+                    <div class="info-grid">
+                        <div class="info-item" style="cursor: pointer;" onclick="alert('Abrir PDF del oficio')">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <i class="fas fa-file-pdf" style="font-size: 2.5rem; color: #dc3545;"></i>
+                                <div>
+                                    <div class="info-label">PDF del Oficio</div>
+                                    <div class="info-value" style="font-size: 0.9rem;">oficio_1445_09_2025.pdf</div>
+                                    <p style="font-size: 0.8rem; color: #666; margin: 0.3rem 0 0 0;">
+                                        <i class="fas fa-download"></i> Click para descargar
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-item" style="cursor: pointer;" onclick="alert('Abrir imagen del oficio')">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <i class="fas fa-image" style="font-size: 2.5rem; color: #17a2b8;"></i>
+                                <div>
+                                    <div class="info-label">Foto del Oficio</div>
+                                    <div class="info-value" style="font-size: 0.9rem;">oficio_foto.jpg</div>
+                                    <p style="font-size: 0.8rem; color: #666; margin: 0.3rem 0 0 0;">
+                                        <i class="fas fa-download"></i> Click para descargar
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeInfoModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Gestión de Estado -->
+    <div class="modal" id="solicitudModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Gestionar Estado de Solicitud</h2>
+                <button class="btn-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <h3 class="section-title">Información de la Solicitud</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Oficio No.</div>
+                        <div class="info-value" id="modalOficio">DSERVPRIM/1445/09/2025</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Departamento</div>
+                        <div class="info-value" id="modalDept">Recolección de Basura</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Fecha Solicitud</div>
+                        <div class="info-value" id="modalFecha">03/Octubre/2025</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Estado Actual</div>
+                        <div class="info-value" id="modalEstadoActual">En Proceso</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Prioridad Actual</div>
+                        <div class="info-value" id="modalPrioridadActual">Alta</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Progreso</div>
+                        <div class="info-value" id="modalProgreso">60%</div>
+                    </div>
+                </div>
+
+                <div class="info-item" style="margin-bottom: 1.5rem;">
+                    <div class="info-label">Material Solicitado</div>
+                    <div class="info-value" id="modalMaterial">Acumulador G-47 para unidad NP-300</div>
+                </div>
+
+                <h3 class="section-title">Actualizar Estado</h3>
+                <div class="form-group">
+                    <label>Estado del Material</label>
+                    <select id="nuevoEstado">
+                        <option value="recibido">Recibido</option>
+                        <option value="proceso" selected>En Proceso</option>
+                        <option value="camino">En Camino</option>
+                        <option value="entregado">Entregado</option>
+                        <option value="completado">Completado</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Prioridad</label>
+                    <select id="nuevaPrioridad">
+                        <option value="baja">Baja</option>
+                        <option value="media">Media</option>
+                        <option value="alta" selected>Alta</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Notas / Observaciones</label>
+                    <textarea id="observaciones" placeholder="Ingrese notas sobre el progreso del material..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-complete" onclick="completarSolicitud()">
+                    <i class="fas fa-check-circle"></i> Completar y Enviar a Almacén
+                </button>
+                <button class="btn-update" onclick="actualizarEstado()">
+                    <i class="fas fa-sync"></i> Actualizar Estado
+                </button>
+                <button class="btn-cancel" onclick="closeModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const solicitudesData = {
+            sol1: {
+                oficio: 'DSERVPRIM/1445/09/2025',
+                destinatario: 'María Argelia Uscanga Guerrero',
+                cargo: 'Directora de Adquisiciones',
+                departamento: 'Recolección de Basura (Limpieza)',
+                fecha: '03/Octubre/2025',
+                estado: 'En Proceso',
+                contenido: 'Por medio de la presente le envío un cordial saludo, así mismo solicito su apoyo con la adquisición de materiales necesarios, para la unidad asignada a Recolección de Basura (Limpieza).',
+                numEconomico: 'TR-01',
+                unidad: 'NP-300',
+                tipo: 'CUADRILLA',
+                marca: 'NISSAN ESTAQUITAS',
+                modelo: '2015',
+                placa: 'EL7781D',
+                serie: '3N6DD25X0FK032548',
+                materiales: [
+                    { cantidad: 1, um: 'PZA', insumo: 'ACUMULADOR', modelo: 'G-47' }
+                ]
+            },
+            sol2: {
+                oficio: 'DSERVPRIM/1393/2025',
+                destinatario: 'Luis Alberto Estrada Mercado',
+                cargo: 'Director de Alumbrado Público',
+                departamento: 'Alumbrado Público',
+                fecha: '22/Septiembre/2025',
+                estado: 'En Camino',
+                contenido: 'Por este medio solicito la adquisición de reflectores LED para el mantenimiento de la red de alumbrado público municipal.',
+                numEconomico: 'N/A',
+                unidad: 'N/A',
+                tipo: 'N/A',
+                marca: 'N/A',
+                modelo: 'N/A',
+                placa: 'N/A',
+                serie: 'N/A',
+                materiales: [
+                    { cantidad: 12, um: 'PZA', insumo: 'REFLECTOR LED 100W LUZ BLANCA', modelo: 'EXTERIOR' }
+                ]
+            },
+            sol3: {
+                oficio: 'BACHEO/0847/2025',
+                destinatario: 'Director de Bacheo',
+                cargo: 'Director',
+                departamento: 'Bacheo',
+                fecha: '15/Septiembre/2025',
+                estado: 'Recibido',
+                contenido: 'Solicito la adquisición de asfalto en frío para realizar reparaciones de emergencia en vialidades del municipio.',
+                numEconomico: 'N/A',
+                unidad: 'N/A',
+                tipo: 'N/A',
+                marca: 'N/A',
+                modelo: 'N/A',
+                placa: 'N/A',
+                serie: 'N/A',
+                materiales: [
+                    { cantidad: 20, um: 'SACO', insumo: 'ASFALTO EN FRÍO', modelo: '50KG' }
+                ]
+            }
+        };
+
+        let currentTab = 'general';
+
+        function verOficio(solicitudId) {
+            const data = solicitudesData[solicitudId];
+
+            document.getElementById('oficioDestinatario').value = data.destinatario;
+            document.getElementById('oficioCargo').value = data.cargo;
+            document.getElementById('oficioFecha').value = data.fecha;
+            document.getElementById('oficioNo').value = data.oficio;
+            document.getElementById('oficioDepartamento').value = data.departamento;
+            document.getElementById('oficioContenido').value = data.contenido;
+
+            if (data.numEconomico !== 'N/A') {
+                document.getElementById('oficioUnidadSection').style.display = 'block';
+                document.getElementById('oficioNumEconomico').value = data.numEconomico;
+                document.getElementById('oficioUnidad').value = data.unidad;
+                document.getElementById('oficioTipo').value = data.tipo;
+                document.getElementById('oficioMarca').value = data.marca;
+                document.getElementById('oficioModelo').value = data.modelo;
+                document.getElementById('oficioPlaca').value = data.placa;
+                document.getElementById('oficioSerie').value = data.serie;
+            } else {
+                document.getElementById('oficioUnidadSection').style.display = 'none';
+            }
+
+            const tbody = document.getElementById('oficioMaterialTableBody');
+            tbody.innerHTML = '';
+            data.materiales.forEach(mat => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${mat.cantidad}</td>
+                    <td>${mat.um}</td>
+                    <td>${mat.insumo}</td>
+                    <td>${mat.modelo}</td>
+                `;
+            });
+
+            document.getElementById('oficioModal').classList.add('active');
+        }
+
+        function closeOficioModal() {
+            document.getElementById('oficioModal').classList.remove('active');
+        }
+
+        function verInformacion(solicitudId) {
+            const data = solicitudesData[solicitudId];
+
+            document.getElementById('infoOficio').textContent = data.oficio;
+            document.getElementById('infoDestinatario').textContent = data.destinatario;
+            document.getElementById('infoCargo').textContent = data.cargo;
+            document.getElementById('infoDepartamento').textContent = data.departamento;
+            document.getElementById('infoFecha').textContent = data.fecha;
+            document.getElementById('infoEstado').textContent = data.estado;
+            document.getElementById('infoContenido').textContent = data.contenido;
+
+            document.getElementById('infoNumEconomico').textContent = data.numEconomico;
+            document.getElementById('infoUnidad').textContent = data.unidad;
+            document.getElementById('infoTipo').textContent = data.tipo;
+            document.getElementById('infoMarca').textContent = data.marca;
+            document.getElementById('infoModelo').textContent = data.modelo;
+            document.getElementById('infoPlaca').textContent = data.placa;
+            document.getElementById('infoSerie').textContent = data.serie;
+
+            const tbody = document.getElementById('infoMaterialesTable');
+            tbody.innerHTML = '';
+            data.materiales.forEach(mat => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${mat.cantidad}</td>
+                    <td>${mat.um}</td>
+                    <td>${mat.insumo}</td>
+                    <td>${mat.modelo}</td>
+                `;
+            });
+
+            changeTab('general');
+            document.getElementById('infoModal').classList.add('active');
+        }
+
+        function closeInfoModal() {
+            document.getElementById('infoModal').classList.remove('active');
+        }
+
+        function changeTab(tabName) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            currentTab = tabName;
+        }
+
+        function gestionarEstado(solicitudId) {
+            document.getElementById('solicitudModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('solicitudModal').classList.remove('active');
+        }
+
+        function actualizarEstado() {
+            const estado = document.getElementById('nuevoEstado').value;
+            const prioridad = document.getElementById('nuevaPrioridad').value;
+            const observaciones = document.getElementById('observaciones').value;
+
+            if (!observaciones.trim()) {
+                alert('Por favor agregue observaciones sobre la actualización');
+                return;
+            }
+
+            if (confirm('¿Confirma la actualización del estado de esta solicitud?')) {
+                alert('Estado actualizado correctamente');
+                closeModal();
+            }
+        }
+
+        function completarSolicitud() {
+            if (confirm('¿Está seguro de marcar esta solicitud como completada? Se enviará al Almacén de Registros.')) {
+                alert('Solicitud completada y enviada al Almacén de Registros');
+                closeModal();
+            }
+        }
+
+        function applyFilters() {
+            const filterDept = document.getElementById('filterDept').value.toLowerCase();
+            const filterStatus = document.getElementById('filterStatus').value.toLowerCase();
+            const filterPriority = document.getElementById('filterPriority').value.toLowerCase();
+            const filterDateFrom = document.getElementById('filterDateFrom').value;
+            const filterDateTo = document.getElementById('filterDateTo').value;
+
+            const cards = document.querySelectorAll('.solicitud-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                let show = true;
+
+                // Filtrar por departamento
+                if (filterDept) {
+                    const cardDept = card.getAttribute('data-departamento');
+                    if (cardDept !== filterDept) {
+                        show = false;
+                    }
+                }
+
+                // Filtrar por estado
+                if (filterStatus) {
+                    const cardStatus = card.getAttribute('data-estado');
+                    if (cardStatus !== filterStatus) {
+                        show = false;
+                    }
+                }
+
+                // Filtrar por prioridad
+                if (filterPriority) {
+                    const cardPriority = card.getAttribute('data-prioridad');
+                    if (cardPriority !== filterPriority) {
+                        show = false;
+                    }
+                }
+
+                // Filtrar por fecha desde
+                if (filterDateFrom) {
+                    const cardDate = card.getAttribute('data-fecha');
+                    if (cardDate < filterDateFrom) {
+                        show = false;
+                    }
+                }
+
+                // Filtrar por fecha hasta
+                if (filterDateTo) {
+                    const cardDate = card.getAttribute('data-fecha');
+                    if (cardDate > filterDateTo) {
+                        show = false;
+                    }
+                }
+
+                // Mostrar u ocultar la tarjeta
+                if (show) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Actualizar contador
+            const totalSpan = document.querySelector('.list-header span');
+            if (totalSpan) {
+                if (visibleCount === cards.length) {
+                    totalSpan.innerHTML = `Total: <strong>${cards.length}</strong> solicitudes`;
+                } else {
+                    totalSpan.innerHTML = `Mostrando: <strong>${visibleCount}</strong> de <strong>${cards.length}</strong> solicitudes`;
+                }
+            }
+
+            // Mostrar mensaje si no hay resultados
+            if (visibleCount === 0) {
+                showNoResults();
+            } else {
+                removeNoResults();
+            }
+        }
+
+        function showNoResults() {
+            removeNoResults();
+            const listDiv = document.querySelector('.solicitudes-list');
+            const noResultsDiv = document.createElement('div');
+            noResultsDiv.id = 'noResults';
+            noResultsDiv.style.cssText = 'text-align: center; padding: 3rem; color: #666; margin-top: 2rem;';
+            noResultsDiv.innerHTML = `
+                <i class="fas fa-search" style="font-size: 3rem; color: #ddd; margin-bottom: 1rem; display: block;"></i>
+                <h3 style="color: #999; margin-bottom: 0.5rem;">No se encontraron solicitudes</h3>
+                <p>Intenta ajustar los filtros de búsqueda</p>
+            `;
+            listDiv.appendChild(noResultsDiv);
+        }
+
+        function removeNoResults() {
+            const noResults = document.getElementById('noResults');
+            if (noResults) {
+                noResults.remove();
+            }
+        }
+
+        function clearFilters() {
+            // Limpiar todos los campos de filtro
+            document.getElementById('filterDept').value = '';
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterPriority').value = '';
+            document.getElementById('filterDateFrom').value = '';
+            document.getElementById('filterDateTo').value = '';
+
+            // Mostrar todas las tarjetas
+            const cards = document.querySelectorAll('.solicitud-card');
+            cards.forEach(card => {
+                card.style.display = 'block';
+            });
+
+            // Actualizar contador
+            const totalSpan = document.querySelector('.list-header span');
+            if (totalSpan) {
+                totalSpan.innerHTML = `Total: <strong>${cards.length}</strong> solicitudes`;
+            }
+
+            // Quitar mensaje de "no hay resultados" si existe
+            removeNoResults();
+        }
+
+        window.onclick = function(event) {
+            const modal1 = document.getElementById('solicitudModal');
+            const modal2 = document.getElementById('infoModal');
+            const modal3 = document.getElementById('oficioModal');
+            if (event.target === modal1) {
+                closeModal();
+            }
+            if (event.target === modal2) {
+                closeInfoModal();
+            }
+            if (event.target === modal3) {
+                closeOficioModal();
+            }
+        }
+    </script>
+</body>
+</html>

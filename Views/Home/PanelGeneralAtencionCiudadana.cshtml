@@ -1,0 +1,458 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atención Ciudadana Servicios Primarios | Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --pri-green: #16a34a;
+            --pri-green-light: #22c55e;
+            --pri-green-dark: #15803d;
+            --pri-green-darker: #14532d;
+            --pri-white: #FFFFFF;
+            --bg-light: #f0fdf4;
+            --bg-green-light: #dcfce7;
+            --text-dark: #1f2937;
+            --text-gray: #4b5563;
+            --shadow: rgba(22, 163, 74, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-green-light) 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--pri-green) 0%, var(--pri-green-dark) 100%);
+            color: var(--pri-white);
+            padding: clamp(0.5rem, 2vw, 1rem) clamp(0.8rem, 3vw, 1.5rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--pri-green-darker);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            gap: clamp(0.5rem, 2vw, 1.5rem);
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 2vw, 1rem);
+            flex: 1 1 auto;
+            min-width: min(250px, 100%);
+        }
+
+        .logo {
+            width: clamp(65px, 10vw, 80px);
+            height: clamp(65px, 10vw, 80px);
+            background: var(--pri-white);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--pri-green-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+            .logo:hover {
+                transform: scale(1.05);
+            }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                padding: 5px;
+            }
+
+            .logo i {
+                font-size: clamp(1.8rem, 5vw, 2.5rem);
+                color: var(--pri-green);
+            }
+
+        .header-info {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+            .header-info h1 {
+                font-size: clamp(1rem, 2.5vw, 1.5rem);
+                font-weight: 800;
+                margin-bottom: 0.2rem;
+                word-wrap: break-word;
+            }
+
+            .header-info p {
+                font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+                opacity: 0.9;
+            }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 0.8rem);
+            flex-shrink: 0;
+        }
+
+        .user-avatar {
+            width: clamp(55px, 9vw, 70px);
+            height: clamp(55px, 9vw, 70px);
+            border-radius: 50%;
+            background: var(--pri-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--pri-green-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+            .user-avatar:hover {
+                transform: scale(1.05);
+            }
+
+            .user-avatar i {
+                font-size: clamp(1.3rem, 4vw, 2rem);
+                color: var(--pri-green);
+            }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: clamp(0.75rem, 2vw, 0.95rem);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .user-role {
+            font-size: clamp(0.65rem, 1.5vw, 0.8rem);
+            opacity: 0.9;
+            white-space: nowrap;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2rem);
+            width: 100%;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+            padding: clamp(1rem, 4vw, 2rem) clamp(0.8rem, 3vw, 1.5rem);
+            background: var(--pri-white);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px var(--shadow);
+            border-left: 4px solid var(--pri-green);
+        }
+
+        .welcome-title {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-weight: 900;
+            color: var(--pri-green);
+            margin-bottom: 0.5rem;
+            word-wrap: break-word;
+        }
+
+        .welcome-subtitle {
+            font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+            color: var(--text-gray);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+            gap: clamp(0.8rem, 2vw, 1rem);
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+        }
+
+        .stat-card {
+            background: var(--pri-white);
+            padding: clamp(1rem, 3vw, 1.5rem);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border-left: 4px solid var(--pri-green);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px var(--shadow);
+            }
+
+        .stat-icon {
+            width: clamp(40px, 8vw, 50px);
+            height: clamp(40px, 8vw, 50px);
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--pri-white);
+            margin: 0 auto clamp(0.5rem, 2vw, 1rem);
+        }
+
+        .stat-number {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 900;
+            color: var(--pri-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .main-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+            gap: clamp(1.5rem, 3vw, 2rem);
+            margin-top: clamp(2rem, 4vw, 3rem);
+        }
+
+        .action-card {
+            background: var(--pri-white);
+            border-radius: 15px;
+            padding: clamp(2rem, 4vw, 3rem);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border: 3px solid transparent;
+            box-shadow: 0 4px 20px var(--shadow);
+            text-align: center;
+        }
+
+            .action-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 12px 35px var(--shadow);
+                border-color: var(--pri-green);
+            }
+
+        .action-icon {
+            width: clamp(70px, 12vw, 90px);
+            height: clamp(70px, 12vw, 90px);
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-light));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--pri-white);
+            margin: 0 auto clamp(1rem, 2vw, 1.5rem);
+            transition: all 0.3s ease;
+        }
+
+        .action-card:hover .action-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .action-title {
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+            font-weight: 900;
+            color: var(--pri-green-dark);
+            margin-bottom: clamp(0.5rem, 1.5vw, 1rem);
+        }
+
+        .action-description {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, var(--pri-green), var(--pri-green-dark));
+            color: var(--pri-white);
+            padding: clamp(1rem, 2.5vw, 1.5rem);
+            margin-top: clamp(3rem, 5vw, 4rem);
+            text-align: center;
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+        }
+
+            .footer p {
+                margin: 0.3rem 0;
+            }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: clamp(0.8rem, 2vw, 1rem) clamp(1rem, 2.5vw, 1.5rem);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 10000;
+            max-width: min(300px, 90vw);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+        }
+
+            .notification.success {
+                background: var(--pri-green);
+                color: white;
+            }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">
+                    <img src="/imagenes/M.png" alt="Monclova" onerror="this.parentElement.innerHTML='<i class=\'fas fa-building\'></i>'">
+                </div>
+                <div class="logo">
+                    <img src="/imagenes/ServiciosPrimarios.png" alt="Servicios Primarios" onerror="this.parentElement.innerHTML='<i class=\'fas fa-tools\'></i>'">
+                </div>
+                <div class="header-info">
+                    <h1>Atención Ciudadana Servicios Primarios</h1>
+                    <p>Portal de Reportes y Consultas - Monclova</p>
+                </div>
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-info">
+                    <div class="user-name">Ciudadano</div>
+                    <div class="user-role">Portal de Servicios</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1 class="welcome-title">Bienvenido al Portal Ciudadano</h1>
+            <p class="welcome-subtitle">
+                Reporta problemas, consulta el estado de tus solicitudes y accede a servicios públicos
+            </p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+                <div class="stat-number">5</div>
+                <div class="stat-label">Mis Reportes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-number">2</div>
+                <div class="stat-label">En Proceso</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-number">3</div>
+                <div class="stat-label">Resueltos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="stat-number">24h</div>
+                <div class="stat-label">Tiempo Promedio</div>
+            </div>
+        </div>
+
+        <div class="main-actions">
+            <div class="action-card" onclick="navigateTo('/Home/AtencionCiudadanoGenerarReportes')">
+                <div class="action-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="action-title">Crear Reportes</div>
+                <div class="action-description">
+                    Genera un nuevo reporte para cualquier departamento: Recolección, Alumbrado o Bacheo
+                </div>
+            </div>
+
+            <div class="action-card" onclick="navigateTo('/Home/AtencionCiudadanoTotalReportes')">
+                <div class="action-icon">
+                    <i class="fas fa-list-alt"></i>
+                </div>
+                <div class="action-title">Total de Reportes</div>
+                <div class="action-description">
+                    Consulta todos los reportes de todos los departamentos en un solo lugar
+                </div>
+            </div>
+
+            <div class="action-card" onclick="navigateTo('/home/AtencionGraficasReportes')">
+                <div class="action-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="action-title">Gráficas de Reportes</div>
+                <div class="action-description">
+                    Visualiza estadísticas y gráficas de todos los reportes del sistema
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p><strong>Portal de Atención Ciudadana - Servicios Primarios Monclova</strong></p>
+        <p>&copy; 2024 H. Ayuntamiento de Monclova. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        function navigateTo(url) {
+            showNotification('Accediendo al servicio...', 'success');
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 2000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                showNotification('¡Bienvenido al Portal Ciudadano!', 'success');
+            }, 500);
+        });
+    </script>
+</body>
+</html>

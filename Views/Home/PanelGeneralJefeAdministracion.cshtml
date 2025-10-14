@@ -1,0 +1,979 @@
+﻿
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Servicios Primarios Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --pink-50: #fdf2f8;
+            --pink-100: #fce7f3;
+            --pink-200: #fbcfe8;
+            --pink-300: #f9a8d4;
+            --pink-400: #f472b6;
+            --pink-500: #ec4899;
+            --pink-600: #db2777;
+            --pink-700: #be185d;
+            --pink-800: #9f1239;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--pink-50) 0%, var(--gray-50) 100%);
+            color: var(--gray-900);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--pink-600) 0%, var(--pink-700) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(236, 72, 153, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1800px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-container {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--pink-300);
+            overflow: hidden;
+        }
+
+            .logo-container i {
+                font-size: 1.8rem;
+                color: var(--pink-600);
+            }
+
+            .logo-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+        .header-center h1 {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-center p {
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            opacity: 0.95;
+        }
+
+        .main-container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: clamp(1rem, 2.5vw, 2rem);
+        }
+
+        .filters-section {
+            background: white;
+            border-radius: 15px;
+            padding: clamp(1.2rem, 2.5vw, 1.8rem);
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .filters-title {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            font-weight: 800;
+            color: var(--pink-700);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-input, .filter-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+            .filter-input:focus, .filter-select:focus {
+                outline: none;
+                border-color: var(--pink-500);
+                box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+            }
+
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-pink {
+            background: linear-gradient(135deg, var(--pink-500), var(--pink-600));
+            color: white;
+        }
+
+            .btn-pink:hover {
+                background: linear-gradient(135deg, var(--pink-600), var(--pink-700));
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+            }
+
+        .btn-outline {
+            background: white;
+            color: var(--pink-600);
+            border: 2px solid var(--pink-600);
+        }
+
+            .btn-outline:hover {
+                background: var(--pink-50);
+            }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(236, 72, 153, 0.15);
+            }
+
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-card-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-card-label {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        .stat-card-change {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+            .stat-card-change.positive {
+                color: #10b981;
+            }
+
+            .stat-card-change.negative {
+                color: #ef4444;
+            }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(450px, 100%), 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+            .chart-card.full-width {
+                grid-column: 1 / -1;
+            }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--pink-700);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chart-control-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--pink-300);
+            background: white;
+            color: var(--pink-600);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+            .chart-control-btn.active {
+                background: var(--pink-500);
+                color: white;
+                border-color: var(--pink-500);
+            }
+
+            .chart-control-btn:hover {
+                background: var(--pink-50);
+            }
+
+            .chart-control-btn.active:hover {
+                background: var(--pink-600);
+            }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+        }
+
+            .chart-container.small {
+                height: 300px;
+            }
+
+            .chart-container.large {
+                height: 450px;
+            }
+
+        .footer {
+            background: var(--gray-800);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 2rem;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid var(--pink-500);
+            z-index: 10000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            max-width: 320px;
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo-container">
+                    <img src="~/imagenes/ESCUDO.png" alt="Logo" onerror="this.parentElement.innerHTML='<i class=\'fas fa-chart-line\'></i>'">
+                </div>
+                <div class="header-center">
+                    <h1>Dashboard Servicios Primarios Monclova</h1>
+                    <p>Panel de Control y Análisis de Operaciones</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Sección de Filtros -->
+        <div class="filters-section">
+            <div class="filters-title">
+                <i class="fas fa-filter"></i>
+                Filtros de Análisis
+            </div>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label>Servicio</label>
+                    <select class="filter-select" id="filterServicio" onchange="applyFilters()">
+                        <option value="todos">Todos los servicios</option>
+                        <option value="bacheo">Bacheo</option>
+                        <option value="alumbrado">Alumbrado Público</option>
+                        <option value="recoleccion">Recolección</option>
+                        <option value="boteo">Boteo</option>
+                        <option value="contenedores">Contenedores</option>
+                        <option value="limpieza">Limpieza</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Período</label>
+                    <select class="filter-select" id="filterPeriodo" onchange="applyFilters()">
+                        <option value="semana">Última semana</option>
+                        <option value="mes" selected>Último mes</option>
+                        <option value="trimestre">Último trimestre</option>
+                        <option value="año">Último año</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Fecha Inicio</label>
+                    <input type="date" class="filter-input" id="filterFechaInicio" onchange="applyFilters()">
+                </div>
+                <div class="filter-group">
+                    <label>Fecha Fin</label>
+                    <input type="date" class="filter-input" id="filterFechaFin" onchange="applyFilters()">
+                </div>
+            </div>
+            <div class="filter-buttons">
+                <button class="btn btn-pink" onclick="applyFilters()">
+                    <i class="fas fa-check"></i> Aplicar Filtros
+                </button>
+                <button class="btn btn-outline" onclick="resetFilters()">
+                    <i class="fas fa-redo"></i> Restablecer
+                </button>
+                <button class="btn btn-outline" onclick="exportData()">
+                    <i class="fas fa-download"></i> Exportar Datos
+                </button>
+            </div>
+        </div>
+
+        <!-- Tarjetas de Estadísticas -->
+        <div class="stats-cards" id="statsCards"></div>
+
+        <!-- Gráficas -->
+        <div class="charts-grid">
+            <!-- Gráfica 1: Resumen General por Servicio -->
+            <div class="chart-card full-width">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-bar"></i>
+                        Operaciones por Servicio
+                    </div>
+                    <div class="chart-controls">
+                        <button class="chart-control-btn active" onclick="changeChartType('chart1', 'bar')">Barras</button>
+                        <button class="chart-control-btn" onclick="changeChartType('chart1', 'line')">Líneas</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chart1"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfica 2: Bacheo -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-road"></i>
+                        Bacheo - Metros Cuadrados
+                    </div>
+                    <div class="chart-controls">
+                        <button class="chart-control-btn active" onclick="changeChartType('chart2', 'line')">Líneas</button>
+                        <button class="chart-control-btn" onclick="changeChartType('chart2', 'bar')">Barras</button>
+                    </div>
+                </div>
+                <div class="chart-container small">
+                    <canvas id="chart2"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfica 3: Alumbrado -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-lightbulb"></i>
+                        Alumbrado - Luminarias
+                    </div>
+                    <div class="chart-controls">
+                        <button class="chart-control-btn active" onclick="changeChartType('chart3', 'bar')">Barras</button>
+                        <button class="chart-control-btn" onclick="changeChartType('chart3', 'line')">Líneas</button>
+                    </div>
+                </div>
+                <div class="chart-container small">
+                    <canvas id="chart3"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfica 4: Distribución de Servicios (Donut) -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-pie"></i>
+                        Distribución de Servicios
+                    </div>
+                    <div class="chart-controls">
+                        <button class="chart-control-btn active" onclick="changeChartType('chart4', 'doughnut')">Donut</button>
+                        <button class="chart-control-btn" onclick="changeChartType('chart4', 'pie')">Pie</button>
+                    </div>
+                </div>
+                <div class="chart-container small">
+                    <canvas id="chart4"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfica 5: Recolección y Boteo -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-trash"></i>
+                        Recolección - Toneladas
+                    </div>
+                    <div class="chart-controls">
+                        <button class="chart-control-btn active" onclick="changeChartType('chart5', 'line')">Líneas</button>
+                        <button class="chart-control-btn" onclick="changeChartType('chart5', 'bar')">Barras</button>
+                    </div>
+                </div>
+                <div class="chart-container small">
+                    <canvas id="chart5"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfica 6: Contenedores -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-dumpster"></i>
+                        Contenedores - Vaciados
+                    </div>
+                    <div class="chart-controls">
+                        <button class="chart-control-btn active" onclick="changeChartType('chart6', 'bar')">Barras</button>
+                        <button class="chart-control-btn" onclick="changeChartType('chart6', 'line')">Líneas</button>
+                    </div>
+                </div>
+                <div class="chart-container small">
+                    <canvas id="chart6"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfica 7: Comparativa Mensual -->
+            <div class="chart-card full-width">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-calendar-alt"></i>
+                        Comparativa Mensual de Todos los Servicios
+                    </div>
+                    <div class="chart-controls">
+                        <button class="chart-control-btn active" onclick="changeChartType('chart7', 'line')">Líneas</button>
+                        <button class="chart-control-btn" onclick="changeChartType('chart7', 'bar')">Barras</button>
+                    </div>
+                </div>
+                <div class="chart-container large">
+                    <canvas id="chart7"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfica 8: Limpieza -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-broom"></i>
+                        Limpieza - Cuadrillas Activas
+                    </div>
+                    <div class="chart-controls">
+                        <button class="chart-control-btn active" onclick="changeChartType('chart8', 'line')">Líneas</button>
+                        <button class="chart-control-btn" onclick="changeChartType('chart8', 'bar')">Barras</button>
+                    </div>
+                </div>
+                <div class="chart-container small">
+                    <canvas id="chart8"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráfica 9: Eficiencia por Zona -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div class="chart-title">
+                        <i class="fas fa-map-marked-alt"></i>
+                        Cobertura por Zona
+                    </div>
+                    <div class="chart-controls">
+                        <button class="chart-control-btn active" onclick="changeChartType('chart9', 'bar')">Barras</button>
+                        <button class="chart-control-btn" onclick="changeChartType('chart9', 'polarArea')">Polar</button>
+                    </div>
+                </div>
+                <div class="chart-container small">
+                    <canvas id="chart9"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Dashboard desarrollado para Servicios Primarios — Monclova, Coahuila</p>
+        <p>&copy; 2024 H. Ayuntamiento de Monclova. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // Configuración de colores rosa
+        const pinkColors = {
+            primary: '#ec4899',
+            secondary: '#db2777',
+            light: '#f9a8d4',
+            lighter: '#fce7f3',
+            dark: '#be185d'
+        };
+
+        const chartColors = [
+            '#ec4899', '#db2777', '#f472b6', '#be185d', '#9f1239',
+            '#f9a8d4', '#fbcfe8', '#a855f7', '#7c3aed', '#8b5cf6'
+        ];
+
+        // Datos de ejemplo
+        const mockData = {
+            labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul'],
+            bacheo: [120, 145, 168, 142, 175, 190, 205],
+            alumbrado: [85, 92, 88, 105, 110, 98, 115],
+            recoleccion: [450, 480, 465, 510, 525, 495, 540],
+            boteo: [280, 295, 310, 285, 320, 305, 335],
+            contenedores: [165, 178, 185, 172, 195, 188, 200],
+            limpieza: [45, 48, 52, 50, 55, 53, 58]
+        };
+
+        const charts = {};
+
+        // Crear tarjetas de estadísticas
+        function createStatsCards() {
+            const statsData = [
+                { icon: 'fa-road', label: 'Bacheo (m²)', value: '1,145', change: '+12%', color: '#ec4899', positive: true },
+                { icon: 'fa-lightbulb', label: 'Luminarias', value: '693', change: '+8%', color: '#db2777', positive: true },
+                { icon: 'fa-trash', label: 'Recolección (ton)', value: '3,465', change: '+15%', color: '#f472b6', positive: true },
+                { icon: 'fa-dumpster', label: 'Contenedores', value: '1,283', change: '+6%', color: '#be185d', positive: true },
+                { icon: 'fa-broom', label: 'Cuadrillas', value: '361', change: '+10%', color: '#9f1239', positive: true },
+                { icon: 'fa-truck', label: 'Boteo (ton)', value: '2,130', change: '+7%', color: '#f9a8d4', positive: true }
+            ];
+
+            const container = document.getElementById('statsCards');
+            container.innerHTML = statsData.map(stat => `
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-icon" style="background: ${stat.color}20; color: ${stat.color};">
+                            <i class="fas ${stat.icon}"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">${stat.value}</div>
+                    <div class="stat-card-label">${stat.label}</div>
+                    <div class="stat-card-change ${stat.positive ? 'positive' : 'negative'}">
+                        <i class="fas fa-arrow-${stat.positive ? 'up' : 'down'}"></i> ${stat.change} vs mes anterior
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Configuración común de gráficas
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        font: { size: 12, weight: 'bold' },
+                        color: '#374151'
+                    }
+                }
+            }
+        };
+
+        // Gráfica 1: Resumen General
+        function createChart1() {
+            const ctx = document.getElementById('chart1').getContext('2d');
+            charts.chart1 = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: mockData.labels,
+                    datasets: [
+                        { label: 'Bacheo', data: mockData.bacheo, backgroundColor: chartColors[0], borderColor: chartColors[0], borderWidth: 2 },
+                        { label: 'Alumbrado', data: mockData.alumbrado, backgroundColor: chartColors[1], borderColor: chartColors[1], borderWidth: 2 },
+                        { label: 'Recolección', data: mockData.recoleccion, backgroundColor: chartColors[2], borderColor: chartColors[2], borderWidth: 2 }
+                    ]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Gráfica 2: Bacheo
+        function createChart2() {
+            const ctx = document.getElementById('chart2').getContext('2d');
+            charts.chart2 = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: mockData.labels,
+                    datasets: [{
+                        label: 'Metros Cuadrados',
+                        data: mockData.bacheo,
+                        borderColor: pinkColors.primary,
+                        backgroundColor: pinkColors.primary + '20',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Gráfica 3: Alumbrado
+        function createChart3() {
+            const ctx = document.getElementById('chart3').getContext('2d');
+            charts.chart3 = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: mockData.labels,
+                    datasets: [{
+                        label: 'Luminarias Reparadas',
+                        data: mockData.alumbrado,
+                        backgroundColor: pinkColors.secondary,
+                        borderColor: pinkColors.secondary,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Gráfica 4: Distribución (Donut)
+        function createChart4() {
+            const ctx = document.getElementById('chart4').getContext('2d');
+            const totals = {
+                bacheo: mockData.bacheo.reduce((a, b) => a + b, 0),
+                alumbrado: mockData.alumbrado.reduce((a, b) => a + b, 0),
+                recoleccion: mockData.recoleccion.reduce((a, b) => a + b, 0),
+                boteo: mockData.boteo.reduce((a, b) => a + b, 0),
+                contenedores: mockData.contenedores.reduce((a, b) => a + b, 0),
+                limpieza: mockData.limpieza.reduce((a, b) => a + b, 0)
+            };
+
+            charts.chart4 = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Bacheo', 'Alumbrado', 'Recolección', 'Boteo', 'Contenedores', 'Limpieza'],
+                    datasets: [{
+                        data: Object.values(totals),
+                        backgroundColor: chartColors,
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    cutout: '60%'
+                }
+            });
+        }
+
+        // Gráfica 5: Recolección
+        function createChart5() {
+            const ctx = document.getElementById('chart5').getContext('2d');
+            charts.chart5 = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: mockData.labels,
+                    datasets: [{
+                        label: 'Toneladas Recolectadas',
+                        data: mockData.recoleccion,
+                        borderColor: chartColors[2],
+                        backgroundColor: chartColors[2] + '20',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Gráfica 6: Contenedores
+        function createChart6() {
+            const ctx = document.getElementById('chart6').getContext('2d');
+            charts.chart6 = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: mockData.labels,
+                    datasets: [{
+                        label: 'Vaciados Realizados',
+                        data: mockData.contenedores,
+                        backgroundColor: chartColors[4],
+                        borderColor: chartColors[4],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Gráfica 7: Comparativa Mensual
+        function createChart7() {
+            const ctx = document.getElementById('chart7').getContext('2d');
+            charts.chart7 = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: mockData.labels,
+                    datasets: [
+                        { label: 'Bacheo', data: mockData.bacheo, borderColor: chartColors[0], backgroundColor: chartColors[0] + '20', tension: 0.4, borderWidth: 2 },
+                        { label: 'Alumbrado', data: mockData.alumbrado, borderColor: chartColors[1], backgroundColor: chartColors[1] + '20', tension: 0.4, borderWidth: 2 },
+                        { label: 'Recolección', data: mockData.recoleccion, borderColor: chartColors[2], backgroundColor: chartColors[2] + '20', tension: 0.4, borderWidth: 2 },
+                        { label: 'Boteo', data: mockData.boteo, borderColor: chartColors[3], backgroundColor: chartColors[3] + '20', tension: 0.4, borderWidth: 2 },
+                        { label: 'Contenedores', data: mockData.contenedores, borderColor: chartColors[4], backgroundColor: chartColors[4] + '20', tension: 0.4, borderWidth: 2 },
+                        { label: 'Limpieza', data: mockData.limpieza, borderColor: chartColors[5], backgroundColor: chartColors[5] + '20', tension: 0.4, borderWidth: 2 }
+                    ]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Gráfica 8: Limpieza
+        function createChart8() {
+            const ctx = document.getElementById('chart8').getContext('2d');
+            charts.chart8 = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: mockData.labels,
+                    datasets: [{
+                        label: 'Cuadrillas Activas',
+                        data: mockData.limpieza,
+                        borderColor: chartColors[5],
+                        backgroundColor: chartColors[5] + '20',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Gráfica 9: Cobertura por Zona
+        function createChart9() {
+            const ctx = document.getElementById('chart9').getContext('2d');
+            charts.chart9 = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Zona Norte', 'Zona Sur', 'Zona Este', 'Zona Oeste', 'Centro'],
+                    datasets: [{
+                        label: 'Cobertura (%)',
+                        data: [85, 92, 78, 88, 95],
+                        backgroundColor: chartColors,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    ...commonOptions,
+                    scales: {
+                        y: { beginAtZero: true, max: 100, grid: { color: '#f3f4f6' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Cambiar tipo de gráfica
+        function changeChartType(chartId, newType) {
+            const chart = charts[chartId];
+            if (!chart) return;
+
+            // Actualizar botones
+            const buttons = document.querySelectorAll(`#${chartId}`).item(0)
+                .closest('.chart-card')
+                .querySelectorAll('.chart-control-btn');
+
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Cambiar tipo
+            chart.config.type = newType;
+            chart.update();
+
+            showNotification(`Gráfica cambiada a ${newType === 'bar' ? 'barras' : newType === 'line' ? 'líneas' : newType}`);
+        }
+
+        // Aplicar filtros
+        function applyFilters() {
+            showNotification('Filtros aplicados correctamente');
+            // Aquí iría la lógica de filtrado real
+        }
+
+        // Restablecer filtros
+        function resetFilters() {
+            document.getElementById('filterServicio').value = 'todos';
+            document.getElementById('filterPeriodo').value = 'mes';
+            document.getElementById('filterFechaInicio').value = '';
+            document.getElementById('filterFechaFin').value = '';
+            showNotification('Filtros restablecidos');
+        }
+
+        // Exportar datos
+        function exportData() {
+            showNotification('Exportando datos...');
+        }
+
+        // Notificación
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `<i class="fas fa-check-circle" style="color: ${pinkColors.primary}; margin-right: 0.5rem;"></i>${message}`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            createStatsCards();
+            createChart1();
+            createChart2();
+            createChart3();
+            createChart4();
+            createChart5();
+            createChart6();
+            createChart7();
+            createChart8();
+            createChart9();
+
+            showNotification('Dashboard cargado correctamente');
+        });
+    </script>
+</body>
+</html>

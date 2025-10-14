@@ -1,0 +1,1692 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Bacheo - Mapa Interactivo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --verde-principal: #16a34a;
+            --verde-secundario: #15803d;
+            --verde-claro: #22c55e;
+            --verde-light: #86efac;
+            --verde-oscuro: #14532d;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --gris-oscuro: #1f2937;
+            --gris-medio: #9ca3af;
+            --gris-claro: #f3f4f6;
+            --blanco: #FFFFFF;
+            --negro: #111827;
+            --bg-light: #f0fdf4;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, var(--gris-claro) 100%);
+            color: var(--negro);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* PANEL DE NAVEGACIÓN */
+        .nav-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #f0f9f4 100%);
+            box-shadow: -10px 0 30px rgba(22, 163, 74, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow: hidden;
+            border-left: 1px solid #d4edda;
+        }
+
+            .nav-panel.open {
+                right: 0;
+            }
+
+        .nav-panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(22, 163, 74, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+            .nav-panel-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .nav-toggle {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--verde-principal) 0%, var(--verde-secundario) 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 20px 25px -5px rgba(22, 163, 74, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-toggle:hover {
+                transform: translateY(-50%) scale(1.1);
+                box-shadow: 0 25px 35px -5px rgba(22, 163, 74, 0.4);
+            }
+
+            .nav-toggle.active {
+                background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                transform: translateY(-50%) rotate(180deg);
+            }
+
+        .nav-panel-header {
+            background: linear-gradient(135deg, var(--verde-principal) 0%, var(--verde-secundario) 100%);
+            padding: 2rem 1.5rem;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-panel-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-panel-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-panel-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-panel-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .nav-panel-body {
+            padding: 1.5rem;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            background: #ffffff;
+            border-radius: 12px;
+            color: #334155;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid #d4edda;
+            cursor: pointer;
+        }
+
+            .nav-item:hover {
+                background: #f0f9f4;
+                transform: translateX(-5px);
+                border-color: var(--verde-principal);
+                box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.1);
+            }
+
+            .nav-item.active {
+                background: linear-gradient(135deg, var(--verde-principal), var(--verde-secundario));
+                color: white;
+                border-color: var(--verde-principal);
+            }
+
+        .nav-item-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-secundario));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active .nav-item-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-item:hover .nav-item-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .nav-item-content {
+            flex: 1;
+        }
+
+        .nav-item-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #1e293b;
+        }
+
+        .nav-item.active .nav-item-title {
+            color: white;
+        }
+
+        .nav-item-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .nav-item.active .nav-item-desc {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-item-arrow {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-item-arrow {
+            color: var(--verde-principal);
+            transform: translateX(3px);
+        }
+
+        .nav-item.active .nav-item-arrow {
+            color: white;
+        }
+
+        .nav-panel-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-track {
+            background: #f0f9f4;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-thumb {
+            background: #5cb85c;
+            border-radius: 3px;
+        }
+
+            .nav-panel-body::-webkit-scrollbar-thumb:hover {
+                background: var(--verde-principal);
+            }
+
+        .filter-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--verde-principal);
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            background: var(--bg-light);
+            border: 1px solid #d4edda;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .filter-item:hover {
+                background: #dcfce7;
+                border-color: var(--verde-principal);
+            }
+
+            .filter-item input[type="checkbox"] {
+                width: 18px;
+                height: 18px;
+                cursor: pointer;
+                accent-color: var(--verde-principal);
+            }
+
+            .filter-item label {
+                flex: 1;
+                cursor: pointer;
+                font-size: 0.88rem;
+                color: var(--gris-oscuro);
+            }
+
+        select, input[type="date"], input[type="text"] {
+            width: 100%;
+            padding: 0.7rem;
+            background: white;
+            border: 2px solid var(--gris-claro);
+            border-radius: 8px;
+            color: var(--negro);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            select:focus, input[type="date"]:focus, input[type="text"]:focus {
+                outline: none;
+                border-color: var(--verde-principal);
+                box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            }
+
+        .header {
+            background: linear-gradient(135deg, var(--verde-secundario) 0%, var(--verde-principal) 100%);
+            color: white;
+            padding: 1.8rem 2rem;
+            box-shadow: 0 4px 20px rgba(22, 163, 74, 0.3);
+            position: relative;
+            z-index: 998;
+            border-bottom: 2px solid var(--verde-light);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            max-width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1.8rem;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .logo-container {
+            display: flex;
+            gap: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            width: 90px;
+            height: 90px;
+            background: white;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--verde-light);
+            box-shadow: 0 8px 24px rgba(22, 163, 74, 0.5);
+            overflow: hidden;
+            padding: 6px;
+            transition: transform 0.3s ease;
+        }
+
+            .logo:hover {
+                transform: scale(1.05);
+            }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                background: white;
+            }
+
+            .logo i {
+                color: var(--verde-principal);
+                font-size: 2.5rem;
+            }
+
+        .header-info {
+            flex: 1;
+            min-width: 250px;
+        }
+
+            .header-info h1 {
+                font-size: 1.65rem;
+                font-weight: 800;
+                color: white;
+                margin-bottom: 0.4rem;
+                line-height: 1.2;
+            }
+
+            .header-info p {
+                font-size: 1rem;
+                color: rgba(255, 255, 255, 0.9);
+                line-height: 1.3;
+            }
+
+        .header-actions {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.6rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            color: white;
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
+            }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+        }
+
+            .btn-secondary:hover {
+                background: white;
+                color: var(--verde-principal);
+            }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+            .btn-success:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+            }
+
+        .map-container {
+            position: absolute;
+            top: 165px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(22, 163, 74, 0.5);
+            z-index: 997;
+            transition: all 0.3s ease;
+        }
+
+            .fab:hover {
+                transform: scale(1.1) rotate(90deg);
+                box-shadow: 0 12px 40px rgba(22, 163, 74, 0.7);
+            }
+
+        .modal {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 400px;
+            max-width: 100%;
+            background: white;
+            border-radius: 15px 15px 0 0;
+            border: 2px solid var(--verde-light);
+            box-shadow: -8px -8px 40px rgba(22, 163, 74, 0.3);
+            z-index: 1300;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+            .modal.active {
+                display: block;
+            }
+
+            .modal.minimized {
+                max-height: 60px;
+                overflow: hidden;
+            }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 2px solid var(--verde-light);
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            cursor: pointer;
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .modal-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 0.3rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+            .modal-btn:hover {
+                background: rgba(255, 255, 255, 0.3);
+            }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            color: var(--gris-oscuro);
+            font-size: 0.85rem;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.7rem;
+            background: white;
+            border: 2px solid var(--gris-claro);
+            border-radius: 8px;
+            color: var(--negro);
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+            .form-input:focus, .form-select:focus, .form-textarea:focus {
+                outline: none;
+                border-color: var(--verde-principal);
+                box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            }
+
+        .location-button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--info), #60A5FA);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+            .location-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+            }
+
+            .location-button.active {
+                background: linear-gradient(135deg, var(--success), #34D399);
+            }
+
+        .location-display {
+            padding: 0.8rem;
+            background: var(--bg-light);
+            border: 1px solid var(--verde-principal);
+            border-radius: 8px;
+            color: var(--gris-oscuro);
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.9rem 1.3rem;
+            border-radius: 10px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            z-index: 3000;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 0.7rem;
+            font-size: 0.9rem;
+            min-width: 300px;
+        }
+
+            .notification.show {
+                display: flex;
+            }
+
+            .notification.success {
+                background: var(--success);
+                color: white;
+            }
+
+            .notification.error {
+                background: var(--danger);
+                color: white;
+            }
+
+            .notification.info {
+                background: var(--info);
+                color: white;
+            }
+
+        .map-crosshair {
+            cursor: crosshair !important;
+        }
+
+        .map-instruction {
+            position: fixed;
+            top: 185px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--info);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            z-index: 1200;
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+            display: none;
+        }
+
+            .map-instruction.show {
+                display: block;
+            }
+    </style>
+</head>
+<body>
+    <div class="nav-panel-overlay" id="navPanelOverlay" onclick="toggleNavPanel()"></div>
+
+    <button class="nav-toggle" id="navToggle" onclick="toggleNavPanel()">
+        <i class="fas fa-th-large"></i>
+    </button>
+
+    <div class="nav-panel" id="navPanel">
+        <div class="nav-panel-header">
+            <button class="nav-panel-close" onclick="toggleNavPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="nav-panel-title">Sistema de Bacheo</h3>
+            <p class="nav-panel-subtitle">Navegación Principal</p>
+        </div>
+
+        <div class="nav-panel-body">
+            <div class="nav-item" onclick="redirectTo('captura')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Captura</div>
+                    <div class="nav-item-desc">Registro de bacheos</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item active" onclick="redirectTo('programacion')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Programación</div>
+                    <div class="nav-item-desc">Horarios y cuadrillas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('mapa')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Mapa Interactivo</div>
+                    <div class="nav-item-desc">Ubicación de bacheos</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('rastreo')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Rastreo GPS</div>
+                    <div class="nav-item-desc">Monitoreo de unidades</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('dashboard')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Dashboard</div>
+                    <div class="nav-item-desc">Estadísticas y reportes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('reportes')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Reportes</div>
+                    <div class="nav-item-desc">Incidencias ciudadanas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('material')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-toolbox"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Material Utilizado</div>
+                    <div class="nav-item-desc">Control de inventario</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('asistencia')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Asistencia</div>
+                    <div class="nav-item-desc">Control de personal</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('repositorio')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Repositorio Vehicular</div>
+                    <div class="nav-item-desc">Gestión de unidades</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('oficios')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Oficios a Almacén</div>
+                    <div class="nav-item-desc">Envío de solicitudes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('citas')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-wrench"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Citas Mantenimiento</div>
+                    <div class="nav-item-desc">Agendar servicios</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="filter-section" style="margin-top: 2rem;">
+                <div class="filter-title">Filtros de Mapa</div>
+                <div class="filter-group">
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterBache" checked onchange="applyFilters()">
+                        <label for="filterBache">Baches</label>
+                    </div>
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterSima" checked onchange="applyFilters()">
+                        <label for="filterSima">SIMAS</label>
+                    </div>
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterBordo" checked onchange="applyFilters()">
+                        <label for="filterBordo">Bordos</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">Urgencia</div>
+                <div class="filter-group">
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterUrgNormal" checked onchange="applyFilters()">
+                        <label for="filterUrgNormal">Normal</label>
+                    </div>
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterUrgHigh" checked onchange="applyFilters()">
+                        <label for="filterUrgHigh">Alta</label>
+                    </div>
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterUrgUrgent" checked onchange="applyFilters()">
+                        <label for="filterUrgUrgent">Urgente</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">Prioridad</div>
+                <div class="filter-group">
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterPrioLow" checked onchange="applyFilters()">
+                        <label for="filterPrioLow">Baja</label>
+                    </div>
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterPrioNormal" checked onchange="applyFilters()">
+                        <label for="filterPrioNormal">Normal</label>
+                    </div>
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterPrioHigh" checked onchange="applyFilters()">
+                        <label for="filterPrioHigh">Alta</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">Estado del Trabajo</div>
+                <div class="filter-group">
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterOnTime" checked onchange="applyFilters()">
+                        <label for="filterOnTime">A Tiempo</label>
+                    </div>
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterWarning" checked onchange="applyFilters()">
+                        <label for="filterWarning">Por Vencer</label>
+                    </div>
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterDelayed" checked onchange="applyFilters()">
+                        <label for="filterDelayed">Atrasado</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">Búsqueda</div>
+                <div class="form-group">
+                    <input type="text" id="searchSolicitante" placeholder="Buscar por solicitante..." onkeyup="applyFilters()" style="margin-bottom: 0.5rem;">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="searchDireccion" placeholder="Buscar por dirección..." onkeyup="applyFilters()" style="margin-bottom: 0.5rem;">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Filtrar por Fecha</label>
+                    <input type="date" id="filterDate" onchange="applyFilters()">
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <button class="btn btn-secondary" style="width: 100%; background: white; color: var(--verde-principal); border: 2px solid var(--verde-principal);" onclick="clearFilters()">
+                    <i class="fas fa-times"></i>
+                    Limpiar Filtros
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-container">
+                    <div class="logo">
+                        <i class="fas fa-road"></i>
+                    </div>
+                    <div class="logo">
+                        <i class="fas fa-landmark"></i>
+                    </div>
+                </div>
+                <div class="header-info">
+                    <h1>Sistema de Programación de Bacheo</h1>
+                    <p>Municipio de Monclova, Coahuila - Mapa Interactivo</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-success" onclick="exportToExcel()">
+                    <i class="fas fa-file-excel"></i>
+                    Excel
+                </button>
+                <button class="btn btn-secondary" onclick="toggleFullscreen()">
+                    <i class="fas fa-expand"></i>
+                    Pantalla
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="map-container">
+        <div id="map"></div>
+    </div>
+
+    <div class="map-instruction" id="mapInstruction">
+        <i class="fas fa-mouse-pointer"></i> Haz clic en el mapa para seleccionar la ubicación
+    </div>
+
+    <button class="fab" onclick="openAddModal()">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <div id="addModal" class="modal">
+        <div class="modal-header" onclick="toggleModal()">
+            <h2 class="modal-title">Nuevo Registro</h2>
+            <div class="modal-actions">
+                <button class="modal-btn" onclick="event.stopPropagation(); toggleModal()">
+                    <i class="fas fa-window-minimize" id="modalIcon"></i>
+                </button>
+                <button class="modal-btn" onclick="event.stopPropagation(); closeAddModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="modal-body" id="modalBody">
+            <form id="addForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label">Tipo de Daño</label>
+                    <select class="form-select" id="tipoInput" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="bache">Bache</option>
+                        <option value="sima">SIMA</option>
+                        <option value="bordo">Bordo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Ubicación en el Mapa</label>
+                    <button type="button" class="location-button" id="selectLocationBtn" onclick="toggleLocationSelection()">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span id="locationBtnText">Seleccionar en el Mapa</span>
+                    </button>
+                    <div class="location-display" id="locationDisplay" style="display: none;">
+                        <span id="locationText"></span>
+                    </div>
+                    <input type="hidden" id="latInput">
+                    <input type="hidden" id="lngInput">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Solicitante</label>
+                    <input type="text" class="form-input" id="solicitanteInput" required placeholder="Nombre del solicitante">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Urgencia</label>
+                    <select class="form-select" id="urgenciaInput" required>
+                        <option value="normal">Normal</option>
+                        <option value="high">Alta</option>
+                        <option value="urgent">Urgente</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Prioridad</label>
+                    <select class="form-select" id="prioridadInput" required>
+                        <option value="low">Baja</option>
+                        <option value="normal">Normal</option>
+                        <option value="high">Alta</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Tiempo Asignado (días)</label>
+                    <input type="number" class="form-input" id="tiempoInput" required placeholder="Ej: 3" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Dirección</label>
+                    <input type="text" class="form-input" id="direccionInput" required placeholder="Dirección completa">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Descripción</label>
+                    <textarea class="form-textarea" id="descripcionInput" rows="3" placeholder="Detalles adicionales..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                    <i class="fas fa-save"></i>
+                    Guardar Registro
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText"></span>
+    </div>
+
+    <script>
+        let map;
+        let markers = [];
+        let records = [];
+        let tempMarker = null;
+        let isSelectingLocation = false;
+        let editingRecordId = null;
+        let navPanelOpen = false;
+
+        const customIcons = {
+            bache: L.divIcon({
+                html: '<div style="background: #DC2626; width: 40px; height: 40px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center;"><i class="fas fa-road" style="color: white; transform: rotate(45deg); font-size: 18px;"></i></div>',
+                className: '',
+                iconSize: [40, 40],
+                iconAnchor: [20, 40]
+            }),
+            sima: L.divIcon({
+                html: '<div style="background: #10B981; width: 40px; height: 40px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center;"><i class="fas fa-tint" style="color: white; transform: rotate(45deg); font-size: 18px;"></i></div>',
+                className: '',
+                iconSize: [40, 40],
+                iconAnchor: [20, 40]
+            }),
+            bordo: L.divIcon({
+                html: '<div style="background: #F59E0B; width: 40px; height: 40px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center;"><i class="fas fa-exclamation-triangle" style="color: white; transform: rotate(45deg); font-size: 18px;"></i></div>',
+                className: '',
+                iconSize: [40, 40],
+                iconAnchor: [20, 40]
+            }),
+            urgent: L.divIcon({
+                html: '<div style="background: #DC2626; width: 46px; height: 46px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid gold; box-shadow: 0 6px 16px rgba(220,38,38,0.6); display: flex; align-items: center; justify-content: center;"><i class="fas fa-star" style="color: gold; transform: rotate(45deg); font-size: 20px;"></i></div>',
+                className: '',
+                iconSize: [46, 46],
+                iconAnchor: [23, 46]
+            }),
+            temp: L.divIcon({
+                html: '<div style="background: #3B82F6; width: 44px; height: 44px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 6px 16px rgba(59,130,246,0.6); display: flex; align-items: center; justify-content: center;"><i class="fas fa-map-pin" style="color: white; transform: rotate(45deg); font-size: 20px;"></i></div>',
+                className: '',
+                iconSize: [44, 44],
+                iconAnchor: [22, 44]
+            })
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+            loadRecords();
+            renderMarkers();
+        });
+
+        function toggleNavPanel() {
+            const navPanel = document.getElementById('navPanel');
+            const overlay = document.getElementById('navPanelOverlay');
+            const toggleBtn = document.getElementById('navToggle');
+
+            navPanelOpen = !navPanelOpen;
+
+            if (navPanelOpen) {
+                navPanel.classList.add('open');
+                overlay.classList.add('active');
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '<i class="fas fa-times"></i>';
+                document.body.style.overflow = 'hidden';
+            } else {
+                navPanel.classList.remove('open');
+                overlay.classList.remove('active');
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '<i class="fas fa-th-large"></i>';
+                document.body.style.overflow = '';
+            }
+        }
+
+        function redirectTo(module) {
+            if (navPanelOpen) toggleNavPanel();
+
+            const urls = {
+                'captura': '/Home/CapturaBacheo',
+                'mapa': '/Home/MapaBacheo',
+                'rastreo': '/Home/RastreoBacheo',
+                'dashboard': '/Home/DashboardBacheo',
+                'reportes': '/Home/ReportesBacheo',
+                'material': '/Home/MaterialUtilizadoBacheo',
+                'asistencia': '/Home/AsistenciaPersonalBacheo',
+                'programacion': '/Home/ProgramacionBacheo',
+                'repositorio': '/Home/RepositorioPlacasBacheo',
+                'oficios': '/Home/EnviarOficiosAlmacenBacheo',
+                'citas': '/Home/AgendarCitasMantenimiento'
+            };
+
+            if (urls[module]) {
+                window.location.href = urls[module];
+            }
+        }
+
+        function initMap() {
+            map = L.map('map').setView([26.9070, -101.4205], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+        }
+
+        function loadRecords() {
+            const saved = localStorage.getItem('programacionBacheoRecords');
+            if (saved) {
+                records = JSON.parse(saved);
+            } else {
+                records = [
+                    {
+                        id: 1,
+                        tipo: 'bache',
+                        lat: 26.9070,
+                        lng: -101.4205,
+                        solicitante: 'Juan Pérez',
+                        urgencia: 'urgent',
+                        prioridad: 'high',
+                        tiempoAsignado: 3,
+                        fechaCreacion: new Date().toISOString(),
+                        direccion: 'Calle Hidalgo #123',
+                        descripcion: 'Bache grande en la vía principal'
+                    },
+                    {
+                        id: 2,
+                        tipo: 'sima',
+                        lat: 26.9100,
+                        lng: -101.4250,
+                        solicitante: 'María García',
+                        urgencia: 'high',
+                        prioridad: 'normal',
+                        tiempoAsignado: 5,
+                        fechaCreacion: new Date().toISOString(),
+                        direccion: 'Avenida Morelos #456',
+                        descripcion: 'Fuga de agua reportada'
+                    },
+                    {
+                        id: 3,
+                        tipo: 'bordo',
+                        lat: 26.9050,
+                        lng: -101.4180,
+                        solicitante: 'Carlos López',
+                        urgencia: 'normal',
+                        prioridad: 'low',
+                        tiempoAsignado: 7,
+                        fechaCreacion: new Date().toISOString(),
+                        direccion: 'Calle Zaragoza #789',
+                        descripcion: 'Reparación de bordo necesaria'
+                    }
+                ];
+                saveRecords();
+            }
+        }
+
+        function saveRecords() {
+            localStorage.setItem('programacionBacheoRecords', JSON.stringify(records));
+        }
+
+        function renderMarkers() {
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+
+            const filtered = getFilteredRecords();
+
+            filtered.forEach(record => {
+                let icon = customIcons[record.tipo];
+
+                if (record.urgencia === 'urgent') {
+                    icon = customIcons.urgent;
+                }
+
+                const marker = L.marker([record.lat, record.lng], { icon: icon }).addTo(map);
+
+                const status = getStatus(record);
+                const statusColor = status === 'ontime' ? '#10B981' : status === 'warning' ? '#F59E0B' : '#EF4444';
+                const statusText = status === 'ontime' ? 'A Tiempo' : status === 'warning' ? 'Por Vencer' : 'Atrasado';
+
+                const popupContent = `
+                    <div style="min-width: 250px; background: white; padding: 1rem; border-radius: 8px; border: 2px solid var(--verde-principal);">
+                        <div style="font-size: 1.1rem; font-weight: 700; color: var(--verde-principal); margin-bottom: 0.5rem;">${getTipoLabel(record.tipo)}</div>
+                        <div style="font-size: 0.85rem; color: #666; margin: 0.3rem 0;">
+                            <i class="fas fa-user" style="width: 20px; color: var(--verde-principal);"></i> <strong>Solicitante:</strong> ${record.solicitante}
+                        </div>
+                        <div style="font-size: 0.85rem; color: #666; margin: 0.3rem 0;">
+                            <i class="fas fa-map-marker-alt" style="width: 20px; color: var(--verde-principal);"></i> ${record.direccion}
+                        </div>
+                        <div style="font-size: 0.85rem; color: #666; margin: 0.3rem 0;">
+                            <i class="fas fa-clock" style="width: 20px; color: var(--verde-principal);"></i> <strong>Tiempo:</strong> ${record.tiempoAsignado} días
+                        </div>
+                        <div style="margin: 0.5rem 0; display: flex; gap: 0.5rem;">
+                            <span style="padding: 0.3rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; background: rgba(220,38,38,0.2); color: #DC2626;">${getUrgenciaLabel(record.urgencia)}</span>
+                            <span style="padding: 0.3rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; background: rgba(22,163,74,0.2); color: var(--verde-principal);">${getPrioridadLabel(record.prioridad)}</span>
+                        </div>
+                        <div style="font-size: 0.85rem; margin: 0.3rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="width: 12px; height: 12px; border-radius: 50%; background: ${statusColor}; display: inline-block;"></span>
+                            <span style="color: ${statusColor}; font-weight: 600;">${statusText}</span>
+                        </div>
+                        ${record.descripcion ? `<div style="margin-top: 0.5rem; font-style: italic; color: #666; font-size: 0.85rem;">${record.descripcion}</div>` : ''}
+                        <div style="display: flex; gap: 0.5rem; margin-top: 0.8rem;">
+                            <button onclick="openInMaps(${record.lat}, ${record.lng})" style="flex: 1; padding: 0.5rem; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; background: var(--verde-principal); color: white;">
+                                <i class="fas fa-map-marked-alt"></i> Maps
+                            </button>
+                            <button onclick="editRecord(${record.id})" style="flex: 1; padding: 0.5rem; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; background: #3B82F6; color: white;">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button onclick="deleteRecord(${record.id})" style="flex: 1; padding: 0.5rem; border: 2px solid #ddd; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; background: white; color: #666;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                marker.bindPopup(popupContent);
+                markers.push(marker);
+            });
+        }
+
+        function getFilteredRecords() {
+            const bacheChecked = document.getElementById('filterBache').checked;
+            const simaChecked = document.getElementById('filterSima').checked;
+            const bordoChecked = document.getElementById('filterBordo').checked;
+            const urgNormalChecked = document.getElementById('filterUrgNormal').checked;
+            const urgHighChecked = document.getElementById('filterUrgHigh').checked;
+            const urgUrgentChecked = document.getElementById('filterUrgUrgent').checked;
+            const prioLowChecked = document.getElementById('filterPrioLow').checked;
+            const prioNormalChecked = document.getElementById('filterPrioNormal').checked;
+            const prioHighChecked = document.getElementById('filterPrioHigh').checked;
+            const onTimeChecked = document.getElementById('filterOnTime').checked;
+            const warningChecked = document.getElementById('filterWarning').checked;
+            const delayedChecked = document.getElementById('filterDelayed').checked;
+            const searchSolicitante = document.getElementById('searchSolicitante').value.toLowerCase();
+            const searchDireccion = document.getElementById('searchDireccion').value.toLowerCase();
+            const filterDate = document.getElementById('filterDate').value;
+
+            return records.filter(record => {
+                const tipoMatch = (record.tipo === 'bache' && bacheChecked) ||
+                                 (record.tipo === 'sima' && simaChecked) ||
+                                 (record.tipo === 'bordo' && bordoChecked);
+
+                const urgMatch = (record.urgencia === 'normal' && urgNormalChecked) ||
+                                (record.urgencia === 'high' && urgHighChecked) ||
+                                (record.urgencia === 'urgent' && urgUrgentChecked);
+
+                const prioMatch = (record.prioridad === 'low' && prioLowChecked) ||
+                                 (record.prioridad === 'normal' && prioNormalChecked) ||
+                                 (record.prioridad === 'high' && prioHighChecked);
+
+                const status = getStatus(record);
+                const statusMatch = (status === 'ontime' && onTimeChecked) ||
+                                   (status === 'warning' && warningChecked) ||
+                                   (status === 'delayed' && delayedChecked);
+
+                const solicitanteMatch = !searchSolicitante || record.solicitante.toLowerCase().indexOf(searchSolicitante) > -1;
+
+                const direccionMatch = !searchDireccion || record.direccion.toLowerCase().indexOf(searchDireccion) > -1;
+
+                const dateMatch = !filterDate || record.fechaCreacion.split('T')[0] === filterDate;
+
+                return tipoMatch && urgMatch && prioMatch && statusMatch && solicitanteMatch && direccionMatch && dateMatch;
+            });
+        }
+
+        function getStatus(record) {
+            const now = new Date();
+            const created = new Date(record.fechaCreacion);
+            const daysElapsed = (now - created) / (1000 * 60 * 60 * 24);
+            const percentageElapsed = (daysElapsed / record.tiempoAsignado) * 100;
+
+            if (percentageElapsed < 70) return 'ontime';
+            if (percentageElapsed < 100) return 'warning';
+            return 'delayed';
+        }
+
+        function getTipoLabel(tipo) {
+            const labels = {
+                'bache': 'Bache',
+                'sima': 'SIMA',
+                'bordo': 'Bordo'
+            };
+            return labels[tipo] || tipo;
+        }
+
+        function getUrgenciaLabel(urgencia) {
+            const labels = {
+                'normal': 'Normal',
+                'high': 'Alta',
+                'urgent': 'Urgente'
+            };
+            return labels[urgencia] || urgencia;
+        }
+
+        function getPrioridadLabel(prioridad) {
+            const labels = {
+                'low': 'Baja',
+                'normal': 'Normal',
+                'high': 'Alta'
+            };
+            return labels[prioridad] || prioridad;
+        }
+
+        function applyFilters() {
+            renderMarkers();
+        }
+
+        function clearFilters() {
+            document.getElementById('filterBache').checked = true;
+            document.getElementById('filterSima').checked = true;
+            document.getElementById('filterBordo').checked = true;
+            document.getElementById('filterUrgNormal').checked = true;
+            document.getElementById('filterUrgHigh').checked = true;
+            document.getElementById('filterUrgUrgent').checked = true;
+            document.getElementById('filterPrioLow').checked = true;
+            document.getElementById('filterPrioNormal').checked = true;
+            document.getElementById('filterPrioHigh').checked = true;
+            document.getElementById('filterOnTime').checked = true;
+            document.getElementById('filterWarning').checked = true;
+            document.getElementById('filterDelayed').checked = true;
+            document.getElementById('searchSolicitante').value = '';
+            document.getElementById('searchDireccion').value = '';
+            document.getElementById('filterDate').value = '';
+            renderMarkers();
+            showNotification('Filtros restablecidos', 'info');
+        }
+
+        function openAddModal() {
+            editingRecordId = null;
+
+            if (tempMarker) {
+                map.removeLayer(tempMarker);
+                tempMarker = null;
+            }
+
+            document.getElementById('addForm').reset();
+            document.getElementById('locationDisplay').style.display = 'none';
+            document.getElementById('locationBtnText').textContent = 'Seleccionar en el Mapa';
+            document.getElementById('latInput').value = '';
+            document.getElementById('lngInput').value = '';
+
+            disableLocationSelection();
+
+            document.getElementById('addModal').classList.add('active');
+            document.getElementById('addModal').classList.remove('minimized');
+            document.querySelector('.modal-title').textContent = 'Nuevo Registro';
+        }
+
+        function closeAddModal() {
+            editingRecordId = null;
+            document.getElementById('addModal').classList.remove('active');
+            document.getElementById('addForm').reset();
+            document.getElementById('locationDisplay').style.display = 'none';
+            document.getElementById('locationBtnText').textContent = 'Seleccionar en el Mapa';
+            document.getElementById('latInput').value = '';
+            document.getElementById('lngInput').value = '';
+
+            if (tempMarker) {
+                map.removeLayer(tempMarker);
+                tempMarker = null;
+            }
+
+            disableLocationSelection();
+
+            document.querySelector('.modal-title').textContent = 'Nuevo Registro';
+
+            const btn = document.getElementById('selectLocationBtn');
+            btn.classList.remove('active');
+        }
+
+        function editRecord(id) {
+            const record = records.find(r => r.id === id);
+            if (!record) return;
+
+            editingRecordId = id;
+
+            document.getElementById('tipoInput').value = record.tipo;
+            document.getElementById('latInput').value = record.lat;
+            document.getElementById('lngInput').value = record.lng;
+            document.getElementById('solicitanteInput').value = record.solicitante;
+            document.getElementById('urgenciaInput').value = record.urgencia;
+            document.getElementById('prioridadInput').value = record.prioridad;
+            document.getElementById('tiempoInput').value = record.tiempoAsignado;
+            document.getElementById('direccionInput').value = record.direccion;
+            document.getElementById('descripcionInput').value = record.descripcion || '';
+
+            document.getElementById('locationDisplay').style.display = 'block';
+            document.getElementById('locationText').textContent = `Lat: ${record.lat.toFixed(6)}, Lng: ${record.lng.toFixed(6)}`;
+            document.getElementById('locationBtnText').textContent = 'Ubicación Seleccionada ✓';
+
+            if (tempMarker) {
+                map.removeLayer(tempMarker);
+            }
+            tempMarker = L.marker([record.lat, record.lng], { icon: customIcons.temp }).addTo(map);
+
+            document.querySelector('.modal-title').textContent = 'Editar Registro';
+            document.getElementById('addModal').classList.add('active');
+            document.getElementById('addModal').classList.remove('minimized');
+
+            map.setView([record.lat, record.lng], 16);
+
+            showNotification('Modo edición activado', 'info');
+        }
+
+        function toggleModal() {
+            const modal = document.getElementById('addModal');
+            modal.classList.toggle('minimized');
+
+            const icon = document.getElementById('modalIcon');
+            if (modal.classList.contains('minimized')) {
+                icon.className = 'fas fa-window-maximize';
+            } else {
+                icon.className = 'fas fa-window-minimize';
+            }
+        }
+
+        function toggleLocationSelection() {
+            if (isSelectingLocation) {
+                disableLocationSelection();
+
+                const lat = document.getElementById('latInput').value;
+                const btn = document.getElementById('selectLocationBtn');
+                btn.classList.remove('active');
+
+                if (lat) {
+                    document.getElementById('locationBtnText').textContent = 'Ubicación Seleccionada ✓';
+                } else {
+                    document.getElementById('locationBtnText').textContent = 'Seleccionar en el Mapa';
+                }
+            } else {
+                enableLocationSelection();
+            }
+        }
+
+        function enableLocationSelection() {
+            isSelectingLocation = true;
+            map.getContainer().style.cursor = 'crosshair';
+            document.getElementById('mapInstruction').classList.add('show');
+
+            const btn = document.getElementById('selectLocationBtn');
+            btn.classList.add('active');
+            document.getElementById('locationBtnText').textContent = 'Haz clic en el mapa...';
+
+            document.getElementById('addModal').classList.add('minimized');
+            document.getElementById('modalIcon').className = 'fas fa-window-maximize';
+
+            map.on('click', onMapClickForSelection);
+
+            showNotification('Haz clic en el mapa para seleccionar ubicación', 'info');
+        }
+
+        function disableLocationSelection() {
+            isSelectingLocation = false;
+            map.getContainer().style.cursor = '';
+            document.getElementById('mapInstruction').classList.remove('show');
+
+            map.off('click', onMapClickForSelection);
+        }
+
+        function onMapClickForSelection(e) {
+            if (!isSelectingLocation) return;
+
+            if (tempMarker) {
+                map.removeLayer(tempMarker);
+            }
+
+            tempMarker = L.marker([e.latlng.lat, e.latlng.lng], { icon: customIcons.temp }).addTo(map);
+
+            document.getElementById('latInput').value = e.latlng.lat.toFixed(6);
+            document.getElementById('lngInput').value = e.latlng.lng.toFixed(6);
+
+            document.getElementById('locationDisplay').style.display = 'block';
+            document.getElementById('locationText').textContent = `Lat: ${e.latlng.lat.toFixed(6)}, Lng: ${e.latlng.lng.toFixed(6)}`;
+
+            disableLocationSelection();
+
+            document.getElementById('addModal').classList.remove('minimized');
+            document.getElementById('modalIcon').className = 'fas fa-window-minimize';
+
+            showNotification('Ubicación capturada correctamente', 'success');
+        }
+
+        function handleSubmit(e) {
+            e.preventDefault();
+
+            const lat = parseFloat(document.getElementById('latInput').value);
+            const lng = parseFloat(document.getElementById('lngInput').value);
+
+            if (!lat || !lng) {
+                showNotification('Por favor selecciona una ubicación en el mapa', 'error');
+                return;
+            }
+
+            const recordData = {
+                tipo: document.getElementById('tipoInput').value,
+                lat: lat,
+                lng: lng,
+                solicitante: document.getElementById('solicitanteInput').value,
+                urgencia: document.getElementById('urgenciaInput').value,
+                prioridad: document.getElementById('prioridadInput').value,
+                tiempoAsignado: parseInt(document.getElementById('tiempoInput').value),
+                direccion: document.getElementById('direccionInput').value,
+                descripcion: document.getElementById('descripcionInput').value
+            };
+
+            if (editingRecordId) {
+                const index = records.findIndex(r => r.id === editingRecordId);
+                if (index !== -1) {
+                    records[index] = {
+                        ...records[index],
+                        ...recordData
+                    };
+                    showNotification('Registro actualizado exitosamente', 'success');
+                }
+            } else {
+                const newRecord = {
+                    id: Date.now(),
+                    ...recordData,
+                    fechaCreacion: new Date().toISOString()
+                };
+                records.push(newRecord);
+                showNotification('Registro agregado exitosamente', 'success');
+            }
+
+            saveRecords();
+
+            if (tempMarker) {
+                map.removeLayer(tempMarker);
+                tempMarker = null;
+            }
+
+            renderMarkers();
+            closeAddModal();
+
+            map.setView([lat, lng], 16);
+        }
+
+        function deleteRecord(id) {
+            if (!confirm('¿Está seguro de eliminar este registro?')) return;
+
+            records = records.filter(r => r.id !== id);
+            saveRecords();
+            renderMarkers();
+            showNotification('Registro eliminado', 'success');
+        }
+
+        function openInMaps(lat, lng) {
+            window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                showNotification('Modo pantalla completa activado', 'info');
+            } else {
+                document.exitFullscreen();
+                showNotification('Modo pantalla completa desactivado', 'info');
+            }
+        }
+
+        function exportToExcel() {
+            const filtered = getFilteredRecords();
+
+            if (filtered.length === 0) {
+                showNotification('No hay registros para exportar', 'error');
+                return;
+            }
+
+            const data = filtered.map(r => ({
+                'ID': r.id,
+                'Tipo': getTipoLabel(r.tipo),
+                'Solicitante': r.solicitante,
+                'Urgencia': getUrgenciaLabel(r.urgencia),
+                'Prioridad': getPrioridadLabel(r.prioridad),
+                'Tiempo Asignado (días)': r.tiempoAsignado,
+                'Estado': getStatus(r) === 'ontime' ? 'A Tiempo' : getStatus(r) === 'warning' ? 'Por Vencer' : 'Atrasado',
+                'Dirección': r.direccion,
+                'Latitud': r.lat,
+                'Longitud': r.lng,
+                'Fecha Creación': new Date(r.fechaCreacion).toLocaleString('es-MX'),
+                'Descripción': r.descripcion,
+                'Link Google Maps': `https://www.google.com/maps?q=${r.lat},${r.lng}`
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Programación Bacheo');
+
+            const fileName = `PROGRAMACION_BACHEO_${new Date().toISOString().split('T')[0]}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+
+            showNotification(`Exportados ${filtered.length} registros a Excel`, 'success');
+        }
+
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            const icon = notification.querySelector('i');
+
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+            } else {
+                icon.className = 'fas fa-info-circle';
+            }
+
+            notification.className = 'notification ' + type + ' show';
+            text.textContent = message;
+
+            setTimeout(function() {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        console.log('Sistema de Programación de Bacheo - Mapa Interactivo Verde v2.0');
+    </script>
+</body>
+</html>

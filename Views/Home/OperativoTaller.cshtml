@@ -1,0 +1,1137 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Mantenimiento - Taller Mecánico Municipal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --green-50: #f0fdf4;
+            --green-100: #dcfce7;
+            --green-200: #bbf7d0;
+            --green-300: #86efac;
+            --green-400: #4ade80;
+            --green-500: #22c55e;
+            --green-600: #16a34a;
+            --green-700: #15803d;
+            --green-800: #166534;
+            --green-900: #14532d;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--green-50) 0%, var(--gray-50) 100%);
+            color: var(--gray-900);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--green-600) 0%, var(--green-700) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-container {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--green-300);
+        }
+
+            .logo-container i {
+                font-size: 1.8rem;
+                color: var(--green-600);
+            }
+
+        .header-center {
+            flex: 1;
+            text-align: center;
+        }
+
+            .header-center h1 {
+                font-size: 1.5rem;
+                font-weight: 800;
+                margin-bottom: 0.3rem;
+            }
+
+            .header-center p {
+                font-size: 0.9rem;
+                opacity: 0.95;
+            }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 55px;
+            height: 55px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--green-300);
+        }
+
+            .user-avatar i {
+                font-size: 1.5rem;
+                color: var(--green-600);
+            }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .action-bar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.85rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-green {
+            background: linear-gradient(135deg, var(--green-500), var(--green-600));
+            color: white;
+        }
+
+            .btn-green:hover {
+                background: linear-gradient(135deg, var(--green-600), var(--green-700));
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+            }
+
+        .btn-outline {
+            background: white;
+            color: var(--green-600);
+            border: 2px solid var(--green-600);
+        }
+
+            .btn-outline:hover {
+                background: var(--green-50);
+            }
+
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, var(--green-600), var(--green-700));
+            color: white;
+            padding: 1.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .form-header h2 {
+                font-size: 1.5rem;
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+            }
+
+        .form-body {
+            padding: 2.5rem;
+        }
+
+        .form-section-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--green-700);
+            margin: 2rem 0 1.2rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--green-200);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+            .form-section-title:first-child {
+                margin-top: 0;
+            }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+            .form-group.full-width {
+                grid-column: 1 / -1;
+            }
+
+        .form-label {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+            .form-label .required {
+                color: var(--green-500);
+            }
+
+        .form-input, .form-select, .form-textarea {
+            padding: 0.85rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+            .form-input:focus, .form-select:focus, .form-textarea:focus {
+                outline: none;
+                border-color: var(--green-500);
+                box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+            }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .photo-upload-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .photo-upload-box {
+            border: 3px dashed var(--green-300);
+            border-radius: 12px;
+            padding: 2rem 1rem;
+            text-align: center;
+            background: var(--green-50);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .photo-upload-box:hover {
+                border-color: var(--green-500);
+                background: var(--green-100);
+            }
+
+            .photo-upload-box input[type="file"] {
+                display: none;
+            }
+
+        .photo-icon {
+            font-size: 2.5rem;
+            color: var(--green-500);
+            margin-bottom: 0.8rem;
+        }
+
+        .photo-text {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .photo-preview {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+            .photo-preview.active {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .photo-preview img {
+                width: 100%;
+                height: 180px;
+                object-fit: cover;
+                border-radius: 8px;
+                margin-bottom: 0.8rem;
+            }
+
+        .photo-preview-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .photo-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn-view {
+            background: var(--green-500);
+            color: white;
+        }
+
+            .btn-view:hover {
+                background: var(--green-600);
+            }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+        }
+
+            .btn-delete:hover {
+                background: #dc2626;
+            }
+
+        .form-footer {
+            padding: 2rem 2.5rem;
+            background: var(--gray-50);
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .btn-modal {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-cancel {
+            background: white;
+            color: var(--gray-700);
+            border: 2px solid var(--gray-300);
+        }
+
+            .btn-cancel:hover {
+                background: var(--gray-100);
+            }
+
+        .btn-save {
+            background: linear-gradient(135deg, var(--green-500), var(--green-600));
+            color: white;
+        }
+
+            .btn-save:hover {
+                background: linear-gradient(135deg, var(--green-600), var(--green-700));
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+            }
+
+        .records-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-top: 2rem;
+            overflow: hidden;
+        }
+
+        .records-header {
+            background: linear-gradient(135deg, var(--green-600), var(--green-700));
+            color: white;
+            padding: 1.5rem 2rem;
+        }
+
+            .records-header h3 {
+                font-size: 1.3rem;
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                gap: 0.7rem;
+            }
+
+        .records-grid {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .record-card {
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            background: var(--gray-50);
+        }
+
+            .record-card:hover {
+                border-color: var(--green-400);
+                box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
+                transform: translateY(-2px);
+            }
+
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid var(--green-200);
+        }
+
+        .record-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--green-700);
+        }
+
+        .record-date {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        .record-field {
+            margin-bottom: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .record-field-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .record-field-value {
+            font-size: 0.95rem;
+            color: var(--gray-800);
+            font-weight: 600;
+        }
+
+        .record-photos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .record-photo {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .record-photo:hover {
+                transform: scale(1.05);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+        .badge {
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .badge-preventivo {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-correctivo {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-urgente {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-completado {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-proceso {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-pendiente {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 2rem;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid var(--green-500);
+            z-index: 10000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            max-width: 350px;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .notification i {
+                color: var(--green-500);
+                font-size: 1.3rem;
+            }
+
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 11000;
+            padding: 2rem;
+        }
+
+            .image-modal.active {
+                display: flex;
+            }
+
+        .image-modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+        }
+
+        .image-modal-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+            .image-modal-close:hover {
+                transform: scale(1.1) rotate(90deg);
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--gray-600);
+        }
+
+            .empty-state i {
+                font-size: 4rem;
+                color: var(--green-400);
+                margin-bottom: 1rem;
+            }
+
+       
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo-container">
+                    <i class="fas fa-tools"></i>
+                </div>
+            </div>
+            <div class="header-center">
+                <h1>Registro de Mantenimiento - Taller Mecánico</h1>
+                <p>Sistema de Control de Mantenimiento Vehicular Municipal</p>
+            </div>
+            <div class="header-right">
+                <div class="user-avatar">
+                    <i class="fas fa-user-cog"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="action-bar">
+            <h3 style="color: var(--green-700); font-weight: 800; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-wrench"></i> Control de Mantenimiento
+            </h3>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button class="btn btn-outline" onclick="exportarRegistros()">
+                    <i class="fas fa-file-export"></i> Exportar
+                </button>
+                <button class="btn btn-outline" onclick="imprimirRegistros()">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <div class="form-header">
+                <h2><i class="fas fa-clipboard-check"></i> Nuevo Registro de Mantenimiento</h2>
+            </div>
+
+            <form id="maintenanceForm" onsubmit="guardarMantenimiento(event)">
+                <div class="form-body">
+                    <div class="form-section-title">
+                        <i class="fas fa-truck"></i>
+                        Información del Vehículo
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">No. Económico <span class="required">*</span></label>
+                            <input type="text" class="form-input" name="economico" placeholder="ECO-001" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Placas <span class="required">*</span></label>
+                            <input type="text" class="form-input" name="placas" placeholder="ABC-1234" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Marca</label>
+                            <input type="text" class="form-input" name="marca" placeholder="Ford, Chevrolet, etc.">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Modelo</label>
+                            <input type="text" class="form-input" name="modelo" placeholder="F-150, Silverado, etc.">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Año</label>
+                            <input type="number" class="form-input" name="year" placeholder="2024" min="1990" max="2030">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Departamento</label>
+                            <select class="form-select" name="departamento">
+                                <option value="">Seleccionar</option>
+                                <option value="alumbrado">Alumbrado Público</option>
+                                <option value="bacheo">Bacheo</option>
+                                <option value="recoleccion">Recolección</option>
+                                <option value="limpieza">Limpieza</option>
+                                <option value="forestacion">Forestación</option>
+                                <option value="direccion">Dirección</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">
+                        <i class="fas fa-wrench"></i>
+                        Datos del Mantenimiento
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Tipo de Mantenimiento <span class="required">*</span></label>
+                            <select class="form-select" name="tipoMantenimiento" required>
+                                <option value="">Seleccionar tipo</option>
+                                <option value="preventivo">Preventivo</option>
+                                <option value="correctivo">Correctivo</option>
+                                <option value="urgente">Urgente</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Fecha de Servicio <span class="required">*</span></label>
+                            <input type="date" class="form-input" name="fechaServicio" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Kilometraje Actual</label>
+                            <input type="number" class="form-input" name="kilometraje" placeholder="150000">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Mecánico Responsable</label>
+                            <input type="text" class="form-input" name="mecanico" placeholder="Nombre del mecánico">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Estado <span class="required">*</span></label>
+                            <select class="form-select" name="estado" required>
+                                <option value="pendiente">Pendiente</option>
+                                <option value="proceso">En Proceso</option>
+                                <option value="completado">Completado</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Costo Estimado</label>
+                            <input type="number" class="form-input" name="costo" placeholder="0.00" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label">Descripción del Trabajo <span class="required">*</span></label>
+                        <textarea class="form-textarea" name="descripcion" placeholder="Detalle el trabajo realizado o por realizar..." required></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label">Observaciones</label>
+                        <textarea class="form-textarea" name="observaciones" placeholder="Observaciones adicionales..."></textarea>
+                    </div>
+
+                    <div class="form-section-title">
+                        <i class="fas fa-camera"></i>
+                        Evidencia Fotográfica
+                    </div>
+
+                    <div class="photo-upload-grid">
+                        <div class="photo-upload-box" onclick="document.getElementById('photo1').click()">
+                            <input type="file" id="photo1" accept="image/*" onchange="handlePhotoUpload(event, 1)">
+                            <div class="photo-upload-content">
+                                <div class="photo-icon"><i class="fas fa-camera"></i></div>
+                                <div class="photo-text">Foto 1<br><small>Antes del servicio</small></div>
+                            </div>
+                            <div class="photo-preview" id="preview1">
+                                <img id="img1" src="" alt="Preview">
+                                <div class="photo-preview-actions">
+                                    <button type="button" class="photo-btn btn-view" onclick="verFoto(event, 1)">
+                                        <i class="fas fa-eye"></i> Ver
+                                    </button>
+                                    <button type="button" class="photo-btn btn-delete" onclick="eliminarFoto(event, 1)">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="photo-upload-box" onclick="document.getElementById('photo2').click()">
+                            <input type="file" id="photo2" accept="image/*" onchange="handlePhotoUpload(event, 2)">
+                            <div class="photo-upload-content">
+                                <div class="photo-icon"><i class="fas fa-camera"></i></div>
+                                <div class="photo-text">Foto 2<br><small>Durante el servicio</small></div>
+                            </div>
+                            <div class="photo-preview" id="preview2">
+                                <img id="img2" src="" alt="Preview">
+                                <div class="photo-preview-actions">
+                                    <button type="button" class="photo-btn btn-view" onclick="verFoto(event, 2)">
+                                        <i class="fas fa-eye"></i> Ver
+                                    </button>
+                                    <button type="button" class="photo-btn btn-delete" onclick="eliminarFoto(event, 2)">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="photo-upload-box" onclick="document.getElementById('photo3').click()">
+                            <input type="file" id="photo3" accept="image/*" onchange="handlePhotoUpload(event, 3)">
+                            <div class="photo-upload-content">
+                                <div class="photo-icon"><i class="fas fa-camera"></i></div>
+                                <div class="photo-text">Foto 3<br><small>Después del servicio</small></div>
+                            </div>
+                            <div class="photo-preview" id="preview3">
+                                <img id="img3" src="" alt="Preview">
+                                <div class="photo-preview-actions">
+                                    <button type="button" class="photo-btn btn-view" onclick="verFoto(event, 3)">
+                                        <i class="fas fa-eye"></i> Ver
+                                    </button>
+                                    <button type="button" class="photo-btn btn-delete" onclick="eliminarFoto(event, 3)">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="photo-upload-box" onclick="document.getElementById('photo4').click()">
+                            <input type="file" id="photo4" accept="image/*" onchange="handlePhotoUpload(event, 4)">
+                            <div class="photo-upload-content">
+                                <div class="photo-icon"><i class="fas fa-camera"></i></div>
+                                <div class="photo-text">Foto 4<br><small>Detalle adicional</small></div>
+                            </div>
+                            <div class="photo-preview" id="preview4">
+                                <img id="img4" src="" alt="Preview">
+                                <div class="photo-preview-actions">
+                                    <button type="button" class="photo-btn btn-view" onclick="verFoto(event, 4)">
+                                        <i class="fas fa-eye"></i> Ver
+                                    </button>
+                                    <button type="button" class="photo-btn btn-delete" onclick="eliminarFoto(event, 4)">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-footer">
+                    <button type="button" class="btn-modal btn-cancel" onclick="limpiarFormulario()">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn-modal btn-save">
+                        <i class="fas fa-save"></i> Guardar Registro
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="records-section">
+            <div class="records-header">
+                <h3><i class="fas fa-history"></i> Historial de Mantenimientos</h3>
+            </div>
+            <div class="records-grid" id="recordsGrid">
+                <div class="empty-state">
+                    <i class="fas fa-clipboard-list"></i>
+                    <p><strong>No hay registros de mantenimiento</strong></p>
+                    <p>Agrega un nuevo registro usando el formulario superior</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="image-modal" id="imageModal">
+        <button class="image-modal-close" onclick="cerrarModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <img class="image-modal-content" id="modalImage" src="" alt="Imagen ampliada">
+    </div>
+
+    <script>
+        let mantenimientos = [];
+        let photoData = {};
+
+        function handlePhotoUpload(event, photoNum) {
+            event.stopPropagation();
+            const file = event.target.files[0];
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    mostrarNotificacion('Por favor selecciona una imagen válida', 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    photoData[photoNum] = e.target.result;
+                    document.getElementById(`img${photoNum}`).src = e.target.result;
+                    document.getElementById(`preview${photoNum}`).classList.add('active');
+                    document.querySelector(`#photo${photoNum}`).parentElement.querySelector('.photo-upload-content').style.display = 'none';
+                    mostrarNotificacion(`Foto ${photoNum} cargada correctamente`);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function verFoto(event, photoNum) {
+            event.stopPropagation();
+            const imgSrc = document.getElementById(`img${photoNum}`).src;
+            if (imgSrc) {
+                document.getElementById('modalImage').src = imgSrc;
+                document.getElementById('imageModal').classList.add('active');
+            }
+        }
+
+        function eliminarFoto(event, photoNum) {
+            event.stopPropagation();
+            photoData[photoNum] = null;
+            document.getElementById(`photo${photoNum}`).value = '';
+            document.getElementById(`preview${photoNum}`).classList.remove('active');
+            document.querySelector(`#photo${photoNum}`).parentElement.querySelector('.photo-upload-content').style.display = 'block';
+            mostrarNotificacion(`Foto ${photoNum} eliminada`);
+        }
+
+        function cerrarModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        function guardarMantenimiento(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const mantenimiento = {
+                id: Date.now(),
+                economico: formData.get('economico'),
+                placas: formData.get('placas'),
+                marca: formData.get('marca'),
+                modelo: formData.get('modelo'),
+                year: formData.get('year'),
+                departamento: formData.get('departamento'),
+                tipoMantenimiento: formData.get('tipoMantenimiento'),
+                fechaServicio: formData.get('fechaServicio'),
+                kilometraje: formData.get('kilometraje'),
+                mecanico: formData.get('mecanico'),
+                estado: formData.get('estado'),
+                costo: formData.get('costo'),
+                descripcion: formData.get('descripcion'),
+                observaciones: formData.get('observaciones'),
+                fotos: {...photoData},
+                fechaRegistro: new Date().toISOString()
+            };
+
+            mantenimientos.unshift(mantenimiento);
+            mostrarNotificacion('✅ Registro guardado exitosamente');
+            limpiarFormulario();
+            renderizarRegistros();
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('maintenanceForm').reset();
+            photoData = {};
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`photo${i}`).value = '';
+                document.getElementById(`preview${i}`).classList.remove('active');
+                document.querySelector(`#photo${i}`).parentElement.querySelector('.photo-upload-content').style.display = 'block';
+            }
+        }
+
+        function renderizarRegistros() {
+            const grid = document.getElementById('recordsGrid');
+
+            if (mantenimientos.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <p><strong>No hay registros de mantenimiento</strong></p>
+                        <p>Agrega un nuevo registro usando el formulario superior</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = mantenimientos.map(m => {
+                const fotos = Object.values(m.fotos).filter(f => f);
+                const fotosHTML = fotos.length > 0 ? `
+                    <div class="record-photos">
+                        ${fotos.map((foto, idx) => `
+                            <img src="${foto}" class="record-photo" onclick="abrirFotoModal('${foto}')" alt="Foto ${idx + 1}">
+                        `).join('')}
+                    </div>
+                ` : '';
+
+                return `
+                    <div class="record-card">
+                        <div class="record-header">
+                            <div class="record-title">${m.economico}</div>
+                            <div class="record-date">${new Date(m.fechaServicio).toLocaleDateString('es-MX')}</div>
+                        </div>
+
+                        <div class="record-field">
+                            <div class="record-field-label">Tipo</div>
+                            <div class="record-field-value">
+                                <span class="badge badge-${m.tipoMantenimiento}">${m.tipoMantenimiento.toUpperCase()}</span>
+                            </div>
+                        </div>
+
+                        <div class="record-field">
+                            <div class="record-field-label">Vehículo</div>
+                            <div class="record-field-value">${m.marca} ${m.modelo} (${m.placas})</div>
+                        </div>
+
+                        <div class="record-field">
+                            <div class="record-field-label">Departamento</div>
+                            <div class="record-field-value">${m.departamento || 'N/A'}</div>
+                        </div>
+
+                        <div class="record-field">
+                            <div class="record-field-label">Descripción</div>
+                            <div class="record-field-value">${m.descripcion}</div>
+                        </div>
+
+                        <div class="record-field">
+                            <div class="record-field-label">Estado</div>
+                            <div class="record-field-value">
+                                <span class="badge badge-${m.estado}">${m.estado.toUpperCase()}</span>
+                            </div>
+                        </div>
+
+                        ${m.costo ? `
+                            <div class="record-field">
+                                <div class="record-field-label">Costo</div>
+                                <div class="record-field-value">$${parseFloat(m.costo).toLocaleString('es-MX', {minimumFractionDigits: 2})}</div>
+                            </div>
+                        ` : ''}
+
+                        ${fotosHTML}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function abrirFotoModal(fotoSrc) {
+            document.getElementById('modalImage').src = fotoSrc;
+            document.getElementById('imageModal').classList.add('active');
+        }
+
+        function mostrarNotificacion(mensaje, tipo = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <i class="fas ${tipo === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                <span>${mensaje}</span>
+            `;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+
+        function exportarRegistros() {
+            if (mantenimientos.length === 0) {
+                mostrarNotificacion('No hay registros para exportar', 'error');
+                return;
+            }
+
+            const headers = ['ID', 'Económico', 'Placas', 'Marca', 'Modelo', 'Tipo', 'Fecha', 'Estado', 'Costo', 'Descripción'];
+            const csvContent = [
+                headers.join(','),
+                ...mantenimientos.map(m => [
+                    m.id,
+                    m.economico,
+                    m.placas,
+                    m.marca,
+                    m.modelo,
+                    m.tipoMantenimiento,
+                    m.fechaServicio,
+                    m.estado,
+                    m.costo || '0',
+                    `"${m.descripcion}"`
+                ].join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `mantenimientos_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+
+            mostrarNotificacion('✅ Registros exportados correctamente');
+        }
+
+        function imprimirRegistros() {
+            window.print();
+            mostrarNotificacion('Preparando impresión...');
+        }
+
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                cerrarModal();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.querySelector('[name="fechaServicio"]').value = today;
+            mostrarNotificacion('Sistema listo para registrar mantenimientos');
+        });
+    </script>
+</body>
+</html>

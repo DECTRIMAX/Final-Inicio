@@ -1,0 +1,2797 @@
+﻿@{
+    ViewData["Title"] = "Bienvenido - Sistema Municipal Monclova";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema Municipal Digital de Monclova - Plataforma tecnológica para ciudadanos, empleados y administradores">
+    <title>Sistema Municipal Digital MONCLOVA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Barra de navegación superior -->
+    <nav class="top-navbar">
+        <div class="navbar-container">
+            <div class="nav-logo">
+                <img src="~/imagenes/ESCUDO.png" alt="Escudo Monclova" class="nav-logo-img" onerror="this.style.display='none';">
+                <span class="nav-logo-text">MONCLOVA</span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="#inicio" class="nav-link" onclick="closeMenu()"><i class="fas fa-home"></i> <span>Inicio</span></a>
+                <a href="#servicios" class="nav-link" onclick="closeMenu()"><i class="fas fa-th"></i> <span>Servicios</span></a>
+                <a href="#primarios" class="nav-link" onclick="closeMenu()"><i class="fas fa-tools"></i> <span>Primarios</span></a>
+                <a href="#contacto" class="nav-link" onclick="closeMenu()"><i class="fas fa-envelope"></i> <span>Contacto</span></a>
+                <a href="/Account/Login" class="nav-login-btn"><i class="fas fa-sign-in-alt"></i> <span>Iniciar Sesión</span></a>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menú" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+
+    <!-- Hero Section -->
+    <div id="inicio" class="hero-section">
+        <div class="bg-decoration">
+            <div class="geometric-shape shape-1"></div>
+            <div class="geometric-shape shape-2"></div>
+            <div class="geometric-shape shape-3"></div>
+            <div class="wave-pattern wave-1"></div>
+            <div class="wave-pattern wave-2"></div>
+            <div class="dot-grid"></div>
+            <div class="floating-circle circle-1"></div>
+            <div class="floating-circle circle-2"></div>
+            <div class="floating-circle circle-3"></div>
+        </div>
+
+        <div class="hero-content">
+            <div class="hero-main">
+                <div class="header-section">
+                    <div class="header-logo">
+                        <span class="logo-text">MONCLOVA</span>
+                        <span class="logo-subtitle">Digital</span>
+                    </div>
+                    <div class="municipality-image">
+                        <img src="~/imagenes/ESCUDO.png" alt="Escudo de Monclova" class="municipality-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="municipality-fallback">
+                            <i class="fas fa-city"></i>
+                        </div>
+                    </div>
+                    <div class="header-badge">
+                        <span>Gobierno 2025-2027</span>
+                    </div>
+                </div>
+
+                <div class="title-section">
+                    <h1 class="hero-title">
+                        Sistema Municipal
+                        <span class="highlight">Digital</span>
+                        <span class="city-name">MONCLOVA</span>
+                    </h1>
+                    <div class="title-accent"></div>
+                    <p class="hero-subtitle">Plataforma Tecnológica Municipal de Nueva Generación</p>
+                </div>
+
+                <div class="description-section">
+                    <div class="feature-pill">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>Acceso 24/7 desde cualquier dispositivo</span>
+                    </div>
+                    <div class="feature-pill">
+                        <i class="fas fa-clipboard-list"></i>
+                        <span>Reporta baches, alumbrado y servicios</span>
+                    </div>
+                    <div class="feature-pill">
+                        <i class="fas fa-bolt"></i>
+                        <span>Respuesta rápida y eficiente</span>
+                    </div>
+                </div>
+
+                <div class="primary-action">
+                    <a href="/Account/Login" class="btn-primary-main">
+                        <div class="btn-icon">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="btn-text">
+                            <span class="btn-title">Acceder al Sistema</span>
+                            <span class="btn-subtitle">Portal Ciudadano</span>
+                        </div>
+                        <div class="btn-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </a>
+                    <a href="#servicios" class="btn-primary-secondary">
+                        <div class="btn-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="btn-text">
+                            <span class="btn-title">Ver Servicios</span>
+                            <span class="btn-subtitle">Explorar Plataforma</span>
+                        </div>
+                        <div class="btn-arrow">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number">15,000+</span>
+                            <span class="stat-label">Ciudadanos Registrados</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number">500+</span>
+                            <span class="stat-label">Empleados Activos</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number">24/7</span>
+                            <span class="stat-label">Disponibilidad Total</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number">98%</span>
+                            <span class="stat-label">Satisfacción</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="secondary-actions">
+                    <a href="#info" class="btn-secondary">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Más Información</span>
+                    </a>
+                    <a href="#primarios" class="btn-secondary">
+                        <i class="fas fa-tools"></i>
+                        <span>Servicios Primarios</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="institutions-section">
+                <div class="section-title">
+                    <h3>Instituciones Participantes</h3>
+                    <div class="title-line"></div>
+                </div>
+
+                <div class="institutions-grid">
+                    <div class="institution-card main-card">
+                        <div class="institution-image-container large">
+                            <img src="~/imagenes/ESCUDO.png" alt="Municipio de Monclova" class="institution-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="image-fallback">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="image-overlay">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                        </div>
+                        <div class="institution-info">
+                            <span class="institution-name">Municipio de Monclova</span>
+                            <span class="institution-subtitle">Coahuila de Zaragoza</span>
+                        </div>
+                    </div>
+
+                    <div class="institution-card">
+                        <div class="institution-image-container">
+                            <img src="~/imagenes/coahuila.png" alt="Gobierno de Coahuila" class="institution-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="image-fallback">
+                                <i class="fas fa-landmark"></i>
+                            </div>
+                            <div class="image-overlay">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                        </div>
+                        <span class="institution-label">Gobierno de Coahuila</span>
+                    </div>
+
+                    <div class="institution-card">
+                        <div class="institution-image-container">
+                            <img src="~/imagenes/GobiernoDigital.png" alt="Gobierno Digital" class="institution-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="image-fallback">
+                                <i class="fas fa-laptop-code"></i>
+                            </div>
+                            <div class="image-overlay">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                        </div>
+                        <span class="institution-label">Gobierno Digital</span>
+                    </div>
+
+                    <div class="institution-card">
+                        <div class="institution-image-container">
+                            <img src="~/imagenes/Transparencia.png" alt="Transparencia" class="institution-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="image-fallback">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="image-overlay">
+                                <i class="fas fa-search-plus"></i>
+                            </div>
+                        </div>
+                        <span class="institution-label">Transparencia</span>
+                    </div>
+
+                    <div class="institution-card">
+                        <div class="institution-image-container">
+                            <img src="~/imagenes/Inovaccion.png" alt="Innovación Municipal" class="institution-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="image-fallback">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div class="image-overlay">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                        </div>
+                        <span class="institution-label">Innovación Municipal</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features-section">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <span>Multiplataforma</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <span>Seguro y Confiable</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <span>Respuesta Inmediata</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <span>En la Nube</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Servicios Digitales -->
+    <section id="servicios" class="services-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Accesos por Rol</span>
+                <h2>Plataforma de Servicios Digitales</h2>
+                <p>Accede a herramientas especializadas según tu rol en el ecosistema municipal de Monclova</p>
+                <div class="header-decoration"></div>
+            </div>
+
+            <div class="services-grid">
+                <div class="service-card citizen-service">
+                    <div class="card-header">
+                        <div class="service-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <div class="card-badge">Acceso Público</div>
+                    </div>
+
+                    <h3>Portal Ciudadano</h3>
+                    <p class="service-description">
+                        Plataforma intuitiva para ciudadanos que permite realizar reportes, consultas y
+                        mantenerse informado sobre servicios municipales de forma rápida y segura.
+                    </p>
+
+                    <div class="service-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Reportes ciudadanos en tiempo real</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Consulta de trámites y servicios</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Información pública y transparencia</span>
+                        </div>
+                    </div>
+
+                    <a href="@Url.Action("Login", "Account")" class="service-btn citizen-btn">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Acceder como Ciudadano</span>
+                    </a>
+                </div>
+
+                <div class="service-card employee-service">
+                    <div class="card-header">
+                        <div class="service-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="card-badge">Área Interna</div>
+                    </div>
+
+                    <h3>Sistema de Empleados</h3>
+                    <p class="service-description">
+                        Herramientas profesionales para empleados municipales que optimizan la gestión
+                        departamental y mejoran la eficiencia en el servicio público.
+                    </p>
+
+                    <div class="service-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Gestión departamental especializada</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Reportes y estadísticas avanzadas</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Control de tareas y casos asignados</span>
+                        </div>
+                    </div>
+
+                    <a href="@Url.Action("Login", "Account")" class="service-btn employee-btn">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Acceder como Empleado</span>
+                    </a>
+                </div>
+
+                <div class="service-card admin-service">
+                    <div class="card-header">
+                        <div class="service-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="card-badge">Nivel Ejecutivo</div>
+                    </div>
+
+                    <h3>Panel Administrativo</h3>
+                    <p class="service-description">
+                        Centro de comando integral para administradores con controles avanzados,
+                        analíticas en tiempo real y gestión completa del sistema municipal.
+                    </p>
+
+                    <div class="service-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Control total del ecosistema digital</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Dashboard ejecutivo con métricas clave</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Reportes generales del municipio</span>
+                        </div>
+                    </div>
+
+                    <a href="@Url.Action("Login", "Account")" class="service-btn admin-btn">
+                        <i class="fas fa-crown"></i>
+                        <span>Acceder como Administrador</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="section-footer">
+                <div class="footer-content">
+                    <h4>¿Necesitas ayuda para comenzar?</h4>
+                    <p>Nuestro equipo de soporte está disponible para guiarte en el uso de la plataforma</p>
+                    <div class="contact-options">
+                        <a href="tel:+528661234567" class="contact-btn">
+                            <i class="fas fa-phone"></i>
+                            <span>(866) 123-4567</span>
+                        </a>
+                        <a href="mailto:soporte@monclova.gob.mx" class="contact-btn">
+                            <i class="fas fa-envelope"></i>
+                            <span>soporte@monclova.gob.mx</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Servicios Primarios -->
+    <section id="primarios" class="primary-services-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Áreas de Servicio</span>
+                <h2>Servicios Primarios Municipales</h2>
+                <p>Áreas especializadas de atención directa al ciudadano con personal capacitado y equipamiento moderno</p>
+                <div class="header-decoration"></div>
+            </div>
+
+            <div class="primary-services-grid">
+                <div class="primary-service-card">
+                    <div class="service-image-container">
+                        <div class="service-photo-circular">
+                            <img src="~/imagenes/CuadrillaDeLimpieza.png" alt="Limpieza Pública" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="service-photo-placeholder">
+                                <i class="fas fa-broom"></i>
+                                <span>Limpieza</span>
+                            </div>
+                        </div>
+                        <div class="circular-logo">
+                            <img src="~/imagenes/logo-limpieza.png" alt="Logo Limpieza" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="logo-fallback">
+                                <i class="fas fa-broom"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-broom"></i>
+                            </div>
+                            <h3>Limpieza Pública</h3>
+                        </div>
+                        <p class="service-description">
+                            El Departamento de Servicios Primarios de Monclova implementa un programa integral de limpieza urbana que abarca barrido manual y mecanizado de calles, avenidas y bulevares, recolección de residuos sólidos, limpieza de plazas públicas, monumentos históricos y áreas recreativas, así como mantenimiento de arroyos y drenajes para prevenir inundaciones y mejorar la imagen urbana.
+                        </p>
+                        <div class="service-details">
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>Horarios de 5:00 AM a 11:00 PM todos los días</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-users"></i>
+                                <span>12 cuadrillas de limpieza especializadas</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-truck"></i>
+                                <span>Barredoras mecánicas y camionetas de apoyo</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-map-marked-alt"></i>
+                                <span>Cobertura: Centro histórico y 85 colonias</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="primary-service-card">
+                    <div class="service-image-container">
+                        <div class="service-photo-circular">
+                            <img src="~/imagenes/RecoleccionDeBasura.png" alt="Recolección de Basura" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="service-photo-placeholder">
+                                <i class="fas fa-trash-alt"></i>
+                                <span>Recolección</span>
+                            </div>
+                        </div>
+                        <div class="circular-logo">
+                            <img src="~/imagenes/logo-recoleccion.png" alt="Logo Recolección" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="logo-fallback">
+                                <i class="fas fa-trash-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-trash-alt"></i>
+                            </div>
+                            <h3>Recolección de Basura</h3>
+                        </div>
+                        <p class="service-description">
+                            El Departamento de Servicios Primarios de Monclova gestiona un sistema integral de recolección de residuos sólidos urbanos, operado mediante 31 rutas de recolección por boteo, que cubren diversas colonias de la ciudad con eficiencia y puntualidad.
+                        </p>
+                        <div class="service-details">
+                            <div class="detail-item">
+                                <i class="fas fa-route"></i>
+                                <span>31 rutas de recolección por boteo</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-truck"></i>
+                                <span>33 unidades de recolección activas</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-users"></i>
+                                <span>Más de 100 personas trabajando</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-recycle"></i>
+                                <span>Programa de separación y reciclaje</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="primary-service-card">
+                    <div class="service-image-container">
+                        <div class="service-photo-circular">
+                            <img src="~/imagenes/Alumbrado.png" alt="Alumbrado Público" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="service-photo-placeholder">
+                                <i class="fas fa-lightbulb"></i>
+                                <span>Alumbrado</span>
+                            </div>
+                        </div>
+                        <div class="circular-logo">
+                            <img src="~/imagenes/logo-alumbrado.png" alt="Logo Alumbrado" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="logo-fallback">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <h3>Alumbrado Público</h3>
+                        </div>
+                        <p class="service-description">
+                            El Departamento de Servicios Primarios de Monclova gestiona una red de más de 17,600 luminarias, que incluyen tecnología LED de alta eficiencia energética. Estas luminarias están distribuidas estratégicamente en calles principales, avenidas, parques, plazas y fraccionamientos.
+                        </p>
+                        <div class="service-details">
+                            <div class="detail-item">
+                                <i class="fas fa-lightbulb"></i>
+                                <span>Tecnología LED de alta eficiencia</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-bolt"></i>
+                                <span>Más de 17,600 luminarias activas</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <span>Atención rápida a reportes ciudadanos</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-wrench"></i>
+                                <span>Mantenimiento preventivo y correctivo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="primary-service-card">
+                    <div class="service-image-container">
+                        <div class="service-photo-circular">
+                            <img src="~/imagenes/Bacheo.png" alt="Bacheo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="service-photo-placeholder">
+                                <i class="fas fa-road"></i>
+                                <span>Bacheo</span>
+                            </div>
+                        </div>
+                        <div class="circular-logo">
+                            <img src="~/imagenes/logo-bacheo.png" alt="Logo Bacheo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="logo-fallback">
+                                <i class="fas fa-road"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-road"></i>
+                            </div>
+                            <h3>Bacheo</h3>
+                        </div>
+                        <p class="service-description">
+                            El Departamento de Servicios Primarios se encarga de identificar y tapar baches en calles de la ciudad, garantizando la seguridad de peatones y conductores. Su trabajo contribuye a mantener la funcionalidad de la vialidad urbana con respuesta eficiente.
+                        </p>
+                        <div class="service-details">
+                            <div class="detail-item">
+                                <i class="fas fa-road"></i>
+                                <span>Más de 17,000 baches reparados</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-tools"></i>
+                                <span>Maquinaria especializada y compactadoras</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar-check"></i>
+                                <span>Programa preventivo de mantenimiento</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Materiales certificados de alta resistencia</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="primary-service-card">
+                    <div class="service-image-container">
+                        <div class="service-photo-circular">
+                            <img src="~/imagenes/Forestacion.png" alt="Forestación" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="service-photo-placeholder">
+                                <i class="fas fa-tree"></i>
+                                <span>Forestación</span>
+                            </div>
+                        </div>
+                        <div class="circular-logo">
+                            <img src="~/imagenes/logo-forestacion.png" alt="Logo Forestación" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="logo-fallback">
+                                <i class="fas fa-tree"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-tree"></i>
+                            </div>
+                            <h3>Forestación </h3>
+                        </div>
+                        <p class="service-description">
+                            El Departamento de Forestación Municipal de Monclova se encarga de la arborización y conservación de áreas verdes en la ciudad. Gestiona la plantación de especies nativas adaptadas al clima semiárido y promueve la conciencia ecológica.
+                        </p>
+                        <div class="service-details">
+                            <div class="detail-item">
+                                <i class="fas fa-seedling"></i>
+                                <span>Más de 150 árboles donados anualmente</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-leaf"></i>
+                                <span>Especies nativas adaptadas</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-water"></i>
+                                <span>Sistemas de riego tecnificado</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-cut"></i>
+                                <span>Poda técnica y sanitaria</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-graduation-cap"></i>
+                                <span>Programas educativos ambientales</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="primary-service-card">
+                    <div class="service-image-container">
+                        <div class="service-photo-circular">
+                            <img src="~/imagenes/ServiciosPrimarios.png" alt="Servicios Primarios" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="service-photo-placeholder">
+                                <i class="fas fa-wrench"></i>
+                                <span>Servicios Generales</span>
+                            </div>
+                        </div>
+                        <div class="circular-logo">
+                            <img src="~/imagenes/logo-servicios.png" alt="Logo Servicios" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="logo-fallback">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <div class="service-header">
+                            <div class="service-icon">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <h3>Servicios Primarios </h3>
+                        </div>
+                        <p class="service-description">
+                            El Departamento de Servicios Primarios de Monclova garantiza espacios públicos limpios, seguros y funcionales. Se encarga del mantenimiento integral de calles, parques, jardines, plazas y camellones, así como la atención a reportes ciudadanos.
+                        </p>
+                        <div class="service-details">
+                            <div class="detail-item">
+                                <i class="fas fa-building"></i>
+                                <span>Edificios y areas en mantenimiento</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-tools"></i>
+                                <span>Servicios integrales de mantenimiento urbano</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>Mantenimiento preventivo programado</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-hard-hat"></i>
+                                <span>Personal técnico certificado</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contacto" class="main-footer">
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-col footer-about">
+                    <div class="footer-logo">
+                        <img src="~/imagenes/ESCUDO.png" alt="Escudo Monclova" class="footer-logo-img" onerror="this.style.display='none';">
+                        <div class="footer-logo-text">
+                            <h3>MONCLOVA</h3>
+                            <p>Gobierno Digital</p>
+                        </div>
+                    </div>
+                    <p class="footer-description">
+                        Sistema Municipal Digital de Monclova. Plataforma tecnológica que conecta a ciudadanos, empleados y administradores para una gestión municipal más eficiente y transparente.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul class="footer-links">
+                        <li><a href="#inicio"><i class="fas fa-chevron-right"></i> Inicio</a></li>
+                        <li><a href="#servicios"><i class="fas fa-chevron-right"></i> Servicios Digitales</a></li>
+                        <li><a href="#primarios"><i class="fas fa-chevron-right"></i> Servicios Primarios</a></li>
+                        <li><a href="/Account/Login"><i class="fas fa-chevron-right"></i> Iniciar Sesión</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Transparencia</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Servicios</h4>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Portal Ciudadano</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Reportes en Línea</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Trámites y Servicios</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Consulta de Reportes</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Información Municipal</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Contacto</h4>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Blvd. Harold R. Pape 1000<br>Monclova, Coahuila, México</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span>(866) 123-4567</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>contacto@monclova.gob.mx</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>Lun - Vie: 8:00 AM - 5:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>&copy; 2025 Municipio de Monclova. Todos los derechos reservados.</p>
+                    <div class="footer-bottom-links">
+                        <a href="#">Política de Privacidad</a>
+                        <span>•</span>
+                        <a href="#">Términos de Uso</a>
+                        <span>•</span>
+                        <a href="#">Aviso Legal</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botón flotante de ayuda -->
+    <button class="help-button" aria-label="Ayuda">
+        <i class="fas fa-question"></i>
+    </button>
+
+    <style>
+        :root {
+            --primary-green: #16a34a;
+            --primary-green-light: #22c55e;
+            --primary-green-dark: #15803d;
+            --accent-red: #dc2626;
+            --accent-red-light: #ef4444;
+            --white-clean: #ffffff;
+            --white-soft: #fefefe;
+            --gray-light: #f8fafc;
+            --gray-medium: #64748b;
+            --gray-dark: #0f172a;
+            --shadow-light: rgba(22, 163, 74, 0.1);
+            --shadow-medium: rgba(22, 163, 74, 0.2);
+            --shadow-strong: rgba(22, 163, 74, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-dark);
+            overflow-x: hidden;
+            background: var(--white-clean);
+        }
+
+        /* Navbar Superior */
+        .top-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .top-navbar.hide {
+                transform: translateY(-100%);
+            }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 1001;
+        }
+
+        .nav-logo-img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .nav-logo-text {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary-green);
+            letter-spacing: 0.05em;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--gray-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+            .nav-link:hover {
+                color: var(--primary-green);
+            }
+
+        .nav-login-btn {
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-green-light));
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px var(--shadow-medium);
+            white-space: nowrap;
+        }
+
+            .nav-login-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px var(--shadow-strong);
+                color: white;
+                text-decoration: none;
+            }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-dark);
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 1001;
+        }
+
+        /* Overlay para cerrar menú móvil */
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            backdrop-filter: blur(2px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+            .menu-overlay.active {
+                display: block;
+                opacity: 1;
+            }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-green-dark) 0%, var(--primary-green) 35%, var(--primary-green-light) 65%, var(--accent-red) 100%);
+            color: white;
+            padding: 4.5rem 2rem 1.5rem;
+            min-height: auto;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .bg-decoration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .geometric-shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+        }
+
+        .shape-1 {
+            width: 180px;
+            height: 120px;
+            top: 15%;
+            left: -40px;
+            transform: rotate(35deg);
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.08), rgba(220, 38, 38, 0.1));
+        }
+
+        .shape-2 {
+            width: 100px;
+            height: 100px;
+            top: 60%;
+            right: -20px;
+            transform: rotate(-25deg);
+            background: linear-gradient(45deg, rgba(220, 38, 38, 0.12), rgba(255, 255, 255, 0.06));
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 80px;
+            bottom: 25%;
+            left: 8%;
+            transform: rotate(20deg);
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.06), rgba(220, 38, 38, 0.08));
+        }
+
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            right: 5%;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            bottom: 15%;
+            right: 15%;
+        }
+
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            left: 10%;
+        }
+
+        .wave-pattern {
+            position: absolute;
+            width: 100%;
+            height: 40px;
+            background: repeating-linear-gradient(90deg, transparent, transparent 25px, rgba(255, 255, 255, 0.02) 25px, rgba(255, 255, 255, 0.02) 50px);
+        }
+
+        .wave-1 {
+            top: 35%;
+            transform: skewY(-1deg);
+        }
+
+        .wave-2 {
+            bottom: 45%;
+            transform: skewY(1deg);
+        }
+
+        .dot-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.4;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            display: grid;
+            gap: 1rem;
+            padding: 1rem 0;
+            width: 100%;
+            background: linear-gradient(135deg, rgba(21, 128, 61, 0.1) 0%, rgba(22, 163, 74, 0.05) 35%, rgba(34, 197, 94, 0.1) 65%, rgba(220, 38, 38, 0.05) 100%);
+            border-radius: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 0.8rem 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-logo {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .logo-text {
+            font-size: clamp(1rem, 4vw, 1.3rem);
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            color: var(--white-clean);
+        }
+
+        .logo-subtitle {
+            font-size: clamp(0.65rem, 2vw, 0.8rem);
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.15em;
+        }
+
+        .municipality-image {
+            width: clamp(50px, 10vw, 70px);
+            height: clamp(50px, 10vw, 70px);
+            border-radius: 12px;
+            background: var(--white-clean);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px var(--shadow-medium);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .municipality-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 8px;
+        }
+
+        .municipality-fallback {
+            display: none;
+            color: var(--primary-green);
+            font-size: clamp(1.8rem, 4vw, 2.2rem);
+            font-weight: 700;
+        }
+
+        .municipality-image:hover {
+            transform: scale(1.05) rotate(3deg);
+            box-shadow: 0 8px 25px var(--shadow-strong);
+            border-color: var(--accent-red);
+        }
+
+        .header-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: clamp(0.4rem, 1vw, 0.6rem) clamp(0.8rem, 2vw, 1.2rem);
+            border-radius: clamp(15px, 3vw, 25px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+            .header-badge span {
+                font-size: clamp(0.8rem, 1.8vw, 1rem);
+                font-weight: 600;
+                color: var(--white-clean);
+            }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+            padding: 0 clamp(1rem, 3vw, 2rem);
+        }
+
+        .hero-title {
+            font-size: clamp(2.2rem, 7vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, var(--accent-red-light), var(--accent-red));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .city-name {
+            display: block;
+            font-size: clamp(1.8rem, 6vw, 3.5rem);
+            font-weight: 900;
+            color: var(--white-clean);
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
+            margin-top: 0.3rem;
+            letter-spacing: 0.05em;
+        }
+
+        .title-accent {
+            width: clamp(60px, 8vw, 80px);
+            height: clamp(3px, 0.5vw, 5px);
+            background: linear-gradient(135deg, var(--accent-red), var(--accent-red-light));
+            margin: 0 auto 1rem;
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+        }
+
+        .hero-subtitle {
+            font-size: clamp(0.95rem, 2.8vw, 1.2rem);
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.05em;
+        }
+
+        .description-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+            padding: 0 clamp(1rem, 3vw, 2rem);
+        }
+
+        .feature-pill {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 1.25rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+            .feature-pill:hover {
+                background: rgba(255, 255, 255, 0.25);
+                transform: translateY(-2px);
+            }
+
+            .feature-pill i {
+                font-size: 1.1rem;
+            }
+
+            .feature-pill span {
+                font-size: 0.9rem;
+                font-weight: 500;
+            }
+
+        .primary-action {
+            display: flex;
+            justify-content: center;
+            gap: clamp(1rem, 3vw, 2rem);
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+            flex-wrap: wrap;
+            padding: 0 clamp(1rem, 3vw, 2rem);
+        }
+
+        .btn-primary-main,
+        .btn-primary-secondary {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.8rem, 2vw, 1.2rem);
+            padding: clamp(1.2rem, 3vw, 1.5rem) clamp(1.5rem, 4vw, 2rem);
+            border-radius: clamp(25px, 5vw, 50px);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            min-width: clamp(280px, 40vw, 350px);
+            max-width: clamp(350px, 45vw, 400px);
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .btn-primary-main {
+            background: var(--white-clean);
+            color: var(--primary-green);
+            box-shadow: 0 8px 25px var(--shadow-medium);
+        }
+
+            .btn-primary-main::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(22, 163, 74, 0.1), transparent);
+                transition: left 0.5s ease;
+            }
+
+        .btn-primary-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+            .btn-primary-secondary::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+                transition: left 0.5s ease;
+            }
+
+            .btn-primary-main:hover::before,
+            .btn-primary-secondary:hover::before {
+                left: 100%;
+            }
+
+        .btn-primary-main:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px var(--shadow-strong);
+            color: var(--primary-green);
+            text-decoration: none;
+        }
+
+        .btn-primary-secondary:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-icon {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+        }
+
+        .btn-text {
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-title {
+            display: block;
+            font-weight: 800;
+            font-size: 1.1em;
+            line-height: 1.2;
+        }
+
+        .btn-subtitle {
+            display: block;
+            font-size: 0.85em;
+            opacity: 0.7;
+            font-weight: 500;
+            margin-top: 0.1rem;
+        }
+
+        .btn-arrow {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            transition: transform 0.3s ease;
+        }
+
+        .btn-primary-main:hover .btn-arrow,
+        .btn-primary-secondary:hover .btn-arrow {
+            transform: translateX(4px);
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(150px, 22vw, 200px), 1fr));
+            gap: clamp(1rem, 3vw, 2rem);
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+            padding: 0 clamp(1rem, 3vw, 2rem);
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.12);
+            padding: clamp(1.5rem, 3.5vw, 2rem) clamp(1rem, 2.5vw, 1.5rem);
+            border-radius: clamp(15px, 3vw, 22px);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+                transition: left 0.6s ease;
+            }
+
+            .stat-card:hover::before {
+                left: 100%;
+            }
+
+            .stat-card:hover {
+                transform: translateY(-4px);
+                background: rgba(255, 255, 255, 0.18);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+
+        .stat-icon {
+            width: clamp(40px, 6vw, 55px);
+            height: clamp(40px, 6vw, 55px);
+            background: var(--white-clean);
+            border-radius: clamp(10px, 2vw, 15px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: var(--primary-green);
+            font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+            box-shadow: 0 4px 12px var(--shadow-light);
+        }
+
+        .stat-number {
+            display: block;
+            font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            color: var(--white-clean);
+        }
+
+        .stat-label {
+            font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+            opacity: 0.9;
+            font-weight: 500;
+            color: var(--white-clean);
+        }
+
+        .secondary-actions {
+            display: flex;
+            justify-content: center;
+            gap: clamp(1rem, 3vw, 1.5rem);
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+            flex-wrap: wrap;
+            padding: 0 clamp(1rem, 3vw, 2rem);
+        }
+
+        .btn-secondary {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 0.8rem);
+            padding: clamp(0.6rem, 1.8vw, 0.8rem) clamp(1.2rem, 3vw, 1.5rem);
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: clamp(20px, 4vw, 30px);
+            color: white;
+            text-decoration: none;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+            .btn-secondary:hover {
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+                text-decoration: none;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+            }
+
+        .institutions-section {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.08) 100%);
+            padding: clamp(2rem, 5vw, 3rem) clamp(1.5rem, 4vw, 2.5rem);
+            border-radius: clamp(1.2rem, 3vw, 2rem);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: clamp(2rem, 5vw, 3rem);
+        }
+
+            .section-title h3 {
+                font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+                font-weight: 700;
+                margin-bottom: clamp(0.6rem, 1.5vw, 1rem);
+                color: var(--white-clean);
+            }
+
+        .title-line {
+            width: clamp(50px, 8vw, 80px);
+            height: clamp(2px, 0.5vw, 4px);
+            background: linear-gradient(135deg, var(--accent-red), var(--accent-red-light));
+            margin: 0 auto;
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+        }
+
+        .institutions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 18vw, 180px), 1fr));
+            gap: clamp(1.5rem, 4vw, 2.5rem);
+            align-items: start;
+        }
+
+        .institution-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: clamp(1.2rem, 3vw, 1.8rem) clamp(1rem, 2.5vw, 1.5rem);
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: clamp(15px, 3vw, 22px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .institution-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+                transition: left 0.6s ease;
+            }
+
+            .institution-card:hover::before {
+                left: 100%;
+            }
+
+            .institution-card:hover {
+                transform: translateY(-6px);
+                background: rgba(255, 255, 255, 0.15);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+            }
+
+        .main-card {
+            grid-column: 1 / -1;
+            flex-direction: row;
+            gap: clamp(1.2rem, 3vw, 2rem);
+            padding: clamp(2rem, 4vw, 2.5rem) clamp(1.5rem, 4vw, 2rem);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .institution-image-container {
+            width: clamp(60px, 8vw, 80px);
+            height: clamp(60px, 8vw, 80px);
+            border-radius: clamp(12px, 2.5vw, 18px);
+            background: var(--white-clean);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: clamp(0.6rem, 1.5vw, 1rem);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px var(--shadow-light);
+        }
+
+            .institution-image-container.large {
+                width: clamp(80px, 10vw, 100px);
+                height: clamp(80px, 10vw, 100px);
+                border-radius: clamp(16px, 3vw, 24px);
+                margin-bottom: 0;
+                box-shadow: 0 6px 20px var(--shadow-medium);
+            }
+
+        .institution-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: all 0.3s ease;
+            padding: 6px;
+        }
+
+        .image-fallback {
+            display: none;
+            color: var(--primary-green);
+            font-size: clamp(1.5rem, 3.5vw, 2rem);
+            font-weight: 700;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(22, 163, 74, 0.9);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            opacity: 0;
+            transition: all 0.3s ease;
+            border-radius: inherit;
+        }
+
+        .institution-image-container:hover .image-overlay {
+            opacity: 1;
+        }
+
+        .institution-image-container:hover .institution-image {
+            transform: scale(1.05);
+        }
+
+        .institution-image-container:hover {
+            transform: scale(1.08) rotate(2deg);
+            box-shadow: 0 8px 25px var(--shadow-strong);
+            border-color: var(--accent-red);
+        }
+
+        .institution-name {
+            display: block;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            font-weight: 700;
+            color: var(--white-clean);
+            margin-bottom: clamp(0.2rem, 0.8vw, 0.4rem);
+        }
+
+        .institution-subtitle {
+            display: block;
+            font-size: clamp(0.8rem, 2vw, 0.95rem);
+            opacity: 0.8;
+            font-weight: 500;
+            color: var(--white-clean);
+        }
+
+        .institution-label {
+            font-size: clamp(0.75rem, 1.8vw, 0.9rem);
+            font-weight: 600;
+            opacity: 0.9;
+            color: var(--white-clean);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            line-height: 1.3;
+        }
+
+        .institution-info {
+            flex: 1;
+        }
+
+        .features-section {
+            display: flex;
+            justify-content: center;
+            gap: clamp(1rem, 4vw, 2rem);
+            flex-wrap: wrap;
+            margin-top: clamp(1rem, 3vw, 2rem);
+            padding: 0 clamp(1rem, 3vw, 2rem);
+        }
+
+        .feature-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(0.6rem, 1.5vw, 1rem);
+            padding: clamp(1.2rem, 3vw, 1.8rem) clamp(0.8rem, 2vw, 1.2rem);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: clamp(12px, 3vw, 20px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+            min-width: clamp(100px, 20vw, 140px);
+            text-align: center;
+        }
+
+            .feature-card:hover {
+                transform: translateY(-4px);
+                background: rgba(255, 255, 255, 0.15);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            }
+
+        .feature-icon {
+            width: clamp(35px, 6vw, 50px);
+            height: clamp(35px, 6vw, 50px);
+            background: var(--white-clean);
+            border-radius: clamp(8px, 2vw, 14px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-green);
+            font-size: clamp(1rem, 2.2vw, 1.3rem);
+            box-shadow: 0 4px 12px var(--shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 6px 18px var(--shadow-medium);
+        }
+
+        .feature-card span {
+            font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+            font-weight: 600;
+            color: var(--white-clean);
+            opacity: 0.95;
+        }
+
+        /* Servicios Digitales */
+        .services-section {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+            padding: 0 1rem;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-green-light), var(--primary-green));
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: #64748b;
+            max-width: 50rem;
+            margin: 0 auto 2rem auto;
+            line-height: 1.6;
+        }
+
+        .header-decoration {
+            width: 5rem;
+            height: 0.25rem;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            margin: 0 auto;
+            border-radius: 0.125rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .service-card {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            border: 1px solid #f1f5f9;
+        }
+
+            .service-card:hover {
+                transform: translateY(-0.5rem);
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-icon {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.4s ease;
+        }
+
+        .citizen-service .service-icon {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+
+        .employee-service .service-icon {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+        }
+
+        .admin-service .service-icon {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .card-badge {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            color: #475569;
+            padding: 0.375rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1px solid #e2e8f0;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .service-description {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            font-size: 0.875rem;
+        }
+
+        .service-features {
+            margin-bottom: 2rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem 0;
+        }
+
+            .feature-item i {
+                color: #22c55e;
+                font-size: 0.875rem;
+                margin-top: 0.125rem;
+                flex-shrink: 0;
+            }
+
+            .feature-item span {
+                color: #475569;
+                font-size: 0.875rem;
+                line-height: 1.5;
+                font-weight: 500;
+            }
+
+        .service-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border-radius: 3rem;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .citizen-btn {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            box-shadow: 0 4px 14px -2px rgba(34, 197, 94, 0.4);
+        }
+
+        .employee-btn {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: white;
+            box-shadow: 0 4px 14px -2px rgba(14, 165, 233, 0.4);
+        }
+
+        .admin-btn {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            box-shadow: 0 4px 14px -2px rgba(220, 38, 38, 0.4);
+        }
+
+        .service-btn:hover {
+            transform: translateY(-0.125rem);
+            color: white;
+            text-decoration: none;
+        }
+
+        .section-footer {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-radius: 1.5rem;
+            padding: 3rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .footer-content h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #f8fafc;
+        }
+
+        .footer-content p {
+            color: #cbd5e1;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .contact-options {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .contact-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 3rem;
+            text-decoration: none;
+            font-weight: 500;
+            backdrop-filter: blur(0.5rem);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            min-width: 12rem;
+        }
+
+            .contact-btn:hover {
+                background: rgba(34, 197, 94, 0.2);
+                border-color: rgba(34, 197, 94, 0.4);
+                transform: translateY(-0.125rem);
+                color: white;
+                text-decoration: none;
+            }
+
+        /* Servicios Primarios */
+        .primary-services-section {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+        }
+
+        .primary-services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+            gap: 2.5rem;
+            margin-top: 4rem;
+        }
+
+        .primary-service-card {
+            background: #ffffff;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+            .primary-service-card:hover {
+                transform: translateY(-0.5rem);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+                border-color: #22c55e;
+            }
+
+        .service-image-container {
+            height: 15rem;
+            position: relative;
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .service-photo-circular {
+            width: 12rem;
+            height: 12rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: all 0.4s ease;
+        }
+
+            .service-photo-circular img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: all 0.3s ease;
+            }
+
+            .service-photo-circular:hover img {
+                transform: scale(1.1);
+            }
+
+        .service-photo-placeholder {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            font-size: 0.875rem;
+            font-weight: 500;
+            gap: 0.5rem;
+        }
+
+            .service-photo-placeholder i {
+                font-size: 3rem;
+                opacity: 0.7;
+            }
+
+        .circular-logo {
+            position: absolute;
+            bottom: -10px;
+            right: 20px;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border: 3px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+            transition: all 0.4s ease;
+            z-index: 10;
+        }
+
+            .circular-logo img {
+                width: 70%;
+                height: 70%;
+                object-fit: contain;
+                border-radius: 50%;
+            }
+
+            .circular-logo .logo-fallback {
+                display: none;
+                width: 100%;
+                height: 100%;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 1.5rem;
+            }
+
+        .primary-service-card:hover .circular-logo {
+            transform: scale(1.2) rotate(10deg);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.6);
+        }
+
+        .primary-service-card:hover .service-photo-circular {
+            transform: scale(1.05);
+            border-color: #22c55e;
+        }
+
+        .service-content {
+            padding: 2rem;
+        }
+
+        .service-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .primary-service-card:hover .service-icon {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .service-header h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+            line-height: 1.2;
+            transition: color 0.3s ease;
+        }
+
+        .primary-service-card:hover .service-header h3 {
+            color: #22c55e;
+        }
+
+        .service-details {
+            margin-top: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem 0;
+        }
+
+            .detail-item i {
+                color: #22c55e;
+                font-size: 0.875rem;
+                width: 1rem;
+                text-align: center;
+                flex-shrink: 0;
+                margin-top: 0.125rem;
+            }
+
+            .detail-item span {
+                color: #475569;
+                font-size: 0.875rem;
+                font-weight: 500;
+                line-height: 1.5;
+            }
+
+        /* Footer */
+        .main-footer {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color: #e2e8f0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 1;
+            padding: 6rem 2rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-col h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+
+            .footer-col h4::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 50px;
+                height: 3px;
+                background: linear-gradient(90deg, var(--primary-green), var(--primary-green-light));
+                border-radius: 2px;
+            }
+
+        .footer-about {
+            grid-column: auto;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-logo-img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .footer-logo-text h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin: 0;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-logo-text p {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .footer-description {
+            color: #cbd5e1;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            max-width: 100%;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+        }
+
+            .social-link:hover {
+                background: var(--primary-green);
+                color: white;
+                transform: translateY(-3px);
+                border-color: var(--primary-green);
+            }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .footer-links li {
+                margin-bottom: 0.75rem;
+            }
+
+            .footer-links a {
+                color: #cbd5e1;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                transition: all 0.3s ease;
+                font-size: 0.95rem;
+                word-break: break-word;
+            }
+
+                .footer-links a:hover {
+                    color: var(--primary-green-light);
+                    transform: translateX(5px);
+                }
+
+                .footer-links a i {
+                    font-size: 0.7rem;
+                    opacity: 0.6;
+                    flex-shrink: 0;
+                }
+
+        .footer-contact {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .footer-contact li {
+                display: flex;
+                align-items: flex-start;
+                gap: 1rem;
+                margin-bottom: 1.25rem;
+                color: #cbd5e1;
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+
+            .footer-contact i {
+                color: var(--primary-green-light);
+                font-size: 1.1rem;
+                margin-top: 0.2rem;
+                flex-shrink: 0;
+            }
+
+            .footer-contact span {
+                word-break: break-word;
+            }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+        }
+
+        .footer-bottom-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+            .footer-bottom-content p {
+                color: #94a3b8;
+                font-size: 0.9rem;
+                margin: 0;
+            }
+
+        .footer-bottom-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+            .footer-bottom-links a {
+                color: #cbd5e1;
+                text-decoration: none;
+                font-size: 0.9rem;
+                transition: color 0.3s ease;
+                white-space: nowrap;
+            }
+
+                .footer-bottom-links a:hover {
+                    color: var(--primary-green-light);
+                }
+
+            .footer-bottom-links span {
+                color: #64748b;
+            }
+
+        /* Botón de ayuda flotante */
+        .help-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-green-light));
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(22, 163, 74, 0.4);
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+            .help-button:hover {
+                transform: scale(1.1) rotate(10deg);
+                box-shadow: 0 12px 35px rgba(22, 163, 74, 0.6);
+            }
+
+        /* Mejoras de accesibilidad */
+        .btn-primary-main:focus,
+        .btn-primary-secondary:focus,
+        .btn-secondary:focus,
+        .service-btn:focus,
+        .nav-login-btn:focus {
+            outline: 3px solid var(--accent-red);
+            outline-offset: 3px;
+        }
+
+        /* Estados de error de imagen */
+        .institution-image[style*="display: none"] + .image-fallback,
+        .municipality-img[style*="display: none"] + .municipality-fallback,
+        .service-photo-circular img[style*="display: none"] + .service-photo-placeholder,
+        .circular-logo img[style*="display: none"] + .logo-fallback {
+            display: flex !important;
+        }
+
+        /* Clases aplicadas por JavaScript para responsividad */
+        .mobile-nav-visible .nav-links {
+            display: flex !important;
+            position: fixed !important;
+            top: 0 !important;
+            right: 0 !important;
+            height: 100vh !important;
+            width: 280px !important;
+            background: rgba(255, 255, 255, 0.98) !important;
+            backdrop-filter: blur(20px) !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            align-items: stretch !important;
+            gap: 0 !important;
+            padding: 5rem 1.5rem 2rem !important;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15) !important;
+            z-index: 1000 !important;
+            overflow-y: auto !important;
+        }
+
+        .mobile-nav-visible .nav-link {
+            width: 100% !important;
+            padding: 1rem 1.2rem !important;
+            border-radius: 12px !important;
+            margin-bottom: 0.5rem !important;
+            background: rgba(22, 163, 74, 0.05) !important;
+            justify-content: flex-start !important;
+        }
+
+            .mobile-nav-visible .nav-link:hover {
+                background: rgba(22, 163, 74, 0.12) !important;
+                transform: translateX(5px) !important;
+            }
+
+        .mobile-nav-visible .nav-login-btn {
+            width: 100% !important;
+            justify-content: center !important;
+            padding: 1rem 1.5rem !important;
+            margin-top: 1rem !important;
+            font-size: 1rem !important;
+        }
+
+        .mobile-nav-visible .nav-links::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 280px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-green-light));
+            z-index: -1;
+        }
+
+        /* Ajustes para tablets aplicados por JS */
+        .is-tablet .navbar-container {
+            padding: 1rem 1.5rem;
+        }
+
+        .is-tablet .nav-links {
+            gap: 1.5rem;
+        }
+
+        .is-tablet .nav-link {
+            font-size: 0.9rem;
+        }
+
+        .is-tablet .services-grid,
+        .is-tablet .primary-services-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .is-tablet .section-header h2 {
+            font-size: 2rem;
+        }
+
+        .is-tablet .footer-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        /* Ajustes para pantallas pequeñas aplicados por JS */
+        .is-small-screen .navbar-container {
+            padding: 0.8rem 1rem;
+        }
+
+        .is-small-screen .nav-logo-img {
+            width: 35px;
+            height: 35px;
+        }
+
+        .is-small-screen .nav-logo-text {
+            font-size: 1.1rem;
+        }
+
+        .is-small-screen .hero-section {
+            padding: 3.5rem 1rem 1rem;
+        }
+
+        .is-small-screen .services-section,
+        .is-small-screen .primary-services-section {
+            padding: 4rem 0;
+        }
+
+        .is-small-screen .container {
+            padding: 0 1rem;
+        }
+
+        .is-small-screen .section-header h2 {
+            font-size: 1.8rem;
+        }
+
+        .is-small-screen .section-header p {
+            font-size: 0.95rem;
+        }
+
+        .is-small-screen .services-grid,
+        .is-small-screen .primary-services-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .is-small-screen .help-button {
+            width: 50px;
+            height: 50px;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .is-small-screen .footer-content {
+            padding: 4rem 1.5rem 1.5rem;
+        }
+
+        .is-small-screen .footer-grid {
+            gap: 2rem;
+        }
+
+        /* Extra pequeño */
+        .is-extra-small .navbar-container {
+            padding: 0.6rem;
+        }
+
+        .is-extra-small .nav-logo-text {
+            font-size: 0.9rem;
+        }
+
+        .is-extra-small .feature-pill span {
+            font-size: 0.75rem;
+        }
+
+        .is-extra-small .btn-primary-main,
+        .is-extra-small .btn-primary-secondary {
+            min-width: 100%;
+        }
+    </style>
+
+    <script>
+        // Función para alternar el menú móvil
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            const overlay = document.getElementById('menuOverlay');
+            const icon = document.querySelector('.mobile-menu-btn i');
+
+            if (document.body.classList.contains('mobile-nav-visible')) {
+                // Cerrar menú
+                document.body.classList.remove('mobile-nav-visible');
+                overlay.classList.remove('active');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                document.body.style.overflow = '';
+
+                // Ocultar en móvil después de cerrar
+                if (window.innerWidth <= 768) {
+                    navLinks.style.display = 'none';
+                }
+            } else {
+                // Abrir menú
+                document.body.classList.add('mobile-nav-visible');
+                navLinks.style.display = 'flex';
+                overlay.classList.add('active');
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // Función para cerrar el menú móvil
+        function closeMenu() {
+            if (document.body.classList.contains('mobile-nav-visible')) {
+                const navLinks = document.getElementById('navLinks');
+                const overlay = document.getElementById('menuOverlay');
+                const icon = document.querySelector('.mobile-menu-btn i');
+
+                document.body.classList.remove('mobile-nav-visible');
+                overlay.classList.remove('active');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                document.body.style.overflow = '';
+
+                // Ocultar en móvil después de cerrar
+                if (window.innerWidth <= 768) {
+                    navLinks.style.display = 'none';
+                }
+            }
+        }
+
+        // Función para manejar responsividad
+        function handleResponsive() {
+            const width = window.innerWidth;
+            const mobileBtn = document.getElementById('mobileMenuBtn');
+            const navLinks = document.getElementById('navLinks');
+
+            // Mostrar/ocultar botón móvil según ancho
+            if (width <= 768) {
+                mobileBtn.style.display = 'block';
+                // Ocultar nav-links en desktop cuando es móvil
+                if (!document.body.classList.contains('mobile-nav-visible')) {
+                    navLinks.style.display = 'none';
+                }
+            } else {
+                mobileBtn.style.display = 'none';
+                navLinks.style.display = 'flex';
+                navLinks.style.position = 'static';
+                navLinks.style.width = 'auto';
+                navLinks.style.height = 'auto';
+                navLinks.style.flexDirection = 'row';
+                navLinks.style.padding = '0';
+                navLinks.style.background = 'transparent';
+                navLinks.style.boxShadow = 'none';
+                closeMenu();
+            }
+
+            // Aplicar clases según tamaño de pantalla
+            if (width <= 480) {
+                document.body.classList.add('is-small-screen');
+            } else {
+                document.body.classList.remove('is-small-screen');
+            }
+
+            if (width <= 360) {
+                document.body.classList.add('is-extra-small');
+            } else {
+                document.body.classList.remove('is-extra-small');
+            }
+
+            if (width <= 1024) {
+                document.body.classList.add('is-tablet');
+            } else {
+                document.body.classList.remove('is-tablet');
+            }
+
+            // Ajustar menú móvil en pantallas muy pequeñas
+            if (width <= 480 && document.body.classList.contains('mobile-nav-visible')) {
+                navLinks.style.width = '100%';
+            } else if (document.body.classList.contains('mobile-nav-visible')) {
+                navLinks.style.width = '280px';
+            }
+
+            // Ajustar grid de servicios
+            adjustServicesGrid();
+        }
+
+        // Función para ajustar grid de servicios dinámicamente
+        function adjustServicesGrid() {
+            const width = window.innerWidth;
+            const servicesGrid = document.querySelector('.services-grid');
+            const primaryGrid = document.querySelector('.primary-services-grid');
+
+            if (servicesGrid) {
+                if (width <= 768) {
+                    servicesGrid.style.gridTemplateColumns = '1fr';
+                } else if (width <= 1024) {
+                    servicesGrid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+                } else {
+                    servicesGrid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(22rem, 1fr))';
+                }
+            }
+
+            if (primaryGrid) {
+                if (width <= 768) {
+                    primaryGrid.style.gridTemplateColumns = '1fr';
+                } else if (width <= 1024) {
+                    primaryGrid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+                } else {
+                    primaryGrid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(22rem, 1fr))';
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar responsividad
+            handleResponsive();
+
+            // Smooth scrolling para enlaces internos
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        closeMenu();
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Navbar scroll effect
+            const navbar = document.querySelector('.top-navbar');
+            let lastScroll = 0;
+
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+
+                if (currentScroll > 100) {
+                    navbar.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.15)';
+                } else {
+                    navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+                }
+
+                if (currentScroll > lastScroll && currentScroll > 80) {
+                    navbar.classList.add('hide');
+                } else {
+                    navbar.classList.remove('hide');
+                }
+
+                lastScroll = currentScroll;
+            });
+
+            // Cerrar menú al hacer clic fuera
+            document.addEventListener('click', function(event) {
+                const navLinks = document.getElementById('navLinks');
+                const mobileBtn = document.getElementById('mobileMenuBtn');
+
+                if (document.body.classList.contains('mobile-nav-visible') &&
+                    !navLinks.contains(event.target) &&
+                    !mobileBtn.contains(event.target)) {
+                    closeMenu();
+                }
+            });
+
+            // Cerrar menú con tecla ESC
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeMenu();
+                }
+            });
+
+            // Manejo de errores de imágenes
+            const images = document.querySelectorAll('img[onerror]');
+            images.forEach(img => {
+                img.addEventListener('error', function() {
+                    this.style.display = 'none';
+                    const placeholder = this.nextElementSibling;
+                    if (placeholder) {
+                        placeholder.style.display = 'flex';
+                    }
+                });
+
+                if (!img.complete || img.naturalWidth === 0) {
+                    img.style.display = 'none';
+                    const placeholder = img.nextElementSibling;
+                    if (placeholder) {
+                        placeholder.style.display = 'flex';
+                    }
+                }
+            });
+
+            // Botón de ayuda
+            const helpButton = document.querySelector('.help-button');
+            if (helpButton) {
+                helpButton.addEventListener('click', function() {
+                    alert('¿Necesitas ayuda?\n\nContacta con nosotros:\n\nTeléfono: (866) 123-4567\nEmail: soporte@monclova.gob.mx\n\nHorario: Lun - Vie, 8:00 AM - 5:00 PM');
+                });
+            }
+
+            // Ajustar en resize
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(handleResponsive, 250);
+            });
+
+            console.log('✓ Sistema Municipal Monclova - Inicializado correctamente');
+            console.log('✓ Versión: 2025.2.3');
+        });
+
+        // Precarga de imágenes críticas
+        window.addEventListener('load', function() {
+            console.log('✓ Recursos cargados completamente');
+        });
+    </script>
+</body>
+</html>

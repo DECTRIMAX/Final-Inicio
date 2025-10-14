@@ -1,0 +1,1271 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Total de Reportes | Atención Ciudadana</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --verde-principal: #16a34a;
+            --verde-secundario: #15803d;
+            --verde-claro: #22c55e;
+            --verde-light: #86efac;
+            --verde-bg: #f0fdf4;
+            --blanco: #FFFFFF;
+            --gris-oscuro: #1f2937;
+            --gris-medio: #6b7280;
+            --gris-claro: #f3f4f6;
+            --negro: #111827;
+            --shadow: rgba(22, 163, 74, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--blanco) 0%, var(--verde-bg) 100%);
+            color: var(--gris-oscuro);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--verde-secundario) 0%, var(--verde-principal) 100%);
+            color: var(--blanco);
+            padding: clamp(0.5rem, 2vw, 1rem) clamp(0.8rem, 3vw, 1.5rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--verde-claro);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            gap: clamp(0.5rem, 2vw, 1.5rem);
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 2vw, 1rem);
+            flex: 1 1 auto;
+            min-width: min(250px, 100%);
+        }
+
+        .logo {
+            width: clamp(60px, 10vw, 75px);
+            height: clamp(60px, 10vw, 75px);
+            background: var(--blanco);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--verde-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+            .logo:hover {
+                transform: scale(1.05);
+            }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                padding: 5px;
+            }
+
+            .logo i {
+                font-size: clamp(1.8rem, 5vw, 2.5rem);
+                color: var(--verde-principal);
+            }
+
+        .header-info {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+            .header-info h1 {
+                font-size: clamp(1rem, 2.5vw, 1.5rem);
+                font-weight: 800;
+                margin-bottom: 0.2rem;
+            }
+
+            .header-info p {
+                font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+                opacity: 0.9;
+            }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--blanco);
+            border: 2px solid var(--blanco);
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+            .back-btn:hover {
+                background: var(--blanco);
+                color: var(--verde-principal);
+                transform: translateX(-3px);
+            }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: clamp(1rem, 3vw, 2rem);
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+            padding: clamp(1rem, 4vw, 2rem) clamp(0.8rem, 3vw, 1.5rem);
+            background: var(--blanco);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px var(--shadow);
+            border-left: 4px solid var(--verde-principal);
+        }
+
+        .welcome-title {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-weight: 900;
+            color: var(--verde-principal);
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-subtitle {
+            font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+            color: var(--gris-medio);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
+            gap: clamp(0.8rem, 2vw, 1rem);
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+        }
+
+        .stat-card {
+            background: var(--blanco);
+            padding: clamp(1rem, 3vw, 1.5rem);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border-left: 4px solid var(--verde-principal);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px var(--shadow);
+            }
+
+        .stat-icon {
+            width: clamp(40px, 8vw, 50px);
+            height: clamp(40px, 8vw, 50px);
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--blanco);
+            margin: 0 auto clamp(0.5rem, 2vw, 1rem);
+        }
+
+        .stat-number {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 900;
+            color: var(--verde-principal);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+            color: var(--gris-medio);
+            font-weight: 600;
+        }
+
+        .filters-container {
+            background: var(--blanco);
+            border-radius: 15px;
+            padding: clamp(1rem, 3vw, 1.5rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            margin-bottom: clamp(1rem, 3vw, 2rem);
+            border-left: 4px solid var(--verde-principal);
+        }
+
+        .filters-title {
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-weight: 700;
+            color: var(--verde-principal);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+            .filter-group label {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--gris-oscuro);
+            }
+
+        .filter-input {
+            padding: 10px 14px;
+            border: 2px solid var(--gris-claro);
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+            .filter-input:focus {
+                border-color: var(--verde-principal);
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-secundario));
+            color: white;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px var(--shadow);
+            }
+
+        .btn-secondary {
+            background: white;
+            color: var(--verde-principal);
+            border: 2px solid var(--verde-principal);
+        }
+
+            .btn-secondary:hover {
+                background: var(--verde-principal);
+                color: white;
+            }
+
+        .btn-export {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+            .btn-export:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+            }
+
+        .reports-container {
+            background: var(--blanco);
+            border-radius: 15px;
+            padding: clamp(1rem, 3vw, 1.5rem);
+            box-shadow: 0 4px 20px var(--shadow);
+            border-left: 4px solid var(--verde-principal);
+        }
+
+        .reports-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .reports-title {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            font-weight: 700;
+            color: var(--verde-principal);
+        }
+
+        .report-card {
+            background: linear-gradient(135deg, var(--blanco), var(--gris-claro));
+            border-radius: 12px;
+            padding: clamp(1rem, 2.5vw, 1.5rem);
+            margin-bottom: 15px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--verde-principal);
+        }
+
+            .report-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px var(--shadow);
+                border-color: var(--verde-principal);
+            }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .report-folio {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            font-weight: 700;
+            color: var(--verde-secundario);
+        }
+
+        .report-status {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pendiente {
+            background: rgba(251, 191, 36, 0.2);
+            color: #d97706;
+        }
+
+        .status-proceso {
+            background: rgba(59, 130, 246, 0.2);
+            color: #2563eb;
+        }
+
+        .status-resuelto {
+            background: rgba(34, 197, 94, 0.2);
+            color: #16a34a;
+        }
+
+        .report-body {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .report-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .field-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gris-medio);
+            text-transform: uppercase;
+        }
+
+        .field-value {
+            font-size: 14px;
+            color: var(--gris-oscuro);
+            font-weight: 500;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-view {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-claro));
+            color: white;
+        }
+
+            .btn-view:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px var(--shadow);
+            }
+
+        .btn-download {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+
+            .btn-download:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+        }
+
+            .btn-delete:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+            }
+
+        .no-reports {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gris-medio);
+        }
+
+            .no-reports i {
+                font-size: 64px;
+                color: #d1d5db;
+                margin-bottom: 20px;
+            }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .pagination-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 2px solid var(--verde-principal);
+            background: white;
+            color: var(--verde-principal);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+            .pagination-btn:hover:not(:disabled) {
+                background: var(--verde-principal);
+                color: white;
+            }
+
+            .pagination-btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+            .pagination-btn.active {
+                background: var(--verde-principal);
+                color: white;
+            }
+
+        .pagination-info {
+            font-size: 14px;
+            color: var(--gris-medio);
+            font-weight: 500;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 30px auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 95%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--verde-principal), var(--verde-secundario));
+            color: white;
+            padding: 25px;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+            .close-btn:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: scale(1.1);
+            }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+        .detail-section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--verde-principal);
+            margin-bottom: 15px;
+            border-bottom: 2px solid rgba(22, 163, 74, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            z-index: 10000;
+            max-width: 350px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+            .notification.success {
+                background: var(--verde-principal);
+                color: white;
+            }
+
+            .notification.error {
+                background: #dc2626;
+                color: white;
+            }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <div class="header-info">
+                    <h1>Total de Reportes</h1>
+                    <p>Atención Ciudadana - Todos los Departamentos</p>
+                </div>
+            </div>
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+                Regresar
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1 class="welcome-title">Gestión de Reportes Ciudadanos</h1>
+            <p class="welcome-subtitle">
+                Visualiza, filtra y administra todos los reportes de todos los departamentos
+            </p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
+                <div class="stat-number" id="totalReports">0</div>
+                <div class="stat-label">Total Reportes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-number" id="pendingReports">0</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-spinner"></i></div>
+                <div class="stat-number" id="processingReports">0</div>
+                <div class="stat-label">En Proceso</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-number" id="resolvedReports">0</div>
+                <div class="stat-label">Resueltos</div>
+            </div>
+        </div>
+
+        <div class="filters-container">
+            <div class="filters-title">
+                <i class="fas fa-filter"></i>
+                Filtros de Búsqueda
+            </div>
+
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label for="searchFolio">Buscar por Folio</label>
+                    <input type="text" id="searchFolio" class="filter-input" placeholder="Ej: MON-1001">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filterDepartment">Departamento</label>
+                    <select id="filterDepartment" class="filter-input">
+                        <option value="">Todos los departamentos</option>
+                        <option value="alumbrado">Alumbrado Público</option>
+                        <option value="forestacion">Forestación</option>
+                        <option value="limpieza">Limpieza Urbana</option>
+                        <option value="bacheo">Bacheo</option>
+                        <option value="recoleccion_boteo">Boteo</option>
+                        <option value="recoleccion_contenedores">Contenedores</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filterStatus">Estado</label>
+                    <select id="filterStatus" class="filter-input">
+                        <option value="">Todos los estados</option>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="proceso">En Proceso</option>
+                        <option value="resuelto">Resuelto</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filterDateFrom">Fecha Desde</label>
+                    <input type="date" id="filterDateFrom" class="filter-input">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filterDateTo">Fecha Hasta</label>
+                    <input type="date" id="filterDateTo" class="filter-input">
+                </div>
+
+                <div class="filter-group">
+                    <label for="searchName">Buscar por Nombre</label>
+                    <input type="text" id="searchName" class="filter-input" placeholder="Nombre del ciudadano">
+                </div>
+            </div>
+
+            <div class="filter-actions">
+                <button class="btn btn-primary" onclick="applyFilters()">
+                    <i class="fas fa-search"></i>
+                    Buscar
+                </button>
+                <button class="btn btn-secondary" onclick="clearFilters()">
+                    <i class="fas fa-redo"></i>
+                    Limpiar Filtros
+                </button>
+                <button class="btn btn-export" onclick="exportToExcel()">
+                    <i class="fas fa-file-excel"></i>
+                    Exportar a Excel
+                </button>
+                <button class="btn btn-export" onclick="exportToPDF()">
+                    <i class="fas fa-file-pdf"></i>
+                    Exportar a PDF
+                </button>
+            </div>
+        </div>
+
+        <div class="reports-container">
+            <div class="reports-header">
+                <div class="reports-title">
+                    <i class="fas fa-list"></i>
+                    Listado de Reportes (<span id="reportCount">0</span>)
+                </div>
+            </div>
+
+            <div id="reportsList"></div>
+
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Detalles del Reporte</h2>
+                <button class="close-btn" onclick="closeDetailModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+                let allReports = [];
+                let filteredReports = [];
+                let currentPage = 1;
+                const reportsPerPage = 10;
+
+                const departmentNames = {
+                    'alumbrado': 'Alumbrado Público',
+                    'forestacion': 'Forestación',
+                    'limpieza': 'Limpieza Urbana',
+                    'bacheo': 'Bacheo',
+                    'recoleccion_boteo': 'Boteo',
+                    'recoleccion_contenedores': 'Contenedores'
+                };
+
+                const statusNames = {
+                    'pendiente': 'Pendiente',
+                    'proceso': 'En Proceso',
+                    'resuelto': 'Resuelto'
+                };
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    loadReports();
+                    setupEventListeners();
+                });
+
+                function setupEventListeners() {
+                    document.getElementById('searchFolio').addEventListener('input', applyFilters);
+                    document.getElementById('filterDepartment').addEventListener('change', applyFilters);
+                    document.getElementById('filterStatus').addEventListener('change', applyFilters);
+                    document.getElementById('filterDateFrom').addEventListener('change', applyFilters);
+                    document.getElementById('filterDateTo').addEventListener('change', applyFilters);
+                    document.getElementById('searchName').addEventListener('input', applyFilters);
+                }
+
+                function loadReports() {
+                    allReports = JSON.parse(localStorage.getItem('userReports') || '[]');
+                    allReports.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    filteredReports = [...allReports];
+                    updateStats();
+                    displayReports();
+                }
+
+                function updateStats() {
+                    const total = allReports.length;
+                    const pending = allReports.filter(r => r.status === 'pendiente').length;
+                    const processing = allReports.filter(r => r.status === 'proceso').length;
+                    const resolved = allReports.filter(r => r.status === 'resuelto').length;
+
+                    animateNumber(document.getElementById('totalReports'), total);
+                    animateNumber(document.getElementById('pendingReports'), pending);
+                    animateNumber(document.getElementById('processingReports'), processing);
+                    animateNumber(document.getElementById('resolvedReports'), resolved);
+                }
+
+                function animateNumber(element, target) {
+                    let current = 0;
+                    const increment = target / 30;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        element.textContent = Math.floor(current);
+                        if (current >= target) {
+                            element.textContent = target;
+                            clearInterval(timer);
+                        }
+                    }, 30);
+                }
+
+                function applyFilters() {
+                    const searchFolio = document.getElementById('searchFolio').value.toLowerCase();
+                    const filterDept = document.getElementById('filterDepartment').value;
+                    const filterStatus = document.getElementById('filterStatus').value;
+                    const dateFrom = document.getElementById('filterDateFrom').value;
+                    const dateTo = document.getElementById('filterDateTo').value;
+                    const searchName = document.getElementById('searchName').value.toLowerCase();
+
+                    filteredReports = allReports.filter(report => {
+                        const reportDate = new Date(report.timestamp).toISOString().split('T')[0];
+
+                        if (searchFolio && !report.folio.toLowerCase().includes(searchFolio)) return false;
+                        if (filterDept && report.department !== filterDept) return false;
+                        if (filterStatus && report.status !== filterStatus) return false;
+                        if (dateFrom && reportDate < dateFrom) return false;
+                        if (dateTo && reportDate > dateTo) return false;
+                        if (searchName && !report.name.toLowerCase().includes(searchName)) return false;
+
+                        return true;
+                    });
+
+                    currentPage = 1;
+                    displayReports();
+                }
+
+                function clearFilters() {
+                    document.getElementById('searchFolio').value = '';
+                    document.getElementById('filterDepartment').value = '';
+                    document.getElementById('filterStatus').value = '';
+                    document.getElementById('filterDateFrom').value = '';
+                    document.getElementById('filterDateTo').value = '';
+                    document.getElementById('searchName').value = '';
+
+                    filteredReports = [...allReports];
+                    currentPage = 1;
+                    displayReports();
+                    showNotification('Filtros limpiados', 'success');
+                }
+
+                function displayReports() {
+                    const reportsList = document.getElementById('reportsList');
+                    const reportCount = document.getElementById('reportCount');
+
+                    reportCount.textContent = filteredReports.length;
+
+                    if (filteredReports.length === 0) {
+                        reportsList.innerHTML = `
+                            <div class="no-reports">
+                                <i class="fas fa-inbox"></i>
+                                <h3>No se encontraron reportes</h3>
+                                <p>No hay reportes que coincidan con los filtros seleccionados</p>
+                            </div>
+                        `;
+                        document.getElementById('pagination').innerHTML = '';
+                        return;
+                    }
+
+                    const startIndex = (currentPage - 1) * reportsPerPage;
+                    const endIndex = startIndex + reportsPerPage;
+                    const reportsToShow = filteredReports.slice(startIndex, endIndex);
+
+                    reportsList.innerHTML = reportsToShow.map(report => {
+                        const date = new Date(report.timestamp);
+                        const formattedDate = date.toLocaleDateString('es-MX', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                        const formattedTime = date.toLocaleTimeString('es-MX', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+
+                        return `
+                            <div class="report-card">
+                                <div class="report-header">
+                                    <div class="report-folio">📋 ${report.folio}</div>
+                                    <div class="report-status status-${report.status}">
+                                        ${statusNames[report.status]}
+                                    </div>
+                                </div>
+
+                                <div class="report-body">
+                                    <div class="report-field">
+                                        <div class="field-label">Departamento</div>
+                                        <div class="field-value">${departmentNames[report.department] || report.department}</div>
+                                    </div>
+
+                                    <div class="report-field">
+                                        <div class="field-label">Ciudadano</div>
+                                        <div class="field-value">${report.name}</div>
+                                    </div>
+
+                                    <div class="report-field">
+                                        <div class="field-label">Teléfono</div>
+                                        <div class="field-value">${report.phone}</div>
+                                    </div>
+
+                                    <div class="report-field">
+                                        <div class="field-label">Fecha</div>
+                                        <div class="field-value">${formattedDate} ${formattedTime}</div>
+                                    </div>
+
+                                    <div class="report-field">
+                                        <div class="field-label">Dirección</div>
+                                        <div class="field-value">${report.street} ${report.houseNumber}, ${report.neighborhood}</div>
+                                    </div>
+
+                                    <div class="report-field">
+                                        <div class="field-label">Descripción</div>
+                                        <div class="field-value">${report.description.substring(0, 100)}...</div>
+                                    </div>
+                                </div>
+
+                                <div class="report-actions">
+                                    <button class="btn-action btn-view" onclick="viewReportDetail('${report.folio}')">
+                                        <i class="fas fa-eye"></i>
+                                        Ver Detalles
+                                    </button>
+                                    <button class="btn-action btn-download" onclick="downloadReport('${report.folio}')">
+                                        <i class="fas fa-download"></i>
+                                        Descargar
+                                    </button>
+                                    <button class="btn-action btn-delete" onclick="deleteReport('${report.folio}')">
+                                        <i class="fas fa-trash"></i>
+                                        Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    displayPagination();
+                }
+
+                function displayPagination() {
+                    const pagination = document.getElementById('pagination');
+                    const totalPages = Math.ceil(filteredReports.length / reportsPerPage);
+
+                    if (totalPages <= 1) {
+                        pagination.innerHTML = '';
+                        return;
+                    }
+
+                    let paginationHTML = `
+                        <button class="pagination-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                    `;
+
+                    for (let i = 1; i <= totalPages; i++) {
+                        if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                            paginationHTML += `
+                                <button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">
+                                    ${i}
+                                </button>
+                            `;
+                        } else if (i === currentPage - 2 || i === currentPage + 2) {
+                            paginationHTML += `<span class="pagination-info">...</span>`;
+                        }
+                    }
+
+                    paginationHTML += `
+                        <button class="pagination-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    `;
+
+                    pagination.innerHTML = paginationHTML;
+                }
+
+                function changePage(page) {
+                    const totalPages = Math.ceil(filteredReports.length / reportsPerPage);
+                    if (page < 1 || page > totalPages) return;
+
+                    currentPage = page;
+                    displayReports();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+
+                function viewReportDetail(folio) {
+                    const report = allReports.find(r => r.folio === folio);
+                    if (!report) return;
+
+                    const date = new Date(report.timestamp);
+                    const formattedDate = date.toLocaleDateString('es-MX', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    const modalBody = document.getElementById('modalBody');
+                    modalBody.innerHTML = `
+                        <div class="detail-section">
+                            <div class="detail-section-title">Información del Reporte</div>
+                            <div class="detail-grid">
+                                <div class="report-field">
+                                    <div class="field-label">Folio</div>
+                                    <div class="field-value">${report.folio}</div>
+                                </div>
+                                <div class="report-field">
+                                    <div class="field-label">Estado</div>
+                                    <div class="field-value">
+                                        <span class="report-status status-${report.status}">${statusNames[report.status]}</span>
+                                    </div>
+                                </div>
+                                <div class="report-field">
+                                    <div class="field-label">Fecha de Registro</div>
+                                    <div class="field-value">${formattedDate}</div>
+                                </div>
+                                <div class="report-field">
+                                    <div class="field-label">Tiempo Estimado</div>
+                                    <div class="field-value">${report.estimatedTime || 'No especificado'}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-section">
+                            <div class="detail-section-title">Datos del Ciudadano</div>
+                            <div class="detail-grid">
+                                <div class="report-field">
+                                    <div class="field-label">Nombre Completo</div>
+                                    <div class="field-value">${report.name}</div>
+                                </div>
+                                <div class="report-field">
+                                    <div class="field-label">Teléfono</div>
+                                    <div class="field-value">${report.phone}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-section">
+                            <div class="detail-section-title">Ubicación del Problema</div>
+                            <div class="detail-grid">
+                                <div class="report-field">
+                                    <div class="field-label">Calle</div>
+                                    <div class="field-value">${report.street}</div>
+                                </div>
+                                <div class="report-field">
+                                    <div class="field-label">Número</div>
+                                    <div class="field-value">${report.houseNumber}</div>
+                                </div>
+                                <div class="report-field">
+                                    <div class="field-label">Colonia</div>
+                                    <div class="field-value">${report.neighborhood}</div>
+                                </div>
+                                ${report.betweenStreets ? `
+                                <div class="report-field">
+                                    <div class="field-label">Entre Calles</div>
+                                    <div class="field-value">${report.betweenStreets}</div>
+                                </div>
+                                ` : ''}
+                                ${report.postalCode ? `
+                                <div class="report-field">
+                                    <div class="field-label">Código Postal</div>
+                                    <div class="field-value">${report.postalCode}</div>
+                                </div>
+                                ` : ''}
+                                ${report.location ? `
+                                <div class="report-field">
+                                    <div class="field-label">Coordenadas GPS</div>
+                                    <div class="field-value">${report.location.lat.toFixed(6)}, ${report.location.lng.toFixed(6)}</div>
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        <div class="detail-section">
+                            <div class="detail-section-title">Detalles del Problema</div>
+                            <div class="report-field">
+                                <div class="field-label">Departamento</div>
+                                <div class="field-value">${departmentNames[report.department] || report.department}</div>
+                            </div>
+                            <div class="report-field" style="margin-top: 15px;">
+                                <div class="field-label">Descripción</div>
+                                <div class="field-value">${report.description}</div>
+                            </div>
+                            ${report.additionalComments ? `
+                            <div class="report-field" style="margin-top: 15px;">
+                                <div class="field-label">Comentarios Adicionales</div>
+                                <div class="field-value">${report.additionalComments}</div>
+                            </div>
+                            ` : ''}
+                            ${report.images && report.images.length > 0 ? `
+                            <div class="report-field" style="margin-top: 15px;">
+                                <div class="field-label">Evidencias Fotográficas</div>
+                                <div class="field-value">${report.images.length} imagen(es) adjunta(s)</div>
+                            </div>
+                            ` : ''}
+                        </div>
+                    `;
+
+                    document.getElementById('detailModal').style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                }
+
+                function closeDetailModal() {
+                    document.getElementById('detailModal').style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+
+                function downloadReport(folio) {
+                    const report = allReports.find(r => r.folio === folio);
+                    if (!report) return;
+
+                    const reportText = `
+        REPORTE CIUDADANO - ${report.folio}
+        ===============================================
+
+        INFORMACIÓN GENERAL
+        -------------------
+        Estado: ${statusNames[report.status]}
+        Fecha: ${new Date(report.timestamp).toLocaleString('es-MX')}
+        Departamento: ${departmentNames[report.department]}
+
+        DATOS DEL CIUDADANO
+        -------------------
+        Nombre: ${report.name}
+        Teléfono: ${report.phone}
+
+        UBICACIÓN
+        ---------
+        Dirección: ${report.street} ${report.houseNumber}
+        Colonia: ${report.neighborhood}
+        ${report.betweenStreets ? `Entre calles: ${report.betweenStreets}` : ''}
+        ${report.postalCode ? `C.P.: ${report.postalCode}` : ''}
+        ${report.location ? `Coordenadas: ${report.location.lat}, ${report.location.lng}` : ''}
+
+        DESCRIPCIÓN DEL PROBLEMA
+        -------------------------
+        ${report.description}
+
+        ${report.additionalComments ? `\nCOMENTARIOS ADICIONALES\n-----------------------\n${report.additionalComments}` : ''}
+
+        ===============================================
+        Sistema de Atención Ciudadana - Monclova
+                    `.trim();
+
+                    const blob = new Blob([reportText], { type: 'text/plain' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `Reporte_${report.folio}.txt`;
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+
+                    showNotification('Reporte descargado exitosamente', 'success');
+                }
+
+                function deleteReport(folio) {
+                    if (!confirm(`¿Está seguro de eliminar el reporte ${folio}?\n\nEsta acción no se puede deshacer.`)) {
+                        return;
+                    }
+
+                    allReports = allReports.filter(r => r.folio !== folio);
+                    localStorage.setItem('userReports', JSON.stringify(allReports));
+
+                    filteredReports = filteredReports.filter(r => r.folio !== folio);
+
+                    updateStats();
+                    displayReports();
+                    showNotification('Reporte eliminado correctamente', 'success');
+                }
+
+                function exportToExcel() {
+                    if (filteredReports.length === 0) {
+                        showNotification('No hay reportes para exportar', 'error');
+                        return;
+                    }
+
+                    let csv = 'Folio,Estado,Departamento,Nombre,Teléfono,Calle,Número,Colonia,Descripción,Fecha\n';
+
+                    filteredReports.forEach(report => {
+                        const date = new Date(report.timestamp).toLocaleString('es-MX');
+                        csv += `"${report.folio}","${statusNames[report.status]}","${departmentNames[report.department]}","${report.name}","${report.phone}","${report.street}","${report.houseNumber}","${report.neighborhood}","${report.description}","${date}"\n`;
+                    });
+
+                    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `Reportes_${new Date().toISOString().split('T')[0]}.csv`;
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+
+                    showNotification('Reportes exportados a Excel', 'success');
+                }
+
+                function exportToPDF() {
+                    showNotification('Función de exportar a PDF en desarrollo', 'error');
+                }
+
+                function goBack() {
+                    window.history.back();
+                }
+
+                function showNotification(message, type) {
+                    const notification = document.createElement('div');
+                    notification.className = `notification ${type}`;
+                    notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i> ${message}`;
+                    document.body.appendChild(notification);
+
+                    setTimeout(() => notification.classList.add('show'), 100);
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                        setTimeout(() => document.body.removeChild(notification), 300);
+                    }, 4000);
+                }
+
+                window.onclick = function(event) {
+                    const modal = document.getElementById('detailModal');
+                    if (event.target === modal) {
+                        closeDetailModal();
+                    }
+                }
+    </script>
+</body>
+</html>

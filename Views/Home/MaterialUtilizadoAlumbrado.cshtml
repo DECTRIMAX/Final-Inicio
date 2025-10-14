@@ -1,0 +1,1445 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Utilizado - Alumbrado Público Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        :root {
+            --primary: #28a745;
+            --secondary: #1e7e34;
+            --accent: #5cb85c;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #06b6d4;
+            --dark: #1f2937;
+            --light: #f0f9f4;
+            --border: #d4edda;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f0f9f4 0%, #e6f7eb 100%);
+            color: #1e293b;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .nav-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #f0f9f4 100%);
+            box-shadow: -10px 0 30px rgba(40, 167, 69, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow: hidden;
+            border-left: 1px solid var(--border);
+        }
+
+            .nav-panel.open {
+                right: 0;
+            }
+
+        .nav-panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 167, 69, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+            .nav-panel-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .nav-toggle {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 20px 25px -5px rgba(40, 167, 69, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-toggle:hover {
+                transform: translateY(-50%) scale(1.1);
+                box-shadow: 0 25px 35px -5px rgba(40, 167, 69, 0.4);
+            }
+
+            .nav-toggle.active {
+                background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+                transform: translateY(-50%) rotate(180deg);
+            }
+
+        .nav-panel-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 2rem 1.5rem;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-panel-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-panel-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-panel-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-panel-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .nav-panel-body {
+            padding: 1.5rem;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            background: #ffffff;
+            border-radius: 12px;
+            color: #334155;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+            .nav-item:hover {
+                background: var(--light);
+                transform: translateX(-5px);
+                border-color: var(--primary);
+                box-shadow: 0 4px 6px -1px rgba(40, 167, 69, 0.1);
+            }
+
+            .nav-item.active {
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+                color: white;
+                border-color: var(--primary);
+            }
+
+        .nav-item-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active .nav-item-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-item:hover .nav-item-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .nav-item-content {
+            flex: 1;
+        }
+
+        .nav-item-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #1e293b;
+        }
+
+        .nav-item.active .nav-item-title {
+            color: white;
+        }
+
+        .nav-item-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .nav-item.active .nav-item-desc {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-item-arrow {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-item-arrow {
+            color: var(--primary);
+            transform: translateX(3px);
+        }
+
+        .nav-item.active .nav-item-arrow {
+            color: white;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 20px 25px -5px rgba(40, 167, 69, 0.15);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-info h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-info p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+            .btn-back:hover {
+                background: rgba(255,255,255,0.3);
+                transform: translateY(-2px);
+            }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: var(--secondary);
+                transform: translateY(-2px);
+            }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+            .btn-success:hover {
+                background: #059669;
+            }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+            .btn-warning:hover {
+                background: #d97706;
+            }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+            .btn-danger:hover {
+                background: #dc2626;
+            }
+
+        .btn-info {
+            background: var(--info);
+            color: white;
+        }
+
+            .btn-info:hover {
+                background: #0891b2;
+            }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(40, 167, 69, 0.1);
+            border: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f9f4 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+            }
+
+        .stat-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .stat-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .stat-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+        }
+
+        .stat-warning {
+            background: linear-gradient(135deg, var(--warning), #d97706);
+        }
+
+        .stat-info {
+            background: linear-gradient(135deg, var(--info), #0891b2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .search-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: var(--light);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+            .form-input:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+            }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(40, 167, 69, 0.1);
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .chart-canvas {
+            max-height: 300px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            font-size: 0.85rem;
+        }
+
+            .table th {
+                background: var(--primary);
+                color: white;
+                padding: 0.75rem 0.5rem;
+                text-align: left;
+                font-weight: 600;
+                font-size: 0.8rem;
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+
+            .table td {
+                padding: 0.75rem 0.5rem;
+                border-bottom: 1px solid var(--border);
+                font-size: 0.8rem;
+                vertical-align: middle;
+            }
+
+            .table tr:hover {
+                background: var(--light);
+            }
+
+        .material-photo {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .material-photo:hover {
+                transform: scale(1.1);
+                border-color: var(--primary);
+            }
+
+        .material-photo-placeholder {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--light), #d4edda);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 1.5rem;
+            border: 2px solid var(--border);
+        }
+
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-1era {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .badge-2da {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .badge-3era {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+        }
+
+        .badge-info {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            color: white;
+        }
+
+        .badge-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .badge-high {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .badge-medium {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .badge-low {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .badge-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 167, 69, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(40, 167, 69, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6B7280;
+        }
+
+        .material-detail-img {
+            width: 100%;
+            max-width: 300px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 1rem auto;
+            display: block;
+            border: 2px solid var(--border);
+        }
+
+        .nav-panel-body::-webkit-scrollbar,
+        .table-container::-webkit-scrollbar,
+        .modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-track,
+        .table-container::-webkit-scrollbar-track,
+        .modal-content::-webkit-scrollbar-track {
+            background: var(--light);
+        }
+
+        .nav-panel-body::-webkit-scrollbar-thumb,
+        .table-container::-webkit-scrollbar-thumb,
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+
+            .nav-panel-body::-webkit-scrollbar-thumb:hover,
+            .table-container::-webkit-scrollbar-thumb:hover,
+            .modal-content::-webkit-scrollbar-thumb:hover {
+                background: var(--primary);
+            }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-panel-overlay" id="navPanelOverlay" onclick="toggleNavPanel()"></div>
+
+    <button class="nav-toggle" id="navToggle" onclick="toggleNavPanel()">
+        <i class="fas fa-th-large"></i>
+    </button>
+
+    <div class="nav-panel" id="navPanel">
+        <div class="nav-panel-header">
+            <button class="nav-panel-close" onclick="toggleNavPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="nav-panel-title">Sistema de Alumbrado</h3>
+            <p class="nav-panel-subtitle">Navegación Principal</p>
+        </div>
+
+        <div class="nav-panel-body">
+            <div class="nav-item" onclick="redirectTo('captura')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Captura</div>
+                    <div class="nav-item-desc">Registro de trabajos</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('programacion')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Programación</div>
+                    <div class="nav-item-desc">Horarios y cuadrillas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('mapa')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Mapa Interactivo</div>
+                    <div class="nav-item-desc">Ubicación de luminarias</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('rastreo')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Rastreo GPS</div>
+                    <div class="nav-item-desc">Monitoreo de unidades</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('dashboard')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Dashboard</div>
+                    <div class="nav-item-desc">Estadísticas y reportes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('reportes')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Reportes</div>
+                    <div class="nav-item-desc">Incidencias ciudadanas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item active" onclick="redirectTo('inventario')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-toolbox"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Material Utilizado</div>
+                    <div class="nav-item-desc">Control de inventario</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('asistencia')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Asistencia</div>
+                    <div class="nav-item-desc">Control de personal</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('oficios')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Oficios a Almacén</div>
+                    <div class="nav-item-desc">Envío de solicitudes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('placas')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Repositorio de Placas</div>
+                    <div class="nav-item-desc">Gestión de placas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="header-info">
+                <h1>Material Utilizado</h1>
+                <p>Control de Inventario y Consumo de Materiales - Monclova, Coahuila</p>
+            </div>
+            <div class="nav-menu">
+                <a href="/Home/DashboardAdministradorAlumbrado" class="btn btn-back">
+                    <i class="fas fa-arrow-left"></i> Dashboard
+                </a>
+                <button class="btn btn-success" onclick="exportarExcel()">
+                    <i class="fas fa-file-excel"></i> Exportar Excel
+                </button>
+                <button class="btn btn-info" onclick="exportarPDF()">
+                    <i class="fas fa-file-pdf"></i> Exportar PDF
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon stat-primary">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <div class="stat-number" id="totalMateriales">156</div>
+                <div class="stat-label">Total de Materiales</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon stat-success">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-number" id="materialesUtilizados">89</div>
+                <div class="stat-label">Materiales Utilizados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon stat-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-number" id="stockBajo">12</div>
+                <div class="stat-label">Stock Bajo</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon stat-info">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-number" id="costoTotal">$24,567</div>
+                <div class="stat-label">Costo Total</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-filter"></i>
+                Filtros y Búsqueda
+            </h2>
+            <div class="search-filters">
+                <div class="form-group">
+                    <label class="form-label">Buscar Material</label>
+                    <input type="text" class="form-input" id="searchMaterial" placeholder="Nombre del material...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Categoría</label>
+                    <select class="form-input" id="filterCategoria">
+                        <option value="">Todas las categorías</option>
+                        <option value="LAMPARAS">LÁMPARAS</option>
+                        <option value="CABLES">CABLES</option>
+                        <option value="FOCOS">FOCOS</option>
+                        <option value="CONECTORES">CONECTORES</option>
+                        <option value="TUBOS">TUBOS</option>
+                        <option value="AISLADORES">AISLADORES</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Oficial</label>
+                    <select class="form-input" id="filterOficial">
+                        <option value="">Todos los oficiales</option>
+                        <option value="FIDENCIO FLORES">FIDENCIO FLORES</option>
+                        <option value="MARIO HERNANDEZ">MARIO HERNANDEZ</option>
+                        <option value="CARLOS RODRIGUEZ">CARLOS RODRIGUEZ</option>
+                        <option value="LUIS MARTINEZ">LUIS MARTINEZ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Turno</label>
+                    <select class="form-input" id="filterTurno">
+                        <option value="">Todos los turnos</option>
+                        <option value="1ERA">1ERA</option>
+                        <option value="2DA">2DA</option>
+                        <option value="3ERA">3ERA</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Fecha Desde</label>
+                    <input type="date" class="form-input" id="fechaDesde">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Fecha Hasta</label>
+                    <input type="date" class="form-input" id="fechaHasta">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Stock</label>
+                    <select class="form-input" id="filterStock">
+                        <option value="">Todo el stock</option>
+                        <option value="alto">Stock Alto (>50)</option>
+                        <option value="medio">Stock Medio (11-50)</option>
+                        <option value="bajo">Stock Bajo (≤10)</option>
+                        <option value="agotado">Agotado (0)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-primary" onclick="aplicarFiltros()">
+                    <i class="fas fa-filter"></i> Aplicar Filtros
+                </button>
+                <button class="btn btn-warning" onclick="limpiarFiltros()">
+                    <i class="fas fa-eraser"></i> Limpiar
+                </button>
+                <button class="btn btn-info" onclick="generarReporte()">
+                    <i class="fas fa-chart-bar"></i> Generar Reporte
+                </button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-pie"></i>
+                Análisis de Materiales
+            </h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3 class="chart-title">Materiales Más Utilizados</h3>
+                    <canvas id="chartMaterialesUtilizados" class="chart-canvas"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">Consumo por Turno</h3>
+                    <canvas id="chartConsumoPorTurno" class="chart-canvas"></canvas>
+                </div>
+            </div>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3 class="chart-title">Tendencia de Uso Mensual</h3>
+                    <canvas id="chartTendenciaMensual" class="chart-canvas"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">Estado del Inventario</h3>
+                    <canvas id="chartEstadoInventario" class="chart-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-list"></i>
+                Inventario de Materiales
+            </h2>
+            <div class="table-container">
+                <table class="table" id="materialesTable">
+                    <thead>
+                        <tr>
+                            <th>Foto</th>
+                            <th>Material</th>
+                            <th>Categoría</th>
+                            <th>Stock Actual</th>
+                            <th>Consumido</th>
+                            <th>Último Uso</th>
+                            <th>Oficial</th>
+                            <th>Turno</th>
+                            <th>Costo Unit.</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="materialesBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modalDetalleMaterial">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitleDetalle">Detalles del Material</h3>
+                <button class="close-modal" onclick="closeModal('modalDetalleMaterial')">&times;</button>
+            </div>
+            <div id="detalleContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let navPanelOpen = false;
+        let materialesData = [];
+        let chartMaterialesUtilizados, chartConsumoPorTurno, chartTendenciaMensual, chartEstadoInventario;
+
+        const materialesEjemplo = [
+            {id: 1, nombre: 'FOTOCELDA', categoria: 'LAMPARAS', stockActual: 45, consumido: 15, ultimoUso: '2025-01-15', oficial: 'FIDENCIO FLORES', turno: '1ERA', costoUnitario: 125.50, foto: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjMjhhNzQ1Ii8+Cjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Rk9UT0NFTERBPC90ZXh0Pgo8L3N2Zz4='},
+            {id: 2, nombre: 'CABLE THW 12', categoria: 'CABLES', stockActual: 120, consumido: 35, ultimoUso: '2025-01-14', oficial: 'MARIO HERNANDEZ', turno: '2DA', costoUnitario: 45.75, foto: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjMTBiOTgxIi8+Cjx0ZXh0IHg9IjUwIiB5PSI0NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Q0FCTEU8L3RleHQ+Cjx0ZXh0IHg9IjUwIiB5PSI2NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEhXIDEyPC90ZXh0Pgo8L3N2Zz4='},
+            {id: 3, nombre: 'LAMPARA LED 85W', categoria: 'LAMPARAS', stockActual: 8, consumido: 22, ultimoUso: '2025-01-13', oficial: 'CARLOS RODRIGUEZ', turno: '3ERA', costoUnitario: 850.00, foto: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjZjU5ZTBiIi8+Cjx0ZXh0IHg9IjUwIiB5PSI0NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TEVEIDg1VzwvdGV4dD4KPC9zdmc+'},
+            {id: 4, nombre: 'CONECTOR ROJO #8', categoria: 'CONECTORES', stockActual: 75, consumido: 28, ultimoUso: '2025-01-12', oficial: 'LUIS MARTINEZ', turno: '1ERA', costoUnitario: 12.50, foto: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjZWY0NDQ0Ii8+Cjx0ZXh0IHg9IjUwIiB5PSI0NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjkiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5DT05FQ1RPUjwvdGV4dD4KPHRleHQgeD0iNTAiIHk9IjY1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iOSIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlJPSk8gIzg8L3RleHQ+Cjwvc3ZnPg=='},
+            {id: 5, nombre: 'TUBO CONDUIT PVC', categoria: 'TUBOS', stockActual: 0, consumido: 18, ultimoUso: '2025-01-11', oficial: 'FIDENCIO FLORES', turno: '2DA', costoUnitario: 95.00, foto: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjMDZiNmQ0Ii8+Cjx0ZXh0IHg9IjUwIiB5PSI0NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VFVCTzwvdGV4dD4KPHRleHQgeD0iNTAiIHk9IjY1IiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5QVkM8L3RleHQ+Cjwvc3ZnPg=='},
+            {id: 6, nombre: 'AISLADOR 1C', categoria: 'AISLADORES', stockActual: 32, consumido: 12, ultimoUso: '2025-01-10', oficial: 'MARIO HERNANDEZ', turno: '3ERA', costoUnitario: 25.00, foto: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjMjhhNzQ1Ii8+Cjx0ZXh0IHg9IjUwIiB5PSI0NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QUlTTEFET1I8L3RleHQ+Cjx0ZXh0IHg9IjUwIiB5PSI2NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+MUM8L3RleHQ+Cjwvc3ZnPg=='}
+        ];
+
+        function toggleNavPanel() {
+            const navPanel = document.getElementById('navPanel');
+            const overlay = document.getElementById('navPanelOverlay');
+            const toggleBtn = document.getElementById('navToggle');
+
+            navPanelOpen = !navPanelOpen;
+
+            if (navPanelOpen) {
+                navPanel.classList.add('open');
+                overlay.classList.add('active');
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '<i class="fas fa-times"></i>';
+                document.body.style.overflow = 'hidden';
+            } else {
+                navPanel.classList.remove('open');
+                overlay.classList.remove('active');
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '<i class="fas fa-th-large"></i>';
+                document.body.style.overflow = '';
+            }
+        }
+
+        function redirectTo(module) {
+            if (navPanelOpen) toggleNavPanel();
+
+            const urls = {
+                'captura': '/Home/CapturaAlumbrado',
+                'programacion': '/Home/ProgramacionAlumbrado',
+                'mapa': '/Home/MapaAlumbrado',
+                'rastreo': '/Home/RastreoAlumbrado',
+                'dashboard': '/Home/DashboardAlumbrado',
+                'reportes': '/Home/ReportesAlumbrado',
+                'inventario': '/Home/MaterialUtilizadoAlumbrado',
+                'asistencia': '/Home/AsistenciaPersonalAlumbrado',
+                'oficios': '/Home/EnviarOficiosAlmacenAlumbrado',
+                'placas': '/Home/RepositorioPlacasAlumbrado'
+            };
+
+            if (urls[module]) {
+                showNotification(`Navegando a ${module}...`, 'info');
+                setTimeout(() => {
+                    window.location.href = urls[module];
+                }, 300);
+            }
+        }
+
+        function initCharts() {
+            const ctxMateriales = document.getElementById('chartMaterialesUtilizados').getContext('2d');
+            chartMaterialesUtilizados = new Chart(ctxMateriales, {
+                type: 'doughnut',
+                data: {
+                    labels: ['FOTOCELDA', 'CABLE THW', 'LED 85W', 'CONECTORES', 'OTROS'],
+                    datasets: [{
+                        data: [15, 35, 22, 28, 25],
+                        backgroundColor: ['#28a745', '#10b981', '#f59e0b', '#ef4444', '#06b6d4']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {legend: {position: 'bottom'}}
+                }
+            });
+
+            const ctxTurno = document.getElementById('chartConsumoPorTurno').getContext('2d');
+            chartConsumoPorTurno = new Chart(ctxTurno, {
+                type: 'bar',
+                data: {
+                    labels: ['1ERA', '2DA', '3ERA'],
+                    datasets: [{
+                        label: 'Materiales Utilizados',
+                        data: [45, 38, 42],
+                        backgroundColor: ['#10b981', '#f59e0b', '#28a745']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {legend: {display: false}},
+                    scales: {y: {beginAtZero: true}}
+                }
+            });
+
+            const ctxTendencia = document.getElementById('chartTendenciaMensual').getContext('2d');
+            chartTendenciaMensual = new Chart(ctxTendencia, {
+                type: 'line',
+                data: {
+                    labels: ['Oct', 'Nov', 'Dic', 'Ene'],
+                    datasets: [{
+                        label: 'Consumo Mensual',
+                        data: [120, 135, 110, 125],
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {legend: {display: false}},
+                    scales: {y: {beginAtZero: true}}
+                }
+            });
+
+            const ctxInventario = document.getElementById('chartEstadoInventario').getContext('2d');
+            chartEstadoInventario = new Chart(ctxInventario, {
+                type: 'pie',
+                data: {
+                    labels: ['Stock Alto', 'Stock Medio', 'Stock Bajo', 'Agotado'],
+                    datasets: [{
+                        data: [65, 45, 32, 14],
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#6b7280']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {legend: {position: 'bottom'}}
+                }
+            });
+        }
+
+        function cargarMateriales(filteredData = null) {
+            const tbody = document.getElementById('materialesBody');
+            const dataToShow = filteredData || materialesEjemplo;
+            tbody.innerHTML = '';
+
+            dataToShow.forEach(material => {
+                const estadoStock = getEstadoStock(material.stockActual);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${material.foto ? `<img src="${material.foto}" alt="${material.nombre}" class="material-photo" onclick="verDetalleMaterial(${material.id})">` : `<div class="material-photo-placeholder"><i class="fas fa-image"></i></div>`}</td>
+                    <td><strong>${material.nombre}</strong></td>
+                    <td><span class="badge badge-info">${material.categoria}</span></td>
+                    <td><strong>${material.stockActual}</strong></td>
+                    <td>${material.consumido}</td>
+                    <td>${formatearFecha(material.ultimoUso)}</td>
+                    <td>${material.oficial}</td>
+                    <td><span class="badge badge-${material.turno.toLowerCase()}">${material.turno}</span></td>
+                    <td>${material.costoUnitario.toFixed(2)}</td>
+                    <td>${(material.consumido * material.costoUnitario).toFixed(2)}</td>
+                    <td><span class="badge badge-${estadoStock.clase}">${estadoStock.texto}</span></td>
+                    <td>
+                        <div style="display: flex; gap: 0.25rem;">
+                            <button class="btn btn-sm btn-primary" onclick="verDetalleMaterial(${material.id})" title="Ver detalle"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-sm btn-warning" onclick="editarMaterial(${material.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            actualizarEstadisticas(dataToShow);
+        }
+
+        function getEstadoStock(cantidad) {
+            if (cantidad === 0) return {clase: 'danger', texto: 'Agotado'};
+            else if (cantidad <= 10) return {clase: 'high', texto: 'Stock Bajo'};
+            else if (cantidad <= 50) return {clase: 'medium', texto: 'Stock Medio'};
+            else return {clase: 'low', texto: 'Stock Alto'};
+        }
+
+        function formatearFecha(fecha) {
+            return new Date(fecha + 'T00:00:00').toLocaleDateString('es-MX');
+        }
+
+        function actualizarEstadisticas(data) {
+            const totalMateriales = data.length;
+            const materialesUtilizados = data.reduce((sum, item) => sum + item.consumido, 0);
+            const stockBajo = data.filter(item => item.stockActual <= 10).length;
+            const costoTotal = data.reduce((sum, item) => sum + (item.consumido * item.costoUnitario), 0);
+
+            document.getElementById('totalMateriales').textContent = totalMateriales;
+            document.getElementById('materialesUtilizados').textContent = materialesUtilizados;
+            document.getElementById('stockBajo').textContent = stockBajo;
+            document.getElementById('costoTotal').textContent = `${costoTotal.toLocaleString('es-MX')}`;
+        }
+
+        function verDetalleMaterial(id) {
+            const material = materialesEjemplo.find(m => m.id === id);
+            if (!material) return;
+
+            const estadoStock = getEstadoStock(material.stockActual);
+            document.getElementById('modalTitleDetalle').textContent = `Detalle: ${material.nombre}`;
+            document.getElementById('detalleContent').innerHTML = `
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    ${material.foto ? `<img src="${material.foto}" alt="${material.nombre}" class="material-detail-img">` : `<div class="material-photo-placeholder" style="width: 200px; height: 150px; margin: 0 auto; font-size: 3rem;"><i class="fas fa-image"></i></div>`}
+                </div>
+                <div class="form-grid">
+                    <div class="form-group"><label class="form-label">Nombre del Material</label><input type="text" class="form-input" value="${material.nombre}" readonly></div>
+                    <div class="form-group"><label class="form-label">Categoría</label><input type="text" class="form-input" value="${material.categoria}" readonly></div>
+                    <div class="form-group"><label class="form-label">Stock Actual</label><input type="text" class="form-input" value="${material.stockActual} unidades" readonly></div>
+                    <div class="form-group"><label class="form-label">Total Consumido</label><input type="text" class="form-input" value="${material.consumido} unidades" readonly></div>
+                    <div class="form-group"><label class="form-label">Último Uso</label><input type="text" class="form-input" value="${formatearFecha(material.ultimoUso)}" readonly></div>
+                    <div class="form-group"><label class="form-label">Oficial Responsable</label><input type="text" class="form-input" value="${material.oficial}" readonly></div>
+                    <div class="form-group"><label class="form-label">Turno</label><input type="text" class="form-input" value="${material.turno}" readonly></div>
+                    <div class="form-group"><label class="form-label">Costo Unitario</label><input type="text" class="form-input" value="${material.costoUnitario.toFixed(2)}" readonly></div>
+                    <div class="form-group"><label class="form-label">Costo Total Consumido</label><input type="text" class="form-input" value="${(material.consumido * material.costoUnitario).toFixed(2)}" readonly></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Estado del Stock</label>
+                    <div style="padding: 1rem; background: ${estadoStock.clase === 'danger' ? '#fee2e2' : estadoStock.clase === 'high' ? '#fef3c7' : estadoStock.clase === 'medium' ? '#dbeafe' : '#d1fae5'}; border-radius: 8px; text-align: center;">
+                        <span class="badge badge-${estadoStock.clase}" style="font-size: 1rem; padding: 0.5rem 1rem;">${estadoStock.texto}</span>
+                    </div>
+                </div>
+                <div class="actions" style="margin-top: 2rem;">
+                    <button class="btn btn-warning" onclick="closeModal('modalDetalleMaterial')">Cerrar</button>
+                    <button class="btn btn-primary" onclick="editarMaterial(${material.id})"><i class="fas fa-edit"></i> Editar Material</button>
+                </div>
+            `;
+            document.getElementById('modalDetalleMaterial').style.display = 'block';
+        }
+
+        function editarMaterial(id) {
+            closeModal('modalDetalleMaterial');
+            showNotification('Función de edición en desarrollo', 'info');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function aplicarFiltros() {
+            const searchMaterial = document.getElementById('searchMaterial').value.toLowerCase();
+            const filterCategoria = document.getElementById('filterCategoria').value;
+            const filterOficial = document.getElementById('filterOficial').value;
+            const filterTurno = document.getElementById('filterTurno').value;
+            const fechaDesde = document.getElementById('fechaDesde').value;
+            const fechaHasta = document.getElementById('fechaHasta').value;
+            const filterStock = document.getElementById('filterStock').value;
+
+            let filteredData = materialesEjemplo.filter(material => {
+                let cumpleFiltros = true;
+                if (searchMaterial) cumpleFiltros = cumpleFiltros && material.nombre.toLowerCase().includes(searchMaterial);
+                if (filterCategoria) cumpleFiltros = cumpleFiltros && material.categoria === filterCategoria;
+                if (filterOficial) cumpleFiltros = cumpleFiltros && material.oficial === filterOficial;
+                if (filterTurno) cumpleFiltros = cumpleFiltros && material.turno === filterTurno;
+                if (fechaDesde && fechaHasta) {
+                    const fechaMaterial = new Date(material.ultimoUso);
+                    const desde = new Date(fechaDesde);
+                    const hasta = new Date(fechaHasta);
+                    cumpleFiltros = cumpleFiltros && (fechaMaterial >= desde && fechaMaterial <= hasta);
+                }
+                if (filterStock) {
+                    switch(filterStock) {
+                        case 'alto': cumpleFiltros = cumpleFiltros && material.stockActual > 50; break;
+                        case 'medio': cumpleFiltros = cumpleFiltros && material.stockActual >= 11 && material.stockActual <= 50; break;
+                        case 'bajo': cumpleFiltros = cumpleFiltros && material.stockActual > 0 && material.stockActual <= 10; break;
+                        case 'agotado': cumpleFiltros = cumpleFiltros && material.stockActual === 0; break;
+                    }
+                }
+                return cumpleFiltros;
+            });
+
+            cargarMateriales(filteredData);
+            showNotification(`Se encontraron ${filteredData.length} materiales`, 'info');
+        }
+
+        function limpiarFiltros() {
+            document.getElementById('searchMaterial').value = '';
+            document.getElementById('filterCategoria').value = '';
+            document.getElementById('filterOficial').value = '';
+            document.getElementById('filterTurno').value = '';
+            document.getElementById('fechaDesde').value = '';
+            document.getElementById('fechaHasta').value = '';
+            document.getElementById('filterStock').value = '';
+            cargarMateriales();
+            showNotification('Filtros limpiados', 'success');
+        }
+
+        function generarReporte() {
+            const fechaDesde = document.getElementById('fechaDesde').value;
+            const fechaHasta = document.getElementById('fechaHasta').value;
+            if (!fechaDesde || !fechaHasta) {
+                showNotification('Selecciona un rango de fechas para generar el reporte', 'warning');
+                return;
+            }
+            showNotification('Generando reporte de materiales...', 'info');
+            setTimeout(() => showNotification('Reporte generado exitosamente', 'success'), 2000);
+        }
+
+        function exportarExcel() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            const headers = ["Material", "Categoría", "Stock Actual", "Consumido", "Último Uso", "Oficial", "Turno", "Costo Unitario", "Costo Total", "Estado"];
+            csvContent += headers.join(",") + "\r\n";
+
+            materialesEjemplo.forEach(material => {
+                const estadoStock = getEstadoStock(material.stockActual);
+                const row = [`"${material.nombre}"`, material.categoria, material.stockActual, material.consumido, material.ultimoUso, `"${material.oficial}"`, material.turno, material.costoUnitario.toFixed(2), (material.consumido * material.costoUnitario).toFixed(2), `"${estadoStock.texto}"`];
+                csvContent += row.join(",") + "\r\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `materiales_utilizados_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showNotification('Archivo Excel exportado correctamente', 'success');
+        }
+
+        function exportarPDF() {
+            showNotification('Generando archivo PDF...', 'info');
+            setTimeout(() => showNotification('Archivo PDF generado exitosamente', 'success'), 2000);
+        }
+
+        function configurarFiltrosEventos() {
+            const filtrosEnTiempoReal = ['searchMaterial'];
+            filtrosEnTiempoReal.forEach(filtroId => {
+                const elemento = document.getElementById(filtroId);
+                if (elemento) {
+                    elemento.addEventListener('input', function() {
+                        if (this.value.length >= 2 || this.value.length === 0) aplicarFiltros();
+                    });
+                }
+            });
+
+            ['filterCategoria', 'filterOficial', 'filterTurno', 'filterStock', 'fechaDesde', 'fechaHasta'].forEach(filtroId => {
+                const elemento = document.getElementById(filtroId);
+                if (elemento) elemento.addEventListener('change', aplicarFiltros);
+            });
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `position: fixed; top: 20px; right: 20px; padding: 1rem 1.5rem; border-radius: 8px; color: white; font-weight: 600; z-index: 2001; opacity: 0; transform: translateX(100%); transition: all 0.3s ease; max-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);`;
+
+            const colors = {
+                success: 'linear-gradient(135deg, #10b981, #059669)',
+                error: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                warning: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                info: 'linear-gradient(135deg, #28a745, #1e7e34)'
+            };
+
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) notification.parentNode.removeChild(notification);
+                }, 300);
+            }, 4000);
+        }
+
+        window.addEventListener('click', function(e) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (e.target === modal) modal.style.display = 'none';
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarMateriales();
+            configurarFiltrosEventos();
+            initCharts();
+
+            const hoy = new Date();
+            const hace30Dias = new Date();
+            hace30Dias.setDate(hoy.getDate() - 30);
+            document.getElementById('fechaHasta').value = hoy.toISOString().split('T')[0];
+            document.getElementById('fechaDesde').value = hace30Dias.toISOString().split('T')[0];
+
+            console.log('Sistema de Material Utilizado cargado correctamente');
+            showNotification('Sistema cargado correctamente', 'success');
+        });
+    </script>
+</body>
+</html>

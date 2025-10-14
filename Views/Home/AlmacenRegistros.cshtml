@@ -1,0 +1,1134 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Almacén de Registros - Historial Completo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #8B0000 0%, #C41E3A 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-title p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+            .btn-back:hover {
+                background: rgba(255,255,255,0.3);
+            }
+
+        .btn-export {
+            background: #28a745;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+            .btn-export:hover {
+                background: #218838;
+            }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+            .stat-icon.blue {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+            }
+
+            .stat-icon.green {
+                background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+                color: white;
+            }
+
+            .stat-icon.orange {
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                color: white;
+            }
+
+            .stat-icon.purple {
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                color: white;
+            }
+
+        .stat-info h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-info p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .filters-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .filters-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #8B0000;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+
+            .filter-group select:focus,
+            .filter-group input:focus {
+                outline: none;
+                border-color: #C41E3A;
+            }
+
+        .filter-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-filter {
+            padding: 0.7rem 1.5rem;
+            background: #C41E3A;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+            .btn-filter:hover {
+                background: #8B0000;
+            }
+
+        .btn-clear {
+            padding: 0.7rem 1.5rem;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+            .btn-clear:hover {
+                background: #5a6268;
+            }
+
+        .registros-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .registro-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+            .registro-card:hover {
+                border-color: #C41E3A;
+                box-shadow: 0 4px 12px rgba(196, 30, 58, 0.15);
+            }
+
+        .registro-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .registro-info h3 {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .registro-meta {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+            .meta-item i {
+                color: #C41E3A;
+            }
+
+        .badge-completed {
+            background: #d4edda;
+            color: #155724;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .registro-timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .timeline-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .timeline-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #28a745;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .timeline-info {
+            flex: 1;
+        }
+
+            .timeline-info strong {
+                display: block;
+                color: #333;
+            }
+
+            .timeline-info span {
+                color: #666;
+                font-size: 0.8rem;
+            }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+            .modal.active {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
+            }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 1400px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #8B0000 0%, #C41E3A 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .modal-header h2 {
+                font-size: 1.5rem;
+                font-weight: 600;
+            }
+
+        .btn-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .detail-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title-modal {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #8B0000;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .timeline-complete {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .timeline-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #28a745;
+        }
+
+            .timeline-card h4 {
+                color: #333;
+                margin-bottom: 0.5rem;
+                font-size: 1rem;
+            }
+
+            .timeline-card p {
+                color: #666;
+                font-size: 0.9rem;
+                margin-bottom: 0.3rem;
+            }
+
+        .material-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .material-table {
+            width: 100%;
+            min-width: 700px;
+            border-collapse: collapse;
+        }
+
+            .material-table th {
+                background: #f8f9fa;
+                padding: 1rem;
+                text-align: left;
+                font-weight: 600;
+                border-bottom: 2px solid #ddd;
+            }
+
+            .material-table td {
+                padding: 0.8rem;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .material-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+        .doc-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .doc-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .doc-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .doc-icon {
+            width: 45px;
+            height: 45px;
+            background: #C41E3A;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .btn-view-doc {
+            padding: 0.5rem 1.2rem;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+            .btn-view-doc:hover {
+                background: #0056b3;
+            }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .btn-print {
+            padding: 0.8rem 2rem;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+            .btn-print:hover {
+                background: #5a6268;
+            }
+
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1><i class="fas fa-archive"></i> Almacén de Registros</h1>
+                <p>Historial Completo de Solicitudes Procesadas y Completadas</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-export" onclick="exportarRegistros()">
+                    <i class="fas fa-file-excel"></i> Exportar
+                </button>
+                <a href="/Home/InicioAlmacen" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>247</h3>
+                    <p>Total Completados</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>23</h3>
+                    <p>Este Mes</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>1,847</h3>
+                    <p>Items Registrados</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon purple">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>5.2</h3>
+                    <p>Días Promedio</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="filters-section">
+            <div class="filters-title">
+                <i class="fas fa-search"></i> Búsqueda Avanzada
+            </div>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label>Departamento</label>
+                    <select id="filterDept">
+                        <option value="">Todos</option>
+                        <option value="alumbrado">Alumbrado Público</option>
+                        <option value="bacheo">Bacheo</option>
+                        <option value="recoleccion">Recolección de Basura</option>
+                        <option value="parques">Parques y Jardines</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Mes de Completado</label>
+                    <select id="filterMonth">
+                        <option value="">Todos</option>
+                        <option value="2025-10">Octubre 2025</option>
+                        <option value="2025-09">Septiembre 2025</option>
+                        <option value="2025-08">Agosto 2025</option>
+                        <option value="2025-07">Julio 2025</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Número de Oficio</label>
+                    <input type="text" id="filterOficio" placeholder="Ej: DSERVPRIM/1445">
+                </div>
+                <div class="filter-group">
+                    <label>Solicitante</label>
+                    <input type="text" id="filterSolicitante" placeholder="Nombre del solicitante">
+                </div>
+                <div class="filter-group">
+                    <label>Fecha Desde</label>
+                    <input type="date" id="filterDateFrom">
+                </div>
+                <div class="filter-group">
+                    <label>Fecha Hasta</label>
+                    <input type="date" id="filterDateTo">
+                </div>
+            </div>
+            <div class="filter-actions">
+                <button class="btn-filter" onclick="aplicarFiltros()">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+                <button class="btn-clear" onclick="limpiarFiltros()">
+                    <i class="fas fa-eraser"></i> Limpiar Filtros
+                </button>
+            </div>
+        </div>
+
+        <div class="registros-section">
+            <div class="section-header">
+                <h2 class="section-title">Registros Históricos</h2>
+                <span style="color: #666; font-size: 0.95rem;">Mostrando: <strong id="countRegistros">5</strong> registros</span>
+            </div>
+
+            <div class="registro-card" onclick="abrirDetalle(1)">
+                <div class="registro-header">
+                    <div class="registro-info">
+                        <h3>Oficio No. BACHEO/0847/2025</h3>
+                        <div class="registro-meta">
+                            <span class="meta-item">
+                                <i class="fas fa-road"></i>
+                                <strong>Bacheo</strong>
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-user"></i>
+                                Director de Bacheo
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-calendar-check"></i>
+                                Completado: 28/Sep/2025
+                            </span>
+                        </div>
+                    </div>
+                    <span class="badge-completed"><i class="fas fa-check"></i> Completado</span>
+                </div>
+                <p style="color: #666; margin-bottom: 0.5rem;">Asfalto en frío 50kg para reparaciones - 20 sacos adquiridos</p>
+                <div class="registro-timeline">
+                    <div class="timeline-step">
+                        <div class="timeline-icon"><i class="fas fa-file-alt"></i></div>
+                        <div class="timeline-info">
+                            <strong>Solicitado</strong>
+                            <span>15/Sep/2025</span>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-icon"><i class="fas fa-check"></i></div>
+                        <div class="timeline-info">
+                            <strong>Aprobado Almacén</strong>
+                            <span>16/Sep/2025</span>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-icon"><i class="fas fa-shopping-cart"></i></div>
+                        <div class="timeline-info">
+                            <strong>Adquirido</strong>
+                            <span>25/Sep/2025</span>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-icon"><i class="fas fa-truck"></i></div>
+                        <div class="timeline-info">
+                            <strong>Entregado</strong>
+                            <span>28/Sep/2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="registro-card" onclick="abrirDetalle(2)">
+                <div class="registro-header">
+                    <div class="registro-info">
+                        <h3>Oficio No. ALUM/1234/2025</h3>
+                        <div class="registro-meta">
+                            <span class="meta-item">
+                                <i class="fas fa-lightbulb"></i>
+                                <strong>Alumbrado Público</strong>
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-user"></i>
+                                Luis Alberto Estrada
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-calendar-check"></i>
+                                Completado: 20/Sep/2025
+                            </span>
+                        </div>
+                    </div>
+                    <span class="badge-completed"><i class="fas fa-check"></i> Completado</span>
+                </div>
+                <p style="color: #666; margin-bottom: 0.5rem;">Luminarias LED 150W - 45 piezas para Col. Centro</p>
+                <div class="registro-timeline">
+                    <div class="timeline-step">
+                        <div class="timeline-icon"><i class="fas fa-file-alt"></i></div>
+                        <div class="timeline-info">
+                            <strong>Solicitado</strong>
+                            <span>05/Sep/2025</span>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-icon"><i class="fas fa-check"></i></div>
+                        <div class="timeline-info">
+                            <strong>Aprobado Almacén</strong>
+                            <span>06/Sep/2025</span>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-icon"><i class="fas fa-shopping-cart"></i></div>
+                        <div class="timeline-info">
+                            <strong>Adquirido</strong>
+                            <span>18/Sep/2025</span>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-icon"><i class="fas fa-truck"></i></div>
+                        <div class="timeline-info">
+                            <strong>Entregado</strong>
+                            <span>20/Sep/2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="registro-card" onclick="abrirDetalle(3)">
+                <div class="registro-header">
+                    <div class="registro-info">
+                        <h3>Oficio No. LIMPIA/0982/2025</h3>
+                        <div class="registro-meta">
+                            <span class="meta-item">
+                                <i class="fas fa-broom"></i>
+                                <strong>Recolección de Basura</strong>
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-user"></i>
+                                María Uscanga
+                            </span>
+                            <span class="meta-item">
+                                <i class="fas fa-calendar-check"></i>
+                                Completado: 10/Sep/2025
+                            </span>
+                        </div>
+                    </div>
+                    <span class="badge-completed"><i class="fas fa-check"></i> Completado</span>
+                </div>
+                <p style="color: #666; margin-bottom: 0.5rem;">Llantas 235/75R15 para camión recolector - 6 piezas</p>
+                <div class="registro-timeline">
+                    <div class="timeline-step">
+                        <div class="timeline-icon"><i class="fas fa-file-alt"></i></div>
+                        <div class="timeline-info">
+                            <strong>Solicitado</strong>
+                            <span>28/Ago/2025</span>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-icon"><i class="fas fa-check"></i></div>
+                        <div class="timeline-info">
+                            <strong>Aprobado Almacén</strong>
+                            <span>29/Ago/2025</span>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-icon"><i class="fas fa-shopping-cart"></i></div>
+                        <div class="timeline-info">
+                            <strong>Adquirido</strong>
+                            <span>08/Sep/2025</span>
+                        </div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-icon"><i class="fas fa-truck"></i></div>
+                        <div class="timeline-info">
+                            <strong>Entregado</strong>
+                            <span>10/Sep/2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="detalleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-file-invoice"></i> Detalle Completo del Registro</h2>
+                <button class="btn-close" onclick="cerrarDetalle()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-section">
+                    <h3 class="section-title-modal"><i class="fas fa-info-circle"></i> Información General</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Número de Oficio</span>
+                            <span class="info-value">BACHEO/0847/2025</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Departamento</span>
+                            <span class="info-value">Bacheo</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Solicitante</span>
+                            <span class="info-value">Director de Bacheo</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Cargo</span>
+                            <span class="info-value">Director del Departamento</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Fecha de Solicitud</span>
+                            <span class="info-value">15/Septiembre/2025</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Estado</span>
+                            <span class="info-value"><span class="badge-completed">Completado</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3 class="section-title-modal"><i class="fas fa-project-diagram"></i> Línea de Tiempo del Proceso</h3>
+                    <div class="timeline-complete">
+                        <div class="timeline-card">
+                            <h4><i class="fas fa-file-alt"></i> 1. Solicitud Recibida</h4>
+                            <p><strong>Fecha:</strong> 15/Septiembre/2025 - 10:30 AM</p>
+                            <p><strong>Por:</strong> Director de Bacheo</p>
+                        </div>
+                        <div class="timeline-card">
+                            <h4><i class="fas fa-check-circle"></i> 2. Aprobación Almacén</h4>
+                            <p><strong>Fecha:</strong> 16/Septiembre/2025 - 09:15 AM</p>
+                            <p><strong>Por:</strong> Jefe de Almacén</p>
+                        </div>
+                        <div class="timeline-card">
+                            <h4><i class="fas fa-clipboard-check"></i> 3. Aprobación Adquisiciones</h4>
+                            <p><strong>Fecha:</strong> 18/Septiembre/2025 - 11:00 AM</p>
+                            <p><strong>Por:</strong> Directora de Adquisiciones</p>
+                        </div>
+                        <div class="timeline-card">
+                            <h4><i class="fas fa-shopping-cart"></i> 4. Compra Realizada</h4>
+                            <p><strong>Fecha:</strong> 25/Septiembre/2025</p>
+                            <p><strong>Proveedor:</strong> Distribuidora Industrial SA</p>
+                        </div>
+                        <div class="timeline-card">
+                            <h4><i class="fas fa-truck"></i> 5. Material Entregado</h4>
+                            <p><strong>Fecha:</strong> 28/Septiembre/2025 - 14:30 PM</p>
+                            <p><strong>Recibido por:</strong> Almacén General</p>
+                        </div>
+                        <div class="timeline-card">
+                            <h4><i class="fas fa-archive"></i> 6. Registro Completado</h4>
+                            <p><strong>Fecha:</strong> 28/Septiembre/2025 - 15:00 PM</p>
+                            <p><strong>Folio:</strong> REG-2025-0847</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3 class="section-title-modal"><i class="fas fa-truck"></i> Información de Unidad/Equipo</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">No. Económico</span>
+                            <span class="info-value">BCH-15</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Unidad/Equipo</span>
+                            <span class="info-value">Camión Volteo</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Marca</span>
+                            <span class="info-value">INTERNATIONAL</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Modelo</span>
+                            <span class="info-value">2018</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Placas</span>
+                            <span class="info-value">XYZ-456-A</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">No. Serie</span>
+                            <span class="info-value">3HSCUAPR7JN123456</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3 class="section-title-modal"><i class="fas fa-boxes"></i> Materiales Adquiridos</h3>
+                    <div class="material-table-wrapper">
+                        <table class="material-table">
+                            <thead>
+                                <tr>
+                                    <th>Cantidad</th>
+                                    <th>U.M.</th>
+                                    <th>Descripción</th>
+                                    <th>Modelo/No. Parte</th>
+                                    <th>Proveedor</th>
+                                    <th>Costo Unit.</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>20</td>
+                                    <td>SACO</td>
+                                    <td>Asfalto en frío</td>
+                                    <td>50KG</td>
+                                    <td>Distribuidora Industrial</td>
+                                    <td>$485.00</td>
+                                    <td>$9,700.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3 class="section-title-modal"><i class="fas fa-file-pdf"></i> Documentos Relacionados</h3>
+                    <div class="doc-list">
+                        <div class="doc-item">
+                            <div class="doc-info">
+                                <div class="doc-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div>
+                                    <strong>Oficio de Solicitud Original</strong>
+                                    <p style="color: #666; font-size: 0.85rem; margin: 0;">BACHEO-0847-2025.pdf</p>
+                                </div>
+                            </div>
+                            <button class="btn-view-doc"><i class="fas fa-eye"></i> Ver</button>
+                        </div>
+                        <div class="doc-item">
+                            <div class="doc-info">
+                                <div class="doc-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div>
+                                    <strong>Aprobación de Almacén</strong>
+                                    <p style="color: #666; font-size: 0.85rem; margin: 0;">Aprobacion-Almacen-0847.pdf</p>
+                                </div>
+                            </div>
+                            <button class="btn-view-doc"><i class="fas fa-eye"></i> Ver</button>
+                        </div>
+                        <div class="doc-item">
+                            <div class="doc-info">
+                                <div class="doc-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div>
+                                    <strong>Orden de Compra</strong>
+                                    <p style="color: #666; font-size: 0.85rem; margin: 0;">OC-2025-0847.pdf</p>
+                                </div>
+                            </div>
+                            <button class="btn-view-doc"><i class="fas fa-eye"></i> Ver</button>
+                        </div>
+                        <div class="doc-item">
+                            <div class="doc-info">
+                                <div class="doc-icon">
+                                    <i class="fas fa-file-invoice"></i>
+                                </div>
+                                <div>
+                                    <strong>Factura del Proveedor</strong>
+                                    <p style="color: #666; font-size: 0.85rem; margin: 0;">Factura-A12345.pdf</p>
+                                </div>
+                            </div>
+                            <button class="btn-view-doc"><i class="fas fa-eye"></i> Ver</button>
+                        </div>
+                        <div class="doc-item">
+                            <div class="doc-info">
+                                <div class="doc-icon">
+                                    <i class="fas fa-clipboard-check"></i>
+                                </div>
+                                <div>
+                                    <strong>Acta de Entrega-Recepción</strong>
+                                    <p style="color: #666; font-size: 0.85rem; margin: 0;">Entrega-0847.pdf</p>
+                                </div>
+                            </div>
+                            <button class="btn-view-doc"><i class="fas fa-eye"></i> Ver</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3 class="section-title-modal"><i class="fas fa-comment-alt"></i> Observaciones</h3>
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border-left: 4px solid #C41E3A;">
+                        <p style="color: #333; margin: 0;">Material recibido en excelentes condiciones. Entrega completa según orden de compra. Sin observaciones adicionales.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-print" onclick="imprimirRegistro()">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+                <button class="btn-print" onclick="cerrarDetalle()">
+                    <i class="fas fa-times"></i> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function abrirDetalle(id) {
+            document.getElementById('detalleModal').classList.add('active');
+        }
+
+        function cerrarDetalle() {
+            document.getElementById('detalleModal').classList.remove('active');
+        }
+
+        function aplicarFiltros() {
+            alert('Filtros aplicados. En producción, esto filtraría los registros según los criterios seleccionados.');
+        }
+
+        function limpiarFiltros() {
+            document.getElementById('filterDept').value = '';
+            document.getElementById('filterMonth').value = '';
+            document.getElementById('filterOficio').value = '';
+            document.getElementById('filterSolicitante').value = '';
+            document.getElementById('filterDateFrom').value = '';
+            document.getElementById('filterDateTo').value = '';
+            alert('Filtros limpiados');
+        }
+
+        function exportarRegistros() {
+            alert('Exportando registros a Excel... En producción, esto generaría un archivo Excel con todos los registros filtrados.');
+        }
+
+        function imprimirRegistro() {
+            window.print();
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('detalleModal');
+            if (event.target === modal) {
+                cerrarDetalle();
+            }
+        }
+    </script>
+</body>
+</html>
