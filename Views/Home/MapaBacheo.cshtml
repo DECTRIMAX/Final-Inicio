@@ -15,325 +15,232 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --primary: #DC2626;
-            --primary-light: #F87171;
-            --secondary: #B91C1C;
-            --success: #10B981;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-            --info: #3B82F6;
-            --purple: #8B5CF6;
-            --bg-primary: #0F0F0F;
-            --bg-secondary: #1A1A1A;
-            --bg-tertiary: #2A2A2A;
-            --text-primary: #FFFFFF;
-            --text-secondary: #B3B3B3;
-            --border: #333333;
-            --card-bg: #1F1F1F;
-        }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-            color: var(--text-primary);
-            line-height: 1.6;
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
             overflow: hidden;
         }
 
-        .header {
-            background: linear-gradient(135deg, #111111 0%, #2A2A2A 100%);
-            padding: 1.8rem 2rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-            position: relative;
-            z-index: 1000;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 2rem;
-            max-width: 100%;
-            flex-wrap: wrap;
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 1.8rem;
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .logo-container {
-            display: flex;
-            gap: 1.2rem;
-            flex-shrink: 0;
-        }
-
-        .logo {
-            width: 90px;
-            height: 90px;
-            background: white;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 3px solid var(--primary);
-            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.5);
-            overflow: hidden;
-            padding: 6px;
-            transition: transform 0.3s ease;
-        }
-
-            .logo:hover {
-                transform: scale(1.05);
-            }
-
-            .logo img {
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-                background: white;
-            }
-
-            .logo i {
-                color: var(--primary);
-                font-size: 2.5rem;
-            }
-
-        .header-info {
-            flex: 1;
-            min-width: 250px;
-        }
-
-            .header-info h1 {
-                font-size: 1.65rem;
-                font-weight: 800;
-                color: var(--text-primary);
-                margin-bottom: 0.4rem;
-                line-height: 1.2;
-            }
-
-            .header-info p {
-                font-size: 1rem;
-                color: var(--text-secondary);
-                line-height: 1.3;
-            }
-
-        .header-actions {
-            display: flex;
-            gap: 0.8rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 0.6rem 1rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-        }
-
-            .btn-primary:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
-            }
-
-        .btn-secondary {
-            background: var(--bg-tertiary);
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-        }
-
-            .btn-secondary:hover {
-                border-color: var(--primary);
-                color: var(--text-primary);
-            }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-
-            .btn-success:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-            }
-
-        .btn-purple {
-            background: linear-gradient(135deg, var(--purple), #A78BFA);
-            color: white;
-        }
-
-            .btn-purple:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
-            }
-
-        .btn-info {
-            background: linear-gradient(135deg, var(--info), #60A5FA);
-            color: white;
-        }
-
-            .btn-info:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-            }
-
-        .nav-toggle {
-            position: fixed;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border: none;
-            border-radius: 50% 0 0 50%;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            box-shadow: -4px 0 20px rgba(220, 38, 38, 0.5);
-            z-index: 1500;
-            transition: all 0.3s ease;
-        }
-
-            .nav-toggle:hover {
-                width: 56px;
-            }
-
+        /* PANEL DE NAVEGACIÓN - Copiado de Control de Asistencia */
         .nav-panel {
             position: fixed;
-            right: -350px;
             top: 0;
-            width: 320px;
+            right: -400px;
+            width: 380px;
             height: 100vh;
-            background: var(--card-bg);
-            border-left: 2px solid var(--border);
-            box-shadow: -8px 0 40px rgba(0, 0, 0, 0.8);
-            z-index: 1400;
-            transition: right 0.3s ease;
-            overflow-y: auto;
-            padding: 1.5rem 1rem;
+            background: linear-gradient(180deg, #ffffff 0%, #f0f9f4 100%);
+            box-shadow: -10px 0 30px rgba(40, 167, 69, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow: hidden;
+            border-left: 1px solid #d4edda;
         }
 
             .nav-panel.open {
                 right: 0;
             }
 
-        .nav-overlay {
+        .nav-panel-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1399;
-            display: none;
+            background: rgba(40, 167, 69, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
         }
 
-            .nav-overlay.show {
-                display: block;
+            .nav-panel-overlay.active {
+                opacity: 1;
+                visibility: visible;
             }
 
-        .nav-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .nav-logo {
-            width: 48px;
-            height: 48px;
-            background: white;
-            border-radius: 10px;
+        .nav-toggle {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 20px 25px -5px rgba(40, 167, 69, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1001;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
         }
 
-            .nav-logo i {
-                color: var(--primary);
+            .nav-toggle:hover {
+                transform: translateY(-50%) scale(1.1);
+                box-shadow: 0 25px 35px -5px rgba(40, 167, 69, 0.4);
             }
 
-        .nav-header h3 {
-            font-size: 1.15rem;
-            color: var(--primary);
-            font-weight: 800;
+            .nav-toggle.active {
+                background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                transform: translateY(-50%) rotate(180deg);
+            }
+
+        .nav-panel-header {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            padding: 2rem 1.5rem;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-panel-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-panel-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-panel-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-panel-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .nav-panel-body {
+            padding: 1.5rem;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            padding: 0.95rem;
-            margin: 0.5rem 0;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            background: #ffffff;
             border-radius: 12px;
-            cursor: pointer;
+            color: #334155;
+            text-decoration: none;
             transition: all 0.3s ease;
+            border: 1px solid #d4edda;
+            cursor: pointer;
         }
 
             .nav-item:hover {
-                background: var(--bg-tertiary);
-                border-color: var(--primary);
+                background: #f0f9f4;
                 transform: translateX(-5px);
+                border-color: #28a745;
+                box-shadow: 0 4px 6px -1px rgba(40, 167, 69, 0.1);
             }
 
             .nav-item.active {
-                background: var(--primary);
-                border-color: var(--primary);
-            }
-
-            .nav-item i {
-                font-size: 1.25rem;
-                color: var(--primary);
-                width: 30px;
-                text-align: center;
-            }
-
-            .nav-item.active i,
-            .nav-item.active span {
+                background: linear-gradient(135deg, #28a745, #1e7e34);
                 color: white;
+                border-color: #28a745;
             }
 
-            .nav-item span {
-                font-weight: 600;
-                color: var(--text-secondary);
-                font-size: 0.92rem;
-            }
+        .nav-item-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active .nav-item-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-item:hover .nav-item-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .nav-item-content {
+            flex: 1;
+        }
+
+        .nav-item-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #1e293b;
+        }
+
+        .nav-item.active .nav-item-title {
+            color: white;
+        }
+
+        .nav-item-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .nav-item.active .nav-item-desc {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-item-arrow {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-item-arrow {
+            color: #28a745;
+            transform: translateX(3px);
+        }
+
+        .nav-item.active .nav-item-arrow {
+            color: white;
+        }
 
         .filter-section {
-            margin-bottom: 1.5rem;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #d4edda;
         }
 
         .filter-title {
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 700;
-            color: var(--text-secondary);
-            margin-bottom: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: #28a745;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e0e0e0;
         }
 
         .filter-group {
@@ -347,45 +254,201 @@
             align-items: center;
             gap: 0.8rem;
             padding: 0.8rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
+            background: #f8f9fa;
+            border: 1px solid #d4edda;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
             .filter-item:hover {
-                background: var(--bg-tertiary);
-                border-color: var(--primary);
+                background: #f0f9f4;
+                border-color: #28a745;
             }
 
             .filter-item input[type="checkbox"] {
                 width: 18px;
                 height: 18px;
                 cursor: pointer;
+                accent-color: #28a745;
             }
 
             .filter-item label {
                 flex: 1;
                 cursor: pointer;
                 font-size: 0.88rem;
-                color: var(--text-secondary);
+                color: #333;
             }
 
-        select, input[type="date"], input[type="text"], input[type="number"] {
-            width: 100%;
-            padding: 0.7rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 0.85rem;
-            cursor: pointer;
+        .nav-panel-body::-webkit-scrollbar {
+            width: 6px;
         }
 
+        .nav-panel-body::-webkit-scrollbar-track {
+            background: #f0f9f4;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-thumb {
+            background: #5cb85c;
+            border-radius: 3px;
+        }
+
+            .nav-panel-body::-webkit-scrollbar-thumb:hover {
+                background: #28a745;
+            }
+
+        /* HEADER - Copiado de Control de Asistencia */
+        .header {
+            background: linear-gradient(135deg, #1e7e34 0%, #28a745 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1.8rem;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .logo-container {
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        .logo {
+            width: 90px;
+            height: 90px;
+            background: white;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #28a745;
+            box-shadow: 0 8px 24px rgba(40, 167, 69, 0.5);
+            padding: 8px;
+            transition: transform 0.3s ease;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+            .logo:hover {
+                transform: scale(1.05);
+            }
+
+            .logo i {
+                color: #28a745;
+                font-size: 2.5rem;
+            }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                display: block;
+            }
+
+        .header-info h1 {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 0.4rem;
+        }
+
+        .header-info p {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.7rem 1.2rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #28a745;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(40, 167, 69, 0.5);
+            }
+
+        .btn-success {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+            .btn-success:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: translateY(-2px);
+            }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+            .btn-secondary:hover {
+                background: #5a6268;
+            }
+
+        .btn-purple {
+            background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+            color: white;
+        }
+
+            .btn-purple:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+            }
+
+        .btn-info {
+            background: linear-gradient(135deg, #3B82F6, #60A5FA);
+            color: white;
+        }
+
+            .btn-info:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+            }
+
+        /* MAPA Y COMPONENTES */
         .map-container {
             position: absolute;
-            top: 165px;
+            top: 140px;
             left: 0;
             right: 0;
             bottom: 0;
@@ -411,12 +474,12 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            background: linear-gradient(135deg, #28a745, #1e7e34);
             color: white;
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            box-shadow: 0 8px 30px rgba(220, 38, 38, 0.5);
+            box-shadow: 0 8px 30px rgba(40, 167, 69, 0.5);
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
@@ -425,11 +488,11 @@
 
             .fab:hover {
                 transform: scale(1.1) rotate(90deg);
-                box-shadow: 0 12px 40px rgba(220, 38, 38, 0.7);
+                box-shadow: 0 12px 40px rgba(40, 167, 69, 0.7);
             }
 
             .fab.fab-route {
-                background: linear-gradient(135deg, var(--purple), #A78BFA);
+                background: linear-gradient(135deg, #8B5CF6, #A78BFA);
                 box-shadow: 0 8px 30px rgba(139, 92, 246, 0.5);
             }
 
@@ -439,8 +502,8 @@
                 }
 
                 .fab.fab-route.active {
-                    background: linear-gradient(135deg, var(--success), #34D399);
-                    box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5);
+                    background: linear-gradient(135deg, #28a745, #1e7e34);
+                    box-shadow: 0 8px 30px rgba(40, 167, 69, 0.5);
                 }
 
         .modal {
@@ -450,10 +513,10 @@
             right: 0;
             width: 400px;
             max-width: 100%;
-            background: var(--card-bg);
+            background: white;
             border-radius: 15px 15px 0 0;
-            border: 2px solid var(--border);
-            box-shadow: -8px -8px 40px rgba(0, 0, 0, 0.8);
+            border: 2px solid #d4edda;
+            box-shadow: -8px -8px 40px rgba(0, 0, 0, 0.2);
             z-index: 1300;
             max-height: 80vh;
             overflow-y: auto;
@@ -473,15 +536,15 @@
             justify-content: space-between;
             align-items: center;
             padding: 1rem 1.5rem;
-            border-bottom: 2px solid var(--border);
-            background: var(--bg-tertiary);
+            border-bottom: 2px solid #d4edda;
+            background: linear-gradient(135deg, #28a745, #1e7e34);
             cursor: pointer;
         }
 
         .modal-title {
             font-size: 1.1rem;
             font-weight: 800;
-            color: var(--primary);
+            color: white;
         }
 
         .modal-actions {
@@ -490,17 +553,18 @@
         }
 
         .modal-btn {
-            background: none;
+            background: rgba(255, 255, 255, 0.2);
             border: none;
-            color: var(--text-secondary);
+            color: white;
             font-size: 1.1rem;
             cursor: pointer;
             padding: 0.3rem;
             transition: all 0.3s ease;
+            border-radius: 4px;
         }
 
             .modal-btn:hover {
-                color: var(--primary);
+                background: rgba(255, 255, 255, 0.3);
             }
 
         .modal-body {
@@ -515,31 +579,31 @@
             display: block;
             margin-bottom: 0.4rem;
             font-weight: 600;
-            color: var(--text-secondary);
+            color: #333;
             font-size: 0.85rem;
         }
 
         .form-input, .form-select, .form-textarea {
             width: 100%;
             padding: 0.7rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
+            background: white;
+            border: 1px solid #ddd;
             border-radius: 8px;
-            color: var(--text-primary);
+            color: #333;
             font-size: 0.9rem;
             font-family: inherit;
         }
 
             .form-input:focus, .form-select:focus, .form-textarea:focus {
                 outline: none;
-                border-color: var(--primary);
-                box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+                border-color: #28a745;
+                box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
             }
 
         .location-button {
             width: 100%;
             padding: 1rem;
-            background: linear-gradient(135deg, var(--info), #60A5FA);
+            background: linear-gradient(135deg, #3B82F6, #60A5FA);
             border: none;
             border-radius: 8px;
             color: white;
@@ -559,15 +623,15 @@
             }
 
             .location-button.active {
-                background: linear-gradient(135deg, var(--success), #34D399);
+                background: linear-gradient(135deg, #28a745, #1e7e34);
             }
 
         .location-display {
             padding: 0.8rem;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--success);
+            background: #f0f9f4;
+            border: 1px solid #28a745;
             border-radius: 8px;
-            color: var(--text-secondary);
+            color: #333;
             font-size: 0.85rem;
             text-align: center;
             margin-top: 0.5rem;
@@ -586,21 +650,21 @@
             justify-content: space-between;
             align-items: center;
             padding: 0.8rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
+            background: #f8f9fa;
+            border: 1px solid #d4edda;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
             .route-item:hover {
-                background: var(--bg-tertiary);
-                border-color: var(--purple);
+                background: #f0f9f4;
+                border-color: #28a745;
             }
 
             .route-item.selected {
-                background: var(--purple);
-                border-color: var(--purple);
+                background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+                border-color: #8B5CF6;
             }
 
                 .route-item.selected .route-info {
@@ -609,16 +673,20 @@
 
         .route-info {
             flex: 1;
-            color: var(--text-secondary);
+            color: #333;
             font-size: 0.85rem;
         }
 
             .route-info strong {
                 display: block;
-                color: var(--text-primary);
+                color: #1e293b;
                 font-size: 0.9rem;
                 margin-bottom: 0.2rem;
             }
+
+        .route-item.selected .route-info strong {
+            color: white;
+        }
 
         .route-actions {
             display: flex;
@@ -636,12 +704,12 @@
 
         .notification {
             position: fixed;
-            top: 1.5rem;
+            top: 25px;
             left: 50%;
             transform: translateX(-50%);
             padding: 0.9rem 1.3rem;
             border-radius: 10px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
             z-index: 3000;
             font-weight: 600;
             display: none;
@@ -656,26 +724,26 @@
             }
 
             .notification.success {
-                background: var(--success);
+                background: linear-gradient(135deg, #28a745, #1e7e34);
                 color: white;
             }
 
             .notification.error {
-                background: var(--danger);
+                background: linear-gradient(135deg, #ef4444, #dc2626);
                 color: white;
             }
 
             .notification.info {
-                background: var(--info);
+                background: linear-gradient(135deg, #3b82f6, #2563eb);
                 color: white;
             }
 
         .map-instruction {
             position: fixed;
-            top: 185px;
+            top: 160px;
             left: 50%;
             transform: translateX(-50%);
-            background: var(--purple);
+            background: #8B5CF6;
             color: white;
             padding: 1rem 1.5rem;
             border-radius: 10px;
@@ -692,11 +760,11 @@
             }
 
         .route-stats {
-            background: var(--bg-tertiary);
+            background: #f0f9f4;
             padding: 1rem;
             border-radius: 8px;
             margin-bottom: 1rem;
-            border: 1px solid var(--border);
+            border: 1px solid #d4edda;
         }
 
         .route-stats-grid {
@@ -712,13 +780,13 @@
         .route-stat-value {
             font-size: 1.5rem;
             font-weight: 800;
-            color: var(--primary);
+            color: #28a745;
             display: block;
         }
 
         .route-stat-label {
             font-size: 0.75rem;
-            color: var(--text-secondary);
+            color: #666;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -735,8 +803,8 @@
             align-items: center;
             gap: 0.8rem;
             padding: 0.8rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
+            background: #f8f9fa;
+            border: 1px solid #d4edda;
             border-radius: 8px;
         }
 
@@ -744,7 +812,7 @@
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            background: var(--purple);
+            background: #8B5CF6;
             color: white;
             display: flex;
             align-items: center;
@@ -757,17 +825,17 @@
         .waypoint-info {
             flex: 1;
             font-size: 0.85rem;
-            color: var(--text-secondary);
+            color: #666;
         }
 
             .waypoint-info strong {
-                color: var(--text-primary);
+                color: #333;
                 display: block;
                 margin-bottom: 0.2rem;
             }
 
         .waypoint-remove {
-            background: var(--danger);
+            background: #ef4444;
             color: white;
             border: none;
             width: 28px;
@@ -787,15 +855,242 @@
     </style>
 </head>
 <body>
+    <div class="nav-panel-overlay" id="navPanelOverlay" onclick="toggleNavPanel()"></div>
+
+    <button class="nav-toggle" id="navToggle" onclick="toggleNavPanel()">
+        <i class="fas fa-th-large"></i>
+    </button>
+
+    <div class="nav-panel" id="navPanel">
+        <div class="nav-panel-header">
+            <button class="nav-panel-close" onclick="toggleNavPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="nav-panel-title">Sistema de Bacheo</h3>
+            <p class="nav-panel-subtitle">Navegación Principal</p>
+        </div>
+
+        <div class="nav-panel-body">
+            <div class="nav-item" onclick="redirectTo('captura')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Captura</div>
+                    <div class="nav-item-desc">Registro de bacheos</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('programacion')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Programación</div>
+                    <div class="nav-item-desc">Horarios y cuadrillas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('mapa')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Mapa Interactivo</div>
+                    <div class="nav-item-desc">Ubicación de bacheos</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item active">
+                <div class="nav-item-icon">
+                    <i class="fas fa-route"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Trazado de Rutas</div>
+                    <div class="nav-item-desc">Planificación de recorridos</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('rastreo')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Rastreo GPS</div>
+                    <div class="nav-item-desc">Monitoreo de unidades</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('dashboard')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Dashboard</div>
+                    <div class="nav-item-desc">Estadísticas y reportes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('reportes')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Reportes</div>
+                    <div class="nav-item-desc">Incidencias ciudadanas</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('material')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-toolbox"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Material Utilizado</div>
+                    <div class="nav-item-desc">Control de inventario</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('asistencia')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Asistencia</div>
+                    <div class="nav-item-desc">Control de personal</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('repositorio')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Repositorio Vehicular</div>
+                    <div class="nav-item-desc">Gestión de unidades</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('citas')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-wrench"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Citas Mantenimiento</div>
+                    <div class="nav-item-desc">Agendar servicios</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="nav-item" onclick="redirectTo('oficios')">
+                <div class="nav-item-icon">
+                    <i class="fas fa-file-invoice"></i>
+                </div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Oficios a Almacén</div>
+                    <div class="nav-item-desc">Envío de solicitudes</div>
+                </div>
+                <div class="nav-item-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">Mis Rutas</div>
+                <div id="routesList" class="route-list">
+                </div>
+                <button class="btn btn-purple" style="width: 100%; margin-top: 0.5rem;" onclick="openNewRouteModal()">
+                    <i class="fas fa-plus"></i>
+                    Nueva Ruta
+                </button>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">Filtros de Puntos</div>
+                <div class="filter-group">
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterBache" checked onchange="applyFilters()">
+                        <label for="filterBache">Baches</label>
+                    </div>
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterSima" checked onchange="applyFilters()">
+                        <label for="filterSima">SIMAS</label>
+                    </div>
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterBordo" checked onchange="applyFilters()">
+                        <label for="filterBordo">Bordos</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="filter-title">Urgencia</div>
+                <div class="filter-group">
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterUrgNormal" checked onchange="applyFilters()">
+                        <label for="filterUrgNormal">Normal</label>
+                    </div>
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterUrgHigh" checked onchange="applyFilters()">
+                        <label for="filterUrgHigh">Alta</label>
+                    </div>
+                    <div class="filter-item">
+                        <input type="checkbox" id="filterUrgUrgent" checked onchange="applyFilters()">
+                        <label for="filterUrgUrgent">Urgente</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <button class="btn btn-secondary" style="width: 100%;" onclick="clearFilters()">
+                    <i class="fas fa-times"></i>
+                    Limpiar Filtros
+                </button>
+            </div>
+        </div>
+    </div>
+
     <header class="header">
         <div class="header-content">
             <div class="logo-section">
                 <div class="logo-container">
                     <div class="logo">
-                        <i class="fas fa-route"></i>
+                        <img src="/imagenes/ESCUDO.png" alt="Escudo Municipio" onerror="this.parentElement.innerHTML='<i class=\'fas fa-landmark\'></i>'">
                     </div>
                     <div class="logo">
-                        <i class="fas fa-landmark"></i>
+                        <img src="/imagenes/Bacheo.png" alt="Logo Bacheo" onerror="this.parentElement.innerHTML='<i class=\'fas fa-route\'></i>'">
                     </div>
                 </div>
                 <div class="header-info">
@@ -815,106 +1110,6 @@
             </div>
         </div>
     </header>
-
-    <div class="nav-overlay" id="navOverlay" onclick="closeNav()"></div>
-
-    <button class="nav-toggle" id="navToggle" onclick="toggleNav()">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <div class="nav-panel" id="navPanel">
-        <div class="nav-header">
-            <div class="nav-logo">
-                <i class="fas fa-road"></i>
-            </div>
-            <h3>Navegación</h3>
-        </div>
-        <div class="nav-item" data-section="captura">
-            <i class="fas fa-edit"></i>
-            <span>Captura</span>
-        </div>
-        <div class="nav-item" data-section="programacion">
-            <i class="fas fa-calendar-alt"></i>
-            <span>Programación</span>
-        </div>
-        <div class="nav-item active" data-section="trazado">
-            <i class="fas fa-route"></i>
-            <span>Trazado de Rutas</span>
-        </div>
-        <div class="nav-item" data-section="rastreo">
-            <i class="fas fa-search-location"></i>
-            <span>Rastreo</span>
-        </div>
-        <div class="nav-item" data-section="dashboard">
-            <i class="fas fa-chart-line"></i>
-            <span>Dashboard</span>
-        </div>
-        <div class="nav-item" data-section="reportes">
-            <i class="fas fa-file-alt"></i>
-            <span>Reportes</span>
-        </div>
-        <div class="nav-item" data-section="material">
-            <i class="fas fa-boxes"></i>
-            <span>Material</span>
-        </div>
-        <div class="nav-item" data-section="asistencia">
-            <i class="fas fa-users"></i>
-            <span>Asistencia</span>
-        </div>
-
-        <div class="filter-section" style="margin-top: 2rem;">
-            <div class="filter-title">Mis Rutas</div>
-            <div id="routesList" class="route-list">
-            </div>
-            <button class="btn btn-purple" style="width: 100%; margin-top: 0.5rem;" onclick="openNewRouteModal()">
-                <i class="fas fa-plus"></i>
-                Nueva Ruta
-            </button>
-        </div>
-
-        <div class="filter-section">
-            <div class="filter-title">Filtros de Puntos</div>
-            <div class="filter-group">
-                <div class="filter-item">
-                    <input type="checkbox" id="filterBache" checked onchange="applyFilters()">
-                    <label for="filterBache">Baches</label>
-                </div>
-                <div class="filter-item">
-                    <input type="checkbox" id="filterSima" checked onchange="applyFilters()">
-                    <label for="filterSima">SIMAS</label>
-                </div>
-                <div class="filter-item">
-                    <input type="checkbox" id="filterBordo" checked onchange="applyFilters()">
-                    <label for="filterBordo">Bordos</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="filter-section">
-            <div class="filter-title">Urgencia</div>
-            <div class="filter-group">
-                <div class="filter-item">
-                    <input type="checkbox" id="filterUrgNormal" checked onchange="applyFilters()">
-                    <label for="filterUrgNormal">Normal</label>
-                </div>
-                <div class="filter-item">
-                    <input type="checkbox" id="filterUrgHigh" checked onchange="applyFilters()">
-                    <label for="filterUrgHigh">Alta</label>
-                </div>
-                <div class="filter-item">
-                    <input type="checkbox" id="filterUrgUrgent" checked onchange="applyFilters()">
-                    <label for="filterUrgUrgent">Urgente</label>
-                </div>
-            </div>
-        </div>
-
-        <div class="filter-section">
-            <button class="btn btn-secondary" style="width: 100%;" onclick="clearFilters()">
-                <i class="fas fa-times"></i>
-                Limpiar Filtros
-            </button>
-        </div>
-    </div>
 
     <div class="map-container">
         <div id="map"></div>
@@ -1005,7 +1200,7 @@
                     <textarea class="form-textarea" id="descripcionInput" rows="3" placeholder="Detalles adicionales..."></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 1rem;">
                     <i class="fas fa-save"></i>
                     Guardar Punto
                 </button>
@@ -1050,7 +1245,7 @@
                         </button>
                     </div>
                     <div id="waypointsList" class="waypoint-list">
-                        <div style="text-align: center; color: var(--text-secondary); padding: 1rem; font-size: 0.85rem;">
+                        <div style="text-align: center; color: #666; padding: 1rem; font-size: 0.85rem;">
                             Usa los botones de arriba para agregar puntos a la ruta
                         </div>
                     </div>
@@ -1069,7 +1264,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                <button type="submit" class="btn btn-success" style="width: 100%; margin-top: 1rem;">
                     <i class="fas fa-save"></i>
                     Guardar Ruta
                 </button>
@@ -1181,16 +1376,17 @@
         };
         let editingRecordId = null;
         let selectedRouteId = null;
+        let navPanelOpen = false;
 
         const customIcons = {
             bache: L.divIcon({
-                html: '<div style="background: #DC2626; width: 40px; height: 40px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center;"><i class="fas fa-road" style="color: white; transform: rotate(45deg); font-size: 18px;"></i></div>',
+                html: '<div style="background: #28a745; width: 40px; height: 40px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center;"><i class="fas fa-road" style="color: white; transform: rotate(45deg); font-size: 18px;"></i></div>',
                 className: '',
                 iconSize: [40, 40],
                 iconAnchor: [20, 40]
             }),
             sima: L.divIcon({
-                html: '<div style="background: #10B981; width: 40px; height: 40px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center;"><i class="fas fa-tint" style="color: white; transform: rotate(45deg); font-size: 18px;"></i></div>',
+                html: '<div style="background: #3B82F6; width: 40px; height: 40px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center;"><i class="fas fa-tint" style="color: white; transform: rotate(45deg); font-size: 18px;"></i></div>',
                 className: '',
                 iconSize: [40, 40],
                 iconAnchor: [20, 40]
@@ -1202,13 +1398,13 @@
                 iconAnchor: [20, 40]
             }),
             urgent: L.divIcon({
-                html: '<div style="background: #DC2626; width: 46px; height: 46px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid gold; box-shadow: 0 6px 16px rgba(220,38,38,0.6); display: flex; align-items: center; justify-content: center;"><i class="fas fa-star" style="color: gold; transform: rotate(45deg); font-size: 20px;"></i></div>',
+                html: '<div style="background: #ef4444; width: 46px; height: 46px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid gold; box-shadow: 0 6px 16px rgba(239,68,68,0.6); display: flex; align-items: center; justify-content: center;"><i class="fas fa-star" style="color: gold; transform: rotate(45deg); font-size: 20px;"></i></div>',
                 className: '',
                 iconSize: [46, 46],
                 iconAnchor: [23, 46]
             }),
             temp: L.divIcon({
-                html: '<div style="background: #3B82F6; width: 44px; height: 44px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 6px 16px rgba(59,130,246,0.6); display: flex; align-items: center; justify-content: center;"><i class="fas fa-map-pin" style="color: white; transform: rotate(45deg); font-size: 20px;"></i></div>',
+                html: '<div style="background: #8B5CF6; width: 44px; height: 44px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 3px solid white; box-shadow: 0 6px 16px rgba(139,92,246,0.6); display: flex; align-items: center; justify-content: center;"><i class="fas fa-map-pin" style="color: white; transform: rotate(45deg); font-size: 20px;"></i></div>',
                 className: '',
                 iconSize: [44, 44],
                 iconAnchor: [22, 44]
@@ -1221,129 +1417,52 @@
             loadRoutes();
             renderMarkers();
             renderRoutesList();
-            setupNavigation();
-            makeHeaderResponsive();
-            window.addEventListener('resize', makeHeaderResponsive);
         });
 
-        function makeHeaderResponsive() {
-            const width = window.innerWidth;
-            const header = document.querySelector('.header');
-            const headerContent = document.querySelector('.header-content');
-            const logoSection = document.querySelector('.logo-section');
-            const logos = document.querySelectorAll('.logo');
-            const logoIcons = document.querySelectorAll('.logo i');
-            const buttons = document.querySelectorAll('.header-actions .btn');
-            const title = document.querySelector('.header-info h1');
-            const subtitle = document.querySelector('.header-info p');
-            const mapContainer = document.querySelector('.map-container');
-            const mapInstruction = document.querySelector('.map-instruction');
-            const headerActions = document.querySelector('.header-actions');
+        function toggleNavPanel() {
+            const navPanel = document.getElementById('navPanel');
+            const overlay = document.getElementById('navPanelOverlay');
+            const toggleBtn = document.getElementById('navToggle');
 
-            if (width < 600) {
-                header.style.padding = '1rem 1rem';
-                headerContent.style.flexDirection = 'column';
-                headerContent.style.alignItems = 'flex-start';
-                headerContent.style.gap = '1rem';
-                logoSection.style.gap = '1rem';
-                logoSection.style.minWidth = 'auto';
-                logos.forEach(logo => {
-                    logo.style.width = '55px';
-                    logo.style.height = '55px';
-                });
-                logoIcons.forEach(icon => {
-                    icon.style.fontSize = '1.8rem';
-                });
-                buttons.forEach(btn => {
-                    btn.style.padding = '0.5rem 0.8rem';
-                    btn.style.fontSize = '0.75rem';
-                });
-                if (title) title.style.fontSize = '1.1rem';
-                if (subtitle) subtitle.style.fontSize = '0.8rem';
-                if (headerActions) {
-                    headerActions.style.width = '100%';
-                    headerActions.style.justifyContent = 'space-between';
-                }
-                mapContainer.style.top = '155px';
-                mapInstruction.style.top = '175px';
-            } else if (width < 900) {
-                header.style.padding = '1.3rem 1.5rem';
-                headerContent.style.flexDirection = 'row';
-                headerContent.style.alignItems = 'center';
-                headerContent.style.gap = '1.2rem';
-                logoSection.style.gap = '1.2rem';
-                logoSection.style.minWidth = '250px';
-                logos.forEach(logo => {
-                    logo.style.width = '65px';
-                    logo.style.height = '65px';
-                });
-                logoIcons.forEach(icon => {
-                    icon.style.fontSize = '2rem';
-                });
-                buttons.forEach(btn => {
-                    btn.style.padding = '0.6rem 1rem';
-                    btn.style.fontSize = '0.85rem';
-                });
-                if (title) title.style.fontSize = '1.3rem';
-                if (subtitle) subtitle.style.fontSize = '0.9rem';
-                if (headerActions) {
-                    headerActions.style.width = 'auto';
-                    headerActions.style.justifyContent = 'flex-end';
-                }
-                mapContainer.style.top = '130px';
-                mapInstruction.style.top = '150px';
-            } else if (width < 1200) {
-                header.style.padding = '1.5rem 1.8rem';
-                headerContent.style.flexDirection = 'row';
-                headerContent.style.alignItems = 'center';
-                headerContent.style.gap = '1.5rem';
-                logoSection.style.gap = '1.5rem';
-                logoSection.style.minWidth = '280px';
-                logos.forEach(logo => {
-                    logo.style.width = '75px';
-                    logo.style.height = '75px';
-                });
-                logoIcons.forEach(icon => {
-                    icon.style.fontSize = '2.2rem';
-                });
-                buttons.forEach(btn => {
-                    btn.style.padding = '0.6rem 1rem';
-                    btn.style.fontSize = '0.85rem';
-                });
-                if (title) title.style.fontSize = '1.45rem';
-                if (subtitle) subtitle.style.fontSize = '0.95rem';
-                if (headerActions) {
-                    headerActions.style.width = 'auto';
-                    headerActions.style.justifyContent = 'flex-end';
-                }
-                mapContainer.style.top = '145px';
-                mapInstruction.style.top = '165px';
+            navPanelOpen = !navPanelOpen;
+
+            if (navPanelOpen) {
+                navPanel.classList.add('open');
+                overlay.classList.add('active');
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '<i class="fas fa-times"></i>';
+                document.body.style.overflow = 'hidden';
             } else {
-                header.style.padding = '1.8rem 2rem';
-                headerContent.style.flexDirection = 'row';
-                headerContent.style.alignItems = 'center';
-                headerContent.style.gap = '2rem';
-                logoSection.style.gap = '1.8rem';
-                logoSection.style.minWidth = '300px';
-                logos.forEach(logo => {
-                    logo.style.width = '90px';
-                    logo.style.height = '90px';
-                });
-                logoIcons.forEach(icon => {
-                    icon.style.fontSize = '2.5rem';
-                });
-                buttons.forEach(btn => {
-                    btn.style.padding = '0.6rem 1rem';
-                    btn.style.fontSize = '0.85rem';
-                });
-                if (title) title.style.fontSize = '1.65rem';
-                if (subtitle) subtitle.style.fontSize = '1rem';
-                if (headerActions) {
-                    headerActions.style.width = 'auto';
-                    headerActions.style.justifyContent = 'flex-end';
-                }
-                mapContainer.style.top = '165px';
-                mapInstruction.style.top = '185px';
+                navPanel.classList.remove('open');
+                overlay.classList.remove('active');
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '<i class="fas fa-th-large"></i>';
+                document.body.style.overflow = '';
+            }
+        }
+
+        function redirectTo(module) {
+            if (navPanelOpen) toggleNavPanel();
+
+            const urls = {
+                'captura': '/Home/CapturaBacheo',
+                'programacion': '/Home/ProgramacionBacheo',
+                'mapa': '/Home/MapaBacheo',
+                'rastreo': '/Home/RastreoBacheo',
+                'dashboard': '/Home/DashboardBacheo',
+                'reportes': '/Home/ReportesBacheo',
+                'material': '/Home/MaterialUtilizadoBacheo',
+                'asistencia': '/Home/AsistenciaPersonalBacheo',
+                'repositorio': '/Home/RepositorioPlacasBacheo',
+                'citas': '/Home/AgendarCitasMantenimiento',
+                'oficios': '/Home/EnviarOficiosAlmacenBacheo'
+            };
+
+            if (urls[module]) {
+                showNotification('Navegando a ' + module, 'info');
+                setTimeout(function() {
+                    window.location.href = urls[module];
+                }, 800);
             }
         }
 
@@ -1356,41 +1475,6 @@
             }).addTo(map);
 
             map.on('click', onMapClick);
-        }
-
-        function setupNavigation() {
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(function(item) {
-                item.addEventListener('click', function() {
-                    const section = this.getAttribute('data-section');
-                    handleNavigation(section);
-                });
-            });
-        }
-
-        function handleNavigation(section) {
-            const routes = {
-                'captura': '/Home/CapturaBacheo',
-                'programacion': '/Home/ProgramacionBacheo',
-                'rastreo': '/Home/RastreoBacheo',
-                'dashboard': '/Home/DashboardBacheo',
-                'reportes': '/Home/ReportesBacheo',
-                'material': '/Home/MaterialUtilizadoBacheo',
-                'asistencia': '/Home/AsistenciaPersonalBacheo',
-                'trazado': '#'
-            };
-
-            const route = routes[section];
-            if (route && route !== '#') {
-                showNotification('Navegando a ' + section, 'info');
-                closeNav();
-                setTimeout(function() {
-                    window.location.href = route;
-                }, 800);
-            } else if (section === 'trazado') {
-                closeNav();
-                showNotification('Ya estás en Trazado de Rutas', 'info');
-            }
         }
 
         function loadRecords() {
@@ -1505,38 +1589,38 @@
                 });
 
                 const status = getStatus(record);
-                const statusColor = status === 'ontime' ? '#10B981' : status === 'warning' ? '#F59E0B' : '#EF4444';
+                const statusColor = status === 'ontime' ? '#28a745' : status === 'warning' ? '#F59E0B' : '#EF4444';
                 const statusText = status === 'ontime' ? 'A Tiempo' : status === 'warning' ? 'Por Vencer' : 'Atrasado';
 
                 const popupContent = `
-                    <div style="min-width: 250px; background: #1F1F1F; padding: 1rem; border-radius: 8px;">
-                        <div style="font-size: 1.1rem; font-weight: 700; color: #DC2626; margin-bottom: 0.5rem;">${getTipoLabel(record.tipo)}</div>
-                        <div style="font-size: 0.85rem; color: #B3B3B3; margin: 0.3rem 0;">
+                    <div style="min-width: 250px; background: white; padding: 1rem; border-radius: 8px;">
+                        <div style="font-size: 1.1rem; font-weight: 700; color: #28a745; margin-bottom: 0.5rem;">${getTipoLabel(record.tipo)}</div>
+                        <div style="font-size: 0.85rem; color: #666; margin: 0.3rem 0;">
                             <i class="fas fa-user" style="width: 20px;"></i> <strong>Solicitante:</strong> ${record.solicitante}
                         </div>
-                        <div style="font-size: 0.85rem; color: #B3B3B3; margin: 0.3rem 0;">
+                        <div style="font-size: 0.85rem; color: #666; margin: 0.3rem 0;">
                             <i class="fas fa-map-marker-alt" style="width: 20px;"></i> ${record.direccion}
                         </div>
-                        <div style="font-size: 0.85rem; color: #B3B3B3; margin: 0.3rem 0;">
+                        <div style="font-size: 0.85rem; color: #666; margin: 0.3rem 0;">
                             <i class="fas fa-clock" style="width: 20px;"></i> <strong>Tiempo:</strong> ${record.tiempoAsignado} días
                         </div>
                         <div style="margin: 0.5rem 0; display: flex; gap: 0.5rem;">
-                            <span style="padding: 0.3rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; background: rgba(220,38,38,0.2); color: #DC2626;">${getUrgenciaLabel(record.urgencia)}</span>
+                            <span style="padding: 0.3rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; background: rgba(40,167,69,0.2); color: #28a745;">${getUrgenciaLabel(record.urgencia)}</span>
                             <span style="padding: 0.3rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; background: rgba(59,130,246,0.2); color: #3B82F6;">${getPrioridadLabel(record.prioridad)}</span>
                         </div>
                         <div style="font-size: 0.85rem; margin: 0.3rem 0; display: flex; align-items: center; gap: 0.5rem;">
                             <span style="width: 12px; height: 12px; border-radius: 50%; background: ${statusColor}; display: inline-block;"></span>
                             <span style="color: ${statusColor}; font-weight: 600;">${statusText}</span>
                         </div>
-                        ${record.descripcion ? `<div style="margin-top: 0.5rem; font-style: italic; color: #B3B3B3; font-size: 0.85rem;">${record.descripcion}</div>` : ''}
+                        ${record.descripcion ? `<div style="margin-top: 0.5rem; font-style: italic; color: #666; font-size: 0.85rem;">${record.descripcion}</div>` : ''}
                         <div style="display: flex; gap: 0.5rem; margin-top: 0.8rem;">
-                            <button onclick="openInMaps(${record.lat}, ${record.lng})" style="flex: 1; padding: 0.5rem; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; background: #DC2626; color: white;">
+                            <button onclick="openInMaps(${record.lat}, ${record.lng})" style="flex: 1; padding: 0.5rem; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; background: #28a745; color: white;">
                                 <i class="fas fa-map-marked-alt"></i> Maps
                             </button>
                             <button onclick="editRecord(${record.id})" style="flex: 1; padding: 0.5rem; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; background: #3B82F6; color: white;">
                                 <i class="fas fa-edit"></i> Editar
                             </button>
-                            <button onclick="deleteRecord(${record.id})" style="flex: 1; padding: 0.5rem; border: 1px solid #333; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; background: #2A2A2A; color: #B3B3B3;">
+                            <button onclick="deleteRecord(${record.id})" style="flex: 1; padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; background: white; color: #666;">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -1552,7 +1636,7 @@
             const container = document.getElementById('routesList');
 
             if (routes.length === 0) {
-                container.innerHTML = '<div style="text-align: center; color: var(--text-secondary); padding: 1rem; font-size: 0.85rem;">No hay rutas creadas</div>';
+                container.innerHTML = '<div style="text-align: center; color: #666; padding: 1rem; font-size: 0.85rem;">No hay rutas creadas</div>';
                 return;
             }
 
@@ -1566,7 +1650,7 @@
                         <button class="route-btn" style="background: #3B82F6; color: white;" onclick="event.stopPropagation(); viewRouteOnMap(${route.id})">
                             <i class="fas fa-eye"></i>
                         </button>
-                        <button class="route-btn" style="background: #10B981; color: white;" onclick="event.stopPropagation(); exportRouteToMaps(${route.id})">
+                        <button class="route-btn" style="background: #28a745; color: white;" onclick="event.stopPropagation(); exportRouteToMaps(${route.id})">
                             <i class="fas fa-map"></i>
                         </button>
                         <button class="route-btn" style="background: #EF4444; color: white;" onclick="event.stopPropagation(); deleteRoute(${route.id})">
@@ -1643,6 +1727,17 @@
             }
         }
 
+        function clearFilters() {
+            document.getElementById('filterBache').checked = true;
+            document.getElementById('filterSima').checked = true;
+            document.getElementById('filterBordo').checked = true;
+            document.getElementById('filterUrgNormal').checked = true;
+            document.getElementById('filterUrgHigh').checked = true;
+            document.getElementById('filterUrgUrgent').checked = true;
+            renderMarkers();
+            showNotification('Filtros restablecidos', 'info');
+        }
+
         function openQuickAddPoint(lat, lng) {
             if (tempMarker) {
                 map.removeLayer(tempMarker);
@@ -1662,7 +1757,7 @@
             map.getContainer().style.cursor = '';
 
             const createBtn = document.getElementById('createNewBtn');
-            if (createBtn) createBtn.style.background = 'linear-gradient(135deg, var(--success), #34D399)';
+            if (createBtn) createBtn.style.background = 'linear-gradient(135deg, #28a745, #1e7e34)';
 
             showNotification('Completa los datos del nuevo punto', 'info');
         }
@@ -1719,36 +1814,6 @@
             showNotification('Punto creado y agregado a la ruta', 'success');
         }
 
-        function clearFilters() {
-            document.getElementById('filterBache').checked = true;
-            document.getElementById('filterSima').checked = true;
-            document.getElementById('filterBordo').checked = true;
-            document.getElementById('filterUrgNormal').checked = true;
-            document.getElementById('filterUrgHigh').checked = true;
-            document.getElementById('filterUrgUrgent').checked = true;
-            renderMarkers();
-            showNotification('Filtros restablecidos', 'info');
-        }
-
-        function toggleNav() {
-            const navPanel = document.getElementById('navPanel');
-            const navOverlay = document.getElementById('navOverlay');
-            navPanel.classList.toggle('open');
-            navOverlay.classList.toggle('show');
-        }
-
-        function closeNav() {
-            const navPanel = document.getElementById('navPanel');
-            const navOverlay = document.getElementById('navOverlay');
-            navPanel.classList.remove('open');
-            navOverlay.classList.remove('show');
-        }
-
-        function toggleRouteMode() {
-            // Esta función ya no es necesaria, pero la mantenemos por compatibilidad
-            openNewRouteModal();
-        }
-
         function toggleSelectExisting() {
             const btn = document.getElementById('selectExistingBtn');
             const createBtn = document.getElementById('createNewBtn');
@@ -1756,7 +1821,7 @@
 
             if (isSelectingExistingPoints) {
                 isSelectingExistingPoints = false;
-                btn.style.background = 'linear-gradient(135deg, var(--info), #60A5FA)';
+                btn.style.background = 'linear-gradient(135deg, #3B82F6, #60A5FA)';
                 document.getElementById('mapInstruction').classList.remove('show');
                 map.getContainer().style.cursor = '';
                 showNotification('Modo selección desactivado', 'info');
@@ -1764,8 +1829,8 @@
                 isSelectingExistingPoints = true;
                 isCreatingNewPoints = false;
 
-                btn.style.background = 'linear-gradient(135deg, var(--success), #34D399)';
-                createBtn.style.background = 'linear-gradient(135deg, var(--success), #34D399)';
+                btn.style.background = 'linear-gradient(135deg, #28a745, #1e7e34)';
+                createBtn.style.background = 'linear-gradient(135deg, #28a745, #1e7e34)';
 
                 instruction.innerHTML = '<i class="fas fa-hand-pointer"></i> <strong>Selecciona puntos existentes:</strong> Haz clic sobre los marcadores en el mapa';
                 document.getElementById('mapInstruction').classList.add('show');
@@ -1785,7 +1850,7 @@
 
             if (isCreatingNewPoints) {
                 isCreatingNewPoints = false;
-                btn.style.background = 'linear-gradient(135deg, var(--success), #34D399)';
+                btn.style.background = 'linear-gradient(135deg, #28a745, #1e7e34)';
                 document.getElementById('mapInstruction').classList.remove('show');
                 map.getContainer().style.cursor = '';
                 showNotification('Modo creación desactivado', 'info');
@@ -1794,7 +1859,7 @@
                 isSelectingExistingPoints = false;
 
                 btn.style.background = 'linear-gradient(135deg, #F59E0B, #FBBF24)';
-                selectBtn.style.background = 'linear-gradient(135deg, var(--info), #60A5FA)';
+                selectBtn.style.background = 'linear-gradient(135deg, #3B82F6, #60A5FA)';
 
                 instruction.innerHTML = '<i class="fas fa-map-pin"></i> <strong>Crea nuevos puntos:</strong> Haz clic en cualquier lugar del mapa';
                 document.getElementById('mapInstruction').classList.add('show');
@@ -1859,7 +1924,7 @@
             const container = document.getElementById('waypointsList');
 
             if (currentRoute.waypoints.length === 0) {
-                container.innerHTML = '<div style="text-align: center; color: var(--text-secondary); padding: 1rem; font-size: 0.85rem;">Selecciona puntos en el mapa para agregar a la ruta</div>';
+                container.innerHTML = '<div style="text-align: center; color: #666; padding: 1rem; font-size: 0.85rem;">Selecciona puntos en el mapa para agregar a la ruta</div>';
                 return;
             }
 
@@ -1893,7 +1958,10 @@
         }
 
         function calculateRouteTime(route) {
-            return route.waypoints.reduce((sum, w) => sum + w.tiempoAsignado, 0);
+            return route.waypoints.reduce((sum, wId) => {
+                const record = records.find(r => r.id === wId);
+                return sum + (record ? record.tiempoAsignado : 0);
+            }, 0);
         }
 
         function clearCurrentRoute() {
@@ -1916,8 +1984,8 @@
 
             const selectBtn = document.getElementById('selectExistingBtn');
             const createBtn = document.getElementById('createNewBtn');
-            selectBtn.style.background = 'linear-gradient(135deg, var(--info), #60A5FA)';
-            createBtn.style.background = 'linear-gradient(135deg, var(--success), #34D399)';
+            selectBtn.style.background = 'linear-gradient(135deg, #3B82F6, #60A5FA)';
+            createBtn.style.background = 'linear-gradient(135deg, #28a745, #1e7e34)';
 
             openRouteModal();
         }
@@ -1936,8 +2004,8 @@
 
             const selectBtn = document.getElementById('selectExistingBtn');
             const createBtn = document.getElementById('createNewBtn');
-            if (selectBtn) selectBtn.style.background = 'linear-gradient(135deg, var(--info), #60A5FA)';
-            if (createBtn) createBtn.style.background = 'linear-gradient(135deg, var(--success), #34D399)';
+            if (selectBtn) selectBtn.style.background = 'linear-gradient(135deg, #3B82F6, #60A5FA)';
+            if (createBtn) createBtn.style.background = 'linear-gradient(135deg, #28a745, #1e7e34)';
         }
 
         function handleRouteSubmit(e) {
@@ -2120,12 +2188,14 @@
             const modal = document.getElementById(modalId);
             modal.classList.toggle('minimized');
 
-            const iconId = modalId === 'addModal' ? 'addModalIcon' : 'routeModalIcon';
+            const iconId = modalId === 'addModal' ? 'addModalIcon' : modalId === 'routeModal' ? 'routeModalIcon' : 'quickAddModalIcon';
             const icon = document.getElementById(iconId);
-            if (modal.classList.contains('minimized')) {
-                icon.className = 'fas fa-window-maximize';
-            } else {
-                icon.className = 'fas fa-window-minimize';
+            if (icon) {
+                if (modal.classList.contains('minimized')) {
+                    icon.className = 'fas fa-window-maximize';
+                } else {
+                    icon.className = 'fas fa-window-minimize';
+                }
             }
         }
 
@@ -2156,7 +2226,6 @@
             document.getElementById('locationBtnText').textContent = 'Haz clic en el mapa...';
 
             document.getElementById('addModal').classList.add('minimized');
-            document.getElementById('addModalIcon').className = 'fas fa-window-maximize';
 
             map.on('click', onMapClickForSelection);
 
@@ -2188,7 +2257,6 @@
             disableLocationSelection();
 
             document.getElementById('addModal').classList.remove('minimized');
-            document.getElementById('addModalIcon').className = 'fas fa-window-minimize';
 
             showNotification('Ubicación capturada correctamente', 'success');
         }
@@ -2338,7 +2406,7 @@
             }, 3000);
         }
 
-        console.log('Sistema de Trazado de Rutas v1.0');
+        console.log('Sistema de Trazado de Rutas - Estilo Verde');
         console.log('Sistema iniciado correctamente');
     </script>
 </body>

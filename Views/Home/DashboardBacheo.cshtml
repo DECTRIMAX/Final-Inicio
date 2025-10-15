@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Bacheo - Monclova</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -12,39 +13,242 @@
             box-sizing: border-box;
         }
 
-        :root {
-            --primary: #DC2626;
-            --primary-light: #F87171;
-            --secondary: #B91C1C;
-            --success: #10B981;
-            --warning: #F59E0B;
-            --danger: #EF4444;
-            --info: #3B82F6;
-            --bg-primary: #0F0F0F;
-            --bg-secondary: #1A1A1A;
-            --bg-tertiary: #2A2A2A;
-            --text-primary: #FFFFFF;
-            --text-secondary: #B3B3B3;
-            --border: #333333;
-            --card-bg: #1F1F1F;
-        }
-
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
             line-height: 1.6;
             min-height: 100vh;
         }
 
+        .nav-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #f0f9f4 100%);
+            box-shadow: -10px 0 30px rgba(40, 167, 69, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow: hidden;
+            border-left: 1px solid #d4edda;
+        }
+
+            .nav-panel.open {
+                right: 0;
+            }
+
+        .nav-panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 167, 69, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+            .nav-panel-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .nav-toggle {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 20px 25px -5px rgba(40, 167, 69, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-toggle:hover {
+                transform: translateY(-50%) scale(1.1);
+                box-shadow: 0 25px 35px -5px rgba(40, 167, 69, 0.4);
+            }
+
+            .nav-toggle.active {
+                background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                transform: translateY(-50%) rotate(180deg);
+            }
+
+        .nav-panel-header {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            padding: 2rem 1.5rem;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-panel-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-panel-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-panel-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-panel-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .nav-panel-body {
+            padding: 1.5rem;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            background: #ffffff;
+            border-radius: 12px;
+            color: #334155;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid #d4edda;
+            cursor: pointer;
+        }
+
+            .nav-item:hover {
+                background: #f0f9f4;
+                transform: translateX(-5px);
+                border-color: #28a745;
+                box-shadow: 0 4px 6px -1px rgba(40, 167, 69, 0.1);
+            }
+
+            .nav-item.active {
+                background: linear-gradient(135deg, #28a745, #1e7e34);
+                color: white;
+                border-color: #28a745;
+            }
+
+        .nav-item-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active .nav-item-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-item:hover .nav-item-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .nav-item-content {
+            flex: 1;
+        }
+
+        .nav-item-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #1e293b;
+        }
+
+        .nav-item.active .nav-item-title {
+            color: white;
+        }
+
+        .nav-item-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .nav-item.active .nav-item-desc {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-item-arrow {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-item-arrow {
+            color: #28a745;
+            transform: translateX(3px);
+        }
+
+        .nav-item.active .nav-item-arrow {
+            color: white;
+        }
+
+        .nav-panel-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-track {
+            background: #f0f9f4;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-thumb {
+            background: #5cb85c;
+            border-radius: 3px;
+        }
+
+            .nav-panel-body::-webkit-scrollbar-thumb:hover {
+                background: #28a745;
+            }
+
         .header {
-            background: linear-gradient(135deg, #111111 0%, #2A2A2A 100%);
-            padding: 1.2rem 1.5rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            background: linear-gradient(135deg, #1e7e34 0%, #28a745 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             position: sticky;
             top: 0;
-            z-index: 1000;
-            border-bottom: 2px solid var(--border);
+            z-index: 100;
         }
 
         .header-content {
@@ -75,41 +279,35 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 3px solid var(--primary);
-            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+            border: 3px solid #28a745;
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
             overflow: hidden;
-            padding: 5px;
-            cursor: pointer;
-            position: relative;
+            padding: 8px;
+            flex-shrink: 0;
         }
-
-            .logo:hover {
-                transform: scale(1.05);
-                transition: all 0.3s ease;
-            }
 
             .logo img {
                 width: 100%;
                 height: 100%;
                 object-fit: contain;
-                background: white;
+                display: block;
             }
 
             .logo i {
-                color: var(--primary);
+                color: #28a745;
                 font-size: 1.8rem;
             }
 
         .header-info h1 {
             font-size: 1.5rem;
             font-weight: 800;
-            color: var(--text-primary);
+            color: white;
             margin-bottom: 0.3rem;
         }
 
         .header-info p {
             font-size: 0.95rem;
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .user-avatar {
@@ -120,16 +318,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 3px solid var(--primary);
+            border: 3px solid #28a745;
             overflow: hidden;
-            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
-            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
         }
-
-            .user-avatar:hover {
-                transform: scale(1.05);
-                transition: all 0.3s ease;
-            }
 
             .user-avatar img {
                 width: 100%;
@@ -138,136 +330,8 @@
             }
 
             .user-avatar i {
-                color: var(--primary);
+                color: #28a745;
                 font-size: 1.8rem;
-            }
-
-        .nav-toggle {
-            position: fixed;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border: none;
-            border-radius: 50% 0 0 50%;
-            color: white;
-            font-size: 1.15rem;
-            cursor: pointer;
-            box-shadow: -4px 0 20px rgba(220, 38, 38, 0.5);
-            z-index: 1500;
-            transition: all 0.3s ease;
-        }
-
-            .nav-toggle:hover {
-                width: 56px;
-            }
-
-        .nav-panel {
-            position: fixed;
-            right: -350px;
-            top: 0;
-            width: 320px;
-            height: 100vh;
-            background: var(--card-bg);
-            border-left: 2px solid var(--border);
-            box-shadow: -8px 0 40px rgba(0, 0, 0, 0.8);
-            z-index: 1400;
-            transition: right 0.3s ease;
-            overflow-y: auto;
-            padding: 1.5rem 1rem;
-        }
-
-            .nav-panel.open {
-                right: 0;
-            }
-
-        .nav-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1399;
-            display: none;
-        }
-
-            .nav-overlay.show {
-                display: block;
-            }
-
-        .nav-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .nav-logo {
-            width: 48px;
-            height: 48px;
-            background: white;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-        }
-
-            .nav-logo i {
-                color: var(--primary);
-            }
-
-        .nav-header h3 {
-            font-size: 1.15rem;
-            color: var(--primary);
-            font-weight: 800;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 0.95rem;
-            margin: 0.5rem 0;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-            .nav-item:hover {
-                background: var(--bg-tertiary);
-                border-color: var(--primary);
-                transform: translateX(-5px);
-            }
-
-            .nav-item.active {
-                background: var(--primary);
-                border-color: var(--primary);
-            }
-
-            .nav-item i {
-                font-size: 1.25rem;
-                color: var(--primary);
-                width: 30px;
-                text-align: center;
-            }
-
-            .nav-item.active i,
-            .nav-item.active span {
-                color: white;
-            }
-
-            .nav-item span {
-                font-weight: 600;
-                color: var(--text-secondary);
-                font-size: 0.92rem;
             }
 
         .container {
@@ -277,17 +341,17 @@
         }
 
         .filters-card {
-            background: var(--card-bg);
+            background: white;
             padding: 1.5rem;
             border-radius: 12px;
-            border: 1px solid var(--border);
+            border: 1px solid #d4edda;
             margin-bottom: 1.5rem;
         }
 
         .filters-title {
             font-size: 1.15rem;
             font-weight: 800;
-            color: var(--primary);
+            color: #28a745;
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
@@ -309,16 +373,16 @@
 
             .date-range input {
                 padding: 0.75rem;
-                background: var(--bg-secondary);
-                border: 1px solid var(--border);
+                background: #f8f9fa;
+                border: 1px solid #ddd;
                 border-radius: 10px;
-                color: var(--text-primary);
+                color: #333;
                 font-size: 0.92rem;
             }
 
                 .date-range input:focus {
                     outline: none;
-                    border-color: var(--primary);
+                    border-color: #28a745;
                 }
 
         .form-group {
@@ -329,16 +393,16 @@
 
         .form-label {
             font-weight: 600;
-            color: var(--text-secondary);
+            color: #666;
             font-size: 0.87rem;
         }
 
         .form-select {
             padding: 0.75rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
+            background: #f8f9fa;
+            border: 1px solid #ddd;
             border-radius: 10px;
-            color: var(--text-primary);
+            color: #333;
             font-size: 0.92rem;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -346,12 +410,12 @@
 
             .form-select:focus {
                 outline: none;
-                border-color: var(--primary);
-                box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+                border-color: #28a745;
+                box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
             }
 
             .form-select:hover {
-                border-color: var(--primary);
+                border-color: #28a745;
             }
 
         .btn {
@@ -368,13 +432,13 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            background: linear-gradient(135deg, #28a745, #1e7e34);
             color: white;
         }
 
             .btn-primary:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4);
+                box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
             }
 
         .kpi-grid {
@@ -385,16 +449,17 @@
         }
 
         .kpi-card {
-            background: var(--card-bg);
+            background: white;
             padding: 1.5rem;
             border-radius: 12px;
-            border: 1px solid var(--border);
+            border: 1px solid #d4edda;
             transition: all 0.3s ease;
         }
 
             .kpi-card:hover {
-                border-color: var(--primary);
+                border-color: #28a745;
                 transform: translateY(-3px);
+                box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
             }
 
         .kpi-icon {
@@ -416,7 +481,7 @@
 
         .kpi-label {
             font-size: 0.85rem;
-            color: var(--text-secondary);
+            color: #666;
         }
 
         .charts-grid {
@@ -426,30 +491,28 @@
             margin-bottom: 1.5rem;
         }
 
-      
-
         .chart-card {
-            background: var(--card-bg);
+            background: white;
             border-radius: 12px;
             padding: 1.5rem;
-            border: 1px solid var(--border);
+            border: 1px solid #d4edda;
             transition: all 0.3s ease;
         }
 
             .chart-card:hover {
-                border-color: var(--primary);
+                border-color: #28a745;
             }
 
         .chart-header {
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
-            border-bottom: 2px solid var(--border);
+            border-bottom: 2px solid #e0e0e0;
         }
 
         .chart-title {
             font-size: 1.15rem;
             font-weight: 800;
-            color: var(--primary);
+            color: #28a745;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -475,7 +538,7 @@
             right: 1.6rem;
             padding: 0.95rem 1.4rem;
             border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
             z-index: 3000;
             font-weight: 600;
             display: none;
@@ -489,92 +552,143 @@
             }
 
             .notification.success {
-                background: var(--success);
+                background: #28a745;
                 color: white;
             }
 
             .notification.info {
-                background: var(--info);
+                background: #3B82F6;
                 color: white;
             }
     </style>
 </head>
 <body>
+    <div class="nav-panel-overlay" id="navPanelOverlay" onclick="toggleNavPanel()"></div>
+    <button class="nav-toggle" id="navToggle" onclick="toggleNavPanel()">
+        <i class="fas fa-th-large"></i>
+    </button>
+
+    <div class="nav-panel" id="navPanel">
+        <div class="nav-panel-header">
+            <button class="nav-panel-close" onclick="toggleNavPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="nav-panel-title">Sistema de Bacheo</h3>
+            <p class="nav-panel-subtitle">Navegación Principal</p>
+        </div>
+        <div class="nav-panel-body">
+            <div class="nav-item" onclick="redirectTo('captura')">
+                <div class="nav-item-icon"><i class="fas fa-plus-circle"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Captura</div>
+                    <div class="nav-item-desc">Registro de bacheos</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('programacion')">
+                <div class="nav-item-icon"><i class="fas fa-calendar-alt"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Programación</div>
+                    <div class="nav-item-desc">Horarios y cuadrillas</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('mapa')">
+                <div class="nav-item-icon"><i class="fas fa-map-marked-alt"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Mapa Interactivo</div>
+                    <div class="nav-item-desc">Ubicación de bacheos</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('rastreo')">
+                <div class="nav-item-icon"><i class="fas fa-satellite-dish"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Rastreo GPS</div>
+                    <div class="nav-item-desc">Monitoreo de unidades</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item active">
+                <div class="nav-item-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Dashboard</div>
+                    <div class="nav-item-desc">Estadísticas y reportes</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('reportes')">
+                <div class="nav-item-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Reportes</div>
+                    <div class="nav-item-desc">Incidencias ciudadanas</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('material')">
+                <div class="nav-item-icon"><i class="fas fa-toolbox"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Material Utilizado</div>
+                    <div class="nav-item-desc">Control de inventario</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('asistencia')">
+                <div class="nav-item-icon"><i class="fas fa-user-check"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Asistencia</div>
+                    <div class="nav-item-desc">Control de personal</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('repositorio')">
+                <div class="nav-item-icon"><i class="fas fa-id-card"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Repositorio Vehicular</div>
+                    <div class="nav-item-desc">Gestión de unidades</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('citas')">
+                <div class="nav-item-icon"><i class="fas fa-wrench"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Citas Mantenimiento</div>
+                    <div class="nav-item-desc">Agendar servicios</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('oficios')">
+                <div class="nav-item-icon"><i class="fas fa-file-invoice"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Oficios a Almacén</div>
+                    <div class="nav-item-desc">Envío de solicitudes</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+        </div>
+    </div>
+
     <header class="header">
         <div class="header-content">
             <div class="logo-section">
                 <div class="logo-container">
-                    <div class="logo" onclick="document.getElementById('logoInput1').click()">
-                        <i class="fas fa-road" id="logoIcon1"></i>
-                        <img id="logoImg1" style="display: none;">
+                    <div class="logo">
+                        <img src="/imagenes/Bacheo.png" alt="Bacheo" onerror="this.parentElement.innerHTML='<i class=\'fas fa-road\'></i>'">
                     </div>
-                    <div class="logo" onclick="document.getElementById('logoInput2').click()">
-                        <i class="fas fa-landmark" id="logoIcon2"></i>
-                        <img id="logoImg2" style="display: none;">
+                    <div class="logo">
+                        <img src="/imagenes/LOGO.png" alt="Gobierno" onerror="this.parentElement.innerHTML='<i class=\'fas fa-landmark\'></i>'">
                     </div>
                 </div>
                 <div class="header-info">
-                    <h1>Dashboard Analítico Bacheo</h1>
+                    <h1>Dashboard Analítico - Servicios Primarios</h1>
                     <p>Municipio de Monclova, Coahuila</p>
                 </div>
             </div>
-            <div class="user-avatar" onclick="document.getElementById('avatarInput').click()">
-                <i class="fas fa-user-cog" id="avatarIcon"></i>
-                <img id="avatarImg" style="display: none;">
+            <div class="user-avatar">
+                <img src="/images/usuario.jpg" alt="Usuario" onerror="this.parentElement.innerHTML='<i class=\'fas fa-user-cog\'></i>'">
             </div>
         </div>
     </header>
-
-    <input type="file" id="logoInput1" accept="image/*" style="display: none;">
-    <input type="file" id="logoInput2" accept="image/*" style="display: none;">
-    <input type="file" id="avatarInput" accept="image/*" style="display: none;">
-
-    <div class="nav-overlay" id="navOverlay"></div>
-
-    <button class="nav-toggle" id="navToggle">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <div class="nav-panel" id="navPanel">
-        <div class="nav-header">
-            <div class="nav-logo">
-                <i class="fas fa-chart-line"></i>
-            </div>
-            <h3>Navegación</h3>
-        </div>
-        <div class="nav-item" data-section="captura">
-            <i class="fas fa-edit"></i>
-            <span>Captura</span>
-        </div>
-        <div class="nav-item" data-section="mapa">
-            <i class="fas fa-map-marked-alt"></i>
-            <span>Mapa</span>
-        </div>
-        <div class="nav-item" data-section="rastreo">
-            <i class="fas fa-search-location"></i>
-            <span>Rastreo</span>
-        </div>
-        <div class="nav-item active" data-section="dashboard">
-            <i class="fas fa-chart-line"></i>
-            <span>Dashboard</span>
-        </div>
-        <div class="nav-item" data-section="reportes">
-            <i class="fas fa-file-alt"></i>
-            <span>Reportes</span>
-        </div>
-        <div class="nav-item" data-section="material">
-            <i class="fas fa-boxes"></i>
-            <span>Material</span>
-        </div>
-        <div class="nav-item" data-section="asistencia">
-            <i class="fas fa-users"></i>
-            <span>Asistencia</span>
-        </div>
-        <div class="nav-item" data-section="programacion">
-            <i class="fas fa-calendar-alt"></i>
-            <span>Programación</span>
-        </div>
-    </div>
 
     <div class="container">
         <div class="filters-card">
@@ -595,21 +709,15 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Sector</label>
-                    <select class="form-select" id="filterSector">
-                        <option value="">Todos</option>
-                    </select>
+                    <select class="form-select" id="filterSector"><option value="">Todos</option></select>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Colonia</label>
-                    <select class="form-select" id="filterColonia">
-                        <option value="">Todas</option>
-                    </select>
+                    <select class="form-select" id="filterColonia"><option value="">Todas</option></select>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Camión</label>
-                    <select class="form-select" id="filterCamion">
-                        <option value="">Todos</option>
-                    </select>
+                    <select class="form-select" id="filterCamion"><option value="">Todos</option></select>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Período</label>
@@ -624,26 +732,21 @@
                 <div class="form-group" id="customDateRange" style="display: none;">
                     <label class="form-label">Rango de Fechas</label>
                     <div class="date-range">
-                        <input type="date" id="fechaInicio" class="form-input">
-                        <input type="date" id="fechaFin" class="form-input">
+                        <input type="date" id="fechaInicio">
+                        <input type="date" id="fechaFin">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Mes</label>
-                    <select class="form-select" id="filterMes">
-                        <option value="">Todos</option>
-                    </select>
+                    <select class="form-select" id="filterMes"><option value="">Todos</option></select>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Año</label>
-                    <select class="form-select" id="filterAnio">
-                        <option value="">Todos</option>
-                    </select>
+                    <select class="form-select" id="filterAnio"><option value="">Todos</option></select>
                 </div>
                 <div class="form-group" style="display: flex; align-items: flex-end;">
                     <button class="btn btn-primary" onclick="resetFilters()" style="width: 100%;">
-                        <i class="fas fa-redo"></i>
-                        Resetear
+                        <i class="fas fa-redo"></i> Resetear
                     </button>
                 </div>
             </div>
@@ -651,144 +754,83 @@
 
         <div class="kpi-grid">
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: rgba(220, 38, 38, 0.2);">
-                    <i class="fas fa-clipboard-list" style="color: var(--primary);"></i>
-                </div>
-                <div class="kpi-value" style="color: var(--primary);" id="totalRegistros">0</div>
+                <div class="kpi-icon" style="background: rgba(40, 167, 69, 0.2);"><i class="fas fa-clipboard-list" style="color: #28a745;"></i></div>
+                <div class="kpi-value" style="color: #28a745;" id="totalRegistros">0</div>
                 <div class="kpi-label">Total Registros</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.2);">
-                    <i class="fas fa-ruler-combined" style="color: var(--success);"></i>
-                </div>
-                <div class="kpi-value" style="color: var(--success);" id="areaTotal">0</div>
+                <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.2);"><i class="fas fa-ruler-combined" style="color: #10B981;"></i></div>
+                <div class="kpi-value" style="color: #10B981;" id="areaTotal">0</div>
                 <div class="kpi-label">Área Total (m²)</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: rgba(220, 38, 38, 0.2);">
-                    <i class="fas fa-road" style="color: var(--primary);"></i>
-                </div>
-                <div class="kpi-value" style="color: var(--primary);" id="totalBacheo">0</div>
+                <div class="kpi-icon" style="background: rgba(59, 130, 246, 0.2);"><i class="fas fa-fill-drip" style="color: #3B82F6;"></i></div>
+                <div class="kpi-value" style="color: #3B82F6;" id="totalLiga">0</div>
+                <div class="kpi-label">Liga Total (L)</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.2);"><i class="fas fa-calculator" style="color: #F59E0B;"></i></div>
+                <div class="kpi-value" style="color: #F59E0B;" id="promedioLiga">0</div>
+                <div class="kpi-label">Promedio Liga (L)</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon" style="background: rgba(40, 167, 69, 0.2);"><i class="fas fa-road" style="color: #28a745;"></i></div>
+                <div class="kpi-value" style="color: #28a745;" id="totalBacheo">0</div>
                 <div class="kpi-label">Bacheo</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.2);">
-                    <i class="fas fa-layer-group" style="color: var(--warning);"></i>
-                </div>
-                <div class="kpi-value" style="color: var(--warning);" id="totalBordos">0</div>
+                <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.2);"><i class="fas fa-layer-group" style="color: #F59E0B;"></i></div>
+                <div class="kpi-value" style="color: #F59E0B;" id="totalBordos">0</div>
                 <div class="kpi-label">Bordos</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.2);">
-                    <i class="fas fa-water" style="color: var(--success);"></i>
-                </div>
-                <div class="kpi-value" style="color: var(--success);" id="totalSimas">0</div>
+                <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.2);"><i class="fas fa-water" style="color: #10B981;"></i></div>
+                <div class="kpi-value" style="color: #10B981;" id="totalSimas">0</div>
                 <div class="kpi-label">SIMAS</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: rgba(59, 130, 246, 0.2);">
-                    <i class="fas fa-truck" style="color: var(--info);"></i>
-                </div>
-                <div class="kpi-value" style="color: var(--info);" id="camionesActivos">0</div>
+                <div class="kpi-icon" style="background: rgba(59, 130, 246, 0.2);"><i class="fas fa-truck" style="color: #3B82F6;"></i></div>
+                <div class="kpi-value" style="color: #3B82F6;" id="camionesActivos">0</div>
                 <div class="kpi-label">Camiones Activos</div>
             </div>
         </div>
 
         <div class="charts-grid">
             <div class="chart-card">
-                <div class="chart-header">
-                    <h3 class="chart-title">
-                        <i class="fas fa-chart-pie"></i>
-                        Trabajos por Tipo
-                    </h3>
-                </div>
-                <div class="chart-wrapper">
-                    <canvas id="tipoChart"></canvas>
-                </div>
+                <div class="chart-header"><h3 class="chart-title"><i class="fas fa-chart-pie"></i> Trabajos por Tipo</h3></div>
+                <div class="chart-wrapper"><canvas id="tipoChart"></canvas></div>
             </div>
-
             <div class="chart-card">
-                <div class="chart-header">
-                    <h3 class="chart-title">
-                        <i class="fas fa-map-marked-alt"></i>
-                        Top 5 Sectores
-                    </h3>
-                </div>
-                <div class="chart-wrapper">
-                    <canvas id="sectoresChart"></canvas>
-                </div>
+                <div class="chart-header"><h3 class="chart-title"><i class="fas fa-fill-drip"></i> Consumo de Liga por Tipo</h3></div>
+                <div class="chart-wrapper"><canvas id="ligaChart"></canvas></div>
             </div>
-
             <div class="chart-card">
-                <div class="chart-header">
-                    <h3 class="chart-title">
-                        <i class="fas fa-building"></i>
-                        Top 5 Colonias
-                    </h3>
-                </div>
-                <div class="chart-wrapper">
-                    <canvas id="coloniasChart"></canvas>
-                </div>
+                <div class="chart-header"><h3 class="chart-title"><i class="fas fa-chart-line"></i> Liga Diaria (Últimos 7 días)</h3></div>
+                <div class="chart-wrapper"><canvas id="ligaDiariaChart"></canvas></div>
             </div>
-
             <div class="chart-card">
-                <div class="chart-header">
-                    <h3 class="chart-title">
-                        <i class="fas fa-truck-moving"></i>
-                        Rendimiento por Camión
-                    </h3>
-                </div>
-                <div class="chart-wrapper">
-                    <canvas id="camionesChart"></canvas>
-                </div>
+                <div class="chart-header"><h3 class="chart-title"><i class="fas fa-map-marked-alt"></i> Top 5 Sectores</h3></div>
+                <div class="chart-wrapper"><canvas id="sectoresChart"></canvas></div>
             </div>
-
             <div class="chart-card">
-                <div class="chart-header">
-                    <h3 class="chart-title">
-                        <i class="fas fa-users"></i>
-                        Asistencia del Personal
-                    </h3>
-                </div>
-                <div class="chart-wrapper">
-                    <canvas id="asistenciaChart"></canvas>
-                </div>
+                <div class="chart-header"><h3 class="chart-title"><i class="fas fa-building"></i> Top 5 Colonias</h3></div>
+                <div class="chart-wrapper"><canvas id="coloniasChart"></canvas></div>
             </div>
-
             <div class="chart-card">
-                <div class="chart-header">
-                    <h3 class="chart-title">
-                        <i class="fas fa-calendar-week"></i>
-                        Producción Semanal
-                    </h3>
-                </div>
-                <div class="chart-wrapper">
-                    <canvas id="semanalChart"></canvas>
-                </div>
+                <div class="chart-header"><h3 class="chart-title"><i class="fas fa-truck-moving"></i> Rendimiento por Camión</h3></div>
+                <div class="chart-wrapper"><canvas id="camionesChart"></canvas></div>
             </div>
-
             <div class="chart-card">
-                <div class="chart-header">
-                    <h3 class="chart-title">
-                        <i class="fas fa-chart-line"></i>
-                        Tendencia Mensual
-                    </h3>
-                </div>
-                <div class="chart-wrapper">
-                    <canvas id="tendenciaChart"></canvas>
-                </div>
+                <div class="chart-header"><h3 class="chart-title"><i class="fas fa-calendar-week"></i> Producción Semanal</h3></div>
+                <div class="chart-wrapper"><canvas id="semanalChart"></canvas></div>
             </div>
-
             <div class="chart-card">
-                <div class="chart-header">
-                    <h3 class="chart-title">
-                        <i class="fas fa-percentage"></i>
-                        Distribución de Área por Tipo
-                    </h3>
-                </div>
-                <div class="chart-wrapper">
-                    <canvas id="areaChart"></canvas>
-                </div>
+                <div class="chart-header"><h3 class="chart-title"><i class="fas fa-chart-line"></i> Tendencia Mensual</h3></div>
+                <div class="chart-wrapper"><canvas id="tendenciaChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header"><h3 class="chart-title"><i class="fas fa-percentage"></i> Distribución de Área por Tipo</h3></div>
+                <div class="chart-wrapper"><canvas id="areaChart"></canvas></div>
             </div>
         </div>
     </div>
@@ -798,34 +840,11 @@
         <span id="notificationText"></span>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script>
-        let allRecords = [];
-        let filteredRecords = [];
-        let personalAsistencia = [];
+        let allRecords = [], filteredRecords = [], navPanelOpen = false;
         const charts = {};
 
-        const empleados = [
-            { id: 1, numero: '3298', nombre: 'MANUEL DE JESUS GARCIA RIVAS', dept: 'operativo' },
-            { id: 2, numero: '8210', nombre: 'LUIS MIGUEL GARCIA SIFUENTES', dept: 'operativo' },
-            { id: 3, numero: '7691', nombre: 'ERASMO GARCIA SIFUENTES', dept: 'operativo' },
-            { id: 4, numero: '3220', nombre: 'MAURO ARTURO CABRERA ESPARZA', dept: 'operativo' },
-            { id: 5, numero: '4578', nombre: 'MANUEL DE JESUS GARCIA FLORES', dept: 'operativo' },
-            { id: 6, numero: '5303', nombre: 'SALVADOR GUERRA MARTINEZ', dept: 'operativo' },
-            { id: 7, numero: '7344', nombre: 'OLIVERIO TORRES HERNANDEZ', dept: 'operativo' },
-            { id: 8, numero: '3114', nombre: 'JESUS DUQUE RODRIGUEZ', dept: 'operativo' },
-            { id: 9, numero: '8844', nombre: 'JAIME DE LA GARZA GUERRERO', dept: 'supervisores' },
-            { id: 10, numero: '11013', nombre: 'LEONARDO IBARRA LARA', dept: 'operativo' },
-            { id: 11, numero: '11001', nombre: 'WILIVALDO DAVID SANCHEZ LOPEZ', dept: 'operativo' },
-            { id: 12, numero: '11002', nombre: 'JOSE CRUZ FLORES SANCHEZ', dept: 'operativo' },
-            { id: 13, numero: '11308', nombre: 'ERICK ALEJANDRO VILLARREAL RAMIREZ', dept: 'operativo' }
-        ];
-
-        document.addEventListener('DOMContentLoaded', function() {
-            init();
-            setupImageUploads();
-            loadSavedImages();
-        });
+        document.addEventListener('DOMContentLoaded', init);
 
         function init() {
             setupEventListeners();
@@ -834,121 +853,55 @@
             applyFilters();
         }
 
-        function setupImageUploads() {
-            document.getElementById('logoInput1').addEventListener('change', function(e) {
-                handleImageUpload(e, 'logoImg1', 'logoIcon1', 'logo1');
-            });
-            document.getElementById('logoInput2').addEventListener('change', function(e) {
-                handleImageUpload(e, 'logoImg2', 'logoIcon2', 'logo2');
-            });
-            document.getElementById('avatarInput').addEventListener('change', function(e) {
-                handleImageUpload(e, 'avatarImg', 'avatarIcon', 'avatar');
-            });
-        }
-
-        function handleImageUpload(e, imgId, iconId, storageKey) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const imgElement = document.getElementById(imgId);
-                const iconElement = document.getElementById(iconId);
-
-                imgElement.src = event.target.result;
-                imgElement.style.display = 'block';
-                iconElement.style.display = 'none';
-
-                localStorage.setItem('dashboard_' + storageKey, event.target.result);
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function loadSavedImages() {
-            const logo1 = localStorage.getItem('dashboard_logo1');
-            if (logo1) {
-                document.getElementById('logoImg1').src = logo1;
-                document.getElementById('logoImg1').style.display = 'block';
-                document.getElementById('logoIcon1').style.display = 'none';
-            }
-
-            const logo2 = localStorage.getItem('dashboard_logo2');
-            if (logo2) {
-                document.getElementById('logoImg2').src = logo2;
-                document.getElementById('logoImg2').style.display = 'block';
-                document.getElementById('logoIcon2').style.display = 'none';
-            }
-
-            const avatar = localStorage.getItem('dashboard_avatar');
-            if (avatar) {
-                document.getElementById('avatarImg').src = avatar;
-                document.getElementById('avatarImg').style.display = 'block';
-                document.getElementById('avatarIcon').style.display = 'none';
-            }
-        }
-
-        function setupEventListeners() {
-            document.getElementById('navToggle').addEventListener('click', toggleNav);
-            document.getElementById('navOverlay').addEventListener('click', closeNav);
-
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(function(item) {
-                item.addEventListener('click', function() {
-                    const section = this.getAttribute('data-section');
-                    handleNavigation(section);
-                });
-            });
-
-            document.getElementById('filterTipo').addEventListener('change', applyFilters);
-            document.getElementById('filterSector').addEventListener('change', applyFilters);
-            document.getElementById('filterColonia').addEventListener('change', applyFilters);
-            document.getElementById('filterCamion').addEventListener('change', applyFilters);
-            document.getElementById('filterPeriodo').addEventListener('change', function() {
-                const customRange = document.getElementById('customDateRange');
-                if (this.value === 'custom') {
-                    customRange.style.display = 'block';
-                } else {
-                    customRange.style.display = 'none';
-                }
-                applyFilters();
-            });
-            document.getElementById('filterMes').addEventListener('change', applyFilters);
-            document.getElementById('filterAnio').addEventListener('change', applyFilters);
-            document.getElementById('fechaInicio').addEventListener('change', applyFilters);
-            document.getElementById('fechaFin').addEventListener('change', applyFilters);
-        }
-
-        function toggleNav() {
+        function toggleNavPanel() {
             const navPanel = document.getElementById('navPanel');
-            const navOverlay = document.getElementById('navOverlay');
-            navPanel.classList.toggle('open');
-            navOverlay.classList.toggle('show');
+            const overlay = document.getElementById('navPanelOverlay');
+            const toggleBtn = document.getElementById('navToggle');
+            navPanelOpen = !navPanelOpen;
+            if (navPanelOpen) {
+                navPanel.classList.add('open');
+                overlay.classList.add('active');
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '<i class="fas fa-times"></i>';
+                document.body.style.overflow = 'hidden';
+            } else {
+                navPanel.classList.remove('open');
+                overlay.classList.remove('active');
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '<i class="fas fa-th-large"></i>';
+                document.body.style.overflow = '';
+            }
         }
 
-        function closeNav() {
-            const navPanel = document.getElementById('navPanel');
-            const navOverlay = document.getElementById('navOverlay');
-            navPanel.classList.remove('open');
-            navOverlay.classList.remove('show');
-        }
-
-        function handleNavigation(section) {
-            const routes = {
+        function redirectTo(module) {
+            if (navPanelOpen) toggleNavPanel();
+            const urls = {
                 'captura': '/Home/CapturaBacheo',
+                'programacion': '/Home/ProgramacionBacheo',
                 'mapa': '/Home/MapaBacheo',
                 'rastreo': '/Home/RastreoBacheo',
                 'dashboard': '/Home/DashboardBacheo',
                 'reportes': '/Home/ReportesBacheo',
                 'material': '/Home/MaterialUtilizadoBacheo',
                 'asistencia': '/Home/AsistenciaPersonalBacheo',
-                'programacion': '/Home/ProgramacionBacheo'
+                'repositorio': '/Home/RepositorioPlacasBacheo',
+                'citas': '/Home/AgendarCitasMantenimiento',
+                'oficios': '/Home/EnviarOficiosAlmacenBacheo'
             };
-
-            const route = routes[section];
-            if (route) {
-                showNotification('Navegando a ' + section, 'info');
-                closeNav();
+            if (urls[module]) {
+                showNotification('Navegando a ' + module, 'info');
+                setTimeout(() => window.location.href = urls[module], 800);
             }
+        }
+
+        function setupEventListeners() {
+            ['filterTipo', 'filterSector', 'filterColonia', 'filterCamion', 'filterMes', 'filterAnio', 'fechaInicio', 'fechaFin'].forEach(id => {
+                document.getElementById(id).addEventListener('change', applyFilters);
+            });
+            document.getElementById('filterPeriodo').addEventListener('change', function() {
+                document.getElementById('customDateRange').style.display = this.value === 'custom' ? 'block' : 'none';
+                applyFilters();
+            });
         }
 
         function loadRecords() {
@@ -956,7 +909,6 @@
             if (saved) {
                 allRecords = JSON.parse(saved);
             }
-
             if (allRecords.length === 0) {
                 generateSampleData();
             }
@@ -971,15 +923,21 @@
             for (let i = 0; i < 120; i++) {
                 const date = new Date();
                 date.setDate(date.getDate() - Math.floor(Math.random() * 90));
+                const tipo = tipos[Math.floor(Math.random() * tipos.length)];
+                const area = parseFloat((Math.random() * 50 + 10).toFixed(2));
+                const factor = tipo !== 'SIMAS' ? 0.5 : 0;
+                const liga = tipo !== 'SIMAS' ? parseFloat((area * factor).toFixed(2)) : 0;
 
                 allRecords.push({
                     id: i + 1,
-                    type: tipos[Math.floor(Math.random() * tipos.length)],
+                    type: tipo,
                     sector: sectores[Math.floor(Math.random() * sectores.length)],
                     date: date.toISOString().split('T')[0],
                     colony: colonias[Math.floor(Math.random() * colonias.length)],
                     truck: camiones[Math.floor(Math.random() * camiones.length)],
-                    area: (Math.random() * 50 + 10).toFixed(2)
+                    area: area,
+                    factorLiga: factor,
+                    ligaLitros: liga
                 });
             }
         }
@@ -989,25 +947,17 @@
             const colonias = [...new Set(allRecords.map(r => r.colony))].sort();
             const camiones = [...new Set(allRecords.map(r => r.truck))].sort();
 
-            document.getElementById('filterSector').innerHTML = '<option value="">Todos</option>' +
-                sectores.map(s => '<option value="' + s + '">Sector ' + s + '</option>').join('');
-
-            document.getElementById('filterColonia').innerHTML = '<option value="">Todas</option>' +
-                colonias.map(c => '<option value="' + c + '">' + c + '</option>').join('');
-
-            document.getElementById('filterCamion').innerHTML = '<option value="">Todos</option>' +
-                camiones.map(c => '<option value="' + c + '">Camión ' + c + '</option>').join('');
+            document.getElementById('filterSector').innerHTML = '<option value="">Todos</option>' + sectores.map(s => '<option value="' + s + '">Sector ' + s + '</option>').join('');
+            document.getElementById('filterColonia').innerHTML = '<option value="">Todas</option>' + colonias.map(c => '<option value="' + c + '">' + c + '</option>').join('');
+            document.getElementById('filterCamion').innerHTML = '<option value="">Todos</option>' + camiones.map(c => '<option value="' + c + '">Camión ' + c + '</option>').join('');
 
             const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            document.getElementById('filterMes').innerHTML = '<option value="">Todos</option>' +
-                meses.map((m, i) => '<option value="' + (i + 1) + '">' + m + '</option>').join('');
+            document.getElementById('filterMes').innerHTML = '<option value="">Todos</option>' + meses.map((m, i) => '<option value="' + (i + 1) + '">' + m + '</option>').join('');
 
             const anios = [...new Set(allRecords.map(r => new Date(r.date).getFullYear()))].sort().reverse();
-            document.getElementById('filterAnio').innerHTML = '<option value="">Todos</option>' +
-                anios.map(a => '<option value="' + a + '">' + a + '</option>').join('');
+            document.getElementById('filterAnio').innerHTML = '<option value="">Todos</option>' + anios.map(a => '<option value="' + a + '">' + a + '</option>').join('');
 
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('fechaFin').value = today;
+            document.getElementById('fechaFin').value = new Date().toISOString().split('T')[0];
         }
 
         function applyFilters() {
@@ -1021,47 +971,34 @@
             const fechaInicio = document.getElementById('fechaInicio').value;
             const fechaFin = document.getElementById('fechaFin').value;
 
-            filteredRecords = allRecords.filter(function(r) {
+            filteredRecords = allRecords.filter(r => {
                 let pass = true;
-
                 if (tipo && r.type !== tipo) pass = false;
                 if (sector && r.sector !== sector) pass = false;
                 if (colonia && r.colony !== colonia) pass = false;
                 if (camion && r.truck !== camion) pass = false;
 
                 const recordDate = new Date(r.date);
-                const recordMonth = recordDate.getMonth() + 1;
-                const recordYear = recordDate.getFullYear();
-
-                if (mes && recordMonth !== parseInt(mes)) pass = false;
-                if (anio && recordYear !== parseInt(anio)) pass = false;
+                if (mes && recordDate.getMonth() + 1 !== parseInt(mes)) pass = false;
+                if (anio && recordDate.getFullYear() !== parseInt(anio)) pass = false;
 
                 if (periodo === 'custom') {
                     if (fechaInicio && r.date < fechaInicio) pass = false;
                     if (fechaFin && r.date > fechaFin) pass = false;
                 } else if (periodo !== 'all') {
-                    const days = parseInt(periodo);
-                    const date = new Date(r.date);
-                    const now = new Date();
-                    const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-                    if (diffDays > days) pass = false;
+                    const diffDays = Math.floor((new Date() - recordDate) / (1000 * 60 * 60 * 24));
+                    if (diffDays > parseInt(periodo)) pass = false;
                 }
-
                 return pass;
             });
-
             updateDashboard();
         }
 
         function resetFilters() {
-            document.getElementById('filterTipo').value = '';
-            document.getElementById('filterSector').value = '';
-            document.getElementById('filterColonia').value = '';
-            document.getElementById('filterCamion').value = '';
+            ['filterTipo', 'filterSector', 'filterColonia', 'filterCamion', 'filterMes', 'filterAnio', 'fechaInicio'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
             document.getElementById('filterPeriodo').value = 'all';
-            document.getElementById('filterMes').value = '';
-            document.getElementById('filterAnio').value = '';
-            document.getElementById('fechaInicio').value = '';
             document.getElementById('fechaFin').value = new Date().toISOString().split('T')[0];
             document.getElementById('customDateRange').style.display = 'none';
             applyFilters();
@@ -1075,31 +1012,25 @@
 
         function updateKPIs() {
             document.getElementById('totalRegistros').textContent = filteredRecords.length;
-
-            const area = filteredRecords.reduce(function(sum, r) {
-                return sum + parseFloat(r.area || 0);
-            }, 0);
+            const area = filteredRecords.reduce((s, r) => s + parseFloat(r.area || 0), 0);
             document.getElementById('areaTotal').textContent = area.toFixed(0);
-
-            const bacheo = filteredRecords.filter(function(r) { return r.type === 'BACHEO'; }).length;
-            document.getElementById('totalBacheo').textContent = bacheo;
-
-            const bordos = filteredRecords.filter(function(r) { return r.type === 'BORDO'; }).length;
-            document.getElementById('totalBordos').textContent = bordos;
-
-            const simas = filteredRecords.filter(function(r) { return r.type === 'SIMAS'; }).length;
-            document.getElementById('totalSimas').textContent = simas;
-
-            const camiones = new Set(filteredRecords.map(function(r) { return r.truck; }));
-            document.getElementById('camionesActivos').textContent = camiones.size;
+            const totalLiga = filteredRecords.reduce((s, r) => s + parseFloat(r.ligaLitros || 0), 0);
+            document.getElementById('totalLiga').textContent = totalLiga.toFixed(0);
+            const conLiga = filteredRecords.filter(r => r.ligaLitros > 0).length;
+            document.getElementById('promedioLiga').textContent = conLiga > 0 ? (totalLiga / conLiga).toFixed(1) : '0';
+            document.getElementById('totalBacheo').textContent = filteredRecords.filter(r => r.type === 'BACHEO').length;
+            document.getElementById('totalBordos').textContent = filteredRecords.filter(r => r.type === 'BORDO').length;
+            document.getElementById('totalSimas').textContent = filteredRecords.filter(r => r.type === 'SIMAS').length;
+            document.getElementById('camionesActivos').textContent = new Set(filteredRecords.map(r => r.truck)).size;
         }
 
         function updateCharts() {
             createTipoChart();
+            createLigaChart();
+            createLigaDiariaChart();
             createSectoresChart();
             createColoniasChart();
             createCamionesChart();
-            createAsistenciaChart();
             createSemanalChart();
             createTendenciaChart();
             createAreaChart();
@@ -1107,27 +1038,18 @@
 
         function createTipoChart() {
             const data = {};
-            filteredRecords.forEach(function(r) {
-                data[r.type] = (data[r.type] || 0) + 1;
-            });
-
+            filteredRecords.forEach(r => data[r.type] = (data[r.type] || 0) + 1);
             const ctx = document.getElementById('tipoChart');
             if (charts.tipo) charts.tipo.destroy();
-
             charts.tipo = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: Object.keys(data),
                     datasets: [{
                         data: Object.values(data),
-                        backgroundColor: [
-                            'rgba(220, 38, 38, 0.9)',
-                            'rgba(245, 158, 11, 0.9)',
-                            'rgba(59, 130, 246, 0.9)',
-                            'rgba(16, 185, 129, 0.9)'
-                        ],
+                        backgroundColor: ['rgba(40, 167, 69, 0.9)', 'rgba(245, 158, 11, 0.9)', 'rgba(59, 130, 246, 0.9)', 'rgba(16, 185, 129, 0.9)'],
                         borderWidth: 4,
-                        borderColor: '#1F1F1F'
+                        borderColor: '#ffffff'
                     }]
                 },
                 options: {
@@ -1137,44 +1059,30 @@
                     plugins: {
                         legend: {
                             position: 'bottom',
-                            labels: {
-                                color: '#B3B3B3',
-                                padding: 20,
-                                font: { size: 14, weight: '600' }
-                            }
+                            labels: { color: '#666', padding: 20, font: { size: 14, weight: '600' } }
                         }
                     }
                 }
             });
         }
 
-        function createSectoresChart() {
-            const data = {};
-            filteredRecords.forEach(function(r) {
-                data[r.sector] = (data[r.sector] || 0) + parseFloat(r.area || 0);
+        function createLigaChart() {
+            const ligaPorTipo = {};
+            filteredRecords.forEach(r => {
+                if (r.ligaLitros && r.ligaLitros > 0) {
+                    ligaPorTipo[r.type] = (ligaPorTipo[r.type] || 0) + parseFloat(r.ligaLitros);
+                }
             });
-
-            const sorted = Object.entries(data)
-                .sort(function(a, b) { return b[1] - a[1]; })
-                .slice(0, 5);
-
-            const ctx = document.getElementById('sectoresChart');
-            if (charts.sectores) charts.sectores.destroy();
-
-            charts.sectores = new Chart(ctx, {
+            const ctx = document.getElementById('ligaChart');
+            if (charts.liga) charts.liga.destroy();
+            charts.liga = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: sorted.map(function(s) { return 'Sector ' + s[0]; }),
+                    labels: Object.keys(ligaPorTipo),
                     datasets: [{
-                        label: 'Área (m²)',
-                        data: sorted.map(function(s) { return s[1].toFixed(0); }),
-                        backgroundColor: [
-                            'rgba(220, 38, 38, 0.9)',
-                            'rgba(245, 158, 11, 0.9)',
-                            'rgba(59, 130, 246, 0.9)',
-                            'rgba(16, 185, 129, 0.9)',
-                            'rgba(168, 85, 247, 0.9)'
-                        ],
+                        label: 'Liga (Litros)',
+                        data: Object.values(ligaPorTipo).map(v => v.toFixed(0)),
+                        backgroundColor: ['rgba(40, 167, 69, 0.9)', 'rgba(245, 158, 11, 0.9)', 'rgba(59, 130, 246, 0.9)'],
                         borderWidth: 0
                     }]
                 },
@@ -1182,214 +1090,36 @@
                     responsive: true,
                     maintainAspectRatio: true,
                     aspectRatio: 1.3,
-                    plugins: {
-                        legend: { display: false }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { color: '#B3B3B3', font: { size: 12 } },
-                            grid: { color: '#333333' }
-                        },
-                        x: {
-                            ticks: { color: '#B3B3B3', font: { size: 12 } },
-                            grid: { display: false }
-                        }
+                        y: { beginAtZero: true, ticks: { color: '#666', font: { size: 12 } }, grid: { color: '#e0e0e0' } },
+                        x: { ticks: { color: '#666', font: { size: 12 } }, grid: { display: false } }
                     }
                 }
             });
         }
 
-        function createColoniasChart() {
-            const data = {};
-            filteredRecords.forEach(function(r) {
-                data[r.colony] = (data[r.colony] || 0) + 1;
-            });
-
-            const sorted = Object.entries(data)
-                .sort(function(a, b) { return b[1] - a[1]; })
-                .slice(0, 5);
-
-            const ctx = document.getElementById('coloniasChart');
-            if (charts.colonias) charts.colonias.destroy();
-
-            charts.colonias = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: sorted.map(function(c) { return c[0]; }),
-                    datasets: [{
-                        data: sorted.map(function(c) { return c[1]; }),
-                        backgroundColor: [
-                            'rgba(16, 185, 129, 0.9)',
-                            'rgba(59, 130, 246, 0.9)',
-                            'rgba(245, 158, 11, 0.9)',
-                            'rgba(220, 38, 38, 0.9)',
-                            'rgba(168, 85, 247, 0.9)'
-                        ],
-                        borderWidth: 4,
-                        borderColor: '#1F1F1F'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    aspectRatio: 1.3,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: '#B3B3B3',
-                                padding: 20,
-                                font: { size: 13, weight: '600' }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function createCamionesChart() {
-            const data = {};
-            filteredRecords.forEach(function(r) {
-                data[r.truck] = (data[r.truck] || 0) + parseFloat(r.area || 0);
-            });
-
-            const sorted = Object.entries(data)
-                .sort(function(a, b) { return b[1] - a[1]; })
-                .slice(0, 5);
-
-            const ctx = document.getElementById('camionesChart');
-            if (charts.camiones) charts.camiones.destroy();
-
-            charts.camiones = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: sorted.map(function(c) { return 'Camión ' + c[0]; }),
-                    datasets: [{
-                        label: 'Área (m²)',
-                        data: sorted.map(function(c) { return c[1].toFixed(0); }),
-                        backgroundColor: [
-                            'rgba(245, 158, 11, 0.9)',
-                            'rgba(16, 185, 129, 0.9)',
-                            'rgba(220, 38, 38, 0.9)',
-                            'rgba(59, 130, 246, 0.9)',
-                            'rgba(168, 85, 247, 0.9)'
-                        ],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    aspectRatio: 1.3,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { color: '#B3B3B3', font: { size: 12 } },
-                            grid: { color: '#333333' }
-                        },
-                        x: {
-                            ticks: { color: '#B3B3B3', font: { size: 12 } },
-                            grid: { display: false }
-                        }
-                    }
-                }
-            });
-        }
-
-        function showNotification(message, type) {
-            const notification = document.getElementById('notification');
-            const text = document.getElementById('notificationText');
-            const icon = notification.querySelector('i');
-
-            if (type === 'success') {
-                icon.className = 'fas fa-check-circle';
-            } else {
-                icon.className = 'fas fa-info-circle';
-            }
-
-            notification.className = 'notification ' + type + ' show';
-            text.textContent = message;
-
-            setTimeout(function() {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-
-        function createAsistenciaChart() {
-            const presentes = Math.floor(empleados.length * 0.85);
-            const ausentes = Math.floor(empleados.length * 0.08);
-            const permisos = Math.floor(empleados.length * 0.05);
-            const retardos = empleados.length - presentes - ausentes - permisos;
-
-            const ctx = document.getElementById('asistenciaChart');
-            if (charts.asistencia) charts.asistencia.destroy();
-
-            charts.asistencia = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Presentes', 'Ausentes', 'Permisos', 'Retardos'],
-                    datasets: [{
-                        data: [presentes, ausentes, permisos, retardos],
-                        backgroundColor: [
-                            'rgba(16, 185, 129, 0.9)',
-                            'rgba(239, 68, 68, 0.9)',
-                            'rgba(59, 130, 246, 0.9)',
-                            'rgba(245, 158, 11, 0.9)'
-                        ],
-                        borderWidth: 4,
-                        borderColor: '#1F1F1F'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    aspectRatio: 1.3,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: '#B3B3B3',
-                                padding: 20,
-                                font: { size: 14, weight: '600' }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        function createSemanalChart() {
-            const last7Days = [];
-            const areas = [];
-
+        function createLigaDiariaChart() {
+            const last7Days = [], ligas = [];
             for (let i = 6; i >= 0; i--) {
                 const date = new Date();
                 date.setDate(date.getDate() - i);
                 const dateStr = date.toISOString().split('T')[0];
                 last7Days.push(date.toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric' }));
-
-                const dayArea = filteredRecords
-                    .filter(r => r.date === dateStr)
-                    .reduce((sum, r) => sum + parseFloat(r.area || 0), 0);
-                areas.push(dayArea.toFixed(0));
+                const dayLiga = filteredRecords.filter(r => r.date === dateStr).reduce((s, r) => s + parseFloat(r.ligaLitros || 0), 0);
+                ligas.push(dayLiga.toFixed(0));
             }
-
-            const ctx = document.getElementById('semanalChart');
-            if (charts.semanal) charts.semanal.destroy();
-
-            charts.semanal = new Chart(ctx, {
+            const ctx = document.getElementById('ligaDiariaChart');
+            if (charts.ligaDiaria) charts.ligaDiaria.destroy();
+            charts.ligaDiaria = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: last7Days,
                     datasets: [{
-                        label: 'Área (m²)',
-                        data: areas,
-                        borderColor: 'rgba(220, 38, 38, 1)',
-                        backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                        label: 'Liga (L)',
+                        data: ligas,
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         tension: 0.4,
                         fill: true,
                         borderWidth: 3
@@ -1399,19 +1129,140 @@
                     responsive: true,
                     maintainAspectRatio: true,
                     aspectRatio: 1.3,
-                    plugins: {
-                        legend: { display: false }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { color: '#B3B3B3', font: { size: 12 } },
-                            grid: { color: '#333333' }
-                        },
-                        x: {
-                            ticks: { color: '#B3B3B3', font: { size: 12 } },
-                            grid: { display: false }
+                        y: { beginAtZero: true, ticks: { color: '#666', font: { size: 12 } }, grid: { color: '#e0e0e0' } },
+                        x: { ticks: { color: '#666', font: { size: 12 } }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function createSectoresChart() {
+            const data = {};
+            filteredRecords.forEach(r => data[r.sector] = (data[r.sector] || 0) + parseFloat(r.area || 0));
+            const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            const ctx = document.getElementById('sectoresChart');
+            if (charts.sectores) charts.sectores.destroy();
+            charts.sectores = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sorted.map(s => 'Sector ' + s[0]),
+                    datasets: [{
+                        label: 'Área (m²)',
+                        data: sorted.map(s => s[1].toFixed(0)),
+                        backgroundColor: ['rgba(40, 167, 69, 0.9)', 'rgba(245, 158, 11, 0.9)', 'rgba(59, 130, 246, 0.9)', 'rgba(16, 185, 129, 0.9)', 'rgba(168, 85, 247, 0.9)'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 1.3,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#666', font: { size: 12 } }, grid: { color: '#e0e0e0' } },
+                        x: { ticks: { color: '#666', font: { size: 12 } }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function createColoniasChart() {
+            const data = {};
+            filteredRecords.forEach(r => data[r.colony] = (data[r.colony] || 0) + 1);
+            const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            const ctx = document.getElementById('coloniasChart');
+            if (charts.colonias) charts.colonias.destroy();
+            charts.colonias = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: sorted.map(c => c[0]),
+                    datasets: [{
+                        data: sorted.map(c => c[1]),
+                        backgroundColor: ['rgba(16, 185, 129, 0.9)', 'rgba(59, 130, 246, 0.9)', 'rgba(245, 158, 11, 0.9)', 'rgba(40, 167, 69, 0.9)', 'rgba(168, 85, 247, 0.9)'],
+                        borderWidth: 4,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 1.3,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#666', padding: 20, font: { size: 13, weight: '600' } }
                         }
+                    }
+                }
+            });
+        }
+
+        function createCamionesChart() {
+            const data = {};
+            filteredRecords.forEach(r => data[r.truck] = (data[r.truck] || 0) + parseFloat(r.area || 0));
+            const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            const ctx = document.getElementById('camionesChart');
+            if (charts.camiones) charts.camiones.destroy();
+            charts.camiones = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sorted.map(c => 'Camión ' + c[0]),
+                    datasets: [{
+                        label: 'Área (m²)',
+                        data: sorted.map(c => c[1].toFixed(0)),
+                        backgroundColor: ['rgba(245, 158, 11, 0.9)', 'rgba(16, 185, 129, 0.9)', 'rgba(40, 167, 69, 0.9)', 'rgba(59, 130, 246, 0.9)', 'rgba(168, 85, 247, 0.9)'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 1.3,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#666', font: { size: 12 } }, grid: { color: '#e0e0e0' } },
+                        x: { ticks: { color: '#666', font: { size: 12 } }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        function createSemanalChart() {
+            const last7Days = [], areas = [];
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+                last7Days.push(date.toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric' }));
+                const dayArea = filteredRecords.filter(r => r.date === dateStr).reduce((s, r) => s + parseFloat(r.area || 0), 0);
+                areas.push(dayArea.toFixed(0));
+            }
+            const ctx = document.getElementById('semanalChart');
+            if (charts.semanal) charts.semanal.destroy();
+            charts.semanal = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: last7Days,
+                    datasets: [{
+                        label: 'Área (m²)',
+                        data: areas,
+                        borderColor: 'rgba(40, 167, 69, 1)',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 1.3,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#666', font: { size: 12 } }, grid: { color: '#e0e0e0' } },
+                        x: { ticks: { color: '#666', font: { size: 12 } }, grid: { display: false } }
                     }
                 }
             });
@@ -1419,21 +1270,18 @@
 
         function createTendenciaChart() {
             const mesesData = {};
-            filteredRecords.forEach(function(r) {
+            filteredRecords.forEach(r => {
                 const mes = r.date.substring(0, 7);
                 mesesData[mes] = (mesesData[mes] || 0) + 1;
             });
-
             const sorted = Object.entries(mesesData).sort().slice(-6);
-            const labels = sorted.map(function(m) {
+            const labels = sorted.map(m => {
                 const [year, month] = m[0].split('-');
                 const meses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
                 return meses[parseInt(month) - 1];
             });
-
             const ctx = document.getElementById('tendenciaChart');
             if (charts.tendencia) charts.tendencia.destroy();
-
             charts.tendencia = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -1452,19 +1300,10 @@
                     responsive: true,
                     maintainAspectRatio: true,
                     aspectRatio: 1.3,
-                    plugins: {
-                        legend: { display: false }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { color: '#B3B3B3', font: { size: 12 } },
-                            grid: { color: '#333333' }
-                        },
-                        x: {
-                            ticks: { color: '#B3B3B3', font: { size: 12 } },
-                            grid: { display: false }
-                        }
+                        y: { beginAtZero: true, ticks: { color: '#666', font: { size: 12 } }, grid: { color: '#e0e0e0' } },
+                        x: { ticks: { color: '#666', font: { size: 12 } }, grid: { display: false } }
                     }
                 }
             });
@@ -1472,27 +1311,18 @@
 
         function createAreaChart() {
             const areasPorTipo = {};
-            filteredRecords.forEach(function(r) {
-                areasPorTipo[r.type] = (areasPorTipo[r.type] || 0) + parseFloat(r.area || 0);
-            });
-
+            filteredRecords.forEach(r => areasPorTipo[r.type] = (areasPorTipo[r.type] || 0) + parseFloat(r.area || 0));
             const ctx = document.getElementById('areaChart');
             if (charts.area) charts.area.destroy();
-
             charts.area = new Chart(ctx, {
                 type: 'pie',
                 data: {
                     labels: Object.keys(areasPorTipo),
                     datasets: [{
                         data: Object.values(areasPorTipo).map(v => v.toFixed(0)),
-                        backgroundColor: [
-                            'rgba(220, 38, 38, 0.9)',
-                            'rgba(245, 158, 11, 0.9)',
-                            'rgba(59, 130, 246, 0.9)',
-                            'rgba(16, 185, 129, 0.9)'
-                        ],
+                        backgroundColor: ['rgba(40, 167, 69, 0.9)', 'rgba(245, 158, 11, 0.9)', 'rgba(59, 130, 246, 0.9)', 'rgba(16, 185, 129, 0.9)'],
                         borderWidth: 4,
-                        borderColor: '#1F1F1F'
+                        borderColor: '#ffffff'
                     }]
                 },
                 options: {
@@ -1502,23 +1332,27 @@
                     plugins: {
                         legend: {
                             position: 'bottom',
-                            labels: {
-                                color: '#B3B3B3',
-                                padding: 20,
-                                font: { size: 14, weight: '600' }
-                            }
+                            labels: { color: '#666', padding: 20, font: { size: 14, weight: '600' } }
                         }
                     }
                 }
             });
         }
 
-        console.log('Dashboard Bacheo v6.0 - Sistema completamente funcional');
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            const icon = notification.querySelector('i');
+            icon.className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-info-circle';
+            notification.className = 'notification ' + type + ' show';
+            text.textContent = message;
+            setTimeout(() => notification.classList.remove('show'), 3000);
+        }
+
+        console.log('Dashboard Bacheo v7.0 - Verde con Liga');
         console.log('Total registros: ' + allRecords.length);
-        console.log('Personal: ' + empleados.length + ' empleados');
-        console.log('Panel de navegación: Activo');
-        console.log('Filtros avanzados: Funcionando');
-        console.log('Gráficas: 8/8 operativas');
+        console.log('Gráficas: 9/9 operativas (incluye liga)');
+        console.log('Navegación: 11 módulos');
     </script>
 </body>
 </html>

@@ -1,5 +1,1317 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes de Bacheo - Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #111827;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .nav-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #f0f9f4 100%);
+            box-shadow: -10px 0 30px rgba(40, 167, 69, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow: hidden;
+            border-left: 1px solid #d4edda;
+        }
+
+            .nav-panel.open {
+                right: 0;
+            }
+
+        .nav-panel-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 167, 69, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+            .nav-panel-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .nav-toggle {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 20px 25px -5px rgba(40, 167, 69, 0.2);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-toggle:hover {
+                transform: translateY(-50%) scale(1.1);
+                box-shadow: 0 25px 35px -5px rgba(40, 167, 69, 0.4);
+            }
+
+            .nav-toggle.active {
+                background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+                transform: translateY(-50%) rotate(180deg);
+            }
+
+        .nav-panel-header {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            padding: 2rem 1.5rem;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-panel-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-panel-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .nav-panel-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-panel-close:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: rotate(90deg);
+            }
+
+        .nav-panel-body {
+            padding: 1.5rem;
+            height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            background: #ffffff;
+            border-radius: 12px;
+            color: #334155;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid #d4edda;
+            cursor: pointer;
+        }
+
+            .nav-item:hover {
+                background: #f0f9f4;
+                transform: translateX(-5px);
+                border-color: #28a745;
+                box-shadow: 0 4px 6px -1px rgba(40, 167, 69, 0.1);
+            }
+
+            .nav-item.active {
+                background: linear-gradient(135deg, #28a745, #1e7e34);
+                color: white;
+                border-color: #28a745;
+            }
+
+        .nav-item-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active .nav-item-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-item:hover .nav-item-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .nav-item-content {
+            flex: 1;
+        }
+
+        .nav-item-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #1e293b;
+        }
+
+        .nav-item.active .nav-item-title {
+            color: white;
+        }
+
+        .nav-item-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .nav-item.active .nav-item-desc {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-item-arrow {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover .nav-item-arrow {
+            color: #28a745;
+            transform: translateX(3px);
+        }
+
+        .nav-item.active .nav-item-arrow {
+            color: white;
+        }
+
+        .nav-panel-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-track {
+            background: #f0f9f4;
+        }
+
+        .nav-panel-body::-webkit-scrollbar-thumb {
+            background: #5cb85c;
+            border-radius: 3px;
+        }
+
+            .nav-panel-body::-webkit-scrollbar-thumb:hover {
+                background: #28a745;
+            }
+
+        .header {
+            background: linear-gradient(135deg, #1e7e34 0%, #28a745 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-info h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-info p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+            .btn-back:hover {
+                background: rgba(255,255,255,0.3);
+                transform: translateY(-2px);
+            }
+
+        .btn-primary {
+            background: #28a745;
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: #1e7e34;
+                transform: translateY(-2px);
+            }
+
+        .btn-success {
+            background: #10B981;
+            color: white;
+        }
+
+            .btn-success:hover {
+                background: #059669;
+            }
+
+        .btn-warning {
+            background: #F59E0B;
+            color: white;
+        }
+
+            .btn-warning:hover {
+                background: #D97706;
+            }
+
+        .btn-danger {
+            background: #EF4444;
+            color: white;
+        }
+
+            .btn-danger:hover {
+                background: #DC2626;
+            }
+
+        .btn-info {
+            background: #06b6d4;
+            color: white;
+        }
+
+            .btn-info:hover {
+                background: #0891b2;
+            }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            padding-right: 100px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #d4edda;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #28a745;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6B7280;
+            font-weight: 600;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+            border: 1px solid #d4edda;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #28a745;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: #f0f9f4;
+            border-radius: 12px;
+            border: 1px solid #d4edda;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #1F2937;
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            padding: 0.75rem;
+            border: 2px solid #d4edda;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+            .form-input:focus {
+                outline: none;
+                border-color: #28a745;
+                box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+            }
+
+        .reports-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .report-card {
+            background: white;
+            border-radius: 12px;
+            border: 2px solid #d4edda;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+            .report-card:hover {
+                border-color: #28a745;
+                box-shadow: 0 8px 25px rgba(40, 167, 69, 0.15);
+                transform: translateY(-2px);
+            }
+
+        .report-header {
+            background: linear-gradient(135deg, #f0f9f4, white);
+            padding: 1.5rem;
+            border-bottom: 2px solid #d4edda;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .report-folio {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #28a745;
+        }
+
+        .report-badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-nuevo {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .badge-revision {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge-aprobado {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .badge-rechazado {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .badge-programado {
+            background: #E0E7FF;
+            color: #3730A3;
+        }
+
+        .badge-alta {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .badge-media {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge-baja {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .report-body {
+            padding: 1.5rem;
+        }
+
+        .report-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            color: #6B7280;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            font-size: 0.95rem;
+            color: #1F2937;
+            font-weight: 500;
+        }
+
+        .report-description {
+            background: #f0f9f4;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            margin-bottom: 1rem;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            padding-top: 1rem;
+            border-top: 2px solid #d4edda;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 2rem auto;
+            border-radius: 16px;
+            width: 95%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+            .close-modal:hover {
+                background: rgba(255,255,255,0.3);
+                transform: rotate(90deg);
+            }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1001;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            .notification.success {
+                background: #10B981;
+            }
+
+            .notification.error {
+                background: #EF4444;
+            }
+
+            .notification.warning {
+                background: #F59E0B;
+            }
+
+            .notification.info {
+                background: #06b6d4;
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6B7280;
+        }
+
+            .empty-state i {
+                font-size: 4rem;
+                margin-bottom: 1rem;
+                opacity: 0.5;
+            }
+    </style>
+</head>
+<body>
+    <div class="nav-panel-overlay" id="navPanelOverlay" onclick="toggleNavPanel()"></div>
+
+    <button class="nav-toggle" id="navToggle" onclick="toggleNavPanel()">
+        <i class="fas fa-th-large"></i>
+    </button>
+
+    <div class="nav-panel" id="navPanel">
+        <div class="nav-panel-header">
+            <button class="nav-panel-close" onclick="toggleNavPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="nav-panel-title">Sistema de Bacheo</h3>
+            <p class="nav-panel-subtitle">Navegación Principal</p>
+        </div>
+        <div class="nav-panel-body">
+            <div class="nav-item" onclick="redirectTo('captura')">
+                <div class="nav-item-icon"><i class="fas fa-plus-circle"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Captura</div>
+                    <div class="nav-item-desc">Registro de bacheos</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('programacion')">
+                <div class="nav-item-icon"><i class="fas fa-calendar-alt"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Programación</div>
+                    <div class="nav-item-desc">Horarios y cuadrillas</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('mapa')">
+                <div class="nav-item-icon"><i class="fas fa-map-marked-alt"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Mapa Interactivo</div>
+                    <div class="nav-item-desc">Ubicación de bacheos</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('rastreo')">
+                <div class="nav-item-icon"><i class="fas fa-satellite-dish"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Rastreo GPS</div>
+                    <div class="nav-item-desc">Monitoreo de unidades</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('dashboard')">
+                <div class="nav-item-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Dashboard</div>
+                    <div class="nav-item-desc">Estadísticas y reportes</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item active">
+                <div class="nav-item-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Reportes</div>
+                    <div class="nav-item-desc">Incidencias ciudadanas</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('material')">
+                <div class="nav-item-icon"><i class="fas fa-toolbox"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Material Utilizado</div>
+                    <div class="nav-item-desc">Control de inventario</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('asistencia')">
+                <div class="nav-item-icon"><i class="fas fa-user-check"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Asistencia</div>
+                    <div class="nav-item-desc">Control de personal</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('repositorio')">
+                <div class="nav-item-icon"><i class="fas fa-id-card"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Repositorio Vehicular</div>
+                    <div class="nav-item-desc">Gestión de unidades</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('citas')">
+                <div class="nav-item-icon"><i class="fas fa-wrench"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Citas Mantenimiento</div>
+                    <div class="nav-item-desc">Agendar servicios</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+            <div class="nav-item" onclick="redirectTo('oficios')">
+                <div class="nav-item-icon"><i class="fas fa-file-invoice"></i></div>
+                <div class="nav-item-content">
+                    <div class="nav-item-title">Oficios a Almacén</div>
+                    <div class="nav-item-desc">Envío de solicitudes</div>
+                </div>
+                <div class="nav-item-arrow"><i class="fas fa-chevron-right"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="header-info">
+                <h1>Reportes de Bacheo Ciudadano</h1>
+                <p>Gestión y Validación de Reportes • Monclova, Coahuila</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-back" onclick="redirectTo('dashboard')">
+                    <i class="fas fa-arrow-left"></i> Dashboard
+                </button>
+                <button class="btn btn-info" onclick="sincronizarReportes()">
+                    <i class="fas fa-sync-alt"></i> Sincronizar
+                </button>
+                <button class="btn btn-success" onclick="exportarReportes()">
+                    <i class="fas fa-file-export"></i> Exportar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+                    <i class="fas fa-inbox"></i>
+                </div>
+                <div class="stat-number" id="totalReportes">0</div>
+                <div class="stat-label">Total Reportes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-number" id="nuevosReportes">0</div>
+                <div class="stat-label">Nuevos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #28a745, #1e7e34);">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="stat-number" id="enRevision">0</div>
+                <div class="stat-label">En Revisión</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-number" id="aprobados">0</div>
+                <div class="stat-label">Aprobados</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-number" id="prioridadAlta">0</div>
+                <div class="stat-label">Prioridad Alta</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-filter"></i>
+                Filtros de Búsqueda
+            </h2>
+            <div class="filters-grid">
+                <div class="form-group">
+                    <label class="form-label">Buscar por Folio</label>
+                    <input type="text" class="form-input" id="searchFolio" placeholder="BCH-1001">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Estado</label>
+                    <select class="form-input" id="filterEstado">
+                        <option value="">Todos los estados</option>
+                        <option value="nuevo">Nuevo</option>
+                        <option value="revision">En Revisión</option>
+                        <option value="aprobado">Aprobado</option>
+                        <option value="rechazado">Rechazado</option>
+                        <option value="programado">Programado</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Prioridad</label>
+                    <select class="form-input" id="filterPrioridad">
+                        <option value="">Todas las prioridades</option>
+                        <option value="alta">Alta</option>
+                        <option value="media">Media</option>
+                        <option value="baja">Baja</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tipo de Problema</label>
+                    <select class="form-input" id="filterTipoFalla">
+                        <option value="">Todos los tipos</option>
+                        <option value="bache_profundo">Bache Profundo</option>
+                        <option value="hundimiento">Hundimiento</option>
+                        <option value="grietas">Grietas en Pavimento</option>
+                        <option value="desgaste">Desgaste de Carpeta</option>
+                        <option value="drenaje">Problema de Drenaje</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Sector</label>
+                    <select class="form-input" id="filterSector">
+                        <option value="">Todos los sectores</option>
+                        <option value="centro">Centro</option>
+                        <option value="norte">Norte</option>
+                        <option value="sur">Sur</option>
+                        <option value="este">Este</option>
+                        <option value="oeste">Oeste</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Fecha Desde</label>
+                    <input type="date" class="form-input" id="filterFechaDesde">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Fecha Hasta</label>
+                    <input type="date" class="form-input" id="filterFechaHasta">
+                </div>
+            </div>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="aplicarFiltros()">
+                    <i class="fas fa-filter"></i> Aplicar Filtros
+                </button>
+                <button class="btn btn-warning" onclick="limpiarFiltros()">
+                    <i class="fas fa-eraser"></i> Limpiar
+                </button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-list"></i>
+                Reportes Ciudadanos de Bacheo
+            </h2>
+            <div class="reports-grid" id="reportsContainer"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="modalEvaluacion">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Evaluación Técnica del Reporte</h3>
+                <button class="close-modal" onclick="cerrarModal('modalEvaluacion')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="formEvaluacion">
+                    <input type="hidden" id="reporteIdEval">
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Problema Identificado *</label>
+                        <select class="form-input" id="evalTipoFalla" required>
+                            <option value="">Seleccione el tipo</option>
+                            <option value="bache_profundo">Bache Profundo</option>
+                            <option value="hundimiento">Hundimiento</option>
+                            <option value="grietas">Grietas en Pavimento</option>
+                            <option value="desgaste">Desgaste de Carpeta</option>
+                            <option value="drenaje">Problema de Drenaje</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Largo Estimado (m)</label>
+                            <input type="number" step="0.1" class="form-input" id="evalLargo" placeholder="0.0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ancho Estimado (m)</label>
+                            <input type="number" step="0.1" class="form-input" id="evalAncho" placeholder="0.0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Prioridad *</label>
+                            <select class="form-input" id="evalPrioridad" required>
+                                <option value="baja">Baja - 7-10 días</option>
+                                <option value="media" selected>Media - 3-5 días</option>
+                                <option value="alta">Alta - 24-48 horas</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Sector/Zona</label>
+                            <select class="form-input" id="evalSector">
+                                <option value="centro">Centro</option>
+                                <option value="norte">Norte</option>
+                                <option value="sur">Sur</option>
+                                <option value="este">Este</option>
+                                <option value="oeste">Oeste</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Material Necesario Estimado</label>
+                        <textarea class="form-input" id="evalMaterial" rows="3" placeholder="Ej: Asfalto caliente 2 toneladas, Liga asfáltica 50L..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Observaciones Técnicas</label>
+                        <textarea class="form-input" id="evalObservaciones" rows="3" placeholder="Detalles técnicos adicionales..."></textarea>
+                    </div>
+                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <button type="button" class="btn btn-danger" style="flex: 1;" onclick="rechazarReporte()">
+                            <i class="fas fa-times"></i> Rechazar Reporte
+                        </button>
+                        <button type="submit" class="btn btn-success" style="flex: 2;">
+                            <i class="fas fa-check"></i> Aprobar y Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        let reportes = [];
+        let reportesFiltrados = [];
+        let navPanelOpen = false;
+
+        const reportesEjemplo = [
+            {
+                id: 1,
+                folio: 'BCH-1001',
+                fechaReporte: '2025-01-10T08:30:00',
+                ciudadano: {
+                    nombre: 'Juan Pérez Martínez',
+                    telefono: '844-555-0101',
+                    email: 'juan.perez@email.com'
+                },
+                ubicacion: {
+                    calle: 'Av. Universidad',
+                    numero: '456',
+                    colonia: 'Tecnológico',
+                    entreCalles: 'Blvd. Insurgentes y Calle 10',
+                    codigoPostal: '25750'
+                },
+                descripcion: 'Bache profundo en carril central que representa peligro para vehículos. Aproximadamente 1.5m de diámetro.',
+                fotos: [],
+                estado: 'nuevo',
+                evaluacionTecnica: null
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarReportes();
+            configurarEventos();
+            actualizarEstadisticas();
+        });
+
+        function toggleNavPanel() {
+            const navPanel = document.getElementById('navPanel');
+            const overlay = document.getElementById('navPanelOverlay');
+            const toggleBtn = document.getElementById('navToggle');
+            navPanelOpen = !navPanelOpen;
+            if (navPanelOpen) {
+                navPanel.classList.add('open');
+                overlay.classList.add('active');
+                toggleBtn.classList.add('active');
+                toggleBtn.innerHTML = '<i class="fas fa-times"></i>';
+                document.body.style.overflow = 'hidden';
+            } else {
+                navPanel.classList.remove('open');
+                overlay.classList.remove('active');
+                toggleBtn.classList.remove('active');
+                toggleBtn.innerHTML = '<i class="fas fa-th-large"></i>';
+                document.body.style.overflow = '';
+            }
+        }
+
+        function redirectTo(module) {
+            if (navPanelOpen) toggleNavPanel();
+            const urls = {
+                'captura': '/Home/CapturaBacheo',
+                'programacion': '/Home/ProgramacionBacheo',
+                'mapa': '/Home/MapaBacheo',
+                'rastreo': '/Home/RastreoBacheo',
+                'dashboard': '/Home/DashboardBacheo',
+                'reportes': '/Home/ReportesBacheo',
+                'material': '/Home/MaterialUtilizadoBacheo',
+                'asistencia': '/Home/AsistenciaPersonalBacheo',
+                'repositorio': '/Home/RepositorioPlacasBacheo',
+                'citas': '/Home/AgendarCitasMantenimiento',
+                'oficios': '/Home/EnviarOficiosAlmacenBacheo'
+            };
+            if (urls[module]) {
+                mostrarNotificacion(`Navegando a ${module}...`, 'info');
+                setTimeout(() => window.location.href = urls[module], 300);
+            }
+        }
+
+        function cargarReportes() {
+            const reportesGuardados = localStorage.getItem('reportesBacheo');
+            reportes = reportesGuardados ? JSON.parse(reportesGuardados) : [...reportesEjemplo];
+            localStorage.setItem('reportesBacheo', JSON.stringify(reportes));
+            reportesFiltrados = [...reportes];
+            renderizarReportes();
+        }
+
+        function configurarEventos() {
+            ['searchFolio', 'filterEstado', 'filterPrioridad', 'filterTipoFalla', 'filterSector'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', aplicarFiltros);
+                    element.addEventListener('change', aplicarFiltros);
+                }
+            });
+            const formEval = document.getElementById('formEvaluacion');
+            if (formEval) formEval.addEventListener('submit', guardarEvaluacion);
+        }
+
+        function renderizarReportes() {
+            const container = document.getElementById('reportsContainer');
+            if (!container) return;
+            if (reportesFiltrados.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No se encontraron reportes</h3>
+                        <p>No hay reportes que coincidan con los filtros seleccionados</p>
+                    </div>
+                `;
+                return;
+            }
+            container.innerHTML = reportesFiltrados.map(reporte => {
+                const fecha = new Date(reporte.fechaReporte).toLocaleDateString('es-MX', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                return `
+                    <div class="report-card">
+                        <div class="report-header">
+                            <div class="report-folio">${reporte.folio}</div>
+                            <div class="report-badges">
+                                <span class="badge badge-${reporte.estado}">${reporte.estado.toUpperCase()}</span>
+                            </div>
+                        </div>
+                        <div class="report-body">
+                            <div class="report-info-grid">
+                                <div class="info-item">
+                                    <div class="info-icon" style="background: linear-gradient(135deg, #28a745, #1e7e34);">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <div class="info-label">Reportado por</div>
+                                        <div class="info-value">${reporte.ciudadano.nombre}</div>
+                                        <div class="info-value" style="font-size: 0.85rem; color: #6B7280;">
+                                            <i class="fas fa-phone"></i> ${reporte.ciudadano.telefono}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <div class="info-label">Ubicación</div>
+                                        <div class="info-value">${reporte.ubicacion.calle}</div>
+                                        <div class="info-value" style="font-size: 0.85rem; color: #6B7280;">
+                                            ${reporte.ubicacion.colonia}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="report-description">
+                                <strong><i class="fas fa-file-alt"></i> Descripción:</strong>
+                                <p style="margin: 0.5rem 0 0 0;">${reporte.descripcion}</p>
+                            </div>
+                            <div class="report-actions">
+                                <button class="btn btn-primary btn-sm" onclick="abrirEvaluacion(${reporte.id})">
+                                    <i class="fas fa-clipboard-check"></i> Evaluar
+                                </button>
+                                <button class="btn btn-info btn-sm" onclick="verMapa(${reporte.id})">
+                                    <i class="fas fa-map"></i> Ver Ubicación
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function actualizarEstadisticas() {
+            document.getElementById('totalReportes').textContent = reportes.length;
+            document.getElementById('nuevosReportes').textContent = reportes.filter(r => r.estado === 'nuevo').length;
+            document.getElementById('enRevision').textContent = reportes.filter(r => r.estado === 'revision').length;
+            document.getElementById('aprobados').textContent = reportes.filter(r => r.estado === 'aprobado').length;
+            document.getElementById('prioridadAlta').textContent = reportes.filter(r => r.evaluacionTecnica?.prioridad === 'alta').length;
+        }
+
+        function aplicarFiltros() {
+            const folio = document.getElementById('searchFolio').value.toLowerCase().trim();
+            const estado = document.getElementById('filterEstado').value;
+            reportesFiltrados = reportes.filter(reporte => {
+                if (folio && !reporte.folio.toLowerCase().includes(folio)) return false;
+                if (estado && reporte.estado !== estado) return false;
+                return true;
+            });
+            renderizarReportes();
+            mostrarNotificacion(`${reportesFiltrados.length} reportes encontrados`, 'info');
+        }
+
+        function limpiarFiltros() {
+            document.getElementById('searchFolio').value = '';
+            document.getElementById('filterEstado').value = '';
+            document.getElementById('filterPrioridad').value = '';
+            document.getElementById('filterTipoFalla').value = '';
+            document.getElementById('filterSector').value = '';
+            reportesFiltrados = [...reportes];
+            renderizarReportes();
+            mostrarNotificacion('Filtros limpiados', 'info');
+        }
+
+        function abrirEvaluacion(reporteId) {
+            document.getElementById('reporteIdEval').value = reporteId;
+            abrirModal('modalEvaluacion');
+        }
+
+        function guardarEvaluacion(e) {
+            e.preventDefault();
+            const reporteId = parseInt(document.getElementById('reporteIdEval').value);
+            const reporte = reportes.find(r => r.id === reporteId);
+            if (reporte) {
+                reporte.estado = 'aprobado';
+                reporte.evaluacionTecnica = {
+                    tipoFalla: document.getElementById('evalTipoFalla').value,
+                    prioridad: document.getElementById('evalPrioridad').value,
+                    largo: document.getElementById('evalLargo').value,
+                    ancho: document.getElementById('evalAncho').value
+                };
+                localStorage.setItem('reportesBacheo', JSON.stringify(reportes));
+                cerrarModal('modalEvaluacion');
+                renderizarReportes();
+                actualizarEstadisticas();
+                mostrarNotificacion('Reporte evaluado correctamente', 'success');
+            }
+        }
+
+        function rechazarReporte() {
+            cerrarModal('modalEvaluacion');
+            mostrarNotificacion('Reporte rechazado', 'warning');
+        }
+
+        function verMapa(reporteId) {
+            mostrarNotificacion('Abriendo mapa...', 'info');
+        }
+
+        function sincronizarReportes() {
+            cargarReportes();
+            mostrarNotificacion('Reportes sincronizados', 'success');
+        }
+
+        function exportarReportes() {
+            mostrarNotificacion('Exportando reportes...', 'info');
+        }
+
+        function abrirModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function cerrarModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function mostrarNotificacion(mensaje, tipo) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${tipo}`;
+            notification.textContent = mensaje;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
