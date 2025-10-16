@@ -626,6 +626,22 @@
                         <div class="nav-card-title">Asistencia Personal</div>
                         <div class="nav-card-description">Control de personal</div>
                     </div>
+                    <!-- MÓDULOS AGREGADOS -->
+                    <div class="nav-card" onclick="navigateTo('/Home/EnviarOficiosAlmacenBacheo')">
+                        <div class="nav-card-icon"><i class="fas fa-file-invoice"></i></div>
+                        <div class="nav-card-title">Oficios al Almacén</div>
+                        <div class="nav-card-description">Solicitudes de materiales</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/RepositorioPlacasBacheo')">
+                        <div class="nav-card-icon"><i class="fas fa-id-card"></i></div>
+                        <div class="nav-card-title">Repositorio de Unidades</div>
+                        <div class="nav-card-description">Información vehicular</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/AgendarCitasMantenimientoBacheo')">
+                        <div class="nav-card-icon"><i class="fas fa-calendar-check"></i></div>
+                        <div class="nav-card-title">Agendar Citas Taller</div>
+                        <div class="nav-card-description">Mantenimiento de maquinaria</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -683,6 +699,22 @@
                         <div class="nav-card-icon"><i class="fas fa-user-check"></i></div>
                         <div class="nav-card-title">Asistencia Personal</div>
                         <div class="nav-card-description">Control de técnicos</div>
+                    </div>
+                    <!-- MÓDULOS AGREGADOS -->
+                    <div class="nav-card" onclick="navigateTo('/Home/EnviarOficiosAlmacenAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-file-invoice"></i></div>
+                        <div class="nav-card-title">Oficios al Almacén</div>
+                        <div class="nav-card-description">Solicitudes de materiales</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/RepositorioPlacasAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-id-card"></i></div>
+                        <div class="nav-card-title">Repositorio de Unidades</div>
+                        <div class="nav-card-description">Información vehicular</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/AgendarCitasMantenimientoAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-calendar-check"></i></div>
+                        <div class="nav-card-title">Agendar Citas Taller</div>
+                        <div class="nav-card-description">Mantenimiento de unidades</div>
                     </div>
                 </div>
             </div>
@@ -837,6 +869,36 @@
                     </div>
                 </div>
 
+                <!-- NUEVA SECCIÓN ADMINISTRATIVA -->
+                <div class="subsection">
+                    <div class="subsection-header" onclick="toggleSubsection('administrativa')">
+                        <div class="subsection-header-content">
+                            <i class="fas fa-briefcase sub-icon"></i>
+                            <span>Gestión Administrativa</span>
+                        </div>
+                        <i class="fas fa-chevron-down subsection-toggle" id="toggle-sub-administrativa"></i>
+                    </div>
+                    <div class="subsection-content" id="content-sub-administrativa">
+                        <div class="navigation-grid">
+                            <div class="nav-card" onclick="navigateTo('/Home/RepositorioPlacasRecoleccion')">
+                                <div class="nav-card-icon"><i class="fas fa-clipboard-list"></i></div>
+                                <div class="nav-card-title">Repositorio de Placas</div>
+                                <div class="nav-card-description">Registro vehicular de unidades</div>
+                            </div>
+                            <div class="nav-card" onclick="navigateTo('/Home/EnviarOficiosAlmacenRecoleccion')">
+                                <div class="nav-card-icon"><i class="fas fa-file-invoice"></i></div>
+                                <div class="nav-card-title">Oficios a Almacén</div>
+                                <div class="nav-card-description">Solicitudes de materiales</div>
+                            </div>
+                            <div class="nav-card" onclick="navigateTo('/Home/AgendarCitasMantenimientoRecoleccion')">
+                                <div class="nav-card-icon"><i class="fas fa-calendar-check"></i></div>
+                                <div class="nav-card-title">Agendar Citas Mantenimiento</div>
+                                <div class="nav-card-description">Programación de mantenimiento</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -939,6 +1001,11 @@
                 <div class="nav-card-icon"><i class="fas fa-clipboard-list"></i></div>
                 <div class="nav-card-title">Reportes Generales</div>
                 <div class="nav-card-description">Reportes ejecutivos</div>
+            </div>
+            <div class="nav-card" onclick="navigateTo('/Home/GeneradorReportesServiciosPrimarios')">
+                <div class="nav-card-icon"><i class="fas fa-chart-bar"></i></div>
+                <div class="nav-card-title">Generar Reportes</div>
+                <div class="nav-card-description">Sistema de generación de reportes</div>
             </div>
         </div>
     </div>

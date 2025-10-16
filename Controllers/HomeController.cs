@@ -888,8 +888,45 @@ namespace Final_Inicio.Controllers
             ViewBag.FechaAcceso = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
             return View();
         }
+        // ======== MÉTODOS OPERATIVOS DE BACHEO ========
 
+        public IActionResult ProgramacionBacheoOperativo()
+        {
+            ViewBag.TipoUsuario = "Personal Operativo de Bacheo";
+            ViewBag.Area = "Programación Operativa";
+            ViewBag.Message = "Sistema de Programación Operativa de Bacheo - Personal de Campo";
+            ViewBag.FechaAcceso = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            return View();
+        }
 
+        public IActionResult CapturaBacheoOperativo()
+        {
+            ViewBag.TipoUsuario = "Personal Operativo de Bacheo";
+            ViewBag.Area = "Captura Operativa";
+            ViewBag.Message = "Sistema de Captura Operativa de Bacheo - Personal de Campo";
+            ViewBag.FechaAcceso = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            return View();
+        }
+
+        // ======== MÉTODOS OPERATIVOS DE ALUMBRADO ========
+
+        public IActionResult ProgramacionAlumbradoOperativo()
+        {
+            ViewBag.TipoUsuario = "Personal Operativo de Alumbrado";
+            ViewBag.Area = "Programación Operativa";
+            ViewBag.Message = "Sistema de Programación Operativa de Alumbrado - Personal de Campo";
+            ViewBag.FechaAcceso = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            return View();
+        }
+
+        public IActionResult CapturaAlumbradoOperativo()
+        {
+            ViewBag.TipoUsuario = "Personal Operativo de Alumbrado";
+            ViewBag.Area = "Captura Operativa";
+            ViewBag.Message = "Sistema de Captura Operativa de Alumbrado - Personal de Campo";
+            ViewBag.FechaAcceso = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            return View();
+        }
 
 
 

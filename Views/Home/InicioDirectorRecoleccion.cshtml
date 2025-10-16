@@ -17,6 +17,7 @@
             --text-dark: #212121;
             --text-gray: #616161;
             --shadow: rgba(46, 125, 50, 0.15);
+            --shadow-hover: rgba(46, 125, 50, 0.25);
         }
 
         * {
@@ -68,7 +69,7 @@
             gap: clamp(0.5rem, 1.5vw, 1rem);
         }
 
-        .logo-municipal {
+        .logo-municipal, .logo-recoleccion {
             width: clamp(60px, 9vw, 75px);
             height: clamp(60px, 9vw, 75px);
             background: var(--pri-white);
@@ -83,36 +84,18 @@
             flex-shrink: 0;
         }
 
-        .logo-recoleccion {
-            width: clamp(60px, 9vw, 75px);
-            height: clamp(60px, 9vw, 75px);
-            background: var(--pri-white);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--pri-green-light);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-            .logo-municipal:hover,
-            .logo-recoleccion:hover {
+            .logo-municipal:hover, .logo-recoleccion:hover {
                 transform: scale(1.05);
-                box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+                box-shadow: 0 4px 15px var(--shadow-hover);
             }
 
-            .logo-municipal img,
-            .logo-recoleccion img {
+            .logo-municipal img, .logo-recoleccion img {
                 width: 100%;
                 height: 100%;
                 object-fit: contain;
             }
 
-            .logo-municipal i,
-            .logo-recoleccion i {
+            .logo-municipal i, .logo-recoleccion i {
                 font-size: clamp(1.8rem, 5vw, 2.3rem);
                 color: var(--pri-green);
             }
@@ -158,7 +141,7 @@
 
             .user-avatar:hover {
                 transform: scale(1.05);
-                box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+                box-shadow: 0 4px 15px var(--shadow-hover);
             }
 
             .user-avatar img {
@@ -238,7 +221,7 @@
 
             .stat-card:hover {
                 transform: translateY(-5px);
-                box-shadow: 0 8px 25px var(--shadow);
+                box-shadow: 0 8px 25px var(--shadow-hover);
             }
 
         .stat-icon {
@@ -265,6 +248,70 @@
             font-size: clamp(0.75rem, 2vw, 0.9rem);
             color: var(--text-gray);
             font-weight: 600;
+        }
+
+        .reports-panel {
+            background: linear-gradient(135deg, var(--pri-green-light), var(--pri-lime));
+            border-radius: 15px;
+            padding: clamp(1rem, 2.5vw, 1.5rem);
+            margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+            color: var(--pri-white);
+            box-shadow: 0 6px 25px var(--shadow-hover);
+        }
+
+        .single-report-button {
+            display: flex;
+            align-items: center;
+            gap: clamp(1rem, 3vw, 2rem);
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: clamp(1.2rem, 3vw, 2rem);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+            .single-report-button:hover {
+                background: rgba(255,255,255,0.2);
+                border-color: rgba(255,255,255,0.4);
+                transform: translateY(-3px);
+                box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            }
+
+        .report-button-icon {
+            width: clamp(60px, 12vw, 80px);
+            height: clamp(60px, 12vw, 80px);
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            color: var(--pri-white);
+            flex-shrink: 0;
+        }
+
+        .report-button-content {
+            flex: 1;
+        }
+
+        .report-button-title {
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--pri-white);
+        }
+
+        .report-button-description {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            color: rgba(255,255,255,0.9);
+            line-height: 1.5;
+        }
+
+        .report-button-arrow {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: rgba(255,255,255,0.8);
+            flex-shrink: 0;
         }
 
         .area-panel {
@@ -383,7 +430,7 @@
 
             .nav-card:hover {
                 transform: translateY(-5px);
-                box-shadow: 0 8px 20px var(--shadow);
+                box-shadow: 0 8px 20px var(--shadow-hover);
                 border-color: var(--pri-green);
             }
 
@@ -591,6 +638,11 @@
                 <div class="stat-number">94%</div>
                 <div class="stat-label">Cobertura</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-route"></i></div>
+                <div class="stat-number">156</div>
+                <div class="stat-label">Rutas Completadas</div>
+            </div>
         </div>
 
         <!-- ÁREA DE RECOLECCIÓN -->
@@ -601,7 +653,7 @@
                 </div>
                 <div class="area-title">
                     <h3>Administración de Recolección</h3>
-                    <p>Control de recolección de residuos y contenedores</p>
+                    <p>Control completo de recolección de residuos y contenedores</p>
                 </div>
                 <i class="fas fa-chevron-down toggle-icon" id="toggle-recoleccion"></i>
             </div>
@@ -693,6 +745,11 @@
                                 <div class="nav-card-title">Asistencia Contenedores</div>
                                 <div class="nav-card-description">Control de personal</div>
                             </div>
+                            <div class="nav-card" onclick="navigateTo('/Home/RutasRecoleccion')">
+                                <div class="nav-card-icon"><i class="fas fa-route"></i></div>
+                                <div class="nav-card-title">Rutas de Recolección</div>
+                                <div class="nav-card-description">Planificación de rutas</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -717,26 +774,31 @@
                     </div>
                 </div>
 
-                <!-- Sección General -->
+                <!-- Sección Administrativa -->
                 <div class="subsection">
-                    <div class="subsection-header" onclick="toggleSubsection('general')">
+                    <div class="subsection-header" onclick="toggleSubsection('administrativa')">
                         <div class="subsection-header-content">
-                            <i class="fas fa-cog sub-icon"></i>
-                            <span>Operaciones Generales</span>
+                            <i class="fas fa-briefcase sub-icon"></i>
+                            <span>Gestión Administrativa</span>
                         </div>
-                        <i class="fas fa-chevron-down subsection-toggle" id="toggle-sub-general"></i>
+                        <i class="fas fa-chevron-down subsection-toggle" id="toggle-sub-administrativa"></i>
                     </div>
-                    <div class="subsection-content" id="content-sub-general">
+                    <div class="subsection-content" id="content-sub-administrativa">
                         <div class="navigation-grid">
-                            <div class="nav-card" onclick="navigateTo('/Home/RutasRecoleccion')">
-                                <div class="nav-card-icon"><i class="fas fa-route"></i></div>
-                                <div class="nav-card-title">Rutas de Recolección</div>
-                                <div class="nav-card-description">Planificación de rutas</div>
+                            <div class="nav-card" onclick="navigateTo('/Home/RepositorioPlacasRecoleccion')">
+                                <div class="nav-card-icon"><i class="fas fa-clipboard-list"></i></div>
+                                <div class="nav-card-title">Repositorio de Placas</div>
+                                <div class="nav-card-description">Registro vehicular de unidades</div>
                             </div>
-                            <div class="nav-card" onclick="navigateTo('/Home/ReportesGeneralesServiciosPrimarios')">
-                                <div class="nav-card-icon"><i class="fas fa-file-alt"></i></div>
-                                <div class="nav-card-title">Reportes</div>
-                                <div class="nav-card-description">Informes y estadísticas</div>
+                            <div class="nav-card" onclick="navigateTo('/Home/EnviarOficiosAlmacenRecoleccion')">
+                                <div class="nav-card-icon"><i class="fas fa-file-invoice"></i></div>
+                                <div class="nav-card-title">Oficios a Almacén</div>
+                                <div class="nav-card-description">Solicitudes de materiales</div>
+                            </div>
+                            <div class="nav-card" onclick="navigateTo('/Home/AgendarCitasMantenimiento')">
+                                <div class="nav-card-icon"><i class="fas fa-calendar-check"></i></div>
+                                <div class="nav-card-title">Agendar Citas Mantenimiento</div>
+                                <div class="nav-card-description">Programación de mantenimiento</div>
                             </div>
                         </div>
                     </div>
@@ -749,13 +811,18 @@
         <div class="navigation-grid">
             <div class="nav-card" onclick="navigateTo('/Home/AgendaCitasProximas')">
                 <div class="nav-card-icon"><i class="fas fa-calendar-check"></i></div>
-                <div class="nav-card-title">Agenda de Citas Próximas</div>
-                <div class="nav-card-description">Reuniones programadas con jefa de administración</div>
+                <div class="nav-card-title">Agenda de Citas</div>
+                <div class="nav-card-description">Reuniones programadas con administración</div>
             </div>
             <div class="nav-card" onclick="navigateTo('/Home/ReportesGeneralesServiciosPrimarios')">
                 <div class="nav-card-icon"><i class="fas fa-clipboard-list"></i></div>
                 <div class="nav-card-title">Reportes Generales</div>
-                <div class="nav-card-description">Informes y reportes ejecutivos</div>
+                <div class="nav-card-description">Informes ejecutivos y análisis</div>
+            </div>
+            <div class="nav-card" onclick="navigateTo('/Home/GeneradorReportesServiciosPrimarios')">
+                <div class="nav-card-icon"><i class="fas fa-chart-bar"></i></div>
+                <div class="nav-card-title">Reportes</div>
+                <div class="nav-card-description">Generación y gestión de reportes del área</div>
             </div>
         </div>
     </div>
@@ -763,6 +830,7 @@
     <footer class="footer">
         <p><strong>Panel Director de Recolección - Gelacio</strong></p>
         <p>&copy; 2024 H. Ayuntamiento de Monclova. Todos los derechos reservados.</p>
+        <p>Sistema versión 3.0 | Última actualización: Octubre 2024</p>
     </footer>
 
     <script>
@@ -836,7 +904,9 @@
             setTimeout(function() {
                 notification.classList.remove('show');
                 setTimeout(function() {
-                    document.body.removeChild(notification);
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
                 }, 300);
             }, 2000);
         }
@@ -869,9 +939,11 @@
             setupPhotoUpload('userAvatar', 'userPhotoInput');
 
             setTimeout(function() {
-                showNotification('Sistema inicializado correctamente', 'success');
+                showNotification('Sistema Director inicializado correctamente', 'success');
             }, 500);
         });
+
+        console.log('✅ Panel Director de Recolección - Verde Completo - Cargado correctamente');
     </script>
 </body>
 </html>

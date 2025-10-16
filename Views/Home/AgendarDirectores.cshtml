@@ -108,10 +108,12 @@
             font-weight: 500;
             cursor: pointer;
             font-size: clamp(0.85rem, 2vw, 0.95rem);
+            transition: all 0.3s ease;
         }
 
             .btn-back:hover {
                 background: rgba(255,255,255,0.3);
+                transform: translateY(-2px);
             }
 
         .main-container {
@@ -666,9 +668,9 @@
                     <p>Gestión de Eventos</p>
                 </div>
             </div>
-            <a href="/Home/InicioAlmacen" class="btn-back">
+            <button class="btn-back" onclick="regresarPantallaAnterior()">
                 <i class="fas fa-arrow-left"></i> Volver
-            </a>
+            </button>
         </div>
     </header>
 
@@ -902,6 +904,17 @@
         let map = null;
         let marker = null;
         let selectedLocation = null;
+
+        // Función para regresar dinámicamente a la pantalla anterior
+        function regresarPantallaAnterior() {
+            // Verificar si hay historial para regresar
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                // Si no hay historial, ir a una página por defecto
+                window.location.href = '/Home/InicioAlmacen';
+            }
+        }
 
         function initMap() {
             map = L.map('map', {

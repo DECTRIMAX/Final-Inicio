@@ -7,16 +7,20 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --pri-yellow: #F9A825;
-            --pri-yellow-light: #FBC02D;
-            --pri-yellow-dark: #F57F17;
-            --pri-orange: #FF6F00;
-            --pri-white: #FFFFFF;
-            --bg-light: #FFF9E6;
-            --bg-dark: #FFF3CD;
-            --text-dark: #212121;
-            --text-gray: #616161;
-            --shadow: rgba(249, 168, 37, 0.15);
+            --primary: #16a34a;
+            --primary-light: #22c55e;
+            --primary-dark: #15803d;
+            --accent: #34d399;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --white: #FFFFFF;
+            --bg-light: #F0FDF4;
+            --bg-dark: #DCFCE7;
+            --text-dark: #1F2937;
+            --text-gray: #6B7280;
+            --shadow: rgba(22, 163, 74, 0.15);
+            --shadow-hover: rgba(22, 163, 74, 0.25);
         }
 
         * {
@@ -34,14 +38,14 @@
         }
 
         .header {
-            background: linear-gradient(135deg, var(--pri-yellow) 0%, var(--pri-yellow-dark) 100%);
-            color: var(--pri-white);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
             padding: clamp(0.5rem, 2vw, 1rem) clamp(0.8rem, 3vw, 1.5rem);
             box-shadow: 0 4px 20px var(--shadow);
             position: sticky;
             top: 0;
             z-index: 1000;
-            border-bottom: 3px solid var(--pri-orange);
+            border-bottom: 3px solid var(--accent);
         }
 
         .header-content {
@@ -68,53 +72,35 @@
             gap: clamp(0.5rem, 1.5vw, 1rem);
         }
 
-        .logo-municipal {
+        .logo-municipal, .logo-alumbrado {
             width: clamp(60px, 9vw, 75px);
             height: clamp(60px, 9vw, 75px);
-            background: var(--pri-white);
+            background: var(--white);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid var(--pri-yellow-light);
+            border: 2px solid var(--primary-light);
             transition: all 0.3s ease;
             cursor: pointer;
             overflow: hidden;
             flex-shrink: 0;
         }
 
-        .logo-alumbrado {
-            width: clamp(60px, 9vw, 75px);
-            height: clamp(60px, 9vw, 75px);
-            background: var(--pri-white);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--pri-yellow-light);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-            .logo-municipal:hover,
-            .logo-alumbrado:hover {
+            .logo-municipal:hover, .logo-alumbrado:hover {
                 transform: scale(1.05);
-                box-shadow: 0 4px 15px rgba(249, 168, 37, 0.3);
+                box-shadow: 0 4px 15px var(--shadow-hover);
             }
 
-            .logo-municipal img,
-            .logo-alumbrado img {
+            .logo-municipal img, .logo-alumbrado img {
                 width: 100%;
                 height: 100%;
                 object-fit: contain;
             }
 
-            .logo-municipal i,
-            .logo-alumbrado i {
+            .logo-municipal i, .logo-alumbrado i {
                 font-size: clamp(1.8rem, 5vw, 2.3rem);
-                color: var(--pri-yellow);
+                color: var(--primary);
             }
 
         .header-info {
@@ -145,11 +131,11 @@
             width: clamp(60px, 10vw, 75px);
             height: clamp(60px, 10vw, 75px);
             border-radius: 50%;
-            background: var(--pri-white);
+            background: var(--white);
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 3px solid var(--pri-yellow-light);
+            border: 3px solid var(--primary-light);
             cursor: pointer;
             transition: all 0.3s ease;
             overflow: hidden;
@@ -158,7 +144,7 @@
 
             .user-avatar:hover {
                 transform: scale(1.05);
-                box-shadow: 0 4px 15px rgba(249, 168, 37, 0.3);
+                box-shadow: 0 4px 15px var(--shadow-hover);
             }
 
             .user-avatar img {
@@ -169,7 +155,7 @@
 
             .user-avatar i {
                 font-size: clamp(1.5rem, 4.5vw, 2.2rem);
-                color: var(--pri-yellow);
+                color: var(--primary);
             }
 
         .user-info {
@@ -200,16 +186,16 @@
             text-align: center;
             margin-bottom: clamp(1rem, 3vw, 2rem);
             padding: clamp(1rem, 4vw, 2rem) clamp(0.8rem, 3vw, 1.5rem);
-            background: var(--pri-white);
+            background: var(--white);
             border-radius: 15px;
             box-shadow: 0 4px 20px var(--shadow);
-            border-left: 4px solid var(--pri-yellow);
+            border-left: 4px solid var(--primary);
         }
 
         .welcome-title {
             font-size: clamp(1.5rem, 5vw, 2.5rem);
             font-weight: 900;
-            color: var(--pri-yellow);
+            color: var(--primary);
             margin-bottom: 0.5rem;
             word-wrap: break-word;
         }
@@ -227,37 +213,37 @@
         }
 
         .stat-card {
-            background: var(--pri-white);
+            background: var(--white);
             padding: clamp(1rem, 3vw, 1.5rem);
             border-radius: 12px;
             box-shadow: 0 4px 15px var(--shadow);
-            border-left: 4px solid var(--pri-yellow);
+            border-left: 4px solid var(--primary);
             text-align: center;
             transition: all 0.3s ease;
         }
 
             .stat-card:hover {
                 transform: translateY(-5px);
-                box-shadow: 0 8px 25px var(--shadow);
+                box-shadow: 0 8px 25px var(--shadow-hover);
             }
 
         .stat-icon {
             width: clamp(40px, 8vw, 50px);
             height: clamp(40px, 8vw, 50px);
-            background: linear-gradient(135deg, var(--pri-yellow), var(--pri-yellow-light));
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: clamp(1.2rem, 3vw, 1.5rem);
-            color: var(--pri-white);
+            color: var(--white);
             margin: 0 auto clamp(0.5rem, 2vw, 1rem);
         }
 
         .stat-number {
             font-size: clamp(1.5rem, 4vw, 2rem);
             font-weight: 900;
-            color: var(--pri-yellow);
+            color: var(--primary);
             margin-bottom: 0.5rem;
         }
 
@@ -268,11 +254,11 @@
         }
 
         .area-panel {
-            background: var(--pri-white);
+            background: var(--white);
             border-radius: 15px;
             margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
             box-shadow: 0 4px 20px var(--shadow);
-            border-left: 5px solid var(--pri-yellow);
+            border-left: 5px solid var(--primary);
             overflow: hidden;
             transition: all 0.3s ease;
         }
@@ -289,30 +275,30 @@
         }
 
             .area-header:hover {
-                background: linear-gradient(135deg, var(--bg-dark), var(--pri-yellow-light));
+                background: linear-gradient(135deg, var(--bg-dark), var(--primary-light));
             }
 
             .area-header.active {
-                background: linear-gradient(135deg, var(--pri-yellow), var(--pri-yellow-light));
+                background: linear-gradient(135deg, var(--primary), var(--primary-light));
             }
 
                 .area-header.active .area-icon,
                 .area-header.active .area-title h3,
                 .area-header.active .area-title p,
                 .area-header.active .toggle-icon {
-                    color: var(--pri-white);
+                    color: var(--white);
                 }
 
         .area-icon {
             width: clamp(50px, 10vw, 60px);
             height: clamp(50px, 10vw, 60px);
-            background: linear-gradient(135deg, var(--pri-yellow), var(--pri-yellow-light));
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: clamp(1.3rem, 3.5vw, 1.8rem);
-            color: var(--pri-white);
+            color: var(--white);
             transition: all 0.3s ease;
             flex-shrink: 0;
         }
@@ -332,7 +318,7 @@
             .area-title h3 {
                 font-size: clamp(1.1rem, 3vw, 1.5rem);
                 font-weight: 800;
-                color: var(--pri-yellow);
+                color: var(--primary);
                 transition: all 0.3s ease;
                 word-wrap: break-word;
             }
@@ -345,7 +331,7 @@
 
         .toggle-icon {
             font-size: clamp(1.2rem, 3vw, 1.5rem);
-            color: var(--pri-yellow);
+            color: var(--primary);
             transition: transform 0.3s ease, color 0.3s ease;
             flex-shrink: 0;
         }
@@ -383,27 +369,27 @@
 
             .nav-card:hover {
                 transform: translateY(-5px);
-                box-shadow: 0 8px 20px var(--shadow);
-                border-color: var(--pri-yellow);
+                box-shadow: 0 8px 20px var(--shadow-hover);
+                border-color: var(--primary);
             }
 
         .nav-card-icon {
             width: clamp(40px, 8vw, 45px);
             height: clamp(40px, 8vw, 45px);
-            background: var(--pri-yellow);
+            background: var(--primary);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: clamp(1.1rem, 2.5vw, 1.3rem);
-            color: var(--pri-white);
+            color: var(--white);
             margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
         }
 
         .nav-card-title {
             font-size: clamp(0.9rem, 2.2vw, 1rem);
             font-weight: 700;
-            color: var(--pri-yellow);
+            color: var(--primary);
             margin-bottom: 0.5rem;
             word-wrap: break-word;
         }
@@ -420,15 +406,15 @@
             margin: clamp(1.5rem, 3vw, 2rem) 0 clamp(1rem, 2.5vw, 1.5rem) 0;
             font-weight: 900;
             padding: clamp(0.8rem, 2vw, 1rem);
-            background: linear-gradient(135deg, var(--pri-yellow), var(--pri-yellow-dark));
-            color: var(--pri-white);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
             border-radius: 12px;
             box-shadow: 0 4px 15px var(--shadow);
         }
 
         .footer {
-            background: linear-gradient(135deg, var(--pri-yellow), var(--pri-yellow-dark));
-            color: var(--pri-white);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
             padding: clamp(1rem, 2.5vw, 1.5rem);
             margin-top: clamp(2rem, 4vw, 3rem);
             text-align: center;
@@ -456,7 +442,7 @@
         }
 
             .notification.success {
-                background: var(--pri-yellow);
+                background: var(--primary);
                 color: white;
             }
 
@@ -467,6 +453,70 @@
 
         .hidden-input {
             display: none;
+        }
+
+        .reports-panel {
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            border-radius: 15px;
+            padding: clamp(1rem, 2.5vw, 1.5rem);
+            margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+            color: var(--white);
+            box-shadow: 0 6px 25px var(--shadow-hover);
+        }
+
+        .single-report-button {
+            display: flex;
+            align-items: center;
+            gap: clamp(1rem, 3vw, 2rem);
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: clamp(1.2rem, 3vw, 2rem);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+            .single-report-button:hover {
+                background: rgba(255,255,255,0.2);
+                border-color: rgba(255,255,255,0.4);
+                transform: translateY(-3px);
+                box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            }
+
+        .report-button-icon {
+            width: clamp(60px, 12vw, 80px);
+            height: clamp(60px, 12vw, 80px);
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            color: var(--white);
+            flex-shrink: 0;
+        }
+
+        .report-button-content {
+            flex: 1;
+        }
+
+        .report-button-title {
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--white);
+        }
+
+        .report-button-description {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            color: rgba(255,255,255,0.9);
+            line-height: 1.5;
+        }
+
+        .report-button-arrow {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: rgba(255,255,255,0.8);
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -532,9 +582,14 @@
                 <div class="stat-number">97%</div>
                 <div class="stat-label">Cobertura</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-route"></i></div>
+                <div class="stat-number">85</div>
+                <div class="stat-label">Rutas de Servicio</div>
+            </div>
         </div>
 
-        <!-- ÁREA DE ALUMBRADO -->
+        <!-- ÁREA DE ALUMBRADO AMPLIADA -->
         <div class="area-panel">
             <div class="area-header" onclick="toggleArea('alumbrado')">
                 <div class="area-icon">
@@ -542,7 +597,7 @@
                 </div>
                 <div class="area-title">
                     <h3>Administración de Alumbrado Público</h3>
-                    <p>Gestión del sistema de iluminación municipal</p>
+                    <p>Gestión completa del sistema de iluminación municipal</p>
                 </div>
                 <i class="fas fa-chevron-down toggle-icon" id="toggle-alumbrado"></i>
             </div>
@@ -550,43 +605,58 @@
                 <div class="navigation-grid">
                     <div class="nav-card" onclick="navigateTo('/Home/DashboardAdministradorAlumbrado')">
                         <div class="nav-card-icon"><i class="fas fa-chart-bar"></i></div>
-                        <div class="nav-card-title">Gráficas de Alumbrado</div>
+                        <div class="nav-card-title">Dashboard y Gráficas</div>
                         <div class="nav-card-description">Estadísticas y análisis visual del sistema</div>
-                    </div>
-                    <div class="nav-card" onclick="navigateTo('/Home/ProgramacionAlumbrado')">
-                        <div class="nav-card-icon"><i class="fas fa-clock"></i></div>
-                        <div class="nav-card-title">Programación de Horarios</div>
-                        <div class="nav-card-description">Control de encendido/apagado</div>
                     </div>
                     <div class="nav-card" onclick="navigateTo('/Home/CapturaAlumbrado')">
                         <div class="nav-card-icon"><i class="fas fa-camera-retro"></i></div>
                         <div class="nav-card-title">Captura de Incidencias</div>
-                        <div class="nav-card-description">Registro de fallas</div>
+                        <div class="nav-card-description">Registro fotográfico de fallas y reportes</div>
                     </div>
                     <div class="nav-card" onclick="navigateTo('/Home/MapaAlumbrado')">
                         <div class="nav-card-icon"><i class="fas fa-map-location-dot"></i></div>
                         <div class="nav-card-title">Mapa de Luminarias</div>
-                        <div class="nav-card-description">Ubicación de postes</div>
+                        <div class="nav-card-description">Ubicación y estado de todas las luminarias</div>
                     </div>
                     <div class="nav-card" onclick="navigateTo('/Home/RastreoAlumbrado')">
                         <div class="nav-card-icon"><i class="fas fa-location-arrow"></i></div>
-                        <div class="nav-card-title">Rastreo de Unidades</div>
-                        <div class="nav-card-description">GPS de cuadrillas</div>
+                        <div class="nav-card-title">Rastreo GPS Unidades</div>
+                        <div class="nav-card-description">Monitoreo en tiempo real de cuadrillas</div>
                     </div>
                     <div class="nav-card" onclick="navigateTo('/Home/ReportesAlumbrado')">
                         <div class="nav-card-icon"><i class="fas fa-exclamation-triangle"></i></div>
                         <div class="nav-card-title">Reportes Ciudadanos</div>
-                        <div class="nav-card-description">Fallas reportadas</div>
+                        <div class="nav-card-description">Gestión de reportes de fallas ciudadanas</div>
                     </div>
                     <div class="nav-card" onclick="navigateTo('/Home/MaterialUtilizadoAlumbrado')">
                         <div class="nav-card-icon"><i class="fas fa-tools"></i></div>
                         <div class="nav-card-title">Material Utilizado</div>
-                        <div class="nav-card-description">Inventario de lámparas</div>
+                        <div class="nav-card-description">Control de inventario y materiales</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/ProgramacionAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-clock"></i></div>
+                        <div class="nav-card-title">Programación Horarios</div>
+                        <div class="nav-card-description">Control automático de encendido/apagado</div>
                     </div>
                     <div class="nav-card" onclick="navigateTo('/Home/AsistenciaPersonalAlumbrado')">
                         <div class="nav-card-icon"><i class="fas fa-user-check"></i></div>
                         <div class="nav-card-title">Asistencia Personal</div>
-                        <div class="nav-card-description">Control de técnicos</div>
+                        <div class="nav-card-description">Control de asistencia de técnicos</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/EnviarOficiosAlmacenAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-file-invoice"></i></div>
+                        <div class="nav-card-title">Enviar Oficios</div>
+                        <div class="nav-card-description">Solicitudes de materiales al almacén</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/RepositorioPlacasAlumbrado')">
+                        <div class="nav-card-icon"><i class="fas fa-id-card"></i></div>
+                        <div class="nav-card-title">Repositorio de Unidades</div>
+                        <div class="nav-card-description">Información de vehículos y documentación</div>
+                    </div>
+                    <div class="nav-card" onclick="navigateTo('/Home/AgendarCitasMantenimiento')">
+                        <div class="nav-card-icon"><i class="fas fa-calendar-check"></i></div>
+                        <div class="nav-card-title">Agendar Citas Taller</div>
+                        <div class="nav-card-description">Programar mantenimiento de unidades</div>
                     </div>
                 </div>
             </div>
@@ -596,13 +666,18 @@
         <div class="navigation-grid">
             <div class="nav-card" onclick="navigateTo('/Home/AgendaCitasProximas')">
                 <div class="nav-card-icon"><i class="fas fa-calendar-check"></i></div>
-                <div class="nav-card-title">Agenda de Citas Próximas</div>
-                <div class="nav-card-description">Reuniones programadas con jefa de administración</div>
+                <div class="nav-card-title">Agenda de Citas</div>
+                <div class="nav-card-description">Reuniones programadas con administración</div>
             </div>
             <div class="nav-card" onclick="navigateTo('/Home/ReportesGeneralesServiciosPrimarios')">
                 <div class="nav-card-icon"><i class="fas fa-clipboard-list"></i></div>
                 <div class="nav-card-title">Reportes Generales</div>
-                <div class="nav-card-description">Informes y reportes ejecutivos</div>
+                <div class="nav-card-description">Informes ejecutivos y análisis</div>
+            </div>
+            <div class="nav-card" onclick="navigateTo('/Home/GeneradorReportesServiciosPrimarios')">
+                <div class="nav-card-icon"><i class="fas fa-chart-bar"></i></div>
+                <div class="nav-card-title">Reportes</div>
+                <div class="nav-card-description">Generación y gestión de reportes del área</div>
             </div>
         </div>
     </div>
@@ -610,6 +685,7 @@
     <footer class="footer">
         <p><strong>Panel Director de Alumbrado Público - Ing. Luis Estrada</strong></p>
         <p>&copy; 2024 H. Ayuntamiento de Monclova. Todos los derechos reservados.</p>
+        <p>Sistema versión 3.0 | Última actualización: Octubre 2024</p>
     </footer>
 
     <script>
@@ -620,6 +696,7 @@
 
             const isActive = content.classList.contains('active');
 
+            // Cerrar todas las áreas
             const allContents = document.querySelectorAll('.area-content');
             const allToggles = document.querySelectorAll('.toggle-icon');
             const allHeaders = document.querySelectorAll('.area-header');
@@ -634,6 +711,7 @@
                 allHeaders[i].classList.remove('active');
             }
 
+            // Abrir el área seleccionada si no estaba activa
             if (!isActive) {
                 content.classList.add('active');
                 toggle.classList.add('active');
@@ -661,7 +739,9 @@
             setTimeout(function() {
                 notification.classList.remove('show');
                 setTimeout(function() {
-                    document.body.removeChild(notification);
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
                 }, 300);
             }, 2000);
         }
@@ -694,9 +774,11 @@
             setupPhotoUpload('userAvatar', 'userPhotoInput');
 
             setTimeout(function() {
-                showNotification('Sistema inicializado correctamente', 'success');
+                showNotification('Sistema Director inicializado correctamente', 'success');
             }, 500);
         });
+
+        console.log('✅ Panel Director de Alumbrado Público - Tema Verde - Cargado completamente');
     </script>
 </body>
 </html>

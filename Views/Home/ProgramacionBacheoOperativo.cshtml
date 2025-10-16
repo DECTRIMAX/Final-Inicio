@@ -1,0 +1,1092 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programación de Bacheo - Personal Operativo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #16a34a;
+            --secondary: #15803d;
+            --accent: #22c55e;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+            --border: #E5E7EB;
+            --card-bg: #FFFFFF;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            touch-action: manipulation;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: white;
+            padding: clamp(1.5rem, 4vw, 2.5rem);
+            box-shadow: 0 4px 20px rgba(22, 163, 74, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: clamp(1rem, 3vw, 2rem);
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: clamp(1rem, 2vw, 1.5rem);
+            flex: 1;
+        }
+
+        .logo {
+            width: clamp(60px, 8vw, 80px);
+            height: clamp(60px, 8vw, 80px);
+            background: rgba(255,255,255,0.2);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            border: 3px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-title {
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: clamp(0.8rem, 2vw, 1rem) clamp(1.2rem, 3vw, 1.5rem);
+            border-radius: 12px;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+            .back-btn:hover {
+                background: rgba(255,255,255,0.3);
+                border-color: rgba(255,255,255,0.5);
+                transform: translateY(-2px);
+            }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: clamp(1.5rem, 4vw, 3rem);
+        }
+
+        .status-bar {
+            background: white;
+            border-radius: 16px;
+            padding: clamp(1rem, 2vw, 1.5rem);
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 2px solid var(--border);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: clamp(0.8rem, 2vw, 1.2rem);
+            align-items: center;
+        }
+
+        .status-item {
+            text-align: center;
+            padding: clamp(0.5rem, 1vw, 0.8rem);
+        }
+
+        .status-value {
+            font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .status-label {
+            font-size: clamp(0.7rem, 1.8vw, 0.9rem);
+            color: var(--text-secondary);
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .filters-section {
+            background: white;
+            border-radius: 16px;
+            padding: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 2px solid var(--border);
+        }
+
+        .filters-title {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            text-align: center;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: clamp(1rem, 2vw, 1.5rem);
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-select {
+            padding: clamp(0.8rem, 2vw, 1rem);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            background: var(--light);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+            .filter-select:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            }
+
+        .clear-filters-btn {
+            background: linear-gradient(135deg, var(--text-secondary), #6B7280);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: clamp(0.8rem, 2vw, 1rem) clamp(1.2rem, 3vw, 1.5rem);
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+            .clear-filters-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(107, 114, 128, 0.3);
+            }
+
+        .records-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        .record-card {
+            background: white;
+            border-radius: 20px;
+            padding: clamp(1.5rem, 3vw, 2rem);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            border: 3px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .record-card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 12px 40px rgba(22, 163, 74, 0.15);
+                border-color: var(--primary);
+            }
+
+            .record-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 6px;
+                background: linear-gradient(90deg, var(--primary), var(--accent));
+            }
+
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .record-type {
+            padding: clamp(0.6rem, 1.5vw, 0.8rem) clamp(1rem, 2vw, 1.2rem);
+            border-radius: 12px;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .type-bache {
+            background: rgba(239, 68, 68, 0.15);
+            color: #DC2626;
+            border: 2px solid #DC2626;
+        }
+
+        .type-sima {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10B981;
+            border: 2px solid #10B981;
+        }
+
+        .type-bordo {
+            background: rgba(245, 158, 11, 0.15);
+            color: #D97706;
+            border: 2px solid #D97706;
+        }
+
+        .urgency-badge {
+            padding: clamp(0.4rem, 1vw, 0.6rem) clamp(0.8rem, 1.5vw, 1rem);
+            border-radius: 8px;
+            font-size: clamp(0.8rem, 1.8vw, 1rem);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .urgency-normal {
+            background: rgba(59, 130, 246, 0.15);
+            color: #1E40AF;
+        }
+
+        .urgency-high {
+            background: rgba(245, 158, 11, 0.15);
+            color: #D97706;
+        }
+
+        .urgency-urgent {
+            background: rgba(239, 68, 68, 0.15);
+            color: #DC2626;
+            border: 2px solid #DC2626;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            padding: clamp(0.8rem, 2vw, 1rem);
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .status-ontime {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+            border: 2px solid #10B981;
+        }
+
+        .status-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #D97706;
+            border: 2px solid #D97706;
+        }
+
+        .status-delayed {
+            background: rgba(239, 68, 68, 0.1);
+            color: #DC2626;
+            border: 2px solid #DC2626;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .maps-btn {
+            background: linear-gradient(135deg, #1E40AF, #3B82F6);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            padding: clamp(1.2rem, 3vw, 1.8rem) clamp(2rem, 4vw, 3rem);
+            font-size: clamp(1.3rem, 3vw, 1.6rem);
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            box-shadow: 0 8px 25px rgba(30, 64, 175, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+            .maps-btn:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 12px 40px rgba(30, 64, 175, 0.4);
+                background: linear-gradient(135deg, #3B82F6, #60A5FA);
+            }
+
+            .maps-btn:active {
+                transform: translateY(-2px);
+            }
+
+            .maps-btn i {
+                font-size: clamp(1.5rem, 3.5vw, 2rem);
+            }
+
+        .record-details {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.8rem, 2vw, 1rem);
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: flex-start;
+            gap: clamp(0.8rem, 2vw, 1rem);
+            padding: clamp(0.8rem, 2vw, 1rem);
+            background: var(--light);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .detail-icon {
+            width: clamp(20px, 4vw, 24px);
+            color: var(--primary);
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .detail-content {
+            flex: 1;
+        }
+
+        .detail-label {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .detail-value {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            color: var(--text-secondary);
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .time-info {
+            background: rgba(22, 163, 74, 0.05);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: clamp(1rem, 2vw, 1.5rem);
+            margin-top: clamp(1rem, 2vw, 1.5rem);
+            text-align: center;
+        }
+
+        .time-assigned {
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .time-elapsed {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: clamp(3rem, 6vw, 5rem);
+            color: var(--text-secondary);
+            grid-column: 1 / -1;
+        }
+
+            .empty-state i {
+                font-size: clamp(3rem, 8vw, 5rem);
+                margin-bottom: clamp(1rem, 2vw, 1.5rem);
+                color: var(--border);
+            }
+
+            .empty-state h3 {
+                font-size: clamp(1.5rem, 4vw, 2rem);
+                margin-bottom: clamp(0.5rem, 1vw, 1rem);
+            }
+
+        .notification {
+            position: fixed;
+            top: clamp(20px, 3vw, 40px);
+            right: clamp(20px, 3vw, 40px);
+            padding: clamp(1rem, 3vw, 1.5rem);
+            border-radius: 16px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+            z-index: 10000;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            font-weight: 600;
+            max-width: clamp(280px, 40vw, 400px);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+            .notification.success {
+                background: var(--success);
+                color: white;
+            }
+
+            .notification.info {
+                background: var(--info);
+                color: white;
+            }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+        button, .filter-select {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div>
+                    <h1 class="header-title">Programación de Bacheo</h1>
+                    <p class="header-subtitle">Personal Operativo - Monclova</p>
+                </div>
+            </div>
+            <a href="/Home/OperativoBacheo" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Regresar
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="status-bar">
+            <div class="status-grid">
+                <div class="status-item">
+                    <div class="status-value" id="totalRecords">0</div>
+                    <div class="status-label">Total Registros</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="urgentCount">0</div>
+                    <div class="status-label">Urgentes</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="delayedCount">0</div>
+                    <div class="status-label">Atrasados</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="onTimeCount">0</div>
+                    <div class="status-label">A Tiempo</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value" id="currentTime">--:--</div>
+                    <div class="status-label">Hora Actual</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filters-section">
+            <h2 class="filters-title">
+                <i class="fas fa-filter"></i>
+                Filtros de Búsqueda
+            </h2>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Tipo de Trabajo</label>
+                    <select class="filter-select" id="filterType" onchange="applyFilters()">
+                        <option value="">Todos</option>
+                        <option value="bache">Baches</option>
+                        <option value="sima">SIMAS</option>
+                        <option value="bordo">Bordos</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Urgencia</label>
+                    <select class="filter-select" id="filterUrgency" onchange="applyFilters()">
+                        <option value="">Todas</option>
+                        <option value="urgent">Urgente</option>
+                        <option value="high">Alta</option>
+                        <option value="normal">Normal</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Estado</label>
+                    <select class="filter-select" id="filterStatus" onchange="applyFilters()">
+                        <option value="">Todos</option>
+                        <option value="ontime">A Tiempo</option>
+                        <option value="warning">Por Vencer</option>
+                        <option value="delayed">Atrasado</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Fecha de Programación</label>
+                    <input type="date" class="filter-select" id="filterDate" onchange="applyFilters()" style="color-scheme: light;">
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Prioridad</label>
+                    <select class="filter-select" id="filterPriority" onchange="applyFilters()">
+                        <option value="">Todas</option>
+                        <option value="high">Alta</option>
+                        <option value="normal">Normal</option>
+                        <option value="low">Baja</option>
+                    </select>
+                </div>
+            </div>
+            <button class="clear-filters-btn" onclick="clearFilters()">
+                <i class="fas fa-times"></i>
+                Limpiar Filtros
+            </button>
+        </div>
+
+        <div class="records-grid" id="recordsGrid">
+            <!-- Se llenarán dinámicamente -->
+        </div>
+    </div>
+
+    <div id="notification" class="notification">
+        <span id="notificationText"></span>
+    </div>
+
+    <script>
+        // Variables globales
+        let records = [];
+        let filteredRecords = [];
+
+        // Función para generar programaciones para múltiples días
+        function generateSampleRecords() {
+            const tipos = ['bache', 'sima', 'bordo'];
+            const urgencias = ['normal', 'high', 'urgent'];
+            const prioridades = ['low', 'normal', 'high'];
+
+            const nombres = [
+                'Juan Pérez García', 'María García López', 'Carlos López Martínez', 'Ana Rodríguez Silva',
+                'Roberto Hernández', 'Laura Martínez', 'José González', 'Carmen Fernández',
+                'Miguel Sánchez', 'Patricia Ramírez', 'Francisco Jiménez', 'Isabel Torres',
+                'Antonio Morales', 'Rosa Álvarez', 'Manuel Ruiz', 'Pilar Hernández',
+                'Alejandro Castro', 'Teresa Ortega', 'Rafael Delgado', 'Dolores Marín',
+                'Fernando Peña', 'Concepción Navarro', 'Sergio Romero', 'Amparo Iglesias',
+                'Ignacio Medina', 'Remedios Garrido', 'Ángel Vargas', 'Estrella Cabrera',
+                'Rubén Herrera', 'Esperanza Mendoza', 'Víctor Manuel Castro', 'Gloria Herrera',
+                'Ricardo Medina', 'Soledad Vargas', 'Eduardo Cabrera', 'Inmaculada López'
+            ];
+
+            const calles = [
+                'Calle Hidalgo', 'Avenida Morelos', 'Boulevard Revolución', 'Calle Zaragoza',
+                'Calle Constitución', 'Avenida Juárez', 'Calle Madero', 'Boulevard López Mateos',
+                'Calle Allende', 'Avenida Insurgentes', 'Calle Guerrero', 'Boulevard Venustiano Carranza',
+                'Calle Aldama', 'Avenida Independencia', 'Calle Benito Juárez', 'Boulevard Miguel Alemán',
+                'Calle 5 de Mayo', 'Avenida 16 de Septiembre', 'Calle Francisco I. Madero', 'Boulevard Fundadores',
+                'Calle Reforma', 'Avenida Universidad', 'Calle Progreso', 'Boulevard Industrial',
+                'Calle Libertad', 'Avenida Tecnológico', 'Calle Pino Suárez', 'Boulevard Las Torres',
+                'Calle Morelos Norte', 'Avenida Las Américas', 'Calle Emilio Carranza', 'Boulevard Coahuila'
+            ];
+
+            const colonias = [
+                'Centro', 'Nueva', 'Obrera', 'Moderna', 'Industrial', 'Jardines',
+                'Las Flores', 'Buenos Aires', 'Revolución', 'Independencia',
+                'Villa Real', 'Lomas', 'Del Valle', 'Ampliación Norte',
+                'Fraccionamiento Los Pinos', 'Colinas del Sur', 'Vista Hermosa',
+                'El Mirador', 'San José', 'Las Palmas', 'Nuevo Amanecer',
+                'Zona Dorada', 'Residencial', 'Popular', 'Las Torres', 'El Vergel'
+            ];
+
+            const descripciones = {
+                bache: [
+                    'Bache grande en la vía principal que afecta el tráfico',
+                    'Bache profundo que puede dañar vehículos',
+                    'Múltiples baches en la calle principal',
+                    'Bache en zona escolar que requiere atención inmediata',
+                    'Hundimiento en el pavimento por falta de mantenimiento',
+                    'Deterioro del asfalto por paso de vehículos pesados'
+                ],
+                sima: [
+                    'Fuga de agua reportada por vecinos',
+                    'Emergencia: fuga grande afecta varias casas',
+                    'Ruptura de tubería principal',
+                    'Fuga en conexión domiciliaria',
+                    'Problema de drenaje que causa encharcamientos',
+                    'Filtración de agua en la vía pública'
+                ],
+                bordo: [
+                    'Reparación de bordo necesaria para evitar inundaciones',
+                    'Construcción de bordo para protección',
+                    'Reforzamiento de bordo existente',
+                    'Limpieza y mantenimiento de bordo',
+                    'Bordo dañado por lluvias recientes',
+                    'Construcción de sistema de drenaje pluvial'
+                ]
+            };
+
+            const records = [];
+            let idCounter = 1;
+
+            // Generar programaciones para los últimos 7 días y próximos 7 días (14 días total)
+            for (let dayOffset = -7; dayOffset <= 7; dayOffset++) {
+                const fecha = new Date();
+                fecha.setDate(fecha.getDate() + dayOffset);
+                fecha.setHours(8, 0, 0, 0); // Programaciones inician a las 8:00 AM
+
+                // Generar entre 20-40 programaciones por día
+                const numProgramaciones = Math.floor(Math.random() * 21) + 20; // 20-40 programaciones
+
+                for (let i = 0; i < numProgramaciones; i++) {
+                    const tipo = tipos[Math.floor(Math.random() * tipos.length)];
+
+                    // Tiempo asignado típico de 15 días con variación
+                    let tiempoAsignado = 15;
+                    if (Math.random() < 0.2) tiempoAsignado = 10; // 20% con 10 días (urgentes)
+                    if (Math.random() < 0.1) tiempoAsignado = 20; // 10% con 20 días (trabajos grandes)
+
+                    // Fecha de creación (cuando se reportó) - puede ser días antes de la programación
+                    const diasAntesReporte = Math.floor(Math.random() * 10) + 1; // 1-10 días antes
+                    const fechaCreacion = new Date(fecha);
+                    fechaCreacion.setDate(fechaCreacion.getDate() - diasAntesReporte);
+
+                    const nombreIndex = Math.floor(Math.random() * nombres.length);
+
+                    const record = {
+                        id: idCounter++,
+                        tipo: tipo,
+                        lat: 26.9070 + (Math.random() - 0.5) * 0.05, // Variación alrededor de Monclova
+                        lng: -101.4205 + (Math.random() - 0.5) * 0.05,
+                        solicitante: nombres[nombreIndex],
+                        urgencia: urgencias[Math.floor(Math.random() * urgencias.length)],
+                        prioridad: prioridades[Math.floor(Math.random() * prioridades.length)],
+                        tiempoAsignado: tiempoAsignado,
+                        fechaCreacion: fechaCreacion.toISOString(), // Cuando se reportó
+                        fechaProgramacion: fecha.toISOString(), // Cuando está programado
+                        direccion: `${calles[Math.floor(Math.random() * calles.length)]} #${Math.floor(Math.random() * 999) + 100}, Col. ${colonias[Math.floor(Math.random() * colonias.length)]}`,
+                        descripcion: descripciones[tipo][Math.floor(Math.random() * descripciones[tipo].length)]
+                    };
+
+                    records.push(record);
+                }
+            }
+
+            return records;
+        }
+
+        const sampleRecords = generateSampleRecords();
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSystem();
+        });
+
+        function initializeSystem() {
+            updateTime();
+            loadRecords();
+            applyFilters();
+
+            setInterval(updateTime, 60000);
+
+            showNotification('Sistema de programación cargado', 'success');
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('es-MX', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
+            document.getElementById('currentTime').textContent = timeString;
+        }
+
+        function loadRecords() {
+            const saved = localStorage.getItem('programacionBacheoRecords');
+            if (saved) {
+                records = JSON.parse(saved);
+            } else {
+                records = sampleRecords;
+                saveRecords();
+            }
+        }
+
+        function saveRecords() {
+            localStorage.setItem('programacionBacheoRecords', JSON.stringify(records));
+        }
+
+        function applyFilters() {
+            const typeFilter = document.getElementById('filterType').value;
+            const urgencyFilter = document.getElementById('filterUrgency').value;
+            const statusFilter = document.getElementById('filterStatus').value;
+            const priorityFilter = document.getElementById('filterPriority').value;
+            const dateFilter = document.getElementById('filterDate').value;
+
+            filteredRecords = records.filter(record => {
+                const typeMatch = !typeFilter || record.tipo === typeFilter;
+                const urgencyMatch = !urgencyFilter || record.urgencia === urgencyFilter;
+                const priorityMatch = !priorityFilter || record.prioridad === priorityFilter;
+
+                const status = getRecordStatus(record);
+                const statusMatch = !statusFilter || status === statusFilter;
+
+                // Filtro por fecha de programación
+                const dateMatch = !dateFilter || record.fechaProgramacion.split('T')[0] === dateFilter;
+
+                return typeMatch && urgencyMatch && priorityMatch && statusMatch && dateMatch;
+            });
+
+            // Ordenar por fecha de programación (más recientes primero), luego por urgencia y estado
+            filteredRecords.sort((a, b) => {
+                // Primero por fecha de programación
+                const dateA = new Date(a.fechaProgramacion);
+                const dateB = new Date(b.fechaProgramacion);
+                if (dateA.getTime() !== dateB.getTime()) {
+                    return dateA - dateB; // Fechas más cercanas primero
+                }
+
+                // Luego por urgencia
+                const urgencyOrder = { urgent: 3, high: 2, normal: 1 };
+                if (urgencyOrder[a.urgencia] !== urgencyOrder[b.urgencia]) {
+                    return urgencyOrder[b.urgencia] - urgencyOrder[a.urgencia];
+                }
+
+                // Finalmente por estado
+                const statusOrderA = getRecordStatus(a);
+                const statusOrderB = getRecordStatus(b);
+                const statusOrder = { delayed: 3, warning: 2, ontime: 1 };
+                return statusOrder[statusOrderB] - statusOrder[statusOrderA];
+            });
+
+            renderRecords();
+            updateStats();
+        }
+
+        function getRecordStatus(record) {
+            const now = new Date();
+            const created = new Date(record.fechaCreacion);
+            const daysElapsed = (now - created) / (1000 * 60 * 60 * 24);
+            const percentageElapsed = (daysElapsed / record.tiempoAsignado) * 100;
+
+            // Para tiempos de ~15 días, ajustamos los umbrales
+            if (percentageElapsed >= 100) return 'delayed';     // Ya pasó el tiempo
+            if (percentageElapsed >= 80) return 'warning';      // Le quedan 3 días o menos
+            return 'ontime';                                     // Más de 3 días restantes
+        }
+
+        function renderRecords() {
+            const container = document.getElementById('recordsGrid');
+
+            if (filteredRecords.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>No se encontraron registros</h3>
+                        <p>Intenta ajustar los filtros de búsqueda</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredRecords.map(record => {
+                const status = getRecordStatus(record);
+                const daysElapsed = Math.floor((new Date() - new Date(record.fechaCreacion)) / (1000 * 60 * 60 * 24));
+
+                return `
+                    <div class="record-card">
+                        <div class="record-header">
+                            <div class="record-type type-${record.tipo}">
+                                <i class="fas fa-${getTypeIcon(record.tipo)}"></i>
+                                ${getTypeLabel(record.tipo)}
+                            </div>
+                            <div class="urgency-badge urgency-${record.urgencia}">
+                                ${getUrgencyLabel(record.urgencia)}
+                            </div>
+                        </div>
+
+                        <div class="status-indicator status-${status}">
+                            <div class="status-dot"></div>
+                            <span>${getStatusLabel(status)}</span>
+                        </div>
+
+                        <button class="maps-btn" onclick="openInMaps(${record.lat}, ${record.lng})">
+                            <i class="fas fa-map-marked-alt"></i>
+                            VER EN GOOGLE MAPS
+                        </button>
+
+                        <div class="record-details">
+                            <div class="detail-item">
+                                <i class="fas fa-user detail-icon"></i>
+                                <div class="detail-content">
+                                    <div class="detail-label">Solicitante</div>
+                                    <div class="detail-value">${record.solicitante}</div>
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt detail-icon"></i>
+                                <div class="detail-content">
+                                    <div class="detail-label">Dirección</div>
+                                    <div class="detail-value">${record.direccion}</div>
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <i class="fas fa-info-circle detail-icon"></i>
+                                <div class="detail-content">
+                                    <div class="detail-label">Descripción</div>
+                                    <div class="detail-value">${record.descripcion}</div>
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <i class="fas fa-flag detail-icon"></i>
+                                <div class="detail-content">
+                                    <div class="detail-label">Prioridad</div>
+                                    <div class="detail-value">${getPriorityLabel(record.prioridad)}</div>
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <i class="fas fa-calendar detail-icon"></i>
+                                <div class="detail-content">
+                                    <div class="detail-label">Fecha de Reporte</div>
+                                    <div class="detail-value">${formatDate(record.fechaCreacion)}</div>
+                                </div>
+                            </div>
+
+                            <div class="detail-item">
+                                <i class="fas fa-map-pin detail-icon"></i>
+                                <div class="detail-content">
+                                    <div class="detail-label">Coordenadas GPS</div>
+                                    <div class="detail-value">Lat: ${record.lat.toFixed(6)}, Lng: ${record.lng.toFixed(6)}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="time-info">
+                            <div class="time-assigned">
+                                <i class="fas fa-clock"></i>
+                                Tiempo Asignado: ${record.tiempoAsignado} días
+                            </div>
+                            <div class="time-elapsed">
+                                Días transcurridos: ${daysElapsed} de ${record.tiempoAsignado}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateStats() {
+            document.getElementById('totalRecords').textContent = filteredRecords.length;
+
+            const urgentCount = filteredRecords.filter(r => r.urgencia === 'urgent').length;
+            document.getElementById('urgentCount').textContent = urgentCount;
+
+            const delayedCount = filteredRecords.filter(r => getRecordStatus(r) === 'delayed').length;
+            document.getElementById('delayedCount').textContent = delayedCount;
+
+            const onTimeCount = filteredRecords.filter(r => getRecordStatus(r) === 'ontime').length;
+            document.getElementById('onTimeCount').textContent = onTimeCount;
+        }
+
+        function clearFilters() {
+            document.getElementById('filterType').value = '';
+            document.getElementById('filterUrgency').value = '';
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterPriority').value = '';
+            document.getElementById('filterDate').value = '';
+            applyFilters();
+            showNotification('Filtros limpiados', 'info');
+        }
+
+        function openInMaps(lat, lng) {
+            const url = `https://www.google.com/maps?q=${lat},${lng}`;
+            window.open(url, '_blank');
+            showNotification('Abriendo Google Maps...', 'info');
+        }
+
+        // Funciones de utilidad
+        function getTypeIcon(tipo) {
+            const icons = { bache: 'road', sima: 'tint', bordo: 'layer-group' };
+            return icons[tipo] || 'exclamation-triangle';
+        }
+
+        function getTypeLabel(tipo) {
+            const labels = { bache: 'BACHE', sima: 'SIMA', bordo: 'BORDO' };
+            return labels[tipo] || tipo.toUpperCase();
+        }
+
+        function getUrgencyLabel(urgencia) {
+            const labels = { urgent: 'URGENTE', high: 'ALTA', normal: 'NORMAL' };
+            return labels[urgencia] || urgencia.toUpperCase();
+        }
+
+        function getPriorityLabel(prioridad) {
+            const labels = { high: 'Alta', normal: 'Normal', low: 'Baja' };
+            return labels[prioridad] || prioridad;
+        }
+
+        function getStatusLabel(status) {
+            const labels = { ontime: 'A Tiempo', warning: 'Por Vencer', delayed: 'Atrasado' };
+            return labels[status] || status;
+        }
+
+        function formatProgrammingDate(dateString) {
+            const date = new Date(dateString);
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            // Comparar solo las fechas (sin horas)
+            const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const tomorrowOnly = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate());
+            const yesterdayOnly = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate());
+
+            if (dateOnly.getTime() === todayOnly.getTime()) {
+                return 'HOY ' + date.toLocaleDateString('es-MX', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long'
+                }).toUpperCase();
+            } else if (dateOnly.getTime() === tomorrowOnly.getTime()) {
+                return 'MAÑANA ' + date.toLocaleDateString('es-MX', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long'
+                }).toUpperCase();
+            } else if (dateOnly.getTime() === yesterdayOnly.getTime()) {
+                return 'AYER ' + date.toLocaleDateString('es-MX', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long'
+                }).toUpperCase();
+            } else {
+                return date.toLocaleDateString('es-MX', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }).toUpperCase();
+            }
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-MX', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+
+            notification.className = `notification ${type}`;
+            text.textContent = message;
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+
+            notification.addEventListener('click', () => {
+                notification.classList.remove('show');
+            });
+        }
+
+        // Prevenir zoom accidental en dispositivos móviles
+        document.addEventListener('touchstart', function(event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        });
+
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        console.log('✅ Sistema de Programación de Bacheo Operativo v1.0');
+        console.log('✅ Optimizado para tablets y personal operativo');
+        console.log('✅ Botones grandes para Google Maps');
+        console.log('✅ Información completa y filtros funcionales');
+    </script>
+</body>
+</html>
