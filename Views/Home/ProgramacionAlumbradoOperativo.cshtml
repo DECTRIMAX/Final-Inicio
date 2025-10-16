@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Programación de Bacheo - Personal Operativo</title>
+    <title>Programación de Alumbrado Público - Personal Operativo</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #16a34a;
-            --secondary: #15803d;
-            --accent: #22c55e;
+            --primary: #F59E0B;
+            --secondary: #D97706;
+            --accent: #FBBF24;
             --success: #10B981;
             --warning: #F59E0B;
             --danger: #EF4444;
@@ -42,7 +42,7 @@
             background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
             color: white;
             padding: clamp(1.5rem, 4vw, 2.5rem);
-            box-shadow: 0 4px 20px rgba(22, 163, 74, 0.3);
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -106,11 +106,11 @@
             backdrop-filter: blur(10px);
         }
 
-        .back-btn:hover {
-            background: rgba(255,255,255,0.3);
-            border-color: rgba(255,255,255,0.5);
-            transform: translateY(-2px);
-        }
+            .back-btn:hover {
+                background: rgba(255,255,255,0.3);
+                border-color: rgba(255,255,255,0.5);
+                transform: translateY(-2px);
+            }
 
         .container {
             max-width: 1200px;
@@ -199,11 +199,11 @@
             transition: all 0.3s ease;
         }
 
-        .filter-select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
-        }
+            .filter-select:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+            }
 
         .clear-filters-btn {
             background: linear-gradient(135deg, var(--text-secondary), #6B7280);
@@ -218,10 +218,10 @@
             width: 100%;
         }
 
-        .clear-filters-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(107, 114, 128, 0.3);
-        }
+            .clear-filters-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(107, 114, 128, 0.3);
+            }
 
         .records-grid {
             display: grid;
@@ -240,21 +240,21 @@
             overflow: hidden;
         }
 
-        .record-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 40px rgba(22, 163, 74, 0.15);
-            border-color: var(--primary);
-        }
+            .record-card:hover {
+                transform: translateY(-6px);
+                box-shadow: 0 12px 40px rgba(245, 158, 11, 0.15);
+                border-color: var(--primary);
+            }
 
-        .record-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 6px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-        }
+            .record-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 6px;
+                background: linear-gradient(90deg, var(--primary), var(--accent));
+            }
 
         .record-header {
             display: flex;
@@ -274,22 +274,28 @@
             letter-spacing: 0.5px;
         }
 
-        .type-bache {
+        .type-lampara {
+            background: rgba(245, 158, 11, 0.15);
+            color: #D97706;
+            border: 2px solid #D97706;
+        }
+
+        .type-poste {
             background: rgba(239, 68, 68, 0.15);
             color: #DC2626;
             border: 2px solid #DC2626;
         }
 
-        .type-sima {
-            background: rgba(16, 185, 129, 0.15);
-            color: #10B981;
-            border: 2px solid #10B981;
+        .type-cable {
+            background: rgba(59, 130, 246, 0.15);
+            color: #1E40AF;
+            border: 2px solid #1E40AF;
         }
 
-        .type-bordo {
-            background: rgba(245, 158, 11, 0.15);
-            color: #D97706;
-            border: 2px solid #D97706;
+        .type-transformador {
+            background: rgba(139, 92, 246, 0.15);
+            color: #7C3AED;
+            border: 2px solid #7C3AED;
         }
 
         .urgency-badge {
@@ -373,19 +379,19 @@
             letter-spacing: 1px;
         }
 
-        .maps-btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(30, 64, 175, 0.4);
-            background: linear-gradient(135deg, #3B82F6, #60A5FA);
-        }
+            .maps-btn:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 12px 40px rgba(30, 64, 175, 0.4);
+                background: linear-gradient(135deg, #3B82F6, #60A5FA);
+            }
 
-        .maps-btn:active {
-            transform: translateY(-2px);
-        }
+            .maps-btn:active {
+                transform: translateY(-2px);
+            }
 
-        .maps-btn i {
-            font-size: clamp(1.5rem, 3.5vw, 2rem);
-        }
+            .maps-btn i {
+                font-size: clamp(1.5rem, 3.5vw, 2rem);
+            }
 
         .record-details {
             display: flex;
@@ -430,7 +436,7 @@
         }
 
         .time-info {
-            background: rgba(22, 163, 74, 0.05);
+            background: rgba(245, 158, 11, 0.05);
             border: 2px solid var(--primary);
             border-radius: 12px;
             padding: clamp(1rem, 2vw, 1.5rem);
@@ -457,16 +463,16 @@
             grid-column: 1 / -1;
         }
 
-        .empty-state i {
-            font-size: clamp(3rem, 8vw, 5rem);
-            margin-bottom: clamp(1rem, 2vw, 1.5rem);
-            color: var(--border);
-        }
+            .empty-state i {
+                font-size: clamp(3rem, 8vw, 5rem);
+                margin-bottom: clamp(1rem, 2vw, 1.5rem);
+                color: var(--border);
+            }
 
-        .empty-state h3 {
-            font-size: clamp(1.5rem, 4vw, 2rem);
-            margin-bottom: clamp(0.5rem, 1vw, 1rem);
-        }
+            .empty-state h3 {
+                font-size: clamp(1.5rem, 4vw, 2rem);
+                margin-bottom: clamp(0.5rem, 1vw, 1rem);
+            }
 
         .notification {
             position: fixed;
@@ -485,20 +491,20 @@
             cursor: pointer;
         }
 
-        .notification.success {
-            background: var(--success);
-            color: white;
-        }
+            .notification.success {
+                background: var(--success);
+                color: white;
+            }
 
-        .notification.info {
-            background: var(--info);
-            color: white;
-        }
+            .notification.info {
+                background: var(--info);
+                color: white;
+            }
 
-        .notification.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
+            .notification.show {
+                opacity: 1;
+                transform: translateX(0);
+            }
 
         button, .filter-select {
             -webkit-tap-highlight-color: transparent;
@@ -516,14 +522,14 @@
         <div class="header-content">
             <div class="logo-section">
                 <div class="logo">
-                    <i class="fas fa-calendar-check"></i>
+                    <i class="fas fa-lightbulb"></i>
                 </div>
                 <div>
-                    <h1 class="header-title">Programación de Bacheo</h1>
+                    <h1 class="header-title">Programación de Alumbrado Público</h1>
                     <p class="header-subtitle">Personal Operativo - Monclova</p>
                 </div>
             </div>
-            <a href="/Home/OperativoBacheo" class="back-btn">
+            <a href="/Home/OperativoAlumbrado" class="back-btn">
                 <i class="fas fa-arrow-left"></i>
                 Regresar
             </a>
@@ -566,9 +572,10 @@
                     <label class="filter-label">Tipo de Trabajo</label>
                     <select class="filter-select" id="filterType" onchange="applyFilters()">
                         <option value="">Todos</option>
-                        <option value="bache">Baches</option>
-                        <option value="sima">SIMAS</option>
-                        <option value="bordo">Bordos</option>
+                        <option value="lampara">Lámparas</option>
+                        <option value="poste">Postes</option>
+                        <option value="cable">Cableado</option>
+                        <option value="transformador">Transformadores</option>
                     </select>
                 </div>
                 <div class="filter-group">
@@ -623,12 +630,12 @@
         let records = [];
         let filteredRecords = [];
 
-        // Función para generar programaciones para múltiples días
+        // Función para generar programaciones de alumbrado público
         function generateSampleRecords() {
-            const tipos = ['bache', 'sima', 'bordo'];
+            const tipos = ['lampara', 'poste', 'cable', 'transformador'];
             const urgencias = ['normal', 'high', 'urgent'];
             const prioridades = ['low', 'normal', 'high'];
-            
+
             const nombres = [
                 'Juan Pérez García', 'María García López', 'Carlos López Martínez', 'Ana Rodríguez Silva',
                 'Roberto Hernández', 'Laura Martínez', 'José González', 'Carmen Fernández',
@@ -662,70 +669,82 @@
             ];
 
             const descripciones = {
-                bache: [
-                    'Bache grande en la vía principal que afecta el tráfico',
-                    'Bache profundo que puede dañar vehículos',
-                    'Múltiples baches en la calle principal',
-                    'Bache en zona escolar que requiere atención inmediata',
-                    'Hundimiento en el pavimento por falta de mantenimiento',
-                    'Deterioro del asfalto por paso de vehículos pesados'
+                lampara: [
+                    'Lámpara apagada - Requiere reemplazo de bombilla LED',
+                    'Luz intermitente - Posible falla en balastro',
+                    'Lámpara fundida - Cambio urgente por seguridad vial',
+                    'Luz tenue - Verificar conexión y voltaje',
+                    'Reemplazo de lámpara completa por vandalismo',
+                    'Actualización a tecnología LED de nueva generación'
                 ],
-                sima: [
-                    'Fuga de agua reportada por vecinos',
-                    'Emergencia: fuga grande afecta varias casas',
-                    'Ruptura de tubería principal',
-                    'Fuga en conexión domiciliaria',
-                    'Problema de drenaje que causa encharcamientos',
-                    'Filtración de agua en la vía pública'
+                poste: [
+                    'Poste inclinado por accidente vehicular',
+                    'Base de poste dañada - Requiere reforzamiento',
+                    'Poste con grietas - Evaluación estructural necesaria',
+                    'Instalación de nuevo poste en zona sin iluminación',
+                    'Poste caído por vientos fuertes',
+                    'Pintura y mantenimiento preventivo de poste'
                 ],
-                bordo: [
-                    'Reparación de bordo necesaria para evitar inundaciones',
-                    'Construcción de bordo para protección',
-                    'Reforzamiento de bordo existente',
-                    'Limpieza y mantenimiento de bordo',
-                    'Bordo dañado por lluvias recientes',
-                    'Construcción de sistema de drenaje pluvial'
+                cable: [
+                    'Cable expuesto - Riesgo eléctrico alto',
+                    'Empalme de cable dañado por condiciones climáticas',
+                    'Instalación de cableado en nueva sección',
+                    'Cable colgante - Requiere fijación urgente',
+                    'Actualización de cableado antiguo',
+                    'Reparación de conexión en caja de registro'
+                ],
+                transformador: [
+                    'Transformador sobrecalentado - Revisión urgente',
+                    'Ruido anormal en transformador',
+                    'Instalación de nuevo transformador para expansión',
+                    'Mantenimiento preventivo programado',
+                    'Falla en fusibles de protección',
+                    'Actualización de capacidad del transformador'
                 ]
             };
 
             const records = [];
             let idCounter = 1;
-            
+
             // Generar programaciones para los últimos 7 días y próximos 7 días (14 días total)
             for (let dayOffset = -7; dayOffset <= 7; dayOffset++) {
                 const fecha = new Date();
                 fecha.setDate(fecha.getDate() + dayOffset);
-                fecha.setHours(8, 0, 0, 0); // Programaciones inician a las 8:00 AM
-                
-                // Generar entre 20-40 programaciones por día
-                const numProgramaciones = Math.floor(Math.random() * 21) + 20; // 20-40 programaciones
-                
+                fecha.setHours(8, 0, 0, 0);
+
+                // Generar entre 15-35 programaciones por día
+                const numProgramaciones = Math.floor(Math.random() * 21) + 15;
+
                 for (let i = 0; i < numProgramaciones; i++) {
                     const tipo = tipos[Math.floor(Math.random() * tipos.length)];
-                    
-                    // Tiempo asignado típico de 15 días con variación
-                    let tiempoAsignado = 15;
-                    if (Math.random() < 0.2) tiempoAsignado = 10; // 20% con 10 días (urgentes)
-                    if (Math.random() < 0.1) tiempoAsignado = 20; // 10% con 20 días (trabajos grandes)
 
-                    // Fecha de creación (cuando se reportó) - puede ser días antes de la programación
-                    const diasAntesReporte = Math.floor(Math.random() * 10) + 1; // 1-10 días antes
+                    // Tiempo asignado basado en tipo de trabajo
+                    let tiempoAsignado = 7; // default para lámparas
+                    if (tipo === 'poste') tiempoAsignado = 15;
+                    if (tipo === 'cable') tiempoAsignado = 10;
+                    if (tipo === 'transformador') tiempoAsignado = 20;
+
+                    // Agregar variación aleatoria
+                    if (Math.random() < 0.2) tiempoAsignado += 5;
+
+                    // Fecha de creación (cuando se reportó)
+                    const diasAntesReporte = Math.floor(Math.random() * 10) + 1;
                     const fechaCreacion = new Date(fecha);
                     fechaCreacion.setDate(fechaCreacion.getDate() - diasAntesReporte);
 
                     const nombreIndex = Math.floor(Math.random() * nombres.length);
-                    
+
                     const record = {
                         id: idCounter++,
                         tipo: tipo,
-                        lat: 26.9070 + (Math.random() - 0.5) * 0.05, // Variación alrededor de Monclova
+                        lat: 26.9070 + (Math.random() - 0.5) * 0.05,
                         lng: -101.4205 + (Math.random() - 0.5) * 0.05,
                         solicitante: nombres[nombreIndex],
                         urgencia: urgencias[Math.floor(Math.random() * urgencias.length)],
                         prioridad: prioridades[Math.floor(Math.random() * prioridades.length)],
                         tiempoAsignado: tiempoAsignado,
-                        fechaCreacion: fechaCreacion.toISOString(), // Cuando se reportó
-                        fechaProgramacion: fecha.toISOString(), // Cuando está programado
+                        fechaCreacion: fechaCreacion.toISOString(),
+                        fechaProgramacion: fecha.toISOString(),
                         direccion: `${calles[Math.floor(Math.random() * calles.length)]} #${Math.floor(Math.random() * 999) + 100}, Col. ${colonias[Math.floor(Math.random() * colonias.length)]}`,
                         descripcion: descripciones[tipo][Math.floor(Math.random() * descripciones[tipo].length)]
                     };
@@ -748,24 +767,24 @@
             updateTime();
             loadRecords();
             applyFilters();
-            
+
             setInterval(updateTime, 60000);
-            
-            showNotification('Sistema de programación cargado', 'success');
+
+            showNotification('Sistema de alumbrado público cargado', 'success');
         }
 
         function updateTime() {
             const now = new Date();
-            const timeString = now.toLocaleTimeString('es-MX', { 
-                hour: '2-digit', 
+            const timeString = now.toLocaleTimeString('es-MX', {
+                hour: '2-digit',
                 minute: '2-digit',
-                hour12: false 
+                hour12: false
             });
             document.getElementById('currentTime').textContent = timeString;
         }
 
         function loadRecords() {
-            const saved = localStorage.getItem('programacionBacheoRecords');
+            const saved = localStorage.getItem('programacionAlumbradoRecords');
             if (saved) {
                 records = JSON.parse(saved);
             } else {
@@ -775,7 +794,7 @@
         }
 
         function saveRecords() {
-            localStorage.setItem('programacionBacheoRecords', JSON.stringify(records));
+            localStorage.setItem('programacionAlumbradoRecords', JSON.stringify(records));
         }
 
         function applyFilters() {
@@ -789,32 +808,28 @@
                 const typeMatch = !typeFilter || record.tipo === typeFilter;
                 const urgencyMatch = !urgencyFilter || record.urgencia === urgencyFilter;
                 const priorityMatch = !priorityFilter || record.prioridad === priorityFilter;
-                
+
                 const status = getRecordStatus(record);
                 const statusMatch = !statusFilter || status === statusFilter;
 
-                // Filtro por fecha de programación
                 const dateMatch = !dateFilter || record.fechaProgramacion.split('T')[0] === dateFilter;
 
                 return typeMatch && urgencyMatch && priorityMatch && statusMatch && dateMatch;
             });
 
-            // Ordenar por fecha de programación (más recientes primero), luego por urgencia y estado
+            // Ordenar por fecha de programación, urgencia y estado
             filteredRecords.sort((a, b) => {
-                // Primero por fecha de programación
                 const dateA = new Date(a.fechaProgramacion);
                 const dateB = new Date(b.fechaProgramacion);
                 if (dateA.getTime() !== dateB.getTime()) {
-                    return dateA - dateB; // Fechas más cercanas primero
+                    return dateA - dateB;
                 }
 
-                // Luego por urgencia
                 const urgencyOrder = { urgent: 3, high: 2, normal: 1 };
                 if (urgencyOrder[a.urgencia] !== urgencyOrder[b.urgencia]) {
                     return urgencyOrder[b.urgencia] - urgencyOrder[a.urgencia];
                 }
 
-                // Finalmente por estado
                 const statusOrderA = getRecordStatus(a);
                 const statusOrderB = getRecordStatus(b);
                 const statusOrder = { delayed: 3, warning: 2, ontime: 1 };
@@ -831,10 +846,9 @@
             const daysElapsed = (now - created) / (1000 * 60 * 60 * 24);
             const percentageElapsed = (daysElapsed / record.tiempoAsignado) * 100;
 
-            // Para tiempos de ~15 días, ajustamos los umbrales
-            if (percentageElapsed >= 100) return 'delayed';     // Ya pasó el tiempo
-            if (percentageElapsed >= 80) return 'warning';      // Le quedan 3 días o menos
-            return 'ontime';                                     // Más de 3 días restantes
+            if (percentageElapsed >= 100) return 'delayed';
+            if (percentageElapsed >= 80) return 'warning';
+            return 'ontime';
         }
 
         function renderRecords() {
@@ -854,7 +868,7 @@
             container.innerHTML = filteredRecords.map(record => {
                 const status = getRecordStatus(record);
                 const daysElapsed = Math.floor((new Date() - new Date(record.fechaCreacion)) / (1000 * 60 * 60 * 24));
-                
+
                 return `
                     <div class="record-card">
                         <div class="record-header">
@@ -943,13 +957,13 @@
 
         function updateStats() {
             document.getElementById('totalRecords').textContent = filteredRecords.length;
-            
+
             const urgentCount = filteredRecords.filter(r => r.urgencia === 'urgent').length;
             document.getElementById('urgentCount').textContent = urgentCount;
-            
+
             const delayedCount = filteredRecords.filter(r => getRecordStatus(r) === 'delayed').length;
             document.getElementById('delayedCount').textContent = delayedCount;
-            
+
             const onTimeCount = filteredRecords.filter(r => getRecordStatus(r) === 'ontime').length;
             document.getElementById('onTimeCount').textContent = onTimeCount;
         }
@@ -972,12 +986,22 @@
 
         // Funciones de utilidad
         function getTypeIcon(tipo) {
-            const icons = { bache: 'road', sima: 'tint', bordo: 'layer-group' };
-            return icons[tipo] || 'exclamation-triangle';
+            const icons = {
+                lampara: 'lightbulb',
+                poste: 'street-view',
+                cable: 'plug',
+                transformador: 'bolt'
+            };
+            return icons[tipo] || 'tools';
         }
 
         function getTypeLabel(tipo) {
-            const labels = { bache: 'BACHE', sima: 'SIMA', bordo: 'BORDO' };
+            const labels = {
+                lampara: 'LÁMPARA',
+                poste: 'POSTE',
+                cable: 'CABLEADO',
+                transformador: 'TRANSFORMADOR'
+            };
             return labels[tipo] || tipo.toUpperCase();
         }
 
@@ -994,48 +1018,6 @@
         function getStatusLabel(status) {
             const labels = { ontime: 'A Tiempo', warning: 'Por Vencer', delayed: 'Atrasado' };
             return labels[status] || status;
-        }
-
-        function formatProgrammingDate(dateString) {
-            const date = new Date(dateString);
-            const today = new Date();
-            const tomorrow = new Date(today);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const yesterday = new Date(today);
-            yesterday.setDate(yesterday.getDate() - 1);
-
-            // Comparar solo las fechas (sin horas)
-            const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-            const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-            const tomorrowOnly = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate());
-            const yesterdayOnly = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate());
-
-            if (dateOnly.getTime() === todayOnly.getTime()) {
-                return 'HOY ' + date.toLocaleDateString('es-MX', {
-                    weekday: 'long',
-                    day: 'numeric',
-                    month: 'long'
-                }).toUpperCase();
-            } else if (dateOnly.getTime() === tomorrowOnly.getTime()) {
-                return 'MAÑANA ' + date.toLocaleDateString('es-MX', {
-                    weekday: 'long',
-                    day: 'numeric',
-                    month: 'long'
-                }).toUpperCase();
-            } else if (dateOnly.getTime() === yesterdayOnly.getTime()) {
-                return 'AYER ' + date.toLocaleDateString('es-MX', {
-                    weekday: 'long',
-                    day: 'numeric',
-                    month: 'long'
-                }).toUpperCase();
-            } else {
-                return date.toLocaleDateString('es-MX', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                }).toUpperCase();
-            }
         }
 
         function formatDate(dateString) {
@@ -1083,7 +1065,7 @@
             lastTouchEnd = now;
         }, false);
 
-        console.log('✅ Sistema de Programación de Bacheo Operativo v1.0');
+        console.log('✅ Sistema de Programación de Alumbrado Público v1.0');
         console.log('✅ Optimizado para tablets y personal operativo');
         console.log('✅ Botones grandes para Google Maps');
         console.log('✅ Información completa y filtros funcionales');

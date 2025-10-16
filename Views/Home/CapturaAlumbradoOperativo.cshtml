@@ -1,0 +1,757 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Captura Alumbrado Público - Monclova</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #DC2626;
+            --primary-light: #F87171;
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F8F9FA;
+            --bg-tertiary: #E9ECEF;
+            --text-primary: #212529;
+            --text-secondary: #6C757D;
+            --border: #DEE2E6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #F8F9FA 0%, #FFFFFF 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding-bottom: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--primary);
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+        }
+
+        .header-info h1 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+            color: var(--text-primary);
+        }
+
+        .header-info p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.9rem;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: inherit;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+            .form-input:focus, .form-select:focus, .form-textarea:focus {
+                outline: none;
+                border-color: var(--primary);
+                box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+            }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+        }
+
+        @@media (max-width: 480px) {
+            .form-row, .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+            .btn:active {
+                transform: translateY(1px);
+            }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 2px solid var(--border);
+        }
+
+        .status-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .status-btn {
+            padding: 1.2rem;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+            .status-btn:active {
+                transform: scale(0.98);
+            }
+
+            .status-btn.completado {
+                border-color: var(--success);
+                background: rgba(16, 185, 129, 0.1);
+            }
+
+                .status-btn.completado.active {
+                    background: var(--success);
+                    border-color: var(--success);
+                }
+
+            .status-btn.pendiente {
+                border-color: var(--warning);
+                background: rgba(245, 158, 11, 0.1);
+            }
+
+                .status-btn.pendiente.active {
+                    background: var(--warning);
+                    border-color: var(--warning);
+                }
+
+            .status-btn i {
+                font-size: 2rem;
+                display: block;
+                margin-bottom: 0.5rem;
+            }
+
+            .status-btn.completado i {
+                color: var(--success);
+            }
+
+            .status-btn.pendiente i {
+                color: var(--warning);
+            }
+
+            .status-btn.active i,
+            .status-btn.active p {
+                color: white;
+            }
+
+            .status-btn p {
+                font-weight: 600;
+                color: var(--text-primary);
+                font-size: 0.9rem;
+            }
+
+        .notification {
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 5000;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 0.8rem;
+            max-width: 90%;
+        }
+
+            .notification.show {
+                display: flex;
+            }
+
+            .notification.success {
+                background: var(--success);
+                color: white;
+            }
+
+            .notification.error {
+                background: var(--danger);
+                color: white;
+            }
+
+            .notification.info {
+                background: var(--info);
+                color: white;
+            }
+
+            .notification.warning {
+                background: var(--warning);
+                color: white;
+            }
+
+        .help-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-lightbulb"></i>
+            </div>
+            <div class="header-info">
+                <h1>Reporte de Petición - Alumbrado Público</h1>
+                <p>Presidencia Municipal Monclova</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form id="reportForm">
+            <!-- DATOS DEL CIUDADANO -->
+            <div class="card">
+                <div class="section-title">
+                    <i class="fas fa-user"></i>
+                    Datos del Ciudadano
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Folio</label>
+                        <input type="text" class="form-input" id="folio" readonly placeholder="Auto-generado">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fecha *</label>
+                        <input type="date" class="form-input" id="fecha" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Nombre *</label>
+                    <input type="text" class="form-input" id="nombre" required placeholder="Nombre completo">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Dirección *</label>
+                    <input type="text" class="form-input" id="direccion" required placeholder="Calle y número">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Colonia *</label>
+                        <input type="text" class="form-input" id="colonia" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Teléfono</label>
+                        <input type="tel" class="form-input" id="telefono" placeholder="(000) 000-0000">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Entre Calles *</label>
+                        <input type="text" class="form-input" id="entreCalles" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Circuito</label>
+                        <input type="text" class="form-input" id="circuito">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Medidor</label>
+                    <input type="text" class="form-input" id="medidor">
+                </div>
+            </div>
+
+            <!-- COMENTARIO Y UBICACIÓN -->
+            <div class="card">
+                <div class="section-title">
+                    <i class="fas fa-comment-alt"></i>
+                    Comentario y Ubicación
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Comentario</label>
+                    <textarea class="form-textarea" id="comentario" placeholder="Describe el problema o petición..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Ubicación del Alumbrado</label>
+                    <input type="text" class="form-input" id="ubicacionAlumbrado" placeholder="Ej: Esquina noroeste, Frente a casa #123">
+                    <p class="help-text">Describe la ubicación específica del poste o luminaria</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Ubicación GPS</label>
+                    <button type="button" class="btn btn-success" onclick="capturarUbicacion()">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Capturar Ubicación GPS
+                    </button>
+                    <div id="gpsDisplay" style="display:none; margin-top: 0.8rem; padding: 1rem; background: rgba(16, 185, 129, 0.1); border: 2px solid var(--success); border-radius: 10px;">
+                        <div style="display: flex; align-items: center; gap: 0.8rem;">
+                            <i class="fas fa-check-circle" style="color: var(--success); font-size: 1.2rem;"></i>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: var(--success); margin-bottom: 0.2rem;">Ubicación Capturada</div>
+                                <div id="gpsText" style="font-size: 0.85rem; color: var(--text-secondary);"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LUMINARIAS -->
+            <div class="card">
+                <div class="section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Información de Luminarias
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Cantidad de Luminarias Rehabilitadas</label>
+                        <input type="number" class="form-input" id="cantidadLuminarias" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Número de Lámpara Asignada</label>
+                        <input type="text" class="form-input" id="numeroLampara">
+                    </div>
+                </div>
+            </div>
+
+            <!-- DATOS GENERALES DEL PERSONAL -->
+            <div class="card">
+                <div class="section-title">
+                    <i class="fas fa-users"></i>
+                    Personal Operativo
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Supervisor</label>
+                    <input type="text" class="form-input" id="supervisor">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Oficial</label>
+                    <input type="text" class="form-input" id="oficial">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Operador de Grúa</label>
+                    <input type="text" class="form-input" id="operadorGrua">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Ayudantes</label>
+                    <input type="text" class="form-input" id="ayudantes" placeholder="Nombres separados por coma">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Grúa No.</label>
+                        <input type="text" class="form-input" id="gruaNo">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Turno</label>
+                        <select class="form-select" id="turno">
+                            <option value="">Seleccionar</option>
+                            <option value="MATUTINO">Matutino</option>
+                            <option value="VESPERTINO">Vespertino</option>
+                            <option value="NOCTURNO">Nocturno</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MATERIALES -->
+            <div class="card">
+                <div class="section-title">
+                    <i class="fas fa-boxes"></i>
+                    Materiales Utilizados
+                </div>
+
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label class="form-label">Focos</label>
+                        <input type="number" class="form-input" id="focos" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Balastra</label>
+                        <input type="number" class="form-input" id="balastra" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fotocelda</label>
+                        <input type="number" class="form-input" id="fotocelda" min="0" placeholder="0">
+                    </div>
+                </div>
+
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label class="form-label">Base</label>
+                        <input type="number" class="form-input" id="base" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cable (mts)</label>
+                        <input type="number" class="form-input" id="cableMts" min="0" step="0.1" placeholder="0.0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cinta Aislar</label>
+                        <input type="number" class="form-input" id="cintaAislar" min="0" placeholder="0">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ESTADO DEL TRABAJO -->
+            <div class="card">
+                <div class="section-title">
+                    <i class="fas fa-check-circle"></i>
+                    Estado del Trabajo
+                </div>
+
+                <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">
+                    ¿El trabajo fue completado exitosamente?
+                </p>
+
+                <div class="status-selector">
+                    <div class="status-btn completado" onclick="selectStatus(event, 'COMPLETADO')">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Completado</p>
+                    </div>
+                    <div class="status-btn pendiente" onclick="selectStatus(event, 'PENDIENTE')">
+                        <i class="fas fa-clock"></i>
+                        <p>Pendiente</p>
+                    </div>
+                </div>
+
+                <div id="motivoPendiente" style="display:none; margin-top: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Motivo / Observaciones *</label>
+                        <textarea class="form-textarea" id="motivoObservaciones" placeholder="Explica por qué quedó pendiente y qué falta por hacer..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                Guardar Reporte
+            </button>
+        </form>
+    </div>
+
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText"></span>
+    </div>
+
+    <script>
+        let folioCounter = parseInt(localStorage.getItem('alumbradomFolioCounter') || '1');
+        let currentStatus = '';
+        let currentLocation = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha').value = today;
+            document.getElementById('folio').value = generateFolio();
+
+            document.getElementById('reportForm').addEventListener('submit', handleSubmit);
+        });
+
+        function generateFolio() {
+            const date = new Date();
+            const year = date.getFullYear();
+            const num = String(folioCounter).padStart(5, '0');
+            return `AP-${year}-${num}`;
+        }
+
+        function capturarUbicacion() {
+            if (!navigator.geolocation) {
+                showNotification('GPS no disponible en este dispositivo', 'error');
+                return;
+            }
+
+            showNotification('Obteniendo ubicación GPS...', 'info');
+
+            const options = {
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 0
+            };
+
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    currentLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                        accuracy: position.coords.accuracy
+                    };
+
+                    document.getElementById('gpsDisplay').style.display = 'block';
+                    document.getElementById('gpsText').textContent =
+                        `Latitud: ${currentLocation.lat.toFixed(6)}, Longitud: ${currentLocation.lng.toFixed(6)} (Precisión: ±${Math.round(currentLocation.accuracy)}m)`;
+
+                    showNotification('¡Ubicación GPS capturada correctamente!', 'success');
+                },
+                error => {
+                    let errorMessage = 'Error al obtener ubicación';
+
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage = 'Permiso de ubicación denegado. Activa el GPS en configuración';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage = 'Ubicación no disponible. Verifica que tengas GPS activado';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage = 'Tiempo agotado. Intenta de nuevo';
+                            break;
+                    }
+
+                    showNotification(errorMessage, 'error');
+                },
+                options
+            );
+        }
+
+        function selectStatus(e, status) {
+            currentStatus = status;
+
+            document.querySelectorAll('.status-btn').forEach(btn => btn.classList.remove('active'));
+            e.target.closest('.status-btn').classList.add('active');
+
+            const motivoDiv = document.getElementById('motivoPendiente');
+            const motivoTextarea = document.getElementById('motivoObservaciones');
+
+            if (status === 'PENDIENTE') {
+                motivoDiv.style.display = 'block';
+                motivoTextarea.required = true;
+            } else {
+                motivoDiv.style.display = 'none';
+                motivoTextarea.required = false;
+                motivoTextarea.value = '';
+            }
+
+            showNotification(
+                status === 'COMPLETADO' ? 'Trabajo marcado como completado' : 'Trabajo marcado como pendiente',
+                status === 'COMPLETADO' ? 'success' : 'warning'
+            );
+        }
+
+        function handleSubmit(e) {
+            e.preventDefault();
+
+            if (!currentStatus) {
+                showNotification('Selecciona el estado del trabajo (Completado o Pendiente)', 'error');
+                return;
+            }
+
+            if (currentStatus === 'PENDIENTE' && !document.getElementById('motivoObservaciones').value.trim()) {
+                showNotification('Ingresa el motivo por el cual quedó pendiente', 'error');
+                return;
+            }
+
+            const report = {
+                id: Date.now(),
+                folio: document.getElementById('folio').value,
+                fecha: document.getElementById('fecha').value,
+                nombre: document.getElementById('nombre').value,
+                direccion: document.getElementById('direccion').value,
+                colonia: document.getElementById('colonia').value,
+                telefono: document.getElementById('telefono').value,
+                entreCalles: document.getElementById('entreCalles').value,
+                circuito: document.getElementById('circuito').value,
+                medidor: document.getElementById('medidor').value,
+                comentario: document.getElementById('comentario').value,
+                ubicacionAlumbrado: document.getElementById('ubicacionAlumbrado').value,
+                gpsLocation: currentLocation,
+                cantidadLuminarias: document.getElementById('cantidadLuminarias').value,
+                numeroLampara: document.getElementById('numeroLampara').value,
+                supervisor: document.getElementById('supervisor').value,
+                oficial: document.getElementById('oficial').value,
+                operadorGrua: document.getElementById('operadorGrua').value,
+                ayudantes: document.getElementById('ayudantes').value,
+                gruaNo: document.getElementById('gruaNo').value,
+                turno: document.getElementById('turno').value,
+                materiales: {
+                    focos: document.getElementById('focos').value,
+                    balastra: document.getElementById('balastra').value,
+                    fotocelda: document.getElementById('fotocelda').value,
+                    base: document.getElementById('base').value,
+                    cableMts: document.getElementById('cableMts').value,
+                    cintaAislar: document.getElementById('cintaAislar').value
+                },
+                status: currentStatus,
+                motivoPendiente: currentStatus === 'PENDIENTE' ? document.getElementById('motivoObservaciones').value : ''
+            };
+
+            const existingReports = JSON.parse(localStorage.getItem('alumbramoReports') || '[]');
+            existingReports.push(report);
+            localStorage.setItem('alumbramoReports', JSON.stringify(existingReports));
+
+            folioCounter++;
+            localStorage.setItem('alumbradomFolioCounter', folioCounter.toString());
+
+            const message = currentStatus === 'COMPLETADO'
+                ? 'Reporte guardado - Trabajo COMPLETADO'
+                : 'Reporte guardado - Trabajo PENDIENTE (requiere reprogramación)';
+
+            showNotification(message, currentStatus === 'COMPLETADO' ? 'success' : 'warning');
+
+            setTimeout(() => {
+                resetForm();
+            }, 2000);
+        }
+
+        function resetForm() {
+            document.getElementById('reportForm').reset();
+            currentStatus = '';
+            currentLocation = null;
+
+            document.querySelectorAll('.status-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('motivoPendiente').style.display = 'none';
+            document.getElementById('motivoObservaciones').required = false;
+            document.getElementById('gpsDisplay').style.display = 'none';
+
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha').value = today;
+            document.getElementById('folio').value = generateFolio();
+
+            showNotification('Formulario listo para nuevo reporte', 'info');
+        }
+
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            const icon = notification.querySelector('i');
+
+            icon.className = type === 'success' ? 'fas fa-check-circle' :
+                            type === 'error' ? 'fas fa-exclamation-circle' :
+                            type === 'warning' ? 'fas fa-exclamation-triangle' :
+                            'fas fa-info-circle';
+
+            notification.className = `notification ${type} show`;
+            text.textContent = message;
+
+            setTimeout(() => notification.classList.remove('show'), 3500);
+        }
+    </script>
+</body>
+</html>
