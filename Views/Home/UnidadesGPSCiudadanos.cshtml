@@ -1,0 +1,572 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unidades GPS - Portal Ciudadano</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e7e34 0%, #28a745 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e7e34 0%, #28a745 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .logo-container {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #28a745;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+            overflow: hidden;
+            padding: 5px;
+            flex-shrink: 0;
+        }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                display: block;
+            }
+
+            .logo i {
+                color: #28a745;
+                font-size: 1.3rem;
+            }
+
+        .header-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+            .header-info h1 {
+                font-size: clamp(1rem, 3vw, 1.3rem);
+                font-weight: 700;
+                color: white;
+                margin-bottom: 0.2rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .header-info p {
+                font-size: clamp(0.75rem, 2vw, 0.85rem);
+                color: rgba(255, 255, 255, 0.9);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #28a745;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+            flex-shrink: 0;
+        }
+
+            .user-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .user-avatar i {
+                color: #28a745;
+                font-size: 1.3rem;
+            }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .nav-menu {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-item {
+            flex: 1;
+            min-width: 150px;
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+        }
+
+            .nav-item:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            }
+
+            .nav-item.active {
+                background: linear-gradient(135deg, #1e7e34 0%, #28a745 100%);
+                box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            }
+
+        .content-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-title {
+            color: #28a745;
+            font-size: 28px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .units-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .unit-card {
+            background: white;
+            border: 2px solid #28a745;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+            .unit-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+                border-color: #1e7e34;
+            }
+
+            .unit-card.active {
+                background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+                color: white;
+                box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+            }
+
+        .unit-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .unit-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .unit-description {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .map-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-top: 20px;
+        }
+
+        .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .map-title {
+            color: #28a745;
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .map-status {
+            padding: 8px 16px;
+            background: #d4edda;
+            color: #155724;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: #28a745;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+
+        .iframe-wrapper {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #28a745;
+        }
+
+        #gpsFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+            .loading-overlay.hidden {
+                display: none;
+            }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #d4edda;
+            border-top: 5px solid #28a745;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+      
+
+        .loading-text {
+            margin-top: 20px;
+            color: #28a745;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .info-banner {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .info-banner i {
+                color: #28a745;
+                font-size: 24px;
+            }
+
+        .info-banner-text {
+            flex: 1;
+        }
+
+        .info-banner-title {
+            font-weight: 700;
+            color: #155724;
+            margin-bottom: 4px;
+        }
+
+        .info-banner-desc {
+            font-size: 14px;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-container">
+                    <div class="logo">
+                        <img src="/imagenes/ServiciosPrimarios.png" alt="Servicios" onerror="this.parentElement.innerHTML='<i class=\'fas fa-tools\'></i>'">
+                    </div>
+                    <div class="logo">
+                        <img src="/imagenes/LOGO.png" alt="Gobierno" onerror="this.parentElement.innerHTML='<i class=\'fas fa-landmark\'></i>'">
+                    </div>
+                </div>
+                <div class="header-info">
+                    <h1>Portal Ciudadano - Unidades GPS</h1>
+                    <p>Municipio de Monclova, Coahuila</p>
+                </div>
+            </div>
+            <div class="user-avatar">
+                <img src="/images/usuario.jpg" alt="Usuario" onerror="this.parentElement.innerHTML='<i class=\'fas fa-user\'></i>'">
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav class="nav-menu">
+            <div class="nav-items">
+                <a href="/Home/DashboardCiudadano" class="nav-item">
+                    <i class="fas fa-home"></i> Inicio
+                </a>
+                <a href="/Home/DashboardCiudadano" class="nav-item">
+                    <i class="fas fa-plus-circle"></i> Crear Reporte
+                </a>
+                <a href="/Home/DashboardCiudadano" class="nav-item">
+                    <i class="fas fa-clipboard-list"></i> Mis Reportes
+                </a>
+                <a href="/Home/UnidadesGPSCiudadanos" class="nav-item active">
+                    <i class="fas fa-map-marker-alt"></i> Unidades GPS
+                </a>
+                <a href="/Home/DirectorioCiudadanos" class="nav-item">
+                    <i class="fas fa-phone"></i> Directorio
+                </a>
+                <a href="/Home/EventosCiudadanos" class="nav-item">
+                    <i class="fas fa-calendar"></i> Eventos
+                </a>
+            </div>
+        </nav>
+
+        <div class="content-card">
+            <h2 class="page-title">
+                <i class="fas fa-satellite-dish"></i>
+                Monitoreo GPS de Unidades
+            </h2>
+            <p class="page-subtitle">Seguimiento en tiempo real de las unidades de servicio municipal</p>
+
+            <div class="info-banner">
+                <i class="fas fa-info-circle"></i>
+                <div class="info-banner-text">
+                    <div class="info-banner-title">Monitoreo en Tiempo Real</div>
+                    <div class="info-banner-desc">Selecciona un departamento para ver la ubicación actual de sus unidades de servicio</div>
+                </div>
+            </div>
+
+            <div class="units-grid">
+                <div class="unit-card" onclick="loadGPS('bacheo')">
+                    <div class="unit-icon">🛣️</div>
+                    <div class="unit-name">Bacheo</div>
+                    <div class="unit-description">Unidades de Pavimentación</div>
+                </div>
+
+                <div class="unit-card" onclick="loadGPS('alumbrado')">
+                    <div class="unit-icon">💡</div>
+                    <div class="unit-name">Alumbrado Público</div>
+                    <div class="unit-description">Unidades de Mantenimiento</div>
+                </div>
+
+                <div class="unit-card" onclick="loadGPS('boteo')">
+                    <div class="unit-icon">🚛</div>
+                    <div class="unit-name">Recolección - Boteo</div>
+                    <div class="unit-description">Camiones Recolectores</div>
+                </div>
+
+                <div class="unit-card" onclick="loadGPS('pipas')">
+                    <div class="unit-icon">💧</div>
+                    <div class="unit-name">Pipas</div>
+                    <div class="unit-description">Pipas de Agua</div>
+                </div>
+
+                <div class="unit-card" onclick="loadGPS('contenedores')">
+                    <div class="unit-icon">🗑️</div>
+                    <div class="unit-name">Contenedores</div>
+                    <div class="unit-description">Recolección de Contenedores</div>
+                </div>
+            </div>
+
+            <div class="map-container" id="mapContainer" style="display: none;">
+                <div class="map-header">
+                    <h3 class="map-title">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span id="mapTitle">Mapa de Unidades</span>
+                    </h3>
+                    <div class="map-status">
+                        <span class="status-dot"></span>
+                        <span>En Vivo</span>
+                    </div>
+                </div>
+
+                <div class="iframe-wrapper">
+                    <div class="loading-overlay" id="loadingOverlay">
+                        <div class="spinner"></div>
+                        <div class="loading-text">Cargando mapa GPS...</div>
+                    </div>
+                    <iframe id="gpsFrame" allow="geolocation" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const gpsUrls = {
+            bacheo: {
+                url: 'https://gps.epcom.net/locator/index.html?t=634ac95b927360f0fe0819aefd9fd6ccEA9EB6CBF34DD486AFD35443D3B3DD446D2C4059',
+                title: 'Unidades de Bacheo'
+            },
+            alumbrado: {
+                url: 'https://gps.epcom.net/locator/index.html?t=0da71feb8d4af78cb29ce6e8a0ab7ab47D3AC2DBA5D40B4FD8BAFA50CF200C13BF69FB6A',
+                title: 'Unidades de Alumbrado Público'
+            },
+            boteo: {
+                url: 'https://gps.epcom.net/locator/index.html?t=a8042422b0efcb088fd477156bfd1a64AB2B984857D6EBB6BF280AEE03386D521F429888',
+                title: 'Unidades de Recolección - Boteo'
+            },
+            pipas: {
+                url: 'https://gps.epcom.net/locator/index.html?t=818dbb593e8f8492ef95e5c4a372daf4A08E1A4A05C06E71973BAA7CF075BD0107C4E5D6&allUnitsEnabled=1&labels=1',
+                title: 'Pipas de Agua'
+            },
+            contenedores: {
+                url: 'https://gps.epcom.net/locator/index.html?t=cfee27e232fae98d84d92679dd124590647B3A6EBF575E87E74A8E84ED9CBF22E417EF21',
+                title: 'Unidades de Contenedores'
+            }
+        };
+
+        let currentUnit = null;
+
+        function loadGPS(unit) {
+            if (!gpsUrls[unit]) return;
+
+            // Remover active de todas las tarjetas
+            document.querySelectorAll('.unit-card').forEach(card => {
+                card.classList.remove('active');
+            });
+
+            // Activar la tarjeta seleccionada
+            event.target.closest('.unit-card').classList.add('active');
+
+            // Mostrar el contenedor del mapa
+            const mapContainer = document.getElementById('mapContainer');
+            mapContainer.style.display = 'block';
+
+            // Actualizar el título
+            document.getElementById('mapTitle').textContent = gpsUrls[unit].title;
+
+            // Mostrar overlay de carga
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.classList.remove('hidden');
+
+            // Cargar el iframe
+            const iframe = document.getElementById('gpsFrame');
+            iframe.src = gpsUrls[unit].url;
+
+            currentUnit = unit;
+
+            // Ocultar overlay después de 2 segundos
+            setTimeout(() => {
+                loadingOverlay.classList.add('hidden');
+            }, 2000);
+
+            // Scroll suave al mapa
+            setTimeout(() => {
+                mapContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+        }
+
+        // Event listener para el iframe
+        document.getElementById('gpsFrame').addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.add('hidden');
+            }, 500);
+        });
+
+        console.log('Sistema GPS Ciudadanos cargado');
+        console.log('Unidades disponibles:', Object.keys(gpsUrls).length);
+    </script>
+</body>
+</html>

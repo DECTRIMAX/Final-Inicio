@@ -927,7 +927,34 @@ namespace Final_Inicio.Controllers
             ViewBag.FechaAcceso = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
             return View();
         }
+        // ======== MÉTODOS PARA CIUDADANOS - PORTAL CIUDADANO ========
 
+        public IActionResult UnidadesGPSCiudadanos()
+        {
+            ViewBag.TipoUsuario = "Ciudadano";
+            ViewBag.Area = "Unidades GPS";
+            ViewBag.Message = "Sistema de Monitoreo GPS - Unidades de Servicio en Tiempo Real";
+            ViewBag.FechaAcceso = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            return View();
+        }
+
+        public IActionResult DirectorioCiudadanos()
+        {
+            ViewBag.TipoUsuario = "Ciudadano";
+            ViewBag.Area = "Directorio de Contactos";
+            ViewBag.Message = "Directorio de Contactos - Presidencia Municipal";
+            ViewBag.FechaAcceso = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            return View();
+        }
+
+        public IActionResult EventosCiudadanos()
+        {
+            ViewBag.TipoUsuario = "Ciudadano";
+            ViewBag.Area = "Eventos Municipales";
+            ViewBag.Message = "Calendario de Eventos y Actividades Municipales";
+            ViewBag.FechaAcceso = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            return View();
+        }
 
 
 
