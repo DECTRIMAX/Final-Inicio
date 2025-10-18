@@ -271,6 +271,12 @@
             gap: 10px;
         }
 
+        .map-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
         .map-status {
             padding: 8px 16px;
             background: #d4edda;
@@ -291,6 +297,31 @@
             animation: pulse 2s infinite;
         }
 
+     
+
+        .fullscreen-btn {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+
+            .fullscreen-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+            }
+
+            .fullscreen-btn:active {
+                transform: translateY(0);
+            }
 
         .iframe-wrapper {
             position: relative;
@@ -300,6 +331,19 @@
             overflow: hidden;
             border: 2px solid #28a745;
         }
+
+            .iframe-wrapper.fullscreen {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                width: 100vw;
+                height: 100vh;
+                z-index: 9999;
+                border-radius: 0;
+                border: none;
+            }
 
         #gpsFrame {
             width: 100%;
@@ -335,8 +379,7 @@
             animation: spin 1s linear infinite;
         }
 
-      
-
+     
         .loading-text {
             margin-top: 20px;
             color: #28a745;
@@ -374,6 +417,35 @@
             font-size: 14px;
             color: #155724;
         }
+
+        .exit-fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(220, 53, 69, 0.95);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+        }
+
+            .exit-fullscreen-btn:hover {
+                background: rgba(200, 35, 51, 0.95);
+                transform: scale(1.05);
+            }
+
+            .exit-fullscreen-btn.show {
+                display: flex;
+            }
     </style>
 </head>
 <body>
@@ -420,6 +492,9 @@
                 <a href="/Home/EventosCiudadanos" class="nav-item">
                     <i class="fas fa-calendar"></i> Eventos
                 </a>
+                <a href="/Home/TramitesCiudadanos" class="nav-item">
+                    <i class="fas fa-file-alt"></i> Trámites
+                </a>
             </div>
         </nav>
 
@@ -434,7 +509,7 @@
                 <i class="fas fa-info-circle"></i>
                 <div class="info-banner-text">
                     <div class="info-banner-title">Monitoreo en Tiempo Real</div>
-                    <div class="info-banner-desc">Selecciona un departamento para ver la ubicación actual de sus unidades de servicio</div>
+                    <div class="info-banner-desc">Selecciona un departamento para ver la ubicación actual de sus unidades de servicio. Puedes expandir el mapa a pantalla completa.</div>
                 </div>
             </div>
 
@@ -476,13 +551,19 @@
                         <i class="fas fa-map-marked-alt"></i>
                         <span id="mapTitle">Mapa de Unidades</span>
                     </h3>
-                    <div class="map-status">
-                        <span class="status-dot"></span>
-                        <span>En Vivo</span>
+                    <div class="map-controls">
+                        <div class="map-status">
+                            <span class="status-dot"></span>
+                            <span>En Vivo</span>
+                        </div>
+                        <button class="fullscreen-btn" onclick="toggleFullscreen()">
+                            <i class="fas fa-expand"></i>
+                            <span id="fullscreenText">Pantalla Completa</span>
+                        </button>
                     </div>
                 </div>
 
-                <div class="iframe-wrapper">
+                <div class="iframe-wrapper" id="iframeWrapper">
                     <div class="loading-overlay" id="loadingOverlay">
                         <div class="spinner"></div>
                         <div class="loading-text">Cargando mapa GPS...</div>
@@ -492,6 +573,11 @@
             </div>
         </div>
     </div>
+
+    <button class="exit-fullscreen-btn" id="exitFullscreenBtn" onclick="exitFullscreen()">
+        <i class="fas fa-times"></i>
+        Salir de Pantalla Completa (ESC)
+    </button>
 
     <script>
         const gpsUrls = {
@@ -518,6 +604,7 @@
         };
 
         let currentUnit = null;
+        let isFullscreen = false;
 
         function loadGPS(unit) {
             if (!gpsUrls[unit]) return;
@@ -558,6 +645,71 @@
             }, 300);
         }
 
+        function toggleFullscreen() {
+            const wrapper = document.getElementById('iframeWrapper');
+            const exitBtn = document.getElementById('exitFullscreenBtn');
+            const fullscreenText = document.getElementById('fullscreenText');
+            const fullscreenBtn = document.querySelector('.fullscreen-btn i');
+
+            if (!isFullscreen) {
+                // Entrar en pantalla completa
+                wrapper.classList.add('fullscreen');
+                exitBtn.classList.add('show');
+                isFullscreen = true;
+
+                // Intentar usar la API nativa de pantalla completa también
+                if (wrapper.requestFullscreen) {
+                    wrapper.requestFullscreen().catch(err => {
+                        console.log('Fullscreen API no disponible, usando CSS');
+                    });
+                } else if (wrapper.webkitRequestFullscreen) {
+                    wrapper.webkitRequestFullscreen();
+                } else if (wrapper.msRequestFullscreen) {
+                    wrapper.msRequestFullscreen();
+                }
+            } else {
+                exitFullscreen();
+            }
+        }
+
+        function exitFullscreen() {
+            const wrapper = document.getElementById('iframeWrapper');
+            const exitBtn = document.getElementById('exitFullscreenBtn');
+
+            wrapper.classList.remove('fullscreen');
+            exitBtn.classList.remove('show');
+            isFullscreen = false;
+
+            // Salir de pantalla completa nativa si está activa
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(err => {});
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+
+        // Detectar cuando se sale de pantalla completa con ESC
+        document.addEventListener('fullscreenchange', function() {
+            if (!document.fullscreenElement) {
+                exitFullscreen();
+            }
+        });
+
+        document.addEventListener('webkitfullscreenchange', function() {
+            if (!document.webkitFullscreenElement) {
+                exitFullscreen();
+            }
+        });
+
+        // Atajo de teclado ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isFullscreen) {
+                exitFullscreen();
+            }
+        });
+
         // Event listener para el iframe
         document.getElementById('gpsFrame').addEventListener('load', function() {
             setTimeout(() => {
@@ -567,6 +719,7 @@
 
         console.log('Sistema GPS Ciudadanos cargado');
         console.log('Unidades disponibles:', Object.keys(gpsUrls).length);
+        console.log('Modo pantalla completa disponible');
     </script>
 </body>
 </html>
