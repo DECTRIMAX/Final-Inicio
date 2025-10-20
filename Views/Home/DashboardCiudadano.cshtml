@@ -643,7 +643,7 @@
                         </button>
 
                         <div class="tip-box">
-                            <strong>💡 Tip:</strong> El marcador se puede arrastrar para ajustar la ubicación exacta
+                            <strong>💡 Tip:</strong> El marcador se puede arrastrar para ajustar la ubicación exacta. Haz clic en el mapa para mover el marcador.
                         </div>
 
                         <div id="map"></div>
@@ -728,75 +728,98 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
     <script>
-        let map;
-        let marker;
+        let map = null;
+        let marker = null;
         let photos = [];
         let reports = [];
+        let mapInitialized = false;
 
         function initMap() {
-            if (map) {
-                map.remove();
-                map = null;
+            if (mapInitialized && map) {
+                map.invalidateSize();
+                return;
             }
 
-            setTimeout(() => {
-                map = L.map('map').setView([27.0587, -101.4209], 13);
+            const mapContainer = document.getElementById('map');
+            if (!mapContainer) {
+                console.error('Contenedor del mapa no encontrado');
+                return;
+            }
 
+            // Limpiar el contenedor si ya existe un mapa
+            mapContainer.innerHTML = '';
+
+            try {
+                // Coordenadas de Monclova, Coahuila
+                const monclovaLat = 26.9066;
+                const monclovaLng = -101.4209;
+
+                // Crear el mapa
+                map = L.map('map').setView([monclovaLat, monclovaLng], 13);
+
+                // Agregar capa de tiles
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors',
                     maxZoom: 19
                 }).addTo(map);
 
-                marker = L.marker([27.0587, -101.4209], {
+                // Crear marcador arrastrable
+                marker = L.marker([monclovaLat, monclovaLng], {
                     draggable: true
                 }).addTo(map);
 
+                // Evento cuando se arrastra el marcador
                 marker.on('dragend', function(e) {
                     const pos = marker.getLatLng();
                     updateLocationInfo(pos.lat, pos.lng);
                 });
 
+                // Evento click en el mapa para mover el marcador
                 map.on('click', function(e) {
                     marker.setLatLng(e.latlng);
                     updateLocationInfo(e.latlng.lat, e.latlng.lng);
                 });
 
+                // Actualizar tamaño del mapa después de un breve delay
                 setTimeout(() => {
                     map.invalidateSize();
+                    updateLocationInfo(monclovaLat, monclovaLng);
                 }, 100);
 
-                console.log('Mapa inicializado correctamente');
-            }, 200);
+                mapInitialized = true;
+                console.log('✅ Mapa inicializado correctamente');
+
+            } catch (error) {
+                console.error('❌ Error al inicializar el mapa:', error);
+            }
         }
 
         function changeView(event, viewName) {
             event.preventDefault();
 
+            // Ocultar todas las vistas
             const views = document.querySelectorAll('.view-content');
             views.forEach(view => view.classList.remove('active'));
 
+            // Mostrar la vista seleccionada
             const selectedView = document.getElementById(viewName + 'View');
             if (selectedView) {
                 selectedView.classList.add('active');
             }
 
+            // Actualizar navegación activa
             const navItems = document.querySelectorAll('.nav-item');
             navItems.forEach(item => item.classList.remove('active'));
             event.target.closest('.nav-item').classList.add('active');
 
+            // Inicializar o actualizar el mapa cuando se muestra la vista de crear reporte
             if (viewName === 'create') {
-                console.log('Cambiando a vista de crear reporte');
                 setTimeout(() => {
-                    if (!map) {
-                        console.log('Inicializando mapa...');
-                        initMap();
-                    } else {
-                        console.log('Mapa ya existe, actualizando tamaño...');
-                        map.invalidateSize();
-                    }
-                }, 300);
+                    initMap();
+                }, 100);
             }
 
+            // Cargar reportes cuando se muestra la vista de reportes
             if (viewName === 'reports') {
                 loadReports();
             }
@@ -805,106 +828,53 @@
         }
 
         function getLocation(event) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-
-            console.log('=== INICIANDO FUNCIÓN GPS ===');
+            event.preventDefault();
+            event.stopPropagation();
 
             if (!navigator.geolocation) {
-                console.error('Navegador no soporta geolocalización');
                 alert('❌ Tu navegador no soporta geolocalización');
                 return;
             }
 
-            console.log('✓ Navegador soporta geolocalización');
-
-            if (!map) {
-                console.error('Mapa no existe');
+            if (!map || !marker) {
                 alert('⚠️ El mapa no está listo. Espera un momento.');
                 return;
             }
 
-            if (!marker) {
-                console.error('Marcador no existe');
-                alert('⚠️ El marcador no está listo. Espera un momento.');
-                return;
-            }
-
-            console.log('✓ Mapa y marcador OK');
-
-            const btn = event ? event.target.closest('button') : document.querySelector('.gps-button');
-            if (!btn) {
-                console.error('No se encontró el botón');
-                return;
-            }
-
+            const btn = event.target.closest('button');
             const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Obteniendo ubicación...';
             btn.disabled = true;
-
-            console.log('🔍 Solicitando ubicación al navegador...');
 
             navigator.geolocation.getCurrentPosition(
                 function(position) {
-                    console.log('=== UBICACIÓN RECIBIDA ===');
-                    console.log('Objeto position completo:', position);
-
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
                     const accuracy = position.coords.accuracy;
 
-                    console.log('📍 Latitud:', lat);
-                    console.log('📍 Longitud:', lng);
-                    console.log('📏 Precisión:', accuracy, 'metros');
+                    // Actualizar marcador y mapa
+                    marker.setLatLng([lat, lng]);
+                    map.setView([lat, lng], 17);
+                    updateLocationInfo(lat, lng);
 
-                    try {
-                        console.log('Actualizando marcador...');
-                        marker.setLatLng([lat, lng]);
-                        console.log('✓ Marcador actualizado');
+                    // Feedback visual
+                    btn.innerHTML = '<i class="fas fa-check-circle"></i> ¡Ubicación obtenida!';
+                    btn.style.background = 'linear-gradient(135deg, #28a745 0%, #1e7e34 100%)';
 
-                        console.log('Centrando mapa...');
-                        map.setView([lat, lng], 17);
-                        console.log('✓ Mapa centrado');
+                    alert('✅ Ubicación GPS obtenida correctamente\n\n' +
+                          'Latitud: ' + lat.toFixed(6) + '\n' +
+                          'Longitud: ' + lng.toFixed(6) + '\n' +
+                          'Precisión: ±' + Math.round(accuracy) + ' metros');
 
-                        updateLocationInfo(lat, lng);
-                        console.log('✓ Info actualizada');
-
-                        btn.innerHTML = '<i class="fas fa-check-circle"></i> ¡Ubicado!';
-                        btn.style.background = 'linear-gradient(135deg, #28a745 0%, #1e7e34 100%)';
-
-                        const msg = '✓ GPS FUNCIONANDO\n\n' +
-                                  'Latitud: ' + lat.toFixed(6) + '\n' +
-                                  'Longitud: ' + lng.toFixed(6) + '\n' +
-                                  'Precisión: ±' + Math.round(accuracy) + ' metros';
-
-                        console.log(msg);
-                        alert(msg);
-
-                        setTimeout(() => {
-                            btn.innerHTML = '<i class="fas fa-map-marker-alt"></i> Usar mi Ubicación GPS';
-                            btn.disabled = false;
-                            btn.style.background = '';
-                        }, 3000);
-
-                        console.log('=== GPS COMPLETADO EXITOSAMENTE ===');
-
-                    } catch (error) {
-                        console.error('❌ ERROR al actualizar mapa:', error);
-                        console.error('Stack:', error.stack);
-                        alert('❌ Error: ' + error.message);
-                        btn.innerHTML = originalText;
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fas fa-map-marker-alt"></i> Usar mi Ubicación GPS';
                         btn.disabled = false;
-                    }
+                        btn.style.background = '';
+                    }, 3000);
+
                 },
                 function(error) {
-                    console.error('=== ERROR GPS ===');
-                    console.error('Código:', error.code);
-                    console.error('Mensaje:', error.message);
-
                     let errorMsg = '';
-                    let consoleMsg = '';
 
                     switch(error.code) {
                         case 1:
@@ -912,28 +882,23 @@
                                       '1. Busca el ícono 🔒 o ⓘ junto a la URL\n' +
                                       '2. Haz clic y permite "Ubicación"\n' +
                                       '3. Recarga la página (F5)';
-                            consoleMsg = 'Usuario denegó permisos de ubicación';
                             break;
                         case 2:
                             errorMsg = '📡 SIN SEÑAL GPS\n\n' +
                                       '• Activa el GPS de tu dispositivo\n' +
                                       '• Sal al exterior si estás dentro\n' +
                                       '• Verifica tu conexión a internet';
-                            consoleMsg = 'No se pudo obtener la posición';
                             break;
                         case 3:
                             errorMsg = '⏱️ TIEMPO AGOTADO\n\n' +
                                       '• Intenta nuevamente\n' +
                                       '• Sal al exterior\n' +
                                       '• Verifica tu conexión';
-                            consoleMsg = 'Timeout al obtener ubicación';
                             break;
                         default:
                             errorMsg = '❌ ERROR: ' + error.message;
-                            consoleMsg = 'Error desconocido';
                     }
 
-                    console.error(consoleMsg);
                     alert(errorMsg);
                     btn.innerHTML = originalText;
                     btn.disabled = false;
@@ -944,8 +909,6 @@
                     maximumAge: 0
                 }
             );
-
-            console.log('Esperando respuesta del GPS...');
         }
 
         function updateLocationInfo(lat, lng) {
@@ -994,9 +957,12 @@
         }
 
         function loadReports() {
-            const saved = localStorage.getItem('citizenReports');
-            if (saved) {
-                reports = JSON.parse(saved);
+            const reportData = {
+                citizenReports: JSON.stringify(reports)
+            };
+
+            if (reportData.citizenReports && reportData.citizenReports !== '[]') {
+                reports = JSON.parse(reportData.citizenReports);
             }
             displayReports();
         }
@@ -1046,7 +1012,9 @@
             `).join('');
         }
 
+        // Inicializar la aplicación
         document.addEventListener('DOMContentLoaded', function() {
+            // Contador de caracteres
             const descripcion = document.getElementById('descripcion');
             if (descripcion) {
                 descripcion.addEventListener('input', function() {
@@ -1054,6 +1022,7 @@
                 });
             }
 
+            // Manejo del formulario
             const form = document.getElementById('reportForm');
             if (form) {
                 form.addEventListener('submit', function(e) {
@@ -1069,6 +1038,8 @@
                     };
 
                     const folio = Math.floor(Math.random() * 90000) + 10000;
+                    const position = marker.getLatLng();
+
                     const newReport = {
                         folio: folio,
                         nombre: document.getElementById('nombre').value,
@@ -1081,39 +1052,41 @@
                         departamento: departamentos[document.getElementById('departamento').value],
                         descripcion: document.getElementById('descripcion').value,
                         comentarios: document.getElementById('comentarios').value,
-                        coordenadas: marker.getLatLng(),
+                        coordenadas: {
+                            lat: position.lat,
+                            lng: position.lng
+                        },
                         fotos: photos,
                         fecha: new Date().toLocaleDateString('es-MX'),
                         status: 'pendiente'
                     };
 
-                    const saved = localStorage.getItem('citizenReports');
-                    reports = saved ? JSON.parse(saved) : [];
                     reports.unshift(newReport);
-                    localStorage.setItem('citizenReports', JSON.stringify(reports));
 
-                    alert('✓ Reporte enviado exitosamente!\n\nNúmero de folio: #' + folio + '\n\nPuedes consultar el estado de tu reporte en la sección "Mis Reportes"');
+                    alert('✅ Reporte enviado exitosamente!\n\nNúmero de folio: #' + folio + '\n\nPuedes consultar el estado de tu reporte en la sección "Mis Reportes"');
 
+                    // Limpiar formulario
                     form.reset();
                     photos = [];
                     displayPhotos();
                     document.getElementById('charCount').textContent = '0';
 
+                    // Reiniciar mapa a coordenadas de Monclova
+                    if (marker) {
+                        marker.setLatLng([26.9066, -101.4209]);
+                        map.setView([26.9066, -101.4209], 13);
+                        updateLocationInfo(26.9066, -101.4209);
+                    }
+
+                    // Volver a la vista de inicio
                     const homeLink = document.querySelector('.nav-item');
                     changeView({target: homeLink, preventDefault: () => {}}, 'home');
                 });
             }
 
+            // Cargar reportes al iniciar
             loadReports();
         });
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-    
